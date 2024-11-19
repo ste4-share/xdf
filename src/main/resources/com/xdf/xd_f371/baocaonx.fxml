@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="vb_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1140.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <HBox prefHeight="40.0" prefWidth="1200.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="300.0" styleClass="sudoan371" stylesheets="@baocao.css" text="SƯ ĐOÀN 371">
+               <font>
+                  <Font name="DejaVu Serif Bold" size="20.0" />
+               </font></Label>
+            <Label fx:id="pxnxd" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="600.0" styleClass="bc_phieunhapxd" stylesheets="@baocao.css" text="PHIẾU NHẬP XĂNG DẦU">
+               <font>
+                  <Font name="DejaVu Serif Bold" size="20.0" />
+               </font></Label>
+            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="244.0" style="-fx-border-color: #000000;" styleClass="bc_soxd" stylesheets="@baocao.css" text="Số 1-03/ XD-14" textAlignment="CENTER">
+               <font>
+                  <Font name="DejaVu Serif Bold" size="13.0" />
+               </font></Label>
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="10.0" prefHeight="41.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="300.0" styleClass="bc_fbo" stylesheets="@baocao.css" text="F bộ">
+               <font>
+                  <Font name="DejaVu Serif Bold" size="20.0" />
+               </font></Label>
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="600.0" />
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="200.0" />
+         </children>
+      </HBox>
+      <HBox prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="200.0" stylesheets="@baocao.css" text="Đơn vị nhận hàng:" />
+            <Label fx:id="bc_dvnh" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="300.0" styleClass="bc_dvnh" stylesheets="@baocao.css" text="Kho xăng dầu kho Y" />
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="100.0" stylesheets="@baocao.css" text="Số:" />
+            <Label fx:id="bc_so" alignment="CENTER" layoutX="510.0" layoutY="10.0" prefHeight="36.0" prefWidth="100.0" style="-fx-border-color: #000000;" text="10" />
+            <Label layoutX="610.0" layoutY="10.0" prefHeight="36.0" prefWidth="100.0" />
+            <Label layoutX="710.0" layoutY="10.0" prefHeight="36.0" prefWidth="126.0" stylesheets="@baocao.css" text="Giá trị đến ngày:">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Label>
+            <Label fx:id="bc_denngay" layoutX="810.0" layoutY="10.0" prefHeight="36.0" prefWidth="201.0" styleClass="bc_denngay" stylesheets="@baocao.css" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="111.0" prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="200.0" stylesheets="@baocao.css" text="Đơn vị giao hàng:" />
+            <Label fx:id="bc_dvgh" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="300.0" styleClass="bc_dvgh" stylesheets="@baocao.css" text="Kho xăng dầu kho Y" />
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="100.0" stylesheets="@baocao.css" text="Ngày" />
+            <Label fx:id="bc_ngay" alignment="CENTER" layoutX="510.0" layoutY="10.0" prefHeight="36.0" prefWidth="100.0" style="-fx-border-color: #000000;" text="22/12/2023" />
+            <Label layoutX="610.0" layoutY="10.0" prefHeight="36.0" prefWidth="100.0" />
+            <Label layoutX="710.0" layoutY="10.0" prefHeight="36.0" prefWidth="126.0" stylesheets="@baocao.css" text="Số xe:">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Label>
+            <Label fx:id="bc_soxe" layoutX="810.0" layoutY="10.0" prefHeight="36.0" prefWidth="201.0" styleClass="bc_soxe" stylesheets="@baocao.css" />
+         </children>
+      </HBox>
+      <HBox prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="200.0" stylesheets="@baocao.css" text="Tính chất nhập:" />
+            <Label fx:id="bc_tcn" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="600.0" styleClass="bc_tcn" stylesheets="@baocao.css" text="Kho xăng dầu kho Y">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Label>
+            <Label fx:id="bc_dvvanchuyen" layoutX="710.0" layoutY="10.0" prefHeight="36.0" prefWidth="126.0" stylesheets="@baocao.css" text="Đ.vị vận chuyển:">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Label>
+            <Label layoutX="810.0" layoutY="10.0" prefHeight="36.0" prefWidth="201.0" styleClass="bc_dvvc" stylesheets="@baocao.css" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="193.0" prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="200.0" stylesheets="@baocao.css" text="Theo lệnh (KH) số:" />
+            <Label fx:id="bc_lenhkh" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="600.0" styleClass="bc_lenhso" stylesheets="@baocao.css" text="Kho xăng dầu kho Y" />
+            <Label fx:id="bc_dtkd" layoutX="710.0" layoutY="10.0" prefHeight="36.0" prefWidth="126.0" stylesheets="@baocao.css" text="D.tích K.định:">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Label>
+            <Label layoutX="810.0" layoutY="10.0" prefHeight="36.0" prefWidth="201.0" styleClass="bc_dtkd" stylesheets="@baocao.css" />
+         </children>
+      </HBox>
+      <HBox prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="200.0" stylesheets="@baocao.css" text="Người nhận hàng:" />
+            <Label fx:id="bc_nguoinhan" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="600.0" styleClass="bc_nguoinhanhang" stylesheets="@baocao.css" text="Đc Giang" />
+            <Label fx:id="bc_nhanhang" layoutX="710.0" layoutY="10.0" prefHeight="36.0" prefWidth="126.0" stylesheets="@baocao.css" text="D.tích nhận hàng:">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Label>
+            <Label layoutX="810.0" layoutY="10.0" prefHeight="36.0" prefWidth="201.0" styleClass="bc_dtn" stylesheets="@baocao.css" />
+         </children>
+      </HBox>
+      <HBox prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="Giấy giới thiệu và CMT:" />
+            <Label fx:id="bc_ggt" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="600.0" styleClass="bc_giaygioithieu" stylesheets="@baocao.css" text="Đc Giang" />
+            <Label fx:id="bc_soluongbaobi" layoutX="710.0" layoutY="10.0" prefHeight="40.0" prefWidth="126.0" stylesheets="@baocao.css" text="Số lượng bao bì:">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Label>
+            <Label layoutX="810.0" layoutY="10.0" prefHeight="40.0" prefWidth="201.0" styleClass="bc_slbb" stylesheets="@baocao.css" />
+         </children>
+      </HBox>
+      <HBox prefHeight="18.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="18.0" prefWidth="1142.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="505.0" prefHeight="148.0" prefWidth="1100.0">
+         <children>
+            <TableView prefHeight="148.0" prefWidth="1140.0" styleClass="tbv" stylesheets="@baocao.css">
+              <columns>
+                <TableColumn prefWidth="55.0" text="TT" />
+                <TableColumn prefWidth="113.0" text="Mã số" />
+                  <TableColumn prefWidth="108.0" text="Tên xăng dầu" />
+                  <TableColumn minWidth="8.0" prefWidth="94.0" text="Chất lượng" />
+                  <TableColumn minWidth="0.0" prefWidth="472.0" text="Số lượng">
+                     <columns>
+                        <TableColumn editable="false" minWidth="0.0" prefWidth="88.0" sortable="false" text="Phái xuất " />
+                        <TableColumn editable="false" minWidth="0.0" prefWidth="137.0" sortable="false" text="Nhiệt độ thực tế" />
+                        <TableColumn editable="false" minWidth="0.0" prefWidth="75.0" sortable="false" text="Tỷ trọng" />
+                        <TableColumn editable="false" minWidth="0.0" prefWidth="113.0" sortable="false" text="Hệ số VCF" />
+                        <TableColumn editable="false" minWidth="0.0" prefWidth="113.0" sortable="false" text="Thực xuất" />
+                     </columns>
+                  </TableColumn>
+                  <TableColumn minWidth="0.0" prefWidth="111.0" text="Đơn giá" />
+                  <TableColumn minWidth="0.0" prefWidth="146.0" text="Thành tiền" />
+              </columns>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </TableView>
+         </children>
+      </HBox>
+      <HBox prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="200.0" stylesheets="@baocao.css" text="Tổng cộng:" />
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="100.0" />
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="100.0" stylesheets="@baocao.css" text="Khoản," />
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="100.0" stylesheets="@baocao.css" text="Số lượng:" />
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="400.0" />
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="100.0" stylesheets="@baocao.css" text="Lit, Kg." />
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="100.0" />
+         </children>
+      </HBox>
+      <HBox prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="200.0" stylesheets="@baocao.css" text="Thành tiền:" />
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="939.0" styleClass="bc_thanhtien" stylesheets="@baocao.css" />
+         </children>
+      </HBox>
+      <HBox prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="200.0" stylesheets="@baocao.css" text="Ghi chú:" />
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="901.0" />
+         </children>
+      </HBox>
+      <HBox prefHeight="18.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="1100.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="724.0" prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="300.0" stylesheets="@baocao.css" text="NGƯỜI NHẬN" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="NGƯỜI GIAO" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="TÀI CHÍNH" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="NGƯỜI VIẾT PHIẾU" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="CHỦ NHIỆM" />
+         </children>
+      </HBox>
+      <HBox prefHeight="18.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="1100.0" />
+         </children>
+      </HBox>
+      <HBox prefHeight="18.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="1100.0" />
+         </children>
+      </HBox>
+      <HBox prefHeight="18.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="1100.0" />
+         </children>
+      </HBox>
+      <HBox prefHeight="36.0" prefWidth="1100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="300.0" stylesheets="@baocao.css" text="NGƯỜI NHẬN" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="NGƯỜI GIAO" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="TÀI CHÍNH" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="NGƯỜI VIẾT PHIẾU" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" stylesheets="@baocao.css" text="CHỦ NHIỆM" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

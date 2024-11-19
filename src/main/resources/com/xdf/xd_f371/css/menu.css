@@ -1,0 +1,64 @@
+
+.nxt-men {
+    -fx-background-color: #262626; /* 鼠标移出 */
+    -fx-cursor: hand; // seems like Cursor.HAND
+}
+
+.nxt-men:hover{
+    -fx-border-color: #aaaaaa;
+    -fx-color: -fx-hover-base;
+    -fx-background-color: #aaaaaa;
+    -fx-cursor: hand;
+}
+
+.nxt-men:selected {
+    -fx-border-color: #aaaaaa;
+    -fx-color: -fx-hover-base;
+    -fx-background-color: #aaaaaa;
+}
+
+.dvi-men {
+    -fx-background-color: #262626; /* 鼠标移出 */
+    cursor: pointer; // seems like Cursor.HAND
+}
+
+.dvi-men:hover{
+    -fx-border-color: #aaaaaa;
+    -fx-color: -fx-hover-base;
+    -fx-background-color: #aaaaaa;
+}
+
+.lxd-men {
+    -fx-background-color: #262626; /* 鼠标移出 */
+    cursor: pointer; // seems like Cursor.HAND
+}
+
+
+.lxd-men:hover{
+    -fx-border-color: #aaaaaa;
+    -fx-color: -fx-hover-base;
+    -fx-background-color: #aaaaaa;
+}
+
+.haohut-men {
+    -fx-background-color: #262626; /* 鼠标移出 */
+    cursor: pointer; // seems like Cursor.HAND
+}
+
+.haohut-men:hover{
+    -fx-border-color: #aaaaaa;
+    -fx-color: -fx-hover-base;
+    -fx-background-color: #aaaaaa;
+}
+
+.dinhmuc-men {
+    -fx-background-color: #262626; /* 鼠标移出 */
+    cursor: pointer; // seems like Cursor.HAND
+}
+
+.dinhmuc-men:hover{
+    -fx-border-color: #aaaaaa;
+    -fx-color: -fx-hover-base;
+    -fx-background-color: #aaaaaa;
+}
+

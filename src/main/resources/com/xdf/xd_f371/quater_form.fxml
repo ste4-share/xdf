@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="quarter_form" prefHeight="464.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.QuyController">
+   <children>
+      <Pane layoutX="12.0" layoutY="73.0" prefHeight="313.0" prefWidth="576.0">
+         <children>
+            <VBox layoutX="-2.0" prefHeight="313.0" prefWidth="576.0">
+               <children>
+                  <HBox>
+                     <children>
+                        <Label prefHeight="45.0" prefWidth="124.0" text="Quý:">
+                           <font>
+                              <Font name="DejaVu Serif Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_quarterName" prefHeight="45.0" prefWidth="451.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 5;" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label prefHeight="45.0" prefWidth="124.0" text="Ngày bắt đầu:">
+                           <font>
+                              <Font name="DejaVu Serif Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <DatePicker fx:id="dp_startdate" editable="false" prefHeight="46.0" prefWidth="423.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></DatePicker>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label prefHeight="45.0" prefWidth="124.0" text="Ngày kết thúc:">
+                           <font>
+                              <Font name="DejaVu Serif Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <DatePicker fx:id="dp_enddate" editable="false" prefHeight="46.0" prefWidth="423.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></DatePicker>
+                     </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label prefHeight="45.0" prefWidth="124.0" text="Ghi chú:">
+                           <font>
+                              <Font name="DejaVu Serif Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="tarea_note" prefHeight="149.0" prefWidth="437.0" />
+                     </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+      <AnchorPane layoutX="7.0" layoutY="7.0" prefHeight="44.0" prefWidth="585.0" style="-fx-background-color: #0c69a2;">
+         <children>
+            <Label alignment="CENTER" layoutX="99.0" layoutY="4.0" prefHeight="37.0" prefWidth="387.0" text="TẠO QUÝ" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="DejaVu Serif Bold" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Button fx:id="createQuarterBtn" layoutX="180.0" layoutY="405.0" mnemonicParsing="false" onAction="#createQuarter" prefHeight="45.0" prefWidth="113.0" style="-fx-background-color: #0ca22c;" text="TẠO MỚI" textFill="WHITE">
+         <font>
+            <Font name="DejaVu Serif Bold" size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <opaqueInsets>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </opaqueInsets>
+         <effect>
+            <DropShadow color="#6b6464" height="12.0" radius="5.5" width="12.0" />
+         </effect>
+      </Button>
+      <Button fx:id="cancel_quaterbtn" layoutX="317.0" layoutY="405.0" mnemonicParsing="false" onAction="#cancel_createNewQuarter" prefHeight="45.0" prefWidth="113.0" style="-fx-background-color: #262626;" text="HỦY" textFill="WHITE">
+         <font>
+            <Font name="DejaVu Serif Bold" size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <opaqueInsets>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </opaqueInsets>
+         <effect>
+            <DropShadow color="#615b5b" height="12.0" radius="5.5" width="12.0" />
+         </effect>
+      </Button>
+   </children>
+</AnchorPane>

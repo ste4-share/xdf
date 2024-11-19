@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="907.0" prefWidth="1168.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.BaoCaoController">
+   <center>
+      <VBox prefHeight="569.0" prefWidth="743.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="257.0" prefWidth="600.0">
+               <children>
+                  <VBox>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <children>
+                        <Label prefHeight="34.0" prefWidth="134.0" text="Nguồn nhập xuất" />
+                        <TableView fx:id="nguonnx_tb" onMouseClicked="#nguonnx_selected" prefHeight="257.0" prefWidth="775.0">
+                          <columns>
+                            <TableColumn fx:id="col_nnx_id" prefWidth="75.0" text="id" />
+                            <TableColumn fx:id="col_nnx_ten" prefWidth="75.0" text="Tên đơn vị" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="20.0" layoutY="10.0">
+                     <children>
+                        <Label prefHeight="34.0" prefWidth="134.0" text="trực thuộc" />
+                        <TableView fx:id="tructhuoc_tb" onMouseClicked="#tructhuoc_selected" prefHeight="257.0" prefWidth="775.0">
+                           <columns>
+                              <TableColumn fx:id="col_tt_id" prefWidth="75.0" text="id" />
+                              <TableColumn fx:id="col_tt_name" prefWidth="75.0" text="name" />
+                              <TableColumn fx:id="col_tt_type" prefWidth="75.0" text="type" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </TableView>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox>
+               <VBox.margin>
+                  <Insets top="50.0" />
+               </VBox.margin>
+               <children>
+                  <Label text="group">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TableView fx:id="group_title_tb" prefHeight="269.0" prefWidth="874.0">
+                    <columns>
+                      <TableColumn fx:id="col_group_id" prefWidth="75.0" text="id" />
+                      <TableColumn fx:id="col_group_ttid" prefWidth="75.0" text="group_title_id" />
+                        <TableColumn fx:id="col_group_nguonnxId" prefWidth="75.0" text="nguonnx_id" />
+                        <TableColumn fx:id="col_group_tructhuocId" prefWidth="75.0" text="tructhuoc_id" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </TableView>
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="317.0">
+               <children>
+                  <Label text="group title">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <TableView fx:id="group_tb" onMouseClicked="#groupTtSeleected" prefHeight="269.0" prefWidth="556.0">
+                           <columns>
+                              <TableColumn fx:id="col_gr_id" prefWidth="75.0" text="id" />
+                              <TableColumn fx:id="col_gr_name" prefWidth="75.0" text="name" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </TableView>
+                        <Button mnemonicParsing="false" onAction="#addNewGroupTitle" prefHeight="31.0" prefWidth="99.0" text="Add new ">
+                           <HBox.margin>
+                              <Insets left="20.0" top="20.0" />
+                           </HBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

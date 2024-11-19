@@ -1,0 +1,39 @@
+.table-view .column-header .label{
+   -fx-text-fill: black;
+   -fx-font-weight: bold;
+   -fx-alignment: CENTER;
+    -fx-padding: 15 0 15 0;
+}
+
+.table-view .cell{
+  -fx-alignment: center;
+  -fx-text-fill: black;
+  -fx-alignment: CENTER;
+}
+
+.table-view .table-cell {
+    -fx-alignment: center;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 12pt;
+    -fx-padding: 10 0 10 0;
+}
+
+.table-row-cell:selected {
+   -fx-background-color: #a8a8a8;
+}
+
+.table-row-cell: hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-background-color: red;
+}
+
+.table-row-cell: odd{
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+.table-row-cell: even{
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
