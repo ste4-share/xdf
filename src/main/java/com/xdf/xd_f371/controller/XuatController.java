@@ -411,8 +411,12 @@ public class XuatController extends CommonFactory implements Initializable {
             ledgerDetails.setLoaixd_id(cbb_tenxd_k.getSelectionModel().getSelectedItem().getId());
             ledgerDetails.setExport_unit_id(cbb_dvx_k.getSelectionModel().getSelectedItem().getId());
             ledgerDetails.setImport_unit_id(cbb_dvn_xk.getSelectionModel().getSelectedItem().getId());
-            ledgerDetails.setDur_text("0.00:00:00");
-            ledgerDetails.setDur_text_tk("0.00:00:00");
+            try {
+                ledgerDetails.setDur_text(new PGInterval("0.00:00:00"));
+                ledgerDetails.setDur_text_tk(new PGInterval("0.00:00:00"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_k.getText()));
         } catch (NullPointerException e) {
             throw new NullPointerException(e.getMessage());
@@ -804,19 +808,24 @@ public class XuatController extends CommonFactory implements Initializable {
             ledgerDetails.setDur(new PGInterval(getStrInterval()));
             ledgerDetails.setNhiemvu_hanmuc_id(getNhiemvuhanmucId());
             if (tk_radio.isSelected()){
-                ledgerDetails.setDur_text_tk(getStrIntervalText());
-                ledgerDetails.setDur_text("0.00:00:00");
+//                ledgerDetails.setDur_text_tk(new PGInterval(getStrIntervalText()));
+                ledgerDetails.setDur_text_tk2(new PGInterval(getStrInterval()));
+                ledgerDetails.setDur_text_md2(new PGInterval("00:00:00"));
+//                ledgerDetails.setDur_text(new PGInterval("0.00:00:00"));
                 ledgerDetails.setThuc_xuat_tk(Integer.parseInt(thucxuat_tf_nv.getText()));
                 ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_nv.getText()));
                 ledgerDetails.setThuc_xuat(0);
             }else {
-                ledgerDetails.setDur_text_tk("0.00:00:00");
+                ledgerDetails.setDur_text_tk2(new PGInterval("00:00:00"));
+                ledgerDetails.setDur_text_md2(new PGInterval(getStrInterval()));
+//                ledgerDetails.setDur_text_tk(new PGInterval("0.00:00:00"));
                 ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat_tf_nv.getText()));
-                ledgerDetails.setDur_text(getStrIntervalText());
+//                ledgerDetails.setDur_text(new PGInterval(getStrIntervalText()));
                 ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_nv.getText()));
                 ledgerDetails.setThuc_xuat_tk(0);
             }
         } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return ledgerDetails;

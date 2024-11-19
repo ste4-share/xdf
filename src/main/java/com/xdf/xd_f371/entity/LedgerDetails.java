@@ -26,7 +26,7 @@ public class LedgerDetails {
     private double nhiet_do_tt;
     private double ty_trong;
     private int he_so_vcf;
-    private int thuc_xuat;
+
     private int don_gia;
     private Long thanh_tien;
     private int so_km;
@@ -59,9 +59,12 @@ public class LedgerDetails {
     private int tructhuoc_id;
     private String loaigiobay;
     private PGInterval dur;
-    private String dur_text;
+    private PGInterval dur_text;
+    private int thuc_xuat;
     private int thuc_xuat_tk;
-    private String dur_text_tk;
+    private PGInterval dur_text_tk;
+    private PGInterval dur_text_md2;
+    private PGInterval dur_text_tk2;
     private int nhiemvu_hanmuc_id;
     private int soluong;
 

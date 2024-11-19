@@ -70,9 +70,9 @@ public class LedgerDetailsImp implements LedgerDetailsService {
                 int export_unit_id = resultSet.getInt("export_unit_id");
                 String loaigiobay = resultSet.getString("loaigiobay");
                 PGInterval dur = (PGInterval) resultSet.getObject("dur");
-                String durText = resultSet.getString("dur_text");
+                PGInterval durText = (PGInterval) resultSet.getObject("dur_text");
                 int thucXuatTk = resultSet.getInt("thuc_xuat_tk");
-                String durTextTk = resultSet.getString("dur_text_tk");
+                PGInterval durTextTk = (PGInterval) resultSet.getObject("dur_text_tk");
                 int soluong = resultSet.getInt("so_luong");
 
                 LedgerDetails obj = new LedgerDetails();
@@ -138,8 +138,8 @@ public class LedgerDetailsImp implements LedgerDetailsService {
         String sql = "INSERT INTO ledger_details (dvi, ngay, ma_xd, ten_xd, chung_loai, loai_phieu, so, theo_lenh_so, nhiem_vu, nguoi_nhan_hang, " +
                 "so_xe, chat_luong, phai_xuat, nhiet_do_tt, ty_trong, he_so_vcf, thuc_xuat, don_gia, thanh_tien, so_km, so_gio, dvvc," +
                 "loaixd_id, nguonnx_id, nguonnx_dvvc_id, denngay," +
-                "nvu_tcn_id,nvu_tructhuoc,quarter_id,phuongtien_id,nhiemvu_id,phuongtien_nvu_id,so_phut,tonkhotong_id,tonkho_id,ledger_id, tcn_id,import_unit_id,export_unit_id,loaigiobay,dur,dur_text,thuc_xuat_tk,dur_text_tk,nhiemvu_hanmuc_id,so_luong) " +
-                "VALUES (?, ?,?, ?, ?,?, ?, ?, ?, ?,?,?,?,?, ?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "nvu_tcn_id,nvu_tructhuoc,quarter_id,phuongtien_id,nhiemvu_id,phuongtien_nvu_id,so_phut,tonkhotong_id,tonkho_id,ledger_id, tcn_id,import_unit_id,export_unit_id,loaigiobay,dur,dur_text,thuc_xuat_tk,dur_text_tk,nhiemvu_hanmuc_id,so_luong,dur_text_md2,dur_text_tk2) " +
+                "VALUES (?, ?,?, ?, ?,?, ?, ?, ?, ?,?,?,?,?, ?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = QDatabase.conn.prepareStatement(sql);
             statement.setString(2, ledgerDetails.getNgay());
@@ -188,11 +188,13 @@ public class LedgerDetailsImp implements LedgerDetailsService {
             statement.setInt(39, ledgerDetails.getExport_unit_id());
             statement.setString(40, ledgerDetails.getLoaigiobay());
             statement.setObject(41, ledgerDetails.getDur());
-            statement.setString(42, ledgerDetails.getDur_text());
+            statement.setObject(42, ledgerDetails.getDur_text());
             statement.setInt(43, ledgerDetails.getThuc_xuat_tk());
-            statement.setString(44, ledgerDetails.getDur_text_tk());
+            statement.setObject(44, ledgerDetails.getDur_text_tk());
             statement.setInt(45, ledgerDetails.getNhiemvu_hanmuc_id());
             statement.setInt(46, ledgerDetails.getSoluong());
+            statement.setObject(47, ledgerDetails.getDur_text_md2());
+            statement.setObject(48, ledgerDetails.getDur_text_tk2());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -346,9 +348,11 @@ public class LedgerDetailsImp implements LedgerDetailsService {
                 int export_unit_id = resultSet.getInt("export_unit_id");
                 String loaigiobay = resultSet.getString("loaigiobay");
                 PGInterval dur = (PGInterval) resultSet.getObject("dur");
-                String durText = resultSet.getString("dur_text");
+                PGInterval durText = (PGInterval) resultSet.getObject("dur_text");
                 int thucXuatTk = resultSet.getInt("thuc_xuat_tk");
-                String durTextTk = resultSet.getString("dur_text_tk");
+                PGInterval durTextTk = (PGInterval) resultSet.getObject("dur_text_tk");
+                PGInterval durTextMD2 = (PGInterval) resultSet.getObject("dur_text_md2");
+                PGInterval durTextTK2 = (PGInterval) resultSet.getObject("dur_text_tk2");
                 int soluong = resultSet.getInt("so_luong");
 
                 LedgerDetails obj = new LedgerDetails();
@@ -394,6 +398,8 @@ public class LedgerDetailsImp implements LedgerDetailsService {
                 obj.setDur_text(durText);
                 obj.setThuc_xuat_tk(thucXuatTk);
                 obj.setDur_text_tk(durTextTk);
+                obj.setDur_text_md2(durTextMD2);
+                obj.setDur_text_tk2(durTextTK2);
                 obj.setSoluong(soluong);
                 result.add(obj);
             }

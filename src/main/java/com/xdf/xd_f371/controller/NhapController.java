@@ -20,9 +20,11 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.controlsfx.control.textfield.TextFields;
+import org.postgresql.util.PGInterval;
 
 import java.io.*;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -222,8 +224,12 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId());
         ledgerDetails.setImport_unit_id(cmb_dvn.getSelectionModel().getSelectedItem().getId());
         ledgerDetails.setExport_unit_id(cmb_dvvc.getSelectionModel().getSelectedItem().getId());
-        ledgerDetails.setDur_text("0.00:00:00");
-        ledgerDetails.setDur_text_tk("0.00:00:00");
+        try {
+            ledgerDetails.setDur_text(new PGInterval("0.00:00:00"));
+            ledgerDetails.setDur_text_tk(new PGInterval("0.00:00:00"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         ledgerDetails.setSoluong(Integer.parseInt(thucXuatTf.getText()));
         return ledgerDetails;
     }
