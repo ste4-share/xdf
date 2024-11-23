@@ -20,7 +20,4 @@ public class HanmucNhiemvuService {
     public List<HanmucNhiemvu> getAll(){
         return hanmucNhiemvuRepo.findAll();
     }
-    public String getGreeting() {
-        return "Welcome to Spring-JavaFX Application!";
-    }
 }

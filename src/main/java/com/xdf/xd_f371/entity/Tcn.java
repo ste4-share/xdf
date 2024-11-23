@@ -1,26 +1,27 @@
 package com.xdf.xd_f371.entity;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Table(name = "tcn")
+@Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Tcn {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "loaiphieu_id")
     private int loaiphieu_id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "concert")
     private int concert;
+    @Column(name = "status")
     private String status;
-    private String lp;
-
-    public Tcn() {
-    }
-
-    public Tcn(int id, int loaiphieu_id, String name, int concert, String status) {
-        this.id = id;
-        this.loaiphieu_id = loaiphieu_id;
-        this.name = name;
-        this.concert = concert;
-        this.status = status;
-    }
 }

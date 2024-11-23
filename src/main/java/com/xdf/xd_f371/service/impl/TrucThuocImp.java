@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.service.impl;
 
-import com.xdf.xd_f371.dto.TructhuocLoaiphieuDTO;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.model.QDatabase;
 import com.xdf.xd_f371.service.TrucThuocService;
@@ -170,66 +169,6 @@ public class TrucThuocImp implements TrucThuocService {
                 TrucThuoc trucThuoc = new TrucThuoc();
                 trucThuoc.setId(id);
                 trucThuoc.setName(name2);
-                trucThuoc.setType(type);
-
-                result.add(trucThuoc);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    @Override
-    public List<TrucThuoc> findByType(String name) {
-        QDatabase.getConnectionDB();
-        List<TrucThuoc> result = new ArrayList<>();
-        String sql = "select * from tructhuoc where type=?";
-        try {
-            PreparedStatement statement = QDatabase.conn.prepareStatement(sql);
-            statement.setString(1, name);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name2 = resultSet.getString("name");
-                String type = resultSet.getString("type");
-
-
-                TrucThuoc trucThuoc = new TrucThuoc();
-                trucThuoc.setId(id);
-                trucThuoc.setName(name2);
-                trucThuoc.setType(type);
-                result.add(trucThuoc);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    @Override
-    public List<TructhuocLoaiphieuDTO> getAllTTLP() {
-        QDatabase.getConnectionDB();
-        List<TructhuocLoaiphieuDTO> result = new ArrayList<>();
-        String sql = "SELECT tructhuoc_loaiphieu.id, tructhuoc_id, loaiphieu_id, loai_phieu.type, tructhuoc.name FROM tructhuoc_loaiphieu join loai_phieu on tructhuoc_loaiphieu.loaiphieu_id=loai_phieu.id join tructhuoc on tructhuoc_loaiphieu.tructhuoc_id=tructhuoc.id;";
-        try {
-            PreparedStatement statement = QDatabase.conn.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int tructhuoc_id = resultSet.getInt("tructhuoc_id");
-                int loaiphieu_id = resultSet.getInt("loaiphieu_id");
-                String name = resultSet.getString("name");
-                String type = resultSet.getString("type");
-
-
-                TructhuocLoaiphieuDTO trucThuoc = new TructhuocLoaiphieuDTO();
-                trucThuoc.setId(id);
-                trucThuoc.setLoaiphieu_id(loaiphieu_id);
-                trucThuoc.setTructhuoc_id(tructhuoc_id);
-                trucThuoc.setName(name);
                 trucThuoc.setType(type);
 
                 result.add(trucThuoc);

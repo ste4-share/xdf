@@ -59,17 +59,11 @@ public class NguonNXImp implements NguonNXService {
             while (resultSet.next()) {
                 int id = resultSet.getInt("nguonnx_id");
                 String ten = resultSet.getString("ten");
-                String ttname = resultSet.getString("ttname");
-                String loaiphieu = resultSet.getString("string_agg");
                 String createtime = resultSet.getString("createtime");
-                int ttid = resultSet.getInt("ttid");
                 NguonNx obj = new NguonNx();
                 obj.setId(id);
-                obj.setTructhuoc(ttname);
-                obj.setLoaiphieu(loaiphieu);
                 obj.setTen(ten);
                 obj.setCreatetime(createtime);
-                obj.setTructhuoc_id(ttid);
                 result.add(obj);
             }
         } catch (SQLException e) {

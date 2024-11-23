@@ -4,6 +4,7 @@ import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.ChungloaiMap;
 import com.xdf.xd_f371.model.MockDataMap;
+import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.TextToNumber;
@@ -29,6 +30,8 @@ import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.*;
 import org.controlsfx.control.textfield.TextFields;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.URL;
@@ -37,7 +40,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Component
 public class TonkhoController implements Initializable {
 
     public static Stage quarter_stage;
@@ -67,7 +70,8 @@ public class TonkhoController implements Initializable {
     @FXML
     private Label lb_end_date,lb_start_date;
 
-    private QuarterService quarterService = new QuarterImp();
+    @Autowired
+    private QuarterRepository quarterRepository;
     private TonKhoService tonKhoService = new TonkhoImp();
     private LoaiXdService loaiXdService = new LoaiXdImp();
     private TrucThuocService trucThuocService = new TrucThuocImp();
@@ -79,7 +83,7 @@ public class TonkhoController implements Initializable {
         pickTonKho = new SpotDto();
         findByTime = new Quarter();
         chungloaiXd = loaiXdService.getChungLoaiCount();
-        findByTime = quarterService.findByDatetime(LocalDate.now());
+        findByTime = quarterRepository.findByCurrentTime(LocalDate.now()).get();
         setQuarterListToCbb();
 
         setTonkhoTongToCol();
@@ -100,12 +104,12 @@ public class TonkhoController implements Initializable {
 
                 @Override
                 public Quarter fromString(String string) {
-                    return quarterService.findByName(string);
+                    return quarterRepository.findByName(string).get();
                 }
             });
 
             ObservableList<Quarter> observableArrayList =
-                    FXCollections.observableArrayList(quarterService.getAll());
+                    FXCollections.observableArrayList(quarterRepository.findAll());
             cbb_quarter.setItems(observableArrayList);
             cbb_quarter.getSelectionModel().select(findByTime);
             lb_end_date.setText(cbb_quarter.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));

@@ -1,11 +1,10 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.LedgerDetails;
+import com.xdf.xd_f371.repo.NhiemvuRepository;
 import com.xdf.xd_f371.service.LedgerDetailsService;
-import com.xdf.xd_f371.service.NhiemVuService;
 import com.xdf.xd_f371.service.PhuongTienService;
 import com.xdf.xd_f371.service.impl.LedgerDetailsImp;
-import com.xdf.xd_f371.service.impl.NhiemVuImp;
 import com.xdf.xd_f371.service.impl.PhuongTienImp;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.collections.FXCollections;
@@ -23,6 +22,8 @@ import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import java.io.*;
 import java.net.URL;
@@ -31,12 +32,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+@Controller
 public class ChiTietSCController implements Initializable {
 
     private LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
     private PhuongTienService phuongTienService = new PhuongTienImp();
-    private NhiemVuService nhiemVuService = new NhiemVuImp();
     private List<LedgerDetails> ls;
+
+    @Autowired
+    private NhiemvuRepository nhiemvuRepository;
+
     @FXML
     private VBox vb_root;
 
@@ -395,7 +400,7 @@ public class ChiTietSCController implements Initializable {
             lb_tcn.setText(ls.get(0).getNhiem_vu());
         }else {
             lb_dvn.setText(phuongTienService.findPhuongTienById(ls.get(0).getPhuongtien_id()).getName());
-            lb_tcn.setText(nhiemVuService.findById(ls.get(0).getNhiemvu_id()).getTen_nv());
+            lb_tcn.setText(nhiemvuRepository.findById(ls.get(0).getNhiemvu_id()).get().getTenNv());
         }
 
         lb_so.setText(ls.get(0).getSo());

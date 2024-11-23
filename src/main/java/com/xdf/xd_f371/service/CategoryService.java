@@ -19,7 +19,6 @@ public interface CategoryService {
     int update(Category category);
     int updateType(Category category);
     int delete(int category_id);
-    TitleDto getTitleById(int catalog);
     Category getTitleByttLpId(int tructhuocId, String type);
     Category findByCode(String code, String type);
     List<Category> getCategoryByTructhuocId(int tructhuocId);

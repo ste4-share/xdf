@@ -39,6 +39,7 @@
                       <TableColumn fx:id="tennv" prefWidth="75.0" text="Nhiệm vụ" />
                         <TableColumn fx:id="ctnv" prefWidth="144.0" text="Chi tiết nhiệm vụ" />
                         <TableColumn fx:id="lnv" prefWidth="144.0" text="Loại nhiệm vụ" />
+                        <TableColumn fx:id="khoi" prefWidth="144.0" text="Loại nhiệm vụ" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

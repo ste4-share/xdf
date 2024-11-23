@@ -1,22 +1,25 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Quarter;
-import com.xdf.xd_f371.service.QuarterService;
-import com.xdf.xd_f371.service.impl.QuarterImp;
+import com.xdf.xd_f371.repo.QuarterRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.Year;
 import java.util.ResourceBundle;
 
+@Component
 public class QuyController implements Initializable {
 
-    private QuarterService quarterService = new QuarterImp();
+    @Autowired
+    QuarterRepository quarterRepository;
 
     @FXML
     private TextArea tarea_note;
@@ -37,9 +40,8 @@ public class QuyController implements Initializable {
         quarter.setStart_date(dp_startdate.getValue());
         quarter.setEnd_date(dp_enddate.getValue());
         int year = Year.now().getValue();
-
         quarter.setYear(String.valueOf(year));
-        quarterService.create(quarter);
+        quarterRepository.save(quarter);
     }
 
     @FXML

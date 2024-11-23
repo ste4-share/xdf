@@ -6,24 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "nguon_nx")
+@Table(name = "loai_nhiemvu")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NguonNx {
+public class LoaiNhiemVu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "ten")
-    private String ten;
-    @Column(name = "createtime")
-    private String createtime;
+    @Column(name = "task_name")
+    private String task_name;
 
-    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
-    List<HanmucNhiemvu> hanmucNhiemvuList;
-
+    @OneToMany(mappedBy = "loaiNhiemVu", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<NhiemVu> nhiemVuList = new ArrayList<>();
 }

@@ -4,6 +4,9 @@ import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
+import com.xdf.xd_f371.repo.ChitietNhiemvuRepo;
+import com.xdf.xd_f371.repo.HanmucNhiemvuRepo;
+import com.xdf.xd_f371.repo.NhiemvuRepository;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +23,7 @@ import javafx.util.StringConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.textfield.TextFields;
 import org.postgresql.util.PGInterval;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -45,8 +49,8 @@ public class XuatController extends CommonFactory implements Initializable {
     private static List<LedgerDetails> ls_socai;
     private static List<Ledger> ledgerList = new ArrayList<>();
     private static PhuongTienNhiemVu phuongTienNhiemVu_selected = new PhuongTienNhiemVu();
-    private static List<ChiTietNhiemVuDTO> chiTietNhiemVuDTO_list = new ArrayList<>();
-    private static ChiTietNhiemVuDTO nhiemVu_selected=  new ChiTietNhiemVuDTO();
+    private static List<NhiemVuDto> chiTietNhiemVuDTO_list = new ArrayList<>();
+    private static NhiemVuDto nhiemVu_selected=  new ChiTietNhiemVuDTO();
 
     @FXML
     private TextField so_tf_k,nguoinhan_tf_k,tcx_tf_k,lenhso_tf_k,soxe_tf_k,phaixuat_tf_k,nhietdothucte_tf_k,vcf_tf_k,tytrong_tf_k,thucxuat_tf_k,
@@ -84,13 +88,18 @@ public class XuatController extends CommonFactory implements Initializable {
     private TableColumn<LedgerDetails, String> col_stt_nv, col_tenxd_nv, col_dongia_nv,col_phaixuat_nv,col_nhietdo_nv,
             col_tytrong_nv,col_vcf_nv, col_thucxuat_nv, col_thanh_tien_nv;
 
+    @Autowired
+    private ChitietNhiemvuRepo chitietNhiemvuRepo;
+    @Autowired
+    private HanmucNhiemvuRepo hanmucNhiemvuRepo;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ls_socai = new ArrayList<>();
 //        ledgerList = DashboardController.ledgerList;
         sogio_md_tf_nv.setText("00");
         sophut_md_tf_nv.setText("00");
-        chiTietNhiemVuDTO_list = nhiemVuService.getNvAndCtnv();
+        chiTietNhiemVuDTO_list = chitietNhiemvuRepo.findAllDtoBy();
         lp_id_pre = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_XUAT);
         ls_tcn = tcnService.getAllByBillTypeId(lp_id_pre.getId());
         tabKhac_assignment();
@@ -625,10 +634,10 @@ public class XuatController extends CommonFactory implements Initializable {
     private void setUpForSearchCompleteTion(){
         List<String> search_arr = new ArrayList<>();
         for(int i = 0; i< chiTietNhiemVuDTO_list.size(); i++){
-            if (chiTietNhiemVuDTO_list.get(i).getChiTietNhiemVu()==null){
-                search_arr.add(chiTietNhiemVuDTO_list.get(i).getNhiemvu());
+            if (chiTietNhiemVuDTO_list.get(i).getChitiet()==null){
+                search_arr.add(chiTietNhiemVuDTO_list.get(i).getTen_nv());
             }else{
-                search_arr.add(chiTietNhiemVuDTO_list.get(i).getNhiemvu() + " - "+chiTietNhiemVuDTO_list.get(i).getChiTietNhiemVu());
+                search_arr.add(chiTietNhiemVuDTO_list.get(i).getTen_nv() + " - "+chiTietNhiemVuDTO_list.get(i).getChitiet());
             }
         }
         TextFields.bindAutoCompletion(tcx_tf_nhiemvu, t -> {
@@ -656,8 +665,8 @@ public class XuatController extends CommonFactory implements Initializable {
         String[] arr = splitAssignment(text);
         if (arr[1]==null){
             for (int i = 0; i< chiTietNhiemVuDTO_list.size(); i++){
-                ChiTietNhiemVuDTO chiTietNhiemVuDTO = chiTietNhiemVuDTO_list.get(i);
-                if (arr[0].equals(chiTietNhiemVuDTO.getNhiemvu())){
+                NhiemVuDto chiTietNhiemVuDTO = chiTietNhiemVuDTO_list.get(i);
+                if (arr[0].equals(chiTietNhiemVuDTO.getTen_nv())){
                     nhiemVu_selected = chiTietNhiemVuDTO;
                     return true;
                 }
@@ -667,9 +676,9 @@ public class XuatController extends CommonFactory implements Initializable {
                 throw new RuntimeException("Chitietnv contains dash  - ");
             }else {
                 for (int i = 0; i< chiTietNhiemVuDTO_list.size(); i++){
-                    ChiTietNhiemVuDTO chiTietNhiemVuDTO = chiTietNhiemVuDTO_list.get(i);
-                    if (arr[0].equals(chiTietNhiemVuDTO.getNhiemvu())){
-                        if (arr[1].equals(chiTietNhiemVuDTO.getChiTietNhiemVu())){
+                    NhiemVuDto chiTietNhiemVuDTO = chiTietNhiemVuDTO_list.get(i);
+                    if (arr[0].equals(chiTietNhiemVuDTO.getTen_nv())){
+                        if (arr[1].equals(chiTietNhiemVuDTO.getChitiet())){
                             nhiemVu_selected = chiTietNhiemVuDTO;
                             return true;
                         }
@@ -694,7 +703,7 @@ public class XuatController extends CommonFactory implements Initializable {
     private void setPhuongtienNhiemVu(){
         phuongTien_buf = cbb_dvn_nv.getValue();
         phuongTienNhiemVu_selected.setPhuongtien_id(phuongTien_buf.getId());
-        phuongTienNhiemVu_selected.setNhiemvu_id(nhiemVu_selected.getId());
+        phuongTienNhiemVu_selected.setNhiemvu_id(nhiemVu_selected.getNv_id());
     }
     //tab nhiemvu
     private void setTenXDToCombobox_tab_nv(){
@@ -827,8 +836,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
 
     private int getNhiemvuhanmucId(){
-        HanmucNhiemvu hanmucNhiemvu = nhiemVuService.getHanmucNhiemvu(cbb_dvx_nv.getValue().getId(),nhiemVu_selected.getCtnv_id(),DashboardController.findByTime.getId());
-        return hanmucNhiemvu.getId();
+        return hanmucNhiemvuRepo.findByUniqueIds(cbb_dvx_nv.getValue().getId(),nhiemVu_selected.getCtnv_id(),DashboardController.findByTime.getId()).get().getId();
     }
 
     private String getStrInterval(){

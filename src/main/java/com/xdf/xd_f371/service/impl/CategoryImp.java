@@ -307,36 +307,6 @@ public class CategoryImp implements CategoryService {
     }
 
     @Override
-    public TitleDto getTitleById(int catalog) {
-        QDatabase.getConnectionDB();
-        String SQL_SELECT = "Select * from category where id=?";
-
-        // auto close connection and preparedStatement
-        try {
-            PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
-            preparedStatement.setInt(1, catalog);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String headerLv1 = resultSet.getString("header_lv1");
-                String headerLv2 = resultSet.getString("header_lv2");
-                String headerLv3 = resultSet.getString("header_lv3");
-                TitleDto titleDto = new TitleDto();
-                titleDto.setLv1(headerLv1);
-                titleDto.setLv2(headerLv2);
-                titleDto.setLv3(headerLv3);
-                return titleDto;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    @Override
     public Category getTitleByttLpId(int tructhuoc_id, String type) {
         QDatabase.getConnectionDB();
 

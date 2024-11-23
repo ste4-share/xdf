@@ -37,4 +37,13 @@ public class HanmucNhiemvu implements Serializable {
     private String ct_md;
     @Column(name = "consumpt")
     private int consumpt;
+
+    @ManyToOne
+    @JoinColumn(name = "unit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private NguonNx nguonNx;
+
+    @ManyToOne
+    @JoinColumn(name = "nhiemvu_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private NhiemVu nhiemVu;
+
 }

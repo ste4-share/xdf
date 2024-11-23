@@ -6,14 +6,18 @@ import com.xdf.xd_f371.dto.QuantityByTTDTO;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.ChungLoaiModel;
 import com.xdf.xd_f371.model.MucGiaEnum;
+import com.xdf.xd_f371.repo.NhiemvuRepository;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.Common;
 import javafx.scene.control.Alert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CommonFactory {
     protected LoaiPhieuService loaiPhieuService = new LoaiPhieuImp();
     protected LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
@@ -29,7 +33,7 @@ public class CommonFactory {
     protected NguonNXService nguonNXService = new NguonNXImp();
     protected TcnService tcnService = new TcnImp();
     protected LedgerService ledgerService = new LedgerImp();
-    protected NhiemVuService nhiemVuService = new NhiemVuImp();
+
     protected PhuongTienService phuongTienService = new PhuongTienImp();
     protected TrucThuocService trucThuocService = new TrucThuocImp();
 

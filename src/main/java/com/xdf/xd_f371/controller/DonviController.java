@@ -41,7 +41,6 @@ public class DonviController implements Initializable {
     private NguonNXService nguonNXService = new NguonNXImp();
     private TcnService tcnService = new TcnImp();
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedUnit = new NguonNx();

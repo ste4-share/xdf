@@ -22,8 +22,6 @@ import java.util.ResourceBundle;
 
 public class PetroleumController implements Initializable {
 
-    private static List<LoaiXangDau> lxd_ls;
-
     @FXML
     TableView<LoaiXangDau> petroleum_table;
     @FXML

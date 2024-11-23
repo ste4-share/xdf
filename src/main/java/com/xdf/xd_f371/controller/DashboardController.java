@@ -1,13 +1,13 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
-import com.xdf.xd_f371.XdF371Application;
 import com.xdf.xd_f371.dto.LichsuXNK;
 import com.xdf.xd_f371.dto.TTPhieuDto;
 import com.xdf.xd_f371.dto.TonKho;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.AssignTypeEnum;
 import com.xdf.xd_f371.model.TTPhieuModel;
+import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.TextToNumber;
@@ -42,8 +42,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.textfield.TextFields;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -113,7 +112,7 @@ public class DashboardController implements Initializable {
     private LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
     private LichsuNXKService lichsuNXKService = new LichsuNXKImp();
     private LedgerService ledgerService = new LedgerImp();
-    private QuarterService quarterService = new QuarterImp();
+
     private LoaiXdService loaiXdService = new LoaiXdImp();
     private MucgiaService mucgiaService = new MucgiaImp();
     public static Quarter findByTime;
@@ -122,6 +121,9 @@ public class DashboardController implements Initializable {
     private HBox dvi_menu,nxt_menu, loai_xd_menu, haohut_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu;
     @FXML
     private AnchorPane main_menu;
+
+    @Autowired
+    private QuarterRepository quarterRepository;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -187,7 +189,7 @@ public class DashboardController implements Initializable {
     }
 
     private void getCurrentQuarter(){
-        findByTime = quarterService.findByDatetime(LocalDate.now());
+        findByTime = quarterRepository.findByCurrentTime(LocalDate.now()).get();
         lb_to.setTextFill(Color.rgb(33, 12, 162));
         lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         lb_from.setTextFill(Color.rgb(33, 12, 162));

@@ -15,5 +15,4 @@ public class QuantityByTTDTO {
         this.ttname = ttname;
         this.sum = sum;
     }
-
 }
