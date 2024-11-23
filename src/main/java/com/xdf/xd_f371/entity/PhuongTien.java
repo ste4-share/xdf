@@ -35,4 +35,8 @@ public class PhuongTien {
     @ManyToOne
     @JoinColumn(name = "loaiphuongtien_id" , referencedColumnName = "id", insertable = false, updatable = false)
     private LoaiPhuongTien loaiPhuongTien;
+
+    @ManyToOne
+    @JoinColumn(name = "nguonnx_id" , referencedColumnName = "id", insertable = false, updatable = false)
+    private NguonNx nguonNx;
 }

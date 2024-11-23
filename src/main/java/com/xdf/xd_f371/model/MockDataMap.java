@@ -3,25 +3,30 @@ package com.xdf.xd_f371.model;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.QuantityByTTDTO;
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.Common;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class MockDataMap {
 
-    private static LoaiXdService loaiXdService = new LoaiXdImp();
     private static CategoryService categoryService = new CategoryImp();
     private static TonKhoService tonKhoService = new TonkhoImp();
     private static InvReportDetailService invReportDetailService = new invReportDetailImp();
     private static MucgiaService mucgiaService = new MucgiaImp();
     private static LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
+    @Autowired
+    private static LoaiXangDauRepo loaiXangDauRepo;
 
     public static void initInventoryMap(){
         invReportDetailService.deleteAll();
-        List<LoaiXangDau> loaiXangDauList = loaiXdService.getAll();
+        List<LoaiXangDau> loaiXangDauList = loaiXangDauRepo.findAll();
         List<Category> categories = categoryService.getAll();
         try {
             int quarter_id = DashboardController.findByTime.getId();
@@ -55,7 +60,7 @@ public class MockDataMap {
                     Map<String, String> titleMap = ChungloaiMap.getMapChungloai();
                     invReportDetail.setTitle_lxd_lv1(titleMap.get(loaiXangDauList.get(i).getChungloai()));
                     invReportDetail.setTitle_lxd_lv2(titleMap.get(loaiXangDauList.get(i).getType()));
-                    invReportDetail.setTitle_lxd_lv3(titleMap.get(loaiXangDauList.get(i).getRtype()));
+                    invReportDetail.setTitle_lxd_lv3(titleMap.get(loaiXangDauList.get(i).getRType()));
                     invReportDetail.setXd_id(loaiXangDauList.get(i).getId());
                     invReportDetail.setQuarter_id(quarter_id);
                     invReportDetail.setTitle_id(catelos.getId());
@@ -71,7 +76,7 @@ public class MockDataMap {
         int tondk_nvdx_mock = 20000;
         int tondk_sscd_mock = 20000;
         int tondk_sum_mock = tondk_sscd_mock+tondk_nvdx_mock;
-        for (LoaiXangDau loaiXangDau : loaiXdService.getAll()) {
+        for (LoaiXangDau loaiXangDau : loaiXangDauRepo.findAll()) {
 
             Inventory inventory = new Inventory();
             inventory.setPetro_id(loaiXangDau.getId());

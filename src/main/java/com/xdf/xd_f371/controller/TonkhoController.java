@@ -4,6 +4,7 @@ import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.ChungloaiMap;
 import com.xdf.xd_f371.model.MockDataMap;
+import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.repo.TructhuocRepo;
 import com.xdf.xd_f371.service.*;
@@ -49,7 +50,6 @@ public class TonkhoController implements Initializable {
     private static List<SpotDto> tkt;
     private static Quarter findByTime;
     public static SpotDto pickTonKho = new SpotDto();
-    private static Map<String, String> chungloaiXd = new HashMap<>();
     @FXML
     public TableView<SpotDto> tb_tonkho;
     @FXML
@@ -75,8 +75,9 @@ public class TonkhoController implements Initializable {
     private QuarterRepository quarterRepository;
     @Autowired
     private TructhuocRepo tructhuocRepo;
+    @Autowired
+    private LoaiXangDauRepo loaiXangDauRepo;
     private TonKhoService tonKhoService = new TonkhoImp();
-    private LoaiXdService loaiXdService = new LoaiXdImp();
     private MucgiaService mucgiaService = new MucgiaImp();
 
     @Override
@@ -84,7 +85,6 @@ public class TonkhoController implements Initializable {
         tkt = new ArrayList<>();
         pickTonKho = new SpotDto();
         findByTime = new Quarter();
-        chungloaiXd = loaiXdService.getChungLoaiCount();
         findByTime = quarterRepository.findByCurrentTime(LocalDate.now()).get();
         setQuarterListToCbb();
 
@@ -192,7 +192,7 @@ public class TonkhoController implements Initializable {
         List<Inventory> inventories = tonKhoService.getAllInventory(DashboardController.findByTime.getId());
         for(int i =0; i< inventories.size(); i++){
             Inventory inventory = inventories.get(i);
-            LoaiXangDau loaiXangDau = loaiXdService.findLoaiXdByID_non(inventory.getPetro_id());
+            LoaiXangDau loaiXangDau = loaiXangDauRepo.findById(inventory.getPetro_id()).orElse(null);
 
 
             inventory.setPetroleumName(loaiXangDau.getTenxd());
@@ -336,7 +336,7 @@ public class TonkhoController implements Initializable {
         int root_num= 7;
         int cell_num = 2;
         for (String s : ls_map) {
-            List<LoaiXangDau> loaiXangDauList = loaiXdService.findLoaiXdByType(s);
+            List<LoaiXangDau> loaiXangDauList = loaiXangDauRepo.findByType(s);
             setCEll(sheet, ChungloaiMap.type_Str_detail().get(s), root_num,cell_num);
             int rowNum = root_num+2;
             for (int i = 0; i<loaiXangDauList.size(); i++){

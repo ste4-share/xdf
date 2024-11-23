@@ -6,7 +6,9 @@ import com.xdf.xd_f371.dto.QuantityByTTDTO;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.ChungLoaiModel;
 import com.xdf.xd_f371.model.MucGiaEnum;
-import com.xdf.xd_f371.repo.NhiemvuRepository;
+import com.xdf.xd_f371.repo.LedgerDetailRepo;
+import com.xdf.xd_f371.repo.LedgersRepo;
+import com.xdf.xd_f371.repo.MucGiaRepo;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.Common;
@@ -20,10 +22,8 @@ import java.util.List;
 @Component
 public class CommonFactory {
     protected LoaiPhieuService loaiPhieuService = new LoaiPhieuImp();
-    protected LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
     protected CategoryService categoryService = new CategoryImp();
     protected InvReportDetailService invReportDetailService = new invReportDetailImp();
-    protected LoaiXdService loaiXdService = new LoaiXdImp();
     protected TonKhoService tonKhoService = new TonkhoImp();
     protected MucgiaService mucgiaService = new MucgiaImp();
     protected LichsuNXKService lichsuNXKService = new LichsuNXKImp();
@@ -32,14 +32,18 @@ public class CommonFactory {
     protected static Tcn pre_createNewTcn = new Tcn();
     protected NguonNXService nguonNXService = new NguonNXImp();
     protected TcnService tcnService = new TcnImp();
-    protected LedgerService ledgerService = new LedgerImp();
 
-    protected PhuongTienService phuongTienService = new PhuongTienImp();
     protected TrucThuocService trucThuocService = new TrucThuocImp();
+    @Autowired
+    protected LedgerDetailRepo ledgerDetailRepo;
+    @Autowired
+    protected LedgersRepo ledgersRepo;
+    @Autowired
+    protected MucGiaRepo mucGiaRepo;
 
     protected void updateAllRowInv(LedgerDetails ledgerDetails){
         Inventory inventory = tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id());
-        Category category = categoryService.getTitleByttLpId(ledgerDetails.getTructhuoc_id(), ledgerDetails.getLoai_phieu());
+        Category category = categoryService.getTitleByttLpId(ledgerDetails.getNhiemvu_id(), ledgerDetails.getLoai_phieu());
         updateTck_forReport(ChungLoaiModel.NVDX_a.getNameChungloai(),ChungLoaiModel.TCK_a.getNameChungloai(), ledgerDetails, inventory.getTcK_nvdx());
         updateTck_forReport(ChungLoaiModel.SSCD_a.getNameChungloai(),ChungLoaiModel.TCK_a.getNameChungloai(), ledgerDetails, inventory.getTck_sscd());
         if (category!=null){
@@ -89,7 +93,7 @@ public class CommonFactory {
         mucgia.setPrice(ledgerDetails.getDon_gia());
         mucgia.setAmount(quantity);
         mucgia.setQuarter_id(ledgerDetails.getQuarter_id());
-        mucgia.setItem_id(ledgerDetails.getXd().getId());
+        mucgia.setItem_id(ledgerDetails.getLoaixd_id());
         mucgia.setStatus(MucGiaEnum.IN_STOCK.getStatus());
         mucgia.setAssign_type_id(DashboardController.assignType.getId());
         mucgia.setInventory_id(inventory.getId());

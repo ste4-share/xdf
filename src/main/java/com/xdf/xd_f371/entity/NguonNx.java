@@ -18,12 +18,17 @@ public class NguonNx {
     private String ten;
     @Column(name = "createtime")
     private String createtime;
+    @Column(name = "status")
+    private String status;
 
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
     List<HanmucNhiemvu> hanmucNhiemvuList;
 
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
     List<DonViTrucThuoc> donViTrucThuocs;
+
+    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
+    List<PhuongTien> phuongTiens;
 
     public NguonNx(int id, String ten, String createtime) {
         this.id = id;

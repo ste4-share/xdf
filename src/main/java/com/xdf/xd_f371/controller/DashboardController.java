@@ -7,6 +7,7 @@ import com.xdf.xd_f371.dto.TonKho;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.AssignTypeEnum;
 import com.xdf.xd_f371.model.TTPhieuModel;
+import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
@@ -111,9 +112,7 @@ public class DashboardController implements Initializable {
     @FXML
     private LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
     private LichsuNXKService lichsuNXKService = new LichsuNXKImp();
-    private LedgerService ledgerService = new LedgerImp();
 
-    private LoaiXdService loaiXdService = new LoaiXdImp();
     private MucgiaService mucgiaService = new MucgiaImp();
     public static Quarter findByTime;
 
@@ -124,12 +123,14 @@ public class DashboardController implements Initializable {
 
     @Autowired
     private QuarterRepository quarterRepository;
+    @Autowired
+    private LedgersRepo ledgersRepo;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ttp_ls = new ArrayList<>();
         lichsuXNKS = new ArrayList<>();
-        ledgerList = ledgerService.getAll();
+        ledgerList = ledgersRepo.findAll();
         assignType = mucgiaService.findByName(AssignTypeEnum.NVDX.getName());
 //        getDataToChart(root_inventory);
         getCurrentQuarter();
@@ -377,8 +378,9 @@ public class DashboardController implements Initializable {
         nhiemvu_menu.setStyle(resetStyle());
 
         try {
-            HBox nxt_menu_bar = FXMLLoader.load(getClass().getResource("../tonkho.fxml"));
-            borderpane_base.setCenter(nxt_menu_bar);
+            HBox hBox = (HBox) getNodeBySource("tonkho.fxml");
+            borderpane_base.setCenter(hBox);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -396,8 +398,8 @@ public class DashboardController implements Initializable {
         tonkho_menu.setStyle(resetStyle());
         nhiemvu_menu.setStyle(resetStyle());
         try {
-            VBox lxd_menu_bar = FXMLLoader.load(getClass().getResource("../petroleum_menu.fxml"));
-            borderpane_base.setCenter(lxd_menu_bar);
+            VBox vBox = (VBox) getNodeBySource("petroleum_menu.fxml");
+            borderpane_base.setCenter(vBox);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -415,14 +417,20 @@ public class DashboardController implements Initializable {
         nxt_menu.setStyle(resetStyle());
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource("nhiemvu.fxml"));
-            fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
-            borderpane_base.setCenter(fxmlLoader.load());
+            HBox hBox = (HBox) getNodeBySource("nhiemvu.fxml");
+            borderpane_base.setCenter(hBox);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
+
+    private Node getNodeBySource(String source) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
+        fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
+        return fxmlLoader.load();
+    }
+
     @FXML
     public void haohut_menu_action(MouseEvent event) {
         String cssLayout =
@@ -449,8 +457,8 @@ public class DashboardController implements Initializable {
         tonkho_menu.setStyle(resetStyle());
         nhiemvu_menu.setStyle(resetStyle());
         try {
-            HBox norm_menu = FXMLLoader.load(getClass().getResource("../norm_menu.fxml"));
-            borderpane_base.setCenter(norm_menu);
+            HBox hBox = (HBox) getNodeBySource("norm_menu.fxml");
+            borderpane_base.setCenter(hBox);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -467,8 +475,8 @@ public class DashboardController implements Initializable {
         nxt_menu.setStyle(resetStyle());
         nhiemvu_menu.setStyle(resetStyle());
         try {
-            VBox dvi_menu_bar = FXMLLoader.load(getClass().getResource("../donvi_menu.fxml"));
-            borderpane_base.setCenter(dvi_menu_bar);
+            VBox vBox = (VBox) getNodeBySource("donvi_menu.fxml");
+            borderpane_base.setCenter(vBox);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

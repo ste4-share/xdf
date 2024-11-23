@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface NguonNxRepo extends JpaRepository<NguonNx,Integer> {
     List<NguonNx> findByTen(String ten);
+    List<NguonNx> findByStatus(String status);
 }

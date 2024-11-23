@@ -4,6 +4,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
+import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.collections.FXCollections;
@@ -62,6 +63,8 @@ public class NhapController extends CommonFactory implements Initializable {
 
     @Autowired
     private NguonNxRepo nguonNxRepo;
+    @Autowired
+    private LoaiXangDauRepo loaiXangDauRepo;
 
 
     @Override
@@ -148,10 +151,10 @@ public class NhapController extends CommonFactory implements Initializable {
 
             @Override
             public LoaiXangDau fromString(String s) {
-                return loaiXdService.findLoaiXdByID_non(lxd_id_combobox_selected);
+                return loaiXangDauRepo.findById(lxd_id_combobox_selected).orElse(null);
             }
         });
-        cmb_tenxd.setItems(FXCollections.observableList(loaiXdService.getAll()));
+        cmb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findAll()));
         cmb_tenxd.getSelectionModel().selectFirst();
         cmb_tenxd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -221,9 +224,6 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
         ledgerDetails.setThanh_tien(Long.parseLong(thucXuatTf.getText()) * Long.parseLong(donGiaTf.getText()));
         ledgerDetails.setDvvc(cmb_dvvc.getValue().getTen());
-        ledgerDetails.setXd(cmb_tenxd.getSelectionModel().getSelectedItem());
-        ledgerDetails.setDvvc_obj(cmb_dvvc.getValue());
-        ledgerDetails.setDvn_obj(cmb_dvn.getSelectionModel().getSelectedItem());
         ledgerDetails.setDenngay(denngay.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
         ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId());
@@ -240,7 +240,7 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void fillDataToTextField(LedgerDetails ledgerDetails){
-        cmb_tenxd.getSelectionModel().select(ledgerDetails.getXd());
+        cmb_tenxd.getSelectionModel().select(loaiXangDauRepo.findById(ledgerDetails.getLoaixd_id()).orElse(null));
         donGiaTf.setText(String.valueOf(ledgerDetails.getDon_gia()));
         phaiXuatTf.setText(String.valueOf(ledgerDetails.getPhai_xuat()));
         thucXuatTf.setText(String.valueOf(ledgerDetails.getThuc_xuat()));
@@ -285,10 +285,9 @@ public class NhapController extends CommonFactory implements Initializable {
             if (!ls_socai.isEmpty()){
                 try {
                     createNewLedger();
-                    Ledger l = ledgerService.findByBillId(DashboardController.findByTime.getId(), Integer.parseInt(soTf.getText()));
+                    Ledger l = ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.findByTime.getId(), Integer.parseInt(soTf.getText()));
                     ls_socai.forEach(soCaiDto -> {
                         soCaiDto.setSo_km(0);
-                        soCaiDto.setSo_gio(0);
                         if (l!=null){
                             soCaiDto.setLedger_id(l.getId());
                         }else{
@@ -296,12 +295,11 @@ public class NhapController extends CommonFactory implements Initializable {
                         }
                         // add new so_cai
                         TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getExport_unit_id(), 2);
-                        soCaiDto.setTructhuoc_id(trucThuoc.getId());
                         saveLichsunxk(soCaiDto);
                         saveMucGia(soCaiDto);
                         recognized_tcn();
                         soCaiDto.setTcn_id(pre_createNewTcn.getId());
-                        ledgerDetailsService.create(soCaiDto);
+                        ledgerDetailRepo.save(soCaiDto);
                         updateAllRowInv(soCaiDto);
                     });
                 } catch (Exception e) {
@@ -331,7 +329,7 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void saveMucGia(LedgerDetails ledgerDetails){
-        Mucgia mucgia_existed = mucgiaService.findMucgiaByGia(ledgerDetails.getXd().getId(), ledgerDetails.getQuarter_id(), ledgerDetails.getDon_gia(),DashboardController.assignType.getId());
+        Mucgia mucgia_existed = mucgiaService.findMucgiaByGia(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id(), ledgerDetails.getDon_gia(),DashboardController.assignType.getId());
         if (mucgia_existed==null){
             createNewMucgia(ledgerDetails, ledgerDetails.getThuc_xuat());
         } else {
@@ -356,7 +354,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setEnd_date(java.sql.Date.valueOf(denngay.getValue()));
         ledger.setStatus("ACTIVE");
         ledger.setBillType_id(loaiPhieu.getId());
-        ledgerService.createNew(ledger);
+        ledgersRepo.save(ledger);
     }
 
 

@@ -2,17 +2,12 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.dto.NormDto;
-import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.NguonNx;
-import com.xdf.xd_f371.model.LoaiPTEnum;
+import com.xdf.xd_f371.model.StatusEnum;
 import com.xdf.xd_f371.repo.DinhMucRepo;
 import com.xdf.xd_f371.repo.LoaiPhuongTienRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.repo.PhuongtienRepo;
-import com.xdf.xd_f371.service.NguonNXService;
-import com.xdf.xd_f371.service.PhuongTienService;
-import com.xdf.xd_f371.service.impl.NguonNXImp;
-import com.xdf.xd_f371.service.impl.PhuongTienImp;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,7 +30,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 @Component
@@ -52,8 +46,6 @@ public class DinhMucPhuongTienController implements Initializable {
     RadioButton xe_radio,may_radio,mb_radio;
     @FXML
     TableColumn<NormDto, String> xmt_name,type_name,quantity,km,h,md,tk,createtime,chungloaipt;
-
-    private PhuongTienService phuongTienService = new PhuongTienImp();
 
     @Autowired
     private DinhMucRepo dinhMucRepo;
@@ -73,7 +65,7 @@ public class DinhMucPhuongTienController implements Initializable {
     }
 
     private void initNguonnxCbb() {
-        units_cbb.setItems(FXCollections.observableList(phuongTienService.getIdNguonnx()));
+        units_cbb.setItems(FXCollections.observableList(nguonNxRepo.findByStatus(StatusEnum.ROOT_STATUS.getName())));
         units_cbb.setConverter(new StringConverter<NguonNx>() {
             @Override
             public String toString(NguonNx nguonNx) {

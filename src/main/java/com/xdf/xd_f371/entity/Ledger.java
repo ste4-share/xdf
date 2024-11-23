@@ -1,39 +1,35 @@
 package com.xdf.xd_f371.entity;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+@Entity
+@Table(name = "ledgers")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ledger {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "quarter_id")
     private int quarter_id;
+    @Column(name = "bill_id")
     private int bill_id;
+    @Column(name = "bill_type_id")
     private int billType_id;
+    @Column(name = "amount")
     private int amount;
+    @Column(name = "from_date")
     private Date from_date;
+    @Column(name = "end_date")
     private Date end_date;
+    @Column(name = "status")
     private String status;
 
-    public Ledger() {
-    }
-
-    public int getBillType_id() {
-        return billType_id;
-    }
-
-    public void setBillType_id(int billType_id) {
-        this.billType_id = billType_id;
-    }
-
-    public Ledger(int id, int quarter_id, int bill_id, int amount, Date from_date, Date end_date, String status) {
-        this.id = id;
-        this.quarter_id = quarter_id;
-        this.bill_id = bill_id;
-        this.amount = amount;
-        this.from_date = from_date;
-        this.end_date = end_date;
-        this.status = status;
-    }
 }

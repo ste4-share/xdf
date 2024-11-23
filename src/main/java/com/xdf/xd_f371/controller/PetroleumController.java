@@ -2,8 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.LoaiXangDau;
 import com.xdf.xd_f371.model.ChungloaiMap;
-import com.xdf.xd_f371.service.LoaiXdService;
-import com.xdf.xd_f371.service.impl.LoaiXdImp;
+import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,12 +13,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
+@Component
 public class PetroleumController implements Initializable {
 
     @FXML
@@ -31,7 +32,8 @@ public class PetroleumController implements Initializable {
     @FXML
     TextField petro_search;
 
-    private LoaiXdService loaiXdService = new LoaiXdImp();
+    @Autowired
+    private LoaiXangDauRepo loaiXangDauRepo;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -41,7 +43,7 @@ public class PetroleumController implements Initializable {
 
     private void fillTypePetroToCbb() {
         List<String> str_ls = new ArrayList<>();
-        loaiXdService.getAllType().forEach(x -> str_ls.add(x+" | "+ChungloaiMap.getMapChungloai().get(x)));
+        loaiXangDauRepo.findAllByChungloai().forEach(x -> str_ls.add(x+" | "+ChungloaiMap.getMapChungloai().get(x)));
 
         chungloai_cbb.setItems(FXCollections.observableList(str_ls));
         chungloai_cbb.setConverter(new StringConverter<String>() {
@@ -61,7 +63,7 @@ public class PetroleumController implements Initializable {
         fillDataToTable(param);
     }
     private void fillDataToTable(String chungloai) {
-        petroleum_table.setItems(FXCollections.observableList(loaiXdService.findLoaiXdByChungloai(chungloai)));
+        petroleum_table.setItems(FXCollections.observableList(loaiXangDauRepo.findByChungloai(chungloai)));
         setFatoryForPetroTb();
     }
     private void setFatoryForPetroTb(){

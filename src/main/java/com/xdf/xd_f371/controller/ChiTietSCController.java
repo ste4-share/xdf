@@ -1,11 +1,9 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.LedgerDetails;
+import com.xdf.xd_f371.repo.LedgerDetailRepo;
 import com.xdf.xd_f371.repo.NhiemvuRepository;
-import com.xdf.xd_f371.service.LedgerDetailsService;
-import com.xdf.xd_f371.service.PhuongTienService;
-import com.xdf.xd_f371.service.impl.LedgerDetailsImp;
-import com.xdf.xd_f371.service.impl.PhuongTienImp;
+import com.xdf.xd_f371.repo.PhuongtienRepo;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,12 +33,14 @@ import java.util.ResourceBundle;
 @Controller
 public class ChiTietSCController implements Initializable {
 
-    private LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
-    private PhuongTienService phuongTienService = new PhuongTienImp();
     private List<LedgerDetails> ls;
 
     @Autowired
+    private LedgerDetailRepo ledgerDetailRepo;
+    @Autowired
     private NhiemvuRepository nhiemvuRepository;
+    @Autowired
+    private PhuongtienRepo phuongtienRepo;
 
     @FXML
     private VBox vb_root;
@@ -60,7 +60,7 @@ public class ChiTietSCController implements Initializable {
         ls = new ArrayList<>();
         int index_val = 0;
 
-        List<LedgerDetails> ledgerDetailsList = ledgerDetailsService.getChiTietSoCai(DashboardController.so_clicked);
+        List<LedgerDetails> ledgerDetailsList = ledgerDetailRepo.findBySo(DashboardController.so_clicked);
         for (LedgerDetails ledgerDetails : ledgerDetailsList) {
             ledgerDetails.setStt(index_val + 1);
             ledgerDetails.setThuc_xuat_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getSoluong())));
@@ -312,7 +312,6 @@ public class ChiTietSCController implements Initializable {
         setCEll(sheet, ls.get(0).getDenngay(), 3,10);
         setCEll(sheet, ls.get(0).getSo_xe(), 4,10);
         setCEll(sheet, String.valueOf(ls.get(0).getSo_km()), 6,10);
-        setCEll(sheet, String.valueOf(ls.get(0).getSo_gio()), 7,10);
         setCEll(sheet, ls.get(0).getSo(), 3,7);
         setCEll(sheet, ls.get(0).getNgay(), 4,7);
 
@@ -399,7 +398,7 @@ public class ChiTietSCController implements Initializable {
             lb_dvn.setText(ls.get(0).getDvi());
             lb_tcn.setText(ls.get(0).getNhiem_vu());
         }else {
-            lb_dvn.setText(phuongTienService.findPhuongTienById(ls.get(0).getPhuongtien_id()).getName());
+            lb_dvn.setText(phuongtienRepo.findById(ls.get(0).getPhuongtien_id()).get().getName());
             lb_tcn.setText(nhiemvuRepository.findById(ls.get(0).getNhiemvu_id()).get().getTenNv());
         }
 
@@ -409,8 +408,6 @@ public class ChiTietSCController implements Initializable {
         lb_soxe.setText(ls.get(0).getSo_xe());
         lb_tcn.setText(ls.get(0).getNhiem_vu());
         lb_tungay.setText(ls.get(0).getNgay());
-        lb_sokm.setText(String.valueOf(ls.get(0).getSo_km()));
-        lb_sogio.setText(String.valueOf(ls.get(0).getSo_gio()));
         lb_loaiphieu.setText(ls.get(0).getLoai_phieu().equals("N") ? "Phiếu nhập" : "Phiếu xuất");
         lb_denngay.setText("32/12/2024");
     }

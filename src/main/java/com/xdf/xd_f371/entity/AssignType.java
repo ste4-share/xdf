@@ -1,30 +1,21 @@
 package com.xdf.xd_f371.entity;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "assignment_type")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssignType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "name")
     private String name;
-
-    public AssignType(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public AssignType() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

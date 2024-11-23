@@ -1,12 +1,9 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.dto.ChitieuDTO;
 import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.repo.DinhMucRepo;
 import com.xdf.xd_f371.repo.PhuongtienRepo;
-import com.xdf.xd_f371.service.PhuongTienService;
-import com.xdf.xd_f371.service.impl.PhuongTienImp;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +22,6 @@ public class AddBtnPt implements Initializable {
     @FXML
     TextField pt_name, quantity,h,km,md,tk,ct_tk,ct_md,ct_km,soluong;
 
-    private PhuongTienService phuongTienService = new PhuongTienImp();
     @Autowired
     private PhuongtienRepo phuongtienRepo;
     @Autowired
@@ -57,12 +53,11 @@ public class AddBtnPt implements Initializable {
                 phuongTien.setNguonnx_id(DinhMucPhuongTienController.nguonnx_id);
                 phuongTien.setStatus("ACTIVE");
                 phuongTien.setLoaiphuongtien_id(DinhMucPhuongTienController.dinhMucPhuongTienDto.getLoaiphuongtien_id());
-                int ptId= phuongTienService.createNew(phuongTien);
+                phuongtienRepo.save(phuongTien);
 
-                if (phuongTienService.createNewNorm(new DinhMuc(Integer.parseInt(md.getText()), Integer.parseInt(tk.getText()), Integer.parseInt(h.getText()),Integer.parseInt(km.getText()), ptId, DashboardController.findByTime.getId())) ==1){
-                    DialogMessage.callAlertWithMessage("Thông báo", "Thông báo","Thêm phương tiện thành công");
-                    DinhMucPhuongTienController.norm_stage.close();
-                }
+//                dinhMucRepo.save(new DinhMuc(Integer.parseInt(md.getText()), Integer.parseInt(tk.getText()), Integer.parseInt(h.getText()), Integer.parseInt(km.getText()), ptId, DashboardController.findByTime.getId()));
+                DialogMessage.callAlertWithMessage("Thông báo", "Thông báo", "Thêm phương tiện thành công");
+                DinhMucPhuongTienController.norm_stage.close();
             }else{
                 // update phuong tien
                 phuongTien.setName(pt_name.getText());
@@ -71,13 +66,12 @@ public class AddBtnPt implements Initializable {
                 phuongTien.setLoaiphuongtien_id(DinhMucPhuongTienController.dinhMucPhuongTienDto.getLoaiphuongtien_id());
                 phuongtienRepo.save(phuongTien);
                 // update dinhmuc
-                if (phuongTienService.createNewNorm(new DinhMuc(Integer.parseInt(md.getText()),
+                dinhMucRepo.save(new DinhMuc(Integer.parseInt(md.getText()),
                         Integer.parseInt(tk.getText()), Integer.parseInt(h.getText()),
                         Integer.parseInt(km.getText()), DinhMucPhuongTienController.dinhMucPhuongTienDto.getPhuongtien_id(),
-                        DashboardController.findByTime.getId())) ==1){
-                    DialogMessage.callAlertWithMessage("Thông báo", "Thông báo","Cập nhật phương tiện thành công");
-                    DinhMucPhuongTienController.norm_stage.close();
-                }
+                        DashboardController.findByTime.getId()));
+                DialogMessage.callAlertWithMessage("Thông báo", "Thông báo", "Cập nhật phương tiện thành công");
+                DinhMucPhuongTienController.norm_stage.close();
             }
         }
     }
