@@ -1,6 +1,8 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.repo.NguonNxRepo;
+import com.xdf.xd_f371.repo.TructhuocRepo;
 import com.xdf.xd_f371.service.CategoryService;
 import com.xdf.xd_f371.service.NguonNXService;
 import com.xdf.xd_f371.service.TrucThuocService;
@@ -15,12 +17,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.TextFields;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+@Controller
 public class AddUnitForm implements Initializable {
     private static int tructhuoc_selected_from_cbb=0;
     private static int group_selected_from_cbb=0;
@@ -31,18 +36,20 @@ public class AddUnitForm implements Initializable {
     @FXML
     CheckBox category_checkbox;
     @FXML
-    ComboBox<GroupTitle> reporter_type_cbb;
-    @FXML
     ComboBox<String> type_title_cbb, code_cbb;
 
     private TrucThuocService trucThuocService = new TrucThuocImp();
     private NguonNXService nguonNXService = new NguonNXImp();
     private CategoryService categoryService = new CategoryImp();
 
+    @Autowired
+    private NguonNxRepo nguonNxRepo;
+    @Autowired
+    private TructhuocRepo tructhuocRepo;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initTructhuocCmb();
-        initGroupTitleCommbox();
         initTypeTitle();
         initCode();
         setHintForTitle(report_title1, categoryService.getAll_Header1());
@@ -92,27 +99,8 @@ public class AddUnitForm implements Initializable {
         type_title_cbb.getSelectionModel().selectFirst();
     }
 
-    private void initGroupTitleCommbox() {
-        reporter_type_cbb.setItems(FXCollections.observableList(nguonNXService.getAllGroup()));
-        reporter_type_cbb.setConverter(new StringConverter<GroupTitle>() {
-            @Override
-            public String toString(GroupTitle groupTitle) {
-                if (groupTitle!=null){
-                    group_selected_from_cbb = groupTitle.getId();
-                }
-                return groupTitle==null ? "" : groupTitle.getGroupName();
-            }
-
-            @Override
-            public GroupTitle fromString(String s) {
-                return nguonNXService.findGroupById(group_selected_from_cbb);
-            }
-        });
-        reporter_type_cbb.getSelectionModel().selectLast();
-    }
-
     private void initTructhuocCmb() {
-        tructhuoc_cbb.setItems(FXCollections.observableList(trucThuocService.getAll()));
+        tructhuoc_cbb.setItems(FXCollections.observableList(tructhuocRepo.findAll()));
         tructhuoc_cbb.setConverter(new StringConverter<TrucThuoc>() {
             @Override
             public String toString(TrucThuoc trucThuoc) {
@@ -124,7 +112,7 @@ public class AddUnitForm implements Initializable {
 
             @Override
             public TrucThuoc fromString(String s) {
-                return trucThuocService.findById(tructhuoc_selected_from_cbb);
+                return tructhuocRepo.findById(tructhuoc_cbb.getValue().getId()).get();
             }
         });
         tructhuoc_cbb.getSelectionModel().selectFirst();
@@ -154,13 +142,7 @@ public class AddUnitForm implements Initializable {
 
     private void addNewNguonnx() {
         //add ngnx
-        nguonNXService.create(new NguonNx(unit_name.getText()));
-
-        int nguonnx_id = nguonNXService.findNguonNXByName_NON(unit_name.getText()).getId();
-        int tructhuoc_id = tructhuoc_cbb.getSelectionModel().getSelectedItem().getId();
-        int group_id = reporter_type_cbb.getSelectionModel().getSelectedItem().getId();
-        //  add new nguonnx_title
-        nguonNXService.createNew(new NguonnxTitle(nguonnx_id, tructhuoc_id,group_id));
+        nguonNxRepo.save(new NguonNx(unit_name.getText()));
     }
 
     @FXML

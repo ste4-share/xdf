@@ -2,8 +2,7 @@ package com.xdf.xd_f371.controller;
 
 
 import com.xdf.xd_f371.entity.TrucThuoc;
-import com.xdf.xd_f371.service.TrucThuocService;
-import com.xdf.xd_f371.service.impl.TrucThuocImp;
+import com.xdf.xd_f371.repo.TructhuocRepo;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,13 +10,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
+@Component
 public class AddAffForm implements Initializable {
     public static int aff_id_selected = 0;
-    private TrucThuocService trucThuocService = new TrucThuocImp();
+
+    @Autowired
+    private TructhuocRepo tructhuocRepo;
 
     @FXML
     Button addBtn,exitBtn;
@@ -30,20 +33,17 @@ public class AddAffForm implements Initializable {
     }
 
     private void fillDataToAfflatedUnitCombobox() {
-        affilatedUnitCb.setItems(FXCollections.observableList(trucThuocService.getAll()));
+        affilatedUnitCb.setItems(FXCollections.observableList(tructhuocRepo.findAll()));
         affilatedUnitCb.getSelectionModel().selectFirst();
         affilatedUnitCb.setConverter(new StringConverter<TrucThuoc>() {
             @Override
             public String toString(TrucThuoc trucThuoc) {
-                if(trucThuoc!=null){
-                    aff_id_selected = trucThuoc.getId();
-                }
                 return trucThuoc==null ? "": trucThuoc.getName();
             }
 
             @Override
             public TrucThuoc fromString(String s) {
-                return trucThuocService.findById(aff_id_selected);
+                return tructhuocRepo.findById(affilatedUnitCb.getSelectionModel().getSelectedItem().getId()).orElse(null);
             }
         });
     }

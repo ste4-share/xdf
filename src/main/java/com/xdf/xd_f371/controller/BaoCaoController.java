@@ -1,6 +1,8 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.repo.NguonNxRepo;
+import com.xdf.xd_f371.repo.TructhuocRepo;
 import com.xdf.xd_f371.service.NguonNXService;
 import com.xdf.xd_f371.service.TrucThuocService;
 import com.xdf.xd_f371.service.impl.NguonNXImp;
@@ -13,10 +15,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
+@Component
 public class BaoCaoController implements Initializable {
 
     @FXML
@@ -38,9 +42,11 @@ public class BaoCaoController implements Initializable {
     @FXML
     private TableColumn<NguonnxTitle, String> col_group_id, col_group_ttid,col_group_nguonnxId,col_group_tructhuocId;
 
-    private TrucThuocService trucThuocService = new TrucThuocImp();
     private NguonNXService nguonNXService = new NguonNXImp();
-
+    @Autowired
+    private TructhuocRepo tructhuocRepo;
+    @Autowired
+    private NguonNxRepo nguonNxRepo;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -64,14 +70,14 @@ public class BaoCaoController implements Initializable {
     }
 
     private void fillDataToTbTructhuoc() {
-        tructhuoc_tb.setItems(FXCollections.observableList(trucThuocService.getAll()));
+        tructhuoc_tb.setItems(FXCollections.observableList(tructhuocRepo.findAll()));
         col_tt_id.setCellValueFactory(new PropertyValueFactory<TrucThuoc, String>("id"));
         col_tt_name.setCellValueFactory(new PropertyValueFactory<TrucThuoc, String>("name"));
         col_tt_type.setCellValueFactory(new PropertyValueFactory<TrucThuoc, String>("type"));
     }
 
     private void fillDataToTbNguonnx() {
-        nguonnx_tb.setItems(FXCollections.observableList(nguonNXService.getAll()));
+        nguonnx_tb.setItems(FXCollections.observableList(nguonNxRepo.findAll()));
         col_nnx_id.setCellValueFactory(new PropertyValueFactory<NguonNx, String>("id"));
         col_nnx_ten.setCellValueFactory(new PropertyValueFactory<NguonNx, String>("ten"));
     }
@@ -87,13 +93,6 @@ public class BaoCaoController implements Initializable {
     }
 
     public void addNewGroupTitle(ActionEvent actionEvent) {
-        NguonNx nguonnx_id = nguonnx_tb.getSelectionModel().getSelectedItem();
-        GroupTitle group_id = group_tb.getSelectionModel().getSelectedItem();
-        TrucThuoc tructhuoc_id = tructhuoc_tb.getSelectionModel().getSelectedItem();
-        if (nguonnx_id!=null && group_id!=null && tructhuoc_id!=null){
-            int success = nguonNXService.createNew(new NguonnxTitle(nguonnx_id.getId(), tructhuoc_id.getId(), group_id.getId()));
-            System.out.println("succees: " + success);
-            fillDataToTbNguonxTitle(group_id.getId());
-        }
+
     }
 }

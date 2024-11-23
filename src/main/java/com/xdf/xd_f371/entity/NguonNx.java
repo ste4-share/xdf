@@ -22,6 +22,9 @@ public class NguonNx {
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
     List<HanmucNhiemvu> hanmucNhiemvuList;
 
+    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
+    List<DonViTrucThuoc> donViTrucThuocs;
+
     public NguonNx(int id, String ten, String createtime) {
         this.id = id;
         this.ten = ten;

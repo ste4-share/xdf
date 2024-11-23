@@ -6,6 +6,7 @@ import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
 import com.xdf.xd_f371.repo.ChitietNhiemvuRepo;
 import com.xdf.xd_f371.repo.HanmucNhiemvuRepo;
+import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.repo.NhiemvuRepository;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.textfield.TextFields;
 import org.postgresql.util.PGInterval;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -35,6 +37,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Component
 public class XuatController extends CommonFactory implements Initializable {
 
     private static int stt = 0;
@@ -92,6 +95,8 @@ public class XuatController extends CommonFactory implements Initializable {
     private ChitietNhiemvuRepo chitietNhiemvuRepo;
     @Autowired
     private HanmucNhiemvuRepo hanmucNhiemvuRepo;
+    @Autowired
+    private NguonNxRepo nguonNxRepo;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -286,7 +291,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     private void setDvxCombobox_tab_k(){
         ObservableList<NguonNx> observableArrayList =
-                FXCollections.observableArrayList(nguonNXService.findNguonNXByName_NON(LoaiPhieu_cons.ROOT_NAME_NGUONNX));
+                FXCollections.observableArrayList(nguonNxRepo.findByTen(LoaiPhieu_cons.ROOT_NAME_NGUONNX));
         cbb_dvx_k.setItems(observableArrayList);
         cbb_dvx_k.setConverter(new StringConverter<NguonNx>() {
             @Override
@@ -299,7 +304,7 @@ public class XuatController extends CommonFactory implements Initializable {
 
             @Override
             public NguonNx fromString(String string) {
-                return nguonNXService.findById(nguonnx_id_selected_dvvc_cbb);
+                return nguonNxRepo.findById(nguonnx_id_selected_dvvc_cbb).get();
             }
         });
         cbb_dvx_k.getSelectionModel().selectFirst();
@@ -316,11 +321,11 @@ public class XuatController extends CommonFactory implements Initializable {
 
             @Override
             public NguonNx fromString(String string) {
-                return nguonNXService.findById(nguonnx_id_selected);
+                return nguonNxRepo.findById(nguonnx_id_selected).get();
             }
         });
         ObservableList<NguonNx> observableArrayList =
-                FXCollections.observableArrayList(nguonNXService.getAll());
+                FXCollections.observableArrayList(nguonNxRepo.findAll());
         cbb_dvn_xk.setItems(observableArrayList);
         cbb_dvn_xk.getSelectionModel().selectFirst();
     }
@@ -736,7 +741,7 @@ public class XuatController extends CommonFactory implements Initializable {
 
             @Override
             public NguonNx fromString(String string) {
-                return nguonNXService.findById(nguonnx_id_selected_dvvc_cbb);
+                return nguonNxRepo.findById(nguonnx_id_selected_dvvc_cbb).get();
             }
         });
         cbb_dvx_nv.getSelectionModel().selectFirst();

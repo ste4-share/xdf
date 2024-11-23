@@ -5,6 +5,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.ChungloaiMap;
 import com.xdf.xd_f371.model.MockDataMap;
 import com.xdf.xd_f371.repo.QuarterRepository;
+import com.xdf.xd_f371.repo.TructhuocRepo;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.TextToNumber;
@@ -72,9 +73,10 @@ public class TonkhoController implements Initializable {
 
     @Autowired
     private QuarterRepository quarterRepository;
+    @Autowired
+    private TructhuocRepo tructhuocRepo;
     private TonKhoService tonKhoService = new TonkhoImp();
     private LoaiXdService loaiXdService = new LoaiXdImp();
-    private TrucThuocService trucThuocService = new TrucThuocImp();
     private MucgiaService mucgiaService = new MucgiaImp();
 
     @Override
@@ -311,125 +313,7 @@ public class TonkhoController implements Initializable {
         RegionUtil.setBorderLeft(BorderStyle.THIN, rangeAddress, sheet);
         RegionUtil.setBorderRight(BorderStyle.THIN, rangeAddress, sheet);
         RegionUtil.setBorderBottom(BorderStyle.THIN, rangeAddress, sheet);
-
     }
-
-    private void setTitleCEl(XSSFSheet sheet, XSSFWorkbook wb){
-
-        int row_title =4;
-        int begin_col_NHAP = 6;
-        List<TrucThuoc> trucThuocLisTNHAP = trucThuocService.getAllByType("NHAP");
-
-        XSSFRow row5 = sheet.createRow(row_title);
-        XSSFRow row6 = sheet.createRow(row_title+1);
-        // stt
-        XSSFCell col_stt = row5.createCell(1);
-        col_stt.setCellStyle(setDefaulCellStyle(wb));
-        col_stt.setCellValue("STT");
-        setMerge(sheet,row_title, row_title+2,begin_col_NHAP-5, begin_col_NHAP-5, true);
-        setCellAlightment(col_stt);
-
-        //ten xd
-        XSSFCell col_tenxd = row5.createCell(2);
-        col_tenxd.setCellStyle(setDefaulCellStyle(wb));
-        col_tenxd.setCellValue("TÊN MÃ KÝ HIỆU XĂNG DẦU");
-        setMerge(sheet,row_title, row_title+2,begin_col_NHAP-4, begin_col_NHAP-4, true);
-        setCellAlightment(col_tenxd);
-
-        // ton dau ky
-        XSSFCell col_tontruoc = row5.createCell(3);
-        col_tontruoc.setCellStyle(setDefaulCellStyle(wb));
-        col_tontruoc.setCellValue("Tồn đầu kỳ");
-        setMerge(sheet,row_title, row_title,begin_col_NHAP-3, begin_col_NHAP-1, true);
-        setCellAlightment(col_tontruoc);
-        //nhap
-        XSSFCell cell_nhap_tt = row5.createCell(6);
-        cell_nhap_tt.setCellStyle(setDefaulCellStyle(wb));
-        cell_nhap_tt.setCellValue("Nhập");
-        setMerge(sheet, row_title, row_title, begin_col_NHAP, begin_col_NHAP+trucThuocLisTNHAP.size(), true);
-        setCellAlightment(cell_nhap_tt);
-
-        //
-        XSSFCell col_NVDX = row6.createCell(3);
-        col_NVDX.setCellStyle(setDefaulCellStyle(wb));
-        col_NVDX.setCellValue("NVDX");
-        setMerge(sheet,row_title+1, row_title+2,begin_col_NHAP-3, begin_col_NHAP-3, true);
-        setCellAlightment(col_NVDX);
-
-        XSSFCell col_SSCD = row6.createCell(4);
-        col_SSCD.setCellStyle(setDefaulCellStyle(wb));
-        col_SSCD.setCellValue("SSCD");
-        setMerge(sheet,row_title+1, row_title+2,begin_col_NHAP-2, begin_col_NHAP-2, true);
-        setCellAlightment(col_SSCD);
-
-        XSSFCell col_tondk_tong = row6.createCell(5);
-        col_tondk_tong.setCellStyle(setDefaulCellStyle(wb));
-        col_tondk_tong.setCellValue("Tổng");
-        setMerge(sheet,row_title+1, row_title+2,begin_col_NHAP-1, begin_col_NHAP-1, true);
-        setCellAlightment(col_tondk_tong);
-
-        for (int i =0 ; i < trucThuocLisTNHAP.size(); i++){
-            XSSFCell cell = row6.createCell(begin_col_NHAP+i);
-            cell.setCellValue(trucThuocLisTNHAP.get(i).getName());
-            cell.setCellStyle(setDefaulCellStyle(wb));
-            setMerge(sheet, row_title+1, row_title+2,begin_col_NHAP+i,begin_col_NHAP+i, true);
-            setCellAlightment(cell);
-        }
-        XSSFCell col_nhap_tong = row6.createCell(begin_col_NHAP+trucThuocLisTNHAP.size());
-        col_nhap_tong.setCellStyle(setDefaulCellStyle(wb));
-        col_nhap_tong.setCellValue("Tổng");
-        setMerge(sheet,row_title+1, row_title+2,begin_col_NHAP+trucThuocLisTNHAP.size(), begin_col_NHAP+trucThuocLisTNHAP.size(), true);
-        setCellAlightment(col_nhap_tong);
-
-        int begin_col_XUAT = begin_col_NHAP+trucThuocLisTNHAP.size()+1;
-        List<TrucThuoc> trucThuocListXuat = trucThuocService.getAllByType("XUAT");
-        int index_tonck = begin_col_XUAT+trucThuocListXuat.size();
-        //nhap
-        XSSFCell cell_xuat = row5.createCell(begin_col_XUAT);
-        cell_xuat.setCellStyle(setDefaulCellStyle(wb));
-        cell_xuat.setCellValue("Xuất");
-        setMerge(sheet, row_title, row_title, begin_col_XUAT, index_tonck, true);
-        setCellAlightment(cell_xuat);
-        for (int i =0 ; i < trucThuocListXuat.size(); i++){
-            XSSFCell cell = row6.createCell(begin_col_XUAT+i);
-            cell.setCellValue(trucThuocListXuat.get(i).getName());
-            cell.setCellStyle(setDefaulCellStyle(wb));
-            setMerge(sheet, row_title+1, row_title+2,begin_col_XUAT+i,begin_col_XUAT+i, true);
-            setCellAlightment(cell);
-        }
-        XSSFCell col_tong_x = row6.createCell(index_tonck);
-        col_tong_x.setCellStyle(setDefaulCellStyle(wb));
-        col_tong_x.setCellValue("Tổng");
-        setMerge(sheet,row_title+1, row_title+2,index_tonck, index_tonck, true);
-        setCellAlightment(col_tong_x);
-
-        // ton cuoi ky
-        XSSFCell col_tonsau = row5.createCell(index_tonck+1);
-        col_tonsau.setCellStyle(setDefaulCellStyle(wb));
-        col_tonsau.setCellValue("Tồn cuối kỳ");
-        setMerge(sheet,row_title, row_title,index_tonck+1, index_tonck+3, true);
-        setCellAlightment(col_tonsau);
-
-        //
-        XSSFCell col_NVDX_x = row6.createCell(index_tonck+1);
-        col_NVDX_x.setCellStyle(setDefaulCellStyle(wb));
-        col_NVDX_x.setCellValue("NVDX");
-        setMerge(sheet,row_title+1, row_title+2,index_tonck+1, index_tonck+1, true);
-        setCellAlightment(col_NVDX_x);
-
-        XSSFCell col_SSCD_x = row6.createCell(index_tonck+2);
-        col_SSCD_x.setCellStyle(setDefaulCellStyle(wb));
-        col_SSCD_x.setCellValue("SSCD");
-        setMerge(sheet,row_title+1, row_title+2,index_tonck+2, index_tonck+2, true);
-        setCellAlightment(col_SSCD_x);
-
-        XSSFCell col_tonck_tong = row6.createCell(index_tonck+3);
-        col_tonck_tong.setCellStyle(setDefaulCellStyle(wb));
-        col_tonck_tong.setCellValue("Tổng");
-        setMerge(sheet,row_title+1, row_title+2,index_tonck+3, index_tonck+3, true);
-        setCellAlightment(col_tonck_tong);
-    }
-
     private void setCellAlightment(XSSFCell cell){
         CellUtil.setAlignment(cell,HorizontalAlignment.CENTER);
         CellUtil.setVerticalAlignment(cell, VerticalAlignment.CENTER);
@@ -464,7 +348,6 @@ public class TonkhoController implements Initializable {
     }
 
     private void fillDataToNXTSheet(XSSFSheet sheet, XSSFWorkbook wb){
-        setTitleCEl(sheet, wb);
         setMapForNxtCell(sheet);
     }
 

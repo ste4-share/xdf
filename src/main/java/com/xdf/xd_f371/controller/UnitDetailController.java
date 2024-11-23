@@ -4,6 +4,7 @@ import com.xdf.xd_f371.entity.Category;
 import com.xdf.xd_f371.entity.NguonnxTitle;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.model.MockDataMap;
+import com.xdf.xd_f371.repo.TructhuocRepo;
 import com.xdf.xd_f371.service.CategoryService;
 import com.xdf.xd_f371.service.NguonNXService;
 import com.xdf.xd_f371.service.TrucThuocService;
@@ -15,21 +16,30 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
+@Component
 public class UnitDetailController implements Initializable {
     public static Stage unit_detail_stage;
     private static int tt_id =0;
     private TrucThuocService trucThuocService = new TrucThuocImp();
     private NguonNXService nguonNXService = new NguonNXImp();
     private CategoryService categoryService = new CategoryImp();
+
+    @Autowired
+    private TructhuocRepo tructhuocRepo;
+
     @FXML
     TextField unit_name_tf;
+    @FXML
+    HBox billHbox;
     @FXML
     RadioButton n_radio,x_radio,all_radio;
     @FXML
@@ -44,32 +54,21 @@ public class UnitDetailController implements Initializable {
     }
 
     private void setTructhuocCombobox(){
-        tructhuoc_cbb.setItems(FXCollections.observableList(trucThuocService.getAll()));
+        tructhuoc_cbb.setItems(FXCollections.observableList(tructhuocRepo.findAll()));
         tructhuoc_cbb.setConverter(new StringConverter<TrucThuoc>() {
             @Override
             public String toString(TrucThuoc trucThuoc) {
-                if (trucThuoc!=null){
-                    tt_id=trucThuoc.getId();
-                }
                 return trucThuoc==null ? "" : trucThuoc.getName();
             }
 
             @Override
             public TrucThuoc fromString(String s) {
-                return trucThuocService.findById(tt_id);
+                return tructhuocRepo.findById(tructhuoc_cbb.getValue().getId()).get();
             }
         });
-        tructhuoc_cbb.getSelectionModel().select(trucThuocService.findById(DonviController.selectedUnit.getTructhuoc_id()));
     }
     private void setRadiobutton() {
-        String lp = DonviController.selectedUnit.getLoaiphieu();
-        if(lp.contains("NHAP") && lp.contains("XUAT")){
-            all_radio.setSelected(true);
-        } else if(lp.contains("NHAP")){
-            n_radio.setSelected(true);
-        } else if(lp.contains("XUAT")){
-            x_radio.setSelected(true);
-        }
+
     }
 
     @FXML
@@ -107,28 +106,28 @@ public class UnitDetailController implements Initializable {
     }
 
     private void isChangeBillType(){
-        if (all_radio.isSelected()){
-            List<Category> category_X = categoryService.getCategoryByTructhuocId(DonviController.selectedUnit.getTructhuoc_id());
-            if (categoryService.deleteBytructhuocId(DonviController.selectedUnit.getTructhuoc_id()) > 0){
-                setNEwCategoryChangeCode(category_X.get(0), "Nhập", "NHAP");
-                setNEwCategoryChangeCode(category_X.get(0), "Xuất", "XUAT");
-            }else{
-                throw new RuntimeException("category_by_tructhuoc is null");
-            }
-        }else if (n_radio.isSelected()){
-            List<Category> category_X = categoryService.getCategoryByTructhuocId(DonviController.selectedUnit.getTructhuoc_id());
-            if (categoryService.deleteBytructhuocId(DonviController.selectedUnit.getTructhuoc_id()) > 0){
-                setNEwCategoryChangeCode(category_X.get(0), "Nhập", "NHAP");
-            }else{
-                throw new RuntimeException("category_by_tructhuoc is null");
-            }
-        }else if (x_radio.isSelected()){
-            List<Category> category_X = categoryService.getCategoryByTructhuocId(DonviController.selectedUnit.getTructhuoc_id());
-            if (categoryService.deleteBytructhuocId(DonviController.selectedUnit.getTructhuoc_id()) > 0){
-                setNEwCategoryChangeCode(category_X.get(0), "Xuất", "XUAT");
-            }else{
-                throw new RuntimeException("category_by_tructhuoc is null");
-            }
-        }
+//        if (all_radio.isSelected()){
+//            List<Category> category_X = categoryService.getCategoryByTructhuocId(DonviController.selectedUnit.getTructhuoc_id());
+//            if (categoryService.deleteBytructhuocId(DonviController.selectedUnit.getTructhuoc_id()) > 0){
+//                setNEwCategoryChangeCode(category_X.get(0), "Nhập", "NHAP");
+//                setNEwCategoryChangeCode(category_X.get(0), "Xuất", "XUAT");
+//            }else{
+//                throw new RuntimeException("category_by_tructhuoc is null");
+//            }
+//        }else if (n_radio.isSelected()){
+//            List<Category> category_X = categoryService.getCategoryByTructhuocId(DonviController.selectedUnit.getTructhuoc_id());
+//            if (categoryService.deleteBytructhuocId(DonviController.selectedUnit.getTructhuoc_id()) > 0){
+//                setNEwCategoryChangeCode(category_X.get(0), "Nhập", "NHAP");
+//            }else{
+//                throw new RuntimeException("category_by_tructhuoc is null");
+//            }
+//        }else if (x_radio.isSelected()){
+//            List<Category> category_X = categoryService.getCategoryByTructhuocId(DonviController.selectedUnit.getTructhuoc_id());
+//            if (categoryService.deleteBytructhuocId(DonviController.selectedUnit.getTructhuoc_id()) > 0){
+//                setNEwCategoryChangeCode(category_X.get(0), "Xuất", "XUAT");
+//            }else{
+//                throw new RuntimeException("category_by_tructhuoc is null");
+//            }
+//        }
     }
 }

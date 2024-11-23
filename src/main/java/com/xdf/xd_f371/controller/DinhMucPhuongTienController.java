@@ -7,6 +7,7 @@ import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.model.LoaiPTEnum;
 import com.xdf.xd_f371.repo.DinhMucRepo;
 import com.xdf.xd_f371.repo.LoaiPhuongTienRepo;
+import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.repo.PhuongtienRepo;
 import com.xdf.xd_f371.service.NguonNXService;
 import com.xdf.xd_f371.service.PhuongTienService;
@@ -53,10 +54,11 @@ public class DinhMucPhuongTienController implements Initializable {
     TableColumn<NormDto, String> xmt_name,type_name,quantity,km,h,md,tk,createtime,chungloaipt;
 
     private PhuongTienService phuongTienService = new PhuongTienImp();
-    private NguonNXService nguonNXService = new NguonNXImp();
 
     @Autowired
     private DinhMucRepo dinhMucRepo;
+    @Autowired
+    private NguonNxRepo nguonNxRepo;
     @Autowired
     private PhuongtienRepo phuongtienRepo;
     @Autowired
@@ -75,15 +77,12 @@ public class DinhMucPhuongTienController implements Initializable {
         units_cbb.setConverter(new StringConverter<NguonNx>() {
             @Override
             public String toString(NguonNx nguonNx) {
-                if (nguonNx!=null){
-                    nguonnx_id = nguonNx.getId();
-                }
                 return nguonNx==null? "" : nguonNx.getTen();
             }
 
             @Override
             public NguonNx fromString(String s) {
-                return nguonNXService.findById(nguonnx_id);
+                return nguonNxRepo.findById(units_cbb.getValue().getId()).get();
             }
         });
         units_cbb.getSelectionModel().selectFirst();

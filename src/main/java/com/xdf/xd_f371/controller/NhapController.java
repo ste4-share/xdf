@@ -4,6 +4,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
+import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.controlsfx.control.textfield.TextFields;
 import org.postgresql.util.PGInterval;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.URL;
@@ -30,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-
+@Component
 public class NhapController extends CommonFactory implements Initializable {
     private static List<LedgerDetails> ls_socai;
     private static int stt = 0;
@@ -56,6 +59,9 @@ public class NhapController extends CommonFactory implements Initializable {
     private ComboBox<NguonNx> cmb_dvvc, cmb_dvn;
     @FXML
     private ComboBox<LoaiXangDau> cmb_tenxd;
+
+    @Autowired
+    private NguonNxRepo nguonNxRepo;
 
 
     @Override
@@ -168,7 +174,7 @@ public class NhapController extends CommonFactory implements Initializable {
             }
             @Override
             public NguonNx fromString(String string) {
-                return nguonNXService.findById(dvvc_id);
+                return nguonNxRepo.findById(dvvc_id).get();
             }
         });
 
@@ -187,11 +193,11 @@ public class NhapController extends CommonFactory implements Initializable {
 
             @Override
             public NguonNx fromString(String string) {
-                return nguonNXService.findNguonNXByName_NON(LoaiPhieu_cons.ROOT_NAME_NGUONNX);
+                return nguonNxRepo.findByTen(LoaiPhieu_cons.ROOT_NAME_NGUONNX).get(0);
             }
         });
         ObservableList<NguonNx> observableArrayList =
-                FXCollections.observableArrayList(nguonNXService.findNguonNXByName_NON(LoaiPhieu_cons.ROOT_NAME_NGUONNX));
+                FXCollections.observableArrayList(nguonNxRepo.findByTen((LoaiPhieu_cons.ROOT_NAME_NGUONNX)));
         cmb_dvn.setItems(observableArrayList);
         cmb_dvn.getSelectionModel().selectFirst();
     }

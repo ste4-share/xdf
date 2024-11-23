@@ -121,7 +121,6 @@ public class DonviController implements Initializable {
         NguonNx nguonNx = tb_unit.getSelectionModel().getSelectedItem();
         if (nguonNx!=null){
             if (DialogMessage.callAlert()== ButtonType.OK){
-                nguonNXService.delete(nguonNx, 2);
                 fillDataForTable_nguonnx();
                 tb_unit.refresh();
             }
