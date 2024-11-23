@@ -12,5 +12,4 @@ import lombok.Setter;
 public class StatusActive {
     private int id;
     private String statusName;
-
 }

@@ -1,8 +1,13 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.dto.NormDto;
+import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.model.LoaiPTEnum;
+import com.xdf.xd_f371.repo.DinhMucRepo;
+import com.xdf.xd_f371.repo.LoaiPhuongTienRepo;
+import com.xdf.xd_f371.repo.PhuongtienRepo;
 import com.xdf.xd_f371.service.NguonNXService;
 import com.xdf.xd_f371.service.PhuongTienService;
 import com.xdf.xd_f371.service.impl.NguonNXImp;
@@ -24,33 +29,44 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class NormController implements Initializable {
+@Component
+public class DinhMucPhuongTienController implements Initializable {
     public static int nguonnx_id;
     public static Stage norm_stage;
-    public static NormDto normDto;
+    public static DinhMucPhuongTienDto dinhMucPhuongTienDto;
 
     @FXML
-    TableView<NormDto> pt_tb;
+    TableView<DinhMucPhuongTienDto> pt_tb;
     @FXML
     ComboBox<NguonNx> units_cbb;
     @FXML
     RadioButton xe_radio,may_radio,mb_radio;
     @FXML
-    TableColumn<NormDto, String> xmt_name,type_name,quantity,km,h,md,tk,createtime;
+    TableColumn<NormDto, String> xmt_name,type_name,quantity,km,h,md,tk,createtime,chungloaipt;
 
     private PhuongTienService phuongTienService = new PhuongTienImp();
     private NguonNXService nguonNXService = new NguonNXImp();
 
+    @Autowired
+    private DinhMucRepo dinhMucRepo;
+    @Autowired
+    private PhuongtienRepo phuongtienRepo;
+    @Autowired
+    private LoaiPhuongTienRepo loaiPhuongTienRepo;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        normDto = new NormDto();
+        dinhMucPhuongTienDto = new DinhMucPhuongTienDto();
         xe_radio.setSelected(true);
-        fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
+        fillDatatoptTable();
         initNguonnxCbb();
     }
 
@@ -73,16 +89,16 @@ public class NormController implements Initializable {
         units_cbb.getSelectionModel().selectFirst();
     }
 
-    private void fillDatatoptTable(String type) {
-        pt_tb.setItems(FXCollections.observableList(phuongTienService.getAllPt(type)));
-        xmt_name.setCellValueFactory(new PropertyValueFactory<NormDto, String>("namePt"));
-        type_name.setCellValueFactory(new PropertyValueFactory<NormDto, String>("typePt"));
+    private void fillDatatoptTable() {
+        pt_tb.setItems(FXCollections.observableList(dinhMucRepo.findAllBy(DashboardController.findByTime.getId())));
+        xmt_name.setCellValueFactory(new PropertyValueFactory<NormDto, String>("name_pt"));
+        type_name.setCellValueFactory(new PropertyValueFactory<NormDto, String>("typeName"));
         quantity.setCellValueFactory(new PropertyValueFactory<NormDto, String>("quantity"));
+        chungloaipt.setCellValueFactory(new PropertyValueFactory<NormDto, String>("type"));
         km.setCellValueFactory(new PropertyValueFactory<NormDto, String>("dm_xm_km"));
         h.setCellValueFactory(new PropertyValueFactory<NormDto, String>("dm_xm_gio"));
         md.setCellValueFactory(new PropertyValueFactory<NormDto, String>("dm_md_gio"));
         tk.setCellValueFactory(new PropertyValueFactory<NormDto, String>("dm_tk_gio"));
-        createtime.setCellValueFactory(new PropertyValueFactory<NormDto, String>("createtime"));
     }
 
     public void selectUnit(ActionEvent actionEvent) {
@@ -90,12 +106,12 @@ public class NormController implements Initializable {
 
     @FXML
     public void addNewPt(ActionEvent actionEvent) throws IOException {
-        normDto = new NormDto();
-        normDto.setDm_md_gio(0);
-        normDto.setDm_tk_gio(0);
-        normDto.setDm_xm_gio(0);
-        normDto.setDm_xm_km(0);
-        normDto.setPt_id(0);
+        dinhMucPhuongTienDto = new DinhMucPhuongTienDto();
+        dinhMucPhuongTienDto.setDm_md_gio(0);
+        dinhMucPhuongTienDto.setDm_tk_gio(0);
+        dinhMucPhuongTienDto.setDm_xm_gio(0);
+        dinhMucPhuongTienDto.setDm_xm_km(0);
+        dinhMucPhuongTienDto.setPhuongtien_id(0);
         Parent root = FXMLLoader.load(getClass().getResource("../add_pt.fxml"));
         Scene scene = new Scene(root);
         norm_stage = new Stage();
@@ -104,25 +120,21 @@ public class NormController implements Initializable {
         norm_stage.initModality(Modality.APPLICATION_MODAL);
         norm_stage.setTitle("Thêm phương tiện");
         norm_stage.showAndWait();
-        fillDatatoptTable(LoaiPTEnum.XE.name());
+        fillDatatoptTable();
     }
     @FXML
     public void xe_selected(ActionEvent actionEvent) {
-        fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
     }
     @FXML
     public void may_selected(ActionEvent actionEvent) {
-        fillDatatoptTable(LoaiPTEnum.MAY.getNameVehicle());
     }
     @FXML
     public void maybay_selected(ActionEvent actionEvent) {
-        fillDatatoptTable(LoaiPTEnum.MAYBAY_a.getNameVehicle());
     }
-
     @FXML
     public void pt_selected(MouseEvent mouseEvent) throws IOException {
         if (mouseEvent.getClickCount()==2){
-            normDto = pt_tb.getSelectionModel().getSelectedItem();
+            dinhMucPhuongTienDto = pt_tb.getSelectionModel().getSelectedItem();
             Parent root = FXMLLoader.load(getClass().getResource("../add_pt.fxml"));
             Scene scene = new Scene(root);
             norm_stage = new Stage();
@@ -131,16 +143,7 @@ public class NormController implements Initializable {
             norm_stage.initModality(Modality.APPLICATION_MODAL);
             norm_stage.setTitle("Thêm phương tiện");
             norm_stage.showAndWait();
-            if (xe_radio.isSelected()){
-                fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
-                pt_tb.refresh();
-            }else if (may_radio.isSelected()){
-                fillDatatoptTable(LoaiPTEnum.MAY.getNameVehicle());
-                pt_tb.refresh();
-            }else if (mb_radio.isSelected()){
-                fillDatatoptTable(LoaiPTEnum.MAYBAY_a.getNameVehicle());
-                pt_tb.refresh();
-            }
+
         }
     }
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Table(name = "phuongtien")
 @Entity
 @Getter
@@ -26,4 +28,11 @@ public class PhuongTien {
     private int loaiphuongtien_id;
     @Column(name = "status")
     private String status;
+
+    @OneToMany(mappedBy = "phuongTien", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DinhMuc> dinhmuc;
+
+    @ManyToOne
+    @JoinColumn(name = "loaiphuongtien_id" , referencedColumnName = "id", insertable = false, updatable = false)
+    private LoaiPhuongTien loaiPhuongTien;
 }

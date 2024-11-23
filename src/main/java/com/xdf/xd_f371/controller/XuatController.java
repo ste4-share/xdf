@@ -50,7 +50,7 @@ public class XuatController extends CommonFactory implements Initializable {
     private static List<Ledger> ledgerList = new ArrayList<>();
     private static PhuongTienNhiemVu phuongTienNhiemVu_selected = new PhuongTienNhiemVu();
     private static List<NhiemVuDto> chiTietNhiemVuDTO_list = new ArrayList<>();
-    private static NhiemVuDto nhiemVu_selected=  new ChiTietNhiemVuDTO();
+    private static NhiemVuDto nhiemVu_selected=  new NhiemVuDto();
 
     @FXML
     private TextField so_tf_k,nguoinhan_tf_k,tcx_tf_k,lenhso_tf_k,soxe_tf_k,phaixuat_tf_k,nhietdothucte_tf_k,vcf_tf_k,tytrong_tf_k,thucxuat_tf_k,

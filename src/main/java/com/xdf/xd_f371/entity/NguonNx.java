@@ -1,10 +1,7 @@
 package com.xdf.xd_f371.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class NguonNx {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +22,12 @@ public class NguonNx {
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
     List<HanmucNhiemvu> hanmucNhiemvuList;
 
+    public NguonNx(int id, String ten, String createtime) {
+        this.id = id;
+        this.ten = ten;
+        this.createtime = createtime;
+    }
+    public NguonNx(String ten) {
+        this.ten = ten;
+    }
 }

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.NormController">
+<HBox style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.DinhMucPhuongTienController">
    <children>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="914.0" prefWidth="1107.0">
          <children>
@@ -65,6 +65,7 @@
               <columns>
                 <TableColumn prefWidth="75.0" text="Tên Xe máy tàu" fx:id="xmt_name" />
                 <TableColumn fx:id="type_name" prefWidth="75.0" text="Loại" />
+                  <TableColumn fx:id="chungloaipt" prefWidth="75.0" text="Chủng loại" />
                   <TableColumn fx:id="quantity" prefWidth="75.0" text="Số lượng" />
                   <TableColumn prefWidth="75.0" text="Định mức">
                      <columns>

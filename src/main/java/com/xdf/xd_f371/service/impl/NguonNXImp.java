@@ -15,37 +15,6 @@ import java.util.List;
 public class NguonNXImp implements NguonNXService {
 
     @Override
-    public List<NguonNx> getAll() {
-        QDatabase.getConnectionDB();
-        List<NguonNx> result = new ArrayList<>();
-
-        String SQL_SELECT = "Select * from nguon_nx";
-
-        // auto close connection and preparedStatement
-        try {
-            PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String ten = resultSet.getString("ten");
-                String createtime = resultSet.getString("createtime");
-                NguonNx obj = new NguonNx();
-                obj.setId(id);
-                obj.setCreatetime(createtime);
-                obj.setTen(ten);
-                result.add(obj);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return result;
-    }
-
-    @Override
     public List<NguonNx> getAllAndNguonnx() {
         QDatabase.getConnectionDB();
         List<NguonNx> result = new ArrayList<>();

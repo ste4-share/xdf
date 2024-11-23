@@ -1,6 +1,8 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.repo.NguonNxRepo;
+import com.xdf.xd_f371.repo.TcnRepo;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -19,16 +21,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+@Component
 public class DonviController implements Initializable {
 
     public static Stage unit_stage;
     public static NguonNx selectedUnit;
-    private int index =0;
     @FXML
     private TableView<NguonNx> tb_unit;
     @FXML
@@ -39,7 +43,10 @@ public class DonviController implements Initializable {
     private TableColumn<Tcn, String> col_property_name,col_property_btype  ,col_property_status;
 
     private NguonNXService nguonNXService = new NguonNXImp();
-    private TcnService tcnService = new TcnImp();
+    @Autowired
+    private NguonNxRepo nguonNxRepo;
+    @Autowired
+    private TcnRepo tcnRepo;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -54,7 +61,7 @@ public class DonviController implements Initializable {
     }
 
     private void fillDataForTable_tcn(){
-        tb_property.setItems(FXCollections.observableList(tcnService.getAll()));
+        tb_property.setItems(FXCollections.observableList(tcnRepo.findAll()));
         setFactoryCell_for_Tcn();
     }
 
@@ -139,9 +146,7 @@ public class DonviController implements Initializable {
 
     @FXML
     public void unit_clicked(MouseEvent mouseEvent) throws IOException {
-        index+=1;
-        if (index==2){
-            index=0;
+        if (mouseEvent.getClickCount()==2){
             showUnitsDetailScreen();
             fillDataForTable_nguonnx();
             tb_unit.refresh();

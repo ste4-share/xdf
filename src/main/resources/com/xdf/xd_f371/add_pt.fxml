@@ -142,7 +142,7 @@
                               <Font name="Cambria Bold" size="16.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="lpt_cmb" prefHeight="44.0" prefWidth="365.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                        <ComboBox prefHeight="44.0" prefWidth="365.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -159,7 +159,7 @@
                               <Font name="Cambria Bold" size="16.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="status_cbb" prefHeight="43.0" prefWidth="217.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                        <ComboBox prefHeight="43.0" prefWidth="217.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

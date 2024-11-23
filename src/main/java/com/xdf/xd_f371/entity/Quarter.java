@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 @Table(name = "quarter")
 @Getter
@@ -29,4 +31,6 @@ public class Quarter {
     @Column(name = "convey")
     private String convey;
 
+    @OneToMany(mappedBy = "quarter",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DinhMuc> dinhMucList;
 }

@@ -5,13 +5,11 @@ import com.xdf.xd_f371.entity.NguonnxTitle;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.model.MockDataMap;
 import com.xdf.xd_f371.service.CategoryService;
-import com.xdf.xd_f371.service.InvReportDetailService;
 import com.xdf.xd_f371.service.NguonNXService;
 import com.xdf.xd_f371.service.TrucThuocService;
 import com.xdf.xd_f371.service.impl.CategoryImp;
 import com.xdf.xd_f371.service.impl.NguonNXImp;
 import com.xdf.xd_f371.service.impl.TrucThuocImp;
-import com.xdf.xd_f371.service.impl.invReportDetailImp;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,7 +28,6 @@ public class UnitDetailController implements Initializable {
     private TrucThuocService trucThuocService = new TrucThuocImp();
     private NguonNXService nguonNXService = new NguonNXImp();
     private CategoryService categoryService = new CategoryImp();
-    private InvReportDetailService invReportDetailService = new invReportDetailImp();
     @FXML
     TextField unit_name_tf;
     @FXML

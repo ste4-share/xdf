@@ -7,7 +7,6 @@ import com.xdf.xd_f371.entity.NguonnxTitle;
 import java.util.List;
 
 public interface NguonNXService {
-    List<NguonNx> getAll();
     List<NguonNx> getAllAndNguonnx();
     List<NguonNx> getAllUnless(String ten_1);
     NguonNx create(NguonNx nguonNx);
