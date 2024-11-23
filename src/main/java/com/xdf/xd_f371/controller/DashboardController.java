@@ -1,5 +1,7 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.MainApplicationApp;
+import com.xdf.xd_f371.XdF371Application;
 import com.xdf.xd_f371.dto.LichsuXNK;
 import com.xdf.xd_f371.dto.TTPhieuDto;
 import com.xdf.xd_f371.dto.TonKho;
@@ -40,6 +42,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.textfield.TextFields;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
@@ -50,8 +55,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-
+@Component
 public class DashboardController implements Initializable {
+
+//    private static final ApplicationContext applicationContext = new AnnotationConfigApplicationContext(XdF371Application.class);
 
     public static Stage primaryStage;
     public static Stage xuatStage;
@@ -130,7 +137,7 @@ public class DashboardController implements Initializable {
         setDataToPhieuCombobox();
         setDataToViewTable();
         setColLichSuNXK();
-        setUpForSearchCompleteTion();
+//        setUpForSearchCompleteTion();
         searching();
         fillDataToLichsuTb();
         tbTTNX.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -221,7 +228,7 @@ public class DashboardController implements Initializable {
         for(int i=0; i< lichsuXNKS.size(); i++){
             search_arr_forLs.add(lichsuXNKS.get(i).getTen_xd());
         }
-        setUpForSearchCompleteTion_lichsu(search_arr_forLs);
+//        setUpForSearchCompleteTion_lichsu(search_arr_forLs);
         searchingFor_lichsuTb();
     }
 
@@ -406,8 +413,9 @@ public class DashboardController implements Initializable {
         nxt_menu.setStyle(resetStyle());
 
         try {
-            HBox nhiemvu_mnu_bar = FXMLLoader.load(getClass().getResource("../nhiemvu.fxml"));
-            borderpane_base.setCenter(nhiemvu_mnu_bar);
+            FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource("nhiemvu.fxml"));
+            fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
+            borderpane_base.setCenter(fxmlLoader.load());
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -499,36 +507,36 @@ public class DashboardController implements Initializable {
 
     public void search_history(ActionEvent actionEvent) {
     }
-
-    private void setUpForSearchCompleteTion(){
-        List<String> search_arr = new ArrayList<>();
-        for(int i=0; i< ttp_ls.size(); i++){
-            search_arr.add(ttp_ls.get(i).getSo());
-        }
-        TextFields.bindAutoCompletion(tf_search_txnt, t -> {
-            return search_arr.stream().filter(elem
-                    -> {
-                return String.valueOf(elem).startsWith(t.getUserText().trim());
-            }).collect(Collectors.toList());
-        });
-        tf_search_txnt.setOnKeyPressed(e -> {
-            addedBySelection = false;
-        });
-
-        tf_search_txnt.setOnKeyReleased(e -> {
-            if (tf_search_txnt.getText().trim().isEmpty()){
-                ttp_ls = new ArrayList<>();
-                tbTTNX.setItems(FXCollections.observableArrayList(new ArrayList<>()));
-                List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu();
-
-                ttPhieuDtoList.forEach(item -> {
-                    ttp_ls.add(new TTPhieuModel(item.getSo(), item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(), item.getTcn(), item.getHang_hoa(), TextToNumber.textToNum(String.valueOf(item.getTong()))));
-                });
-                tbTTNX.setItems(FXCollections.observableArrayList(ttp_ls));
-            }
-            addedBySelection = true;
-        });
-    }
+//
+//    private void setUpForSearchCompleteTion(){
+//        List<String> search_arr = new ArrayList<>();
+//        for(int i=0; i< ttp_ls.size(); i++){
+//            search_arr.add(ttp_ls.get(i).getSo());
+//        }
+//        TextFields.bindAutoCompletion(tf_search_txnt, t -> {
+//            return search_arr.stream().filter(elem
+//                    -> {
+//                return String.valueOf(elem).startsWith(t.getUserText().trim());
+//            }).collect(Collectors.toList());
+//        });
+//        tf_search_txnt.setOnKeyPressed(e -> {
+//            addedBySelection = false;
+//        });
+//
+//        tf_search_txnt.setOnKeyReleased(e -> {
+//            if (tf_search_txnt.getText().trim().isEmpty()){
+//                ttp_ls = new ArrayList<>();
+//                tbTTNX.setItems(FXCollections.observableArrayList(new ArrayList<>()));
+//                List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu();
+//
+//                ttPhieuDtoList.forEach(item -> {
+//                    ttp_ls.add(new TTPhieuModel(item.getSo(), item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(), item.getTcn(), item.getHang_hoa(), TextToNumber.textToNum(String.valueOf(item.getTong()))));
+//                });
+//                tbTTNX.setItems(FXCollections.observableArrayList(ttp_ls));
+//            }
+//            addedBySelection = true;
+//        });
+//    }
 
     private void searching(){
         tf_search_txnt.textProperty().addListener(e -> {

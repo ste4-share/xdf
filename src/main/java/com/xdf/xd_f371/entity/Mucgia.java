@@ -1,11 +1,17 @@
 package com.xdf.xd_f371.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Mucgia {
+    @Id
     private int id;
     private int price;
     private int amount;
@@ -16,6 +22,4 @@ public class Mucgia {
     private String status;
     private String timestamp;
 
-    public Mucgia() {
-    }
 }

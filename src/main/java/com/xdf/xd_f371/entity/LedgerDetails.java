@@ -58,11 +58,8 @@ public class LedgerDetails {
     private int export_unit_id;
     private int tructhuoc_id;
     private String loaigiobay;
-    private PGInterval dur;
-    private PGInterval dur_text;
     private int thuc_xuat;
     private int thuc_xuat_tk;
-    private PGInterval dur_text_tk;
     private PGInterval dur_text_md2;
     private PGInterval dur_text_tk2;
     private int nhiemvu_hanmuc_id;

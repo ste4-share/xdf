@@ -5,6 +5,8 @@ import com.xdf.xd_f371.entity.HanmucNhiemvu;
 import com.xdf.xd_f371.entity.NhiemVu;
 import com.xdf.xd_f371.model.QDatabase;
 import com.xdf.xd_f371.service.NhiemVuService;
+import org.postgresql.util.PGInterval;
+import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class NhiemVuImp implements NhiemVuService {
     @Override
     public List<NhiemVu> getAll() {
@@ -30,12 +33,10 @@ public class NhiemVuImp implements NhiemVuService {
 
                 int id = resultSet.getInt("id");
                 String ten_nv = resultSet.getString("ten_nv");
-                String createtime = resultSet.getString("createtime");
                 String status = resultSet.getString("status");
                 NhiemVu nhiemVu = new NhiemVu();
                 nhiemVu.setId(id);
                 nhiemVu.setTen_nv(ten_nv);
-                nhiemVu.setCreatetime(createtime);
                 nhiemVu.setStatus(status);
                 result.add(nhiemVu);
             }
@@ -201,8 +202,8 @@ public class NhiemVuImp implements NhiemVuService {
             statement.setInt(1, hanmucNhiemvu.getQuarter_id());
             statement.setInt(2, hanmucNhiemvu.getUnit_id());
             statement.setInt(3, hanmucNhiemvu.getNhiemvu_id());
-            statement.setString(4, hanmucNhiemvu.getCt_tk());
-            statement.setString(5, hanmucNhiemvu.getCt_md());
+            statement.setObject(4, hanmucNhiemvu.getCt_tk());
+            statement.setObject(5, hanmucNhiemvu.getCt_md());
             statement.setInt(6, hanmucNhiemvu.getConsumpt());
 
             return statement.executeUpdate();
@@ -236,11 +237,11 @@ public class NhiemVuImp implements NhiemVuService {
                 int quarterId = resultSet.getInt("quarter_id");
                 int unitId = resultSet.getInt("unit_id");
                 int nhiemvuId = resultSet.getInt("nhiemvu_id");
-                String ct_tk = resultSet.getString("ct_tk");
-                String ct_md = resultSet.getString("ct_md");
+                PGInterval ct_tk = (PGInterval) resultSet.getObject("ct_tk");
+                PGInterval ct_md = (PGInterval) resultSet.getObject("ct_md");
                 int consumpt = resultSet.getInt("consumpt");
 
-                return new HanmucNhiemvu(id,quarterId, unitId, nhiemvuId, ct_tk,ct_md,consumpt);
+                return new HanmucNhiemvu(id,quarterId, unitId, nhiemvuId, ct_tk.getHours() +":" +ct_tk.getMinutes(),ct_md.getHours() + ":"+ct_md.getMinutes(),consumpt);
             }
 
         } catch (SQLException e) {
@@ -303,12 +304,10 @@ public class NhiemVuImp implements NhiemVuService {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String ten_nv = resultSet.getString("ten_nv");
-                String createtime = resultSet.getString("createtime");
                 String status = resultSet.getString("status");
 
                 result.setId(id);
                 result.setTen_nv(ten_nv);
-                result.setCreatetime(createtime);
                 result.setStatus(status);
             }
         } catch (SQLException e) {
@@ -334,12 +333,10 @@ public class NhiemVuImp implements NhiemVuService {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String ten_nv = resultSet.getString("ten_nv");
-                String createtime = resultSet.getString("createtime");
                 String status = resultSet.getString("status");
 
                 result.setId(id);
                 result.setTen_nv(ten_nv);
-                result.setCreatetime(createtime);
                 result.setStatus(status);
             }
         } catch (SQLException e) {

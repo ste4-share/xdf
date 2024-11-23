@@ -220,13 +220,12 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setDvn_obj(cmb_dvn.getSelectionModel().getSelectedItem());
         ledgerDetails.setDenngay(denngay.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
-//        ledgerDetails.setNguonnx_tructhuoc(nguonNxTructhuoc_selected.getId());
         ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId());
         ledgerDetails.setImport_unit_id(cmb_dvn.getSelectionModel().getSelectedItem().getId());
         ledgerDetails.setExport_unit_id(cmb_dvvc.getSelectionModel().getSelectedItem().getId());
         try {
-            ledgerDetails.setDur_text(new PGInterval("0.00:00:00"));
-            ledgerDetails.setDur_text_tk(new PGInterval("0.00:00:00"));
+            ledgerDetails.setDur_text_md2(new PGInterval("0.00:00:00"));
+            ledgerDetails.setDur_text_tk2(new PGInterval("0.00:00:00"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

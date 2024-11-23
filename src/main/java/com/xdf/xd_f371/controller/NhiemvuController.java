@@ -17,13 +17,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
+import org.postgresql.util.PGInterval;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.sql.SQLException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
+@Component
 public class NhiemvuController implements Initializable {
 
     private NhiemVuService nhiemVuService = new NhiemVuImp();
@@ -32,13 +37,10 @@ public class NhiemvuController implements Initializable {
     private QuarterService quarterService = new QuarterImp();
     private CategoryService categoryService = new CategoryImp();
     private LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
-    private static int khoiid_selected = 0;
     private static int quarterid_selected = 0;
+    @Autowired
+    private HanmucNhiemvuService hanmucNhiemvuService;
 
-    @FXML
-    ComboBox<KhoiDto> khoi_cmb;
-    @FXML
-    ComboBox<Quarter> quy_cbb;
     @FXML
     TableView<NhiemVuDto> nv_tb;
     @FXML
@@ -46,51 +48,11 @@ public class NhiemvuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initKhoiTb();
-        initNvTb(khoi_cmb.getSelectionModel().getSelectedItem().getId());
-        initQuarter();
+        initNvTb();
+        System.out.println("asdfdg: "+hanmucNhiemvuService.getAll().size());
     }
 
-    private void initQuarter() {
-        quy_cbb.setItems(FXCollections.observableList(quarterService.getAll()));
-        quy_cbb.setConverter(new StringConverter<Quarter>() {
-            @Override
-            public String toString(Quarter quarter) {
-                if (quarter!=null){
-                    quarterid_selected = quarter.getId();
-                }
-                return quarter==null ? "" : quarter.getName();
-            }
-
-            @Override
-            public Quarter fromString(String s) {
-                return quarterService.findById(quarterid_selected);
-            }
-        });
-        quy_cbb.getSelectionModel().selectFirst();
-    }
-
-    private void initKhoiTb() {
-        khoi_cmb.setItems(FXCollections.observableList(nhiemVuService.getAllKhoi()));
-        khoi_cmb.setConverter(new StringConverter<KhoiDto>() {
-            @Override
-            public String toString(KhoiDto khoiDto) {
-                if (khoiDto!=null) {
-                    khoiid_selected = khoiDto.getId();
-                }
-                return khoiDto==null ? "" : khoiDto.getName_k();
-            }
-
-            @Override
-            public KhoiDto fromString(String s) {
-                return nhiemVuService.findKhoiById(khoiid_selected);
-            }
-        });
-        khoi_cmb.getSelectionModel().selectFirst();
-    }
-
-    private void initNvTb(int khoi) {
-        nv_tb.setItems(FXCollections.observableList(nhiemVuService.getAllNVDTO(khoi)));
+    private void initNvTb() {
         tennv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_nv"));
         ctnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("chitiet"));
         lnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_loai_nv"));
@@ -104,16 +66,8 @@ public class NhiemvuController implements Initializable {
     }
 
     @FXML
-    public void khoi_selected(ActionEvent actionEvent) {
-        KhoiDto k = khoi_cmb.getSelectionModel().getSelectedItem();
-        initNvTb(k.getId());
-        nv_tb.refresh();
-    }
-
-    @FXML
     public void bcNlbayTheoKh(ActionEvent actionEvent) {
         initNhiemVu();
-
     }
 
     private void initNhiemVu() {
@@ -123,10 +77,15 @@ public class NhiemvuController implements Initializable {
             for (int j=0; j< nhiemVuService.getAllCtnvByType(1).size(); j++){
                 List<AssignmentCategory> assignmentCategories = categoryService.getAllAssCategory();
                 ChiTietNhiemVuDTO ctnvDto = nhiemVuService.getAllCtnvByType(1).get(j);
-                String ct_tk = "0.20:11:00";
-                String ct_md = "0.01:12:00";
+                String ct_tk = "20:11:00";
+                String ct_md = "01:12:00";
                 int consumpt =9000;
-                nhiemVuService.createHanmucNhiemVu(new HanmucNhiemvu(0, quarterId, nguonNx.getId(),ctnvDto.getCtnv_id(), ct_tk,ct_md,consumpt));
+//                Duration duration = Duration.ofHours(8);
+//                try {
+//                    nhiemVuService.createHanmucNhiemVu(new HanmucNhiemvu(0, quarterId, nguonNx.getId(),ctnvDto.getCtnv_id(), ,new PGInterval(ct_md),consumpt));
+//                } catch (SQLException e) {
+//                    throw new RuntimeException(e);
+//                }
 //                HanmucNhiemvu hanmucNhiemvu = nhiemVuService.getHanmucNhiemvu(nguonNx.getId(), ctnvDto.getCtnv_id(), quarterId);
 //                GioBay gioBay_md = ledgerDetailsService.getSumofWorkingTime(ctnvDto.getCtnv_id(), quarterId, LoaiGB.MD.getName());
 //                GioBay gioBay_tk = ledgerDetailsService.getSumofWorkingTime(ctnvDto.getCtnv_id(), quarterId, LoaiGB.TK.getName());

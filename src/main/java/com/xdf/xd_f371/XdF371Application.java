@@ -1,38 +1,18 @@
 package com.xdf.xd_f371;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.io.IOException;
 
-@SpringBootApplication
-public class XdF371Application extends Application {
-	public static Scene rootScence;
-	public static Stage rootStage;
-
+@SpringBootApplication(scanBasePackages = {"com.xdf.xd_f371"})
+@ComponentScan({"com.xdf.xd_f371.controller","com.xdf.xd_f371.service","com.xdf.xd_f371.service.impl","com.xdf.xd_f371.dto"})
+@EnableJpaRepositories(basePackages = {"com.xdf.xd_f371.repo"})
+@EntityScan(basePackages = {"com.xdf.xd_f371.entity"})
+public class XdF371Application {
 	public static void main(String[] args) {
-		launch();
-	}
-
-	@Override
-	public void start(Stage stage) throws Exception {
-		Parent root = null;
-		try {
-			root = FXMLLoader.load(getClass().getResource("dashboard2.fxml"));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		rootScence = new Scene(root);
-		rootScence.setFill(Color.TRANSPARENT);
-		stage.setScene(rootScence);
-//        stage.setMaximized(true);
-		stage.setTitle("Xăng dầu F371");
-		rootStage = stage;
-		stage.show();
+		SpringApplication.run(XdF371Application.class, args);
 	}
 }

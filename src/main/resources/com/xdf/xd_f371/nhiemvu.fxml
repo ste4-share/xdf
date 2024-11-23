@@ -18,21 +18,15 @@
             <HBox prefHeight="61.0" prefWidth="946.0" />
             <HBox layoutX="10.0" layoutY="10.0">
                <children>
-                  <Label prefHeight="47.0" prefWidth="114.0" text="Khối:">
-                     <font>
-                        <Font name="Cambria Bold" size="19.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="khoi_cmb" onAction="#khoi_selected" prefHeight="48.0" prefWidth="278.0" />
-                  <Label layoutX="10.0" layoutY="10.0" prefHeight="47.0" prefWidth="114.0" text="Quý">
+                  <Label layoutX="10.0" layoutY="10.0" prefHeight="47.0" prefWidth="85.0" text="Quý">
                      <font>
                         <Font name="Cambria Bold" size="19.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="100.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="quy_cbb" layoutX="124.0" layoutY="10.0" prefHeight="48.0" prefWidth="101.0" />
+                  <ComboBox fx:id="quy_cbb" layoutX="124.0" layoutY="10.0" prefHeight="48.0" prefWidth="359.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
