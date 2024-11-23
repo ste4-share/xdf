@@ -3,9 +3,7 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.dto.LichsuXNK;
 import com.xdf.xd_f371.dto.TTPhieuDto;
-import com.xdf.xd_f371.dto.TonKho;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.model.AssignTypeEnum;
 import com.xdf.xd_f371.model.TTPhieuModel;
 import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
@@ -94,12 +92,12 @@ public class DashboardController implements Initializable {
     @FXML
     private Pagination pagination_tbnxt,pagination_lichsu;
 
-    @FXML
-    private TableColumn<TonKho, String> col_tkt_loaixd, col_tkt_soluong;
+//    @FXML
+//    private TableColumn<Inventory, String> col_tkt_loaixd, col_tkt_soluong;
     @FXML
     private TableColumn<LichsuXNK, String> col_lsnxk_tenxd,col_lsnxk_mucgia, col_lsnxk_loaiphieu,col_lsnxk_soluong, col_lsnxk_tontruoc,col_lsnxk_tonsau,col_lsnxk_ngay;
-    @FXML
-    private TableColumn<TonKho, String> col_slton,col_loaixd,col_stt, col_mucgia;
+//    @FXML
+//    private TableColumn<Inventory, String> col_slton,col_loaixd,col_stt, col_mucgia;
 
     @FXML
     public TableView<TTPhieuModel> tbTTNX;

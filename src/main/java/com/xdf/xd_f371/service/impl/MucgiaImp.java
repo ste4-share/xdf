@@ -55,18 +55,7 @@ public class MucgiaImp implements MucgiaService {
     public List<SpotDto> getAllSpots(int quart_id) {
         QDatabase.getConnectionDB();
         List<SpotDto> result = new ArrayList<>();
-        String SQL_SELECT = "SELECT lxd2.id as lxd_id,lxd2.maxd, lxd2.tenxd, ast.name as nvdx,sum(amount) as nvdx_total, \n" +
-                "(select assignment_type.name from assignment_type where id=1 limit 1) as sscd, \n" +
-                "(select sum(amount) as total_sscd from assignment_type \n" +
-                "join mucgia on assignment_type.id=mucgia.asssign_type_id \n" +
-                "join loaixd2 on mucgia.item_id=loaixd2.id \n" +
-                "where assignment_type.id=1 and tenxd=lxd2.tenxd limit 1) as sscd_total\n" +
-                "FROM mucgia mg\n" +
-                "right join loaixd2 lxd2 on mg.item_id=lxd2.id \n" +
-                "join assignment_type ast on ast.id=mg.asssign_type_id\n" +
-                "where ast.id=2 and mg.quarter_id=?\n" +
-                "group by lxd_id, maxd, tenxd, nvdx \n" +
-                "order by nvdx_total desc";
+        String SQL_SELECT = "SELECT lxd2.id as lxd_id,lxd2.maxd, lxd2.tenxd, 'NVDX',sum(amount) as nvdx_total, 'SSCD', (select sum(amount) as total_sscd from mucgia join loaixd2 on mucgia.item_id=loaixd2.id where purpose like 'SSCD' and tenxd=lxd2.tenxd limit 1) as sscd_total FROM mucgia mg right join loaixd2 lxd2 on mg.item_id=lxd2.id where purpose like 'NVDX' and mg.quarter_id=? group by lxd_id, maxd, tenxd order by nvdx_total desc";
         // auto close connection and preparedStatement
         try {
             PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);

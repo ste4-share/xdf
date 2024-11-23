@@ -53,8 +53,7 @@ public class Inventory {
     private String petroleumName;
     private String chungloai;
 
-    public Inventory(int stt, int id, int petro_id, int quarter_id, int tdk_nvdx, int tdk_sscd, int pre_nvdx, int pre_sscd, int tck_nvdx, int tck_sscd, int import_total, int export_total, int total, String status) {
-        this.stt = stt;
+    public Inventory(int id, int petro_id, int quarter_id, int tdk_nvdx, int tdk_sscd, int pre_nvdx, int pre_sscd, int tck_nvdx, int tck_sscd, int import_total, int export_total, int total, String status) {
         this.id = id;
         this.petro_id = petro_id;
         this.quarter_id = quarter_id;
