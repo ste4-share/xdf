@@ -44,6 +44,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -64,7 +65,6 @@ public class DashboardController implements Initializable {
     public static Stage xuatStage;
     public static Stage ctStage;
     public static String so_clicked;
-    public static AssignType assignType;
     public static List<Ledger> ledgerList = new ArrayList<>();
     private static List<TTPhieuModel> ttp_ls = new ArrayList<>();
 
@@ -113,7 +113,6 @@ public class DashboardController implements Initializable {
     private LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
     private LichsuNXKService lichsuNXKService = new LichsuNXKImp();
 
-    private MucgiaService mucgiaService = new MucgiaImp();
     public static Quarter findByTime;
 
     @FXML
@@ -131,7 +130,6 @@ public class DashboardController implements Initializable {
         ttp_ls = new ArrayList<>();
         lichsuXNKS = new ArrayList<>();
         ledgerList = ledgersRepo.findAll();
-        assignType = mucgiaService.findByName(AssignTypeEnum.NVDX.getName());
 //        getDataToChart(root_inventory);
         getCurrentQuarter();
         getCurrentTiming();

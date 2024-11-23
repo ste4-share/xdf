@@ -1,5 +1,6 @@
 package com.xdf.xd_f371;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -15,6 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = {"com.xdf.xd_f371.repo"})
 @EntityScan(basePackages = {"com.xdf.xd_f371.entity"})
 public class XdF371Application {
+
 	public static void main(String[] args) {
 		SpringApplication.run(XdF371Application.class, args);
 	}

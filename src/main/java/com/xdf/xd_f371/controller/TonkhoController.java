@@ -4,6 +4,7 @@ import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.ChungloaiMap;
 import com.xdf.xd_f371.model.MockDataMap;
+import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.repo.TructhuocRepo;
@@ -77,7 +78,8 @@ public class TonkhoController implements Initializable {
     private TructhuocRepo tructhuocRepo;
     @Autowired
     private LoaiXangDauRepo loaiXangDauRepo;
-    private TonKhoService tonKhoService = new TonkhoImp();
+    @Autowired
+    private InventoryRepo inventoryRepo;
     private MucgiaService mucgiaService = new MucgiaImp();
 
     @Override
@@ -189,7 +191,7 @@ public class TonkhoController implements Initializable {
     }
 
     private void fillDataToTable(Quarter selected){
-        List<Inventory> inventories = tonKhoService.getAllInventory(DashboardController.findByTime.getId());
+        List<Inventory> inventories = inventoryRepo.findByQuarter_id(DashboardController.findByTime.getId());
         for(int i =0; i< inventories.size(); i++){
             Inventory inventory = inventories.get(i);
             LoaiXangDau loaiXangDau = loaiXangDauRepo.findById(inventory.getPetro_id()).orElse(null);
@@ -199,9 +201,9 @@ public class TonkhoController implements Initializable {
             inventory.setChungloai(loaiXangDau.getChungloai());
             inventory.setStt(i+1);
 
-            inventory.setTcK_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getTcK_nvdx()).equals("") ? "0" : String.valueOf(inventory.getTcK_nvdx())));
+            inventory.setTcK_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getTck_nvdx()).equals("") ? "0" : String.valueOf(inventory.getTck_nvdx())));
             inventory.setTck_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getTck_sscd()).equals("") ? "0" : String.valueOf(inventory.getTck_sscd())));
-            int sum_tck = inventory.getTcK_nvdx() + inventory.getTck_sscd();
+            int sum_tck = inventory.getTck_nvdx() + inventory.getTck_sscd();
             inventory.setTck_sum_str(TextToNumber.textToNum(String.valueOf(sum_tck).equals("") ? "0" : String.valueOf(sum_tck)));
 
             inventory.setTdk_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getTdk_sscd()).equals("") ? "0" : String.valueOf(inventory.getTdk_sscd())));

@@ -4,6 +4,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
+import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.util.TextToNumber;
@@ -65,6 +66,8 @@ public class NhapController extends CommonFactory implements Initializable {
     private NguonNxRepo nguonNxRepo;
     @Autowired
     private LoaiXangDauRepo loaiXangDauRepo;
+    @Autowired
+    private InventoryRepo inventoryRepo;
 
 
     @Override
@@ -294,7 +297,7 @@ public class NhapController extends CommonFactory implements Initializable {
                             soCaiDto.setLedger_id(0);
                         }
                         // add new so_cai
-                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getExport_unit_id(), 2);
+//                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getExport_unit_id(), 2);
                         saveLichsunxk(soCaiDto);
                         saveMucGia(soCaiDto);
                         recognized_tcn();
@@ -322,21 +325,21 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void saveLichsunxk(LedgerDetails soCaiDto) {
-        Inventory inventory = tonKhoService.findByUniqueId(soCaiDto.getLoaixd_id(), DashboardController.findByTime.getId());
+        Inventory inventory = inventoryRepo.findByPetro_idAndQuarter_id(soCaiDto.getLoaixd_id(), DashboardController.findByTime.getId()).orElse(null);
         int tonsau = inventory.getPre_nvdx()+ soCaiDto.getThuc_xuat();
         int tontruoc = inventory.getPre_nvdx();
         createNewTransaction(soCaiDto, tontruoc, tonsau);
     }
 
     private void saveMucGia(LedgerDetails ledgerDetails){
-        Mucgia mucgia_existed = mucgiaService.findMucgiaByGia(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id(), ledgerDetails.getDon_gia(),DashboardController.assignType.getId());
-        if (mucgia_existed==null){
-            createNewMucgia(ledgerDetails, ledgerDetails.getThuc_xuat());
-        } else {
-            int quantityPerPrice = mucgia_existed.getAmount() + ledgerDetails.getThuc_xuat();
-            updateMucgia(quantityPerPrice, mucgia_existed);
-        }
-        ledgerDetails.setTonkho_id(tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id()).getId());
+//        Mucgia mucgia_existed = mucgiaService.findMucgiaByGia(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id(), ledgerDetails.getDon_gia(),DashboardController.assignType.getId());
+//        if (mucgia_existed==null){
+//            createNewMucgia(ledgerDetails, ledgerDetails.getThuc_xuat());
+//        } else {
+//            int quantityPerPrice = mucgia_existed.getAmount() + ledgerDetails.getThuc_xuat();
+//            updateMucgia(quantityPerPrice, mucgia_existed);
+//        }
+//        ledgerDetails.setTonkho_id(tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id()).getId());
     }
 
     private void createNewLedger() {
@@ -709,7 +712,7 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setTonKhoLabel(){
-        Inventory inventory = tonKhoService.findByUniqueId(cmb_tenxd.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId());
+        Inventory inventory = inventoryRepo.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElse(null);
         if (inventory!=null){
             String sl_ton = TextToNumber.textToNum(String.valueOf(inventory.getPre_nvdx()));
             lb_tontheoxd.setText("Số lượng tồn: "+ sl_ton +" (Lit)");

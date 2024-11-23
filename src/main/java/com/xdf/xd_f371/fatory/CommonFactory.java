@@ -1,18 +1,13 @@
 package com.xdf.xd_f371.fatory;
 
-import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.LichsuXNK;
-import com.xdf.xd_f371.dto.QuantityByTTDTO;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.model.ChungLoaiModel;
 import com.xdf.xd_f371.model.MucGiaEnum;
 import com.xdf.xd_f371.repo.LedgerDetailRepo;
 import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.MucGiaRepo;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
-import com.xdf.xd_f371.util.Common;
-import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +19,6 @@ public class CommonFactory {
     protected LoaiPhieuService loaiPhieuService = new LoaiPhieuImp();
     protected CategoryService categoryService = new CategoryImp();
     protected InvReportDetailService invReportDetailService = new invReportDetailImp();
-    protected TonKhoService tonKhoService = new TonkhoImp();
     protected MucgiaService mucgiaService = new MucgiaImp();
     protected LichsuNXKService lichsuNXKService = new LichsuNXKImp();
     protected static LoaiPhieu lp_id_pre = new LoaiPhieu();
@@ -42,38 +36,38 @@ public class CommonFactory {
     protected MucGiaRepo mucGiaRepo;
 
     protected void updateAllRowInv(LedgerDetails ledgerDetails){
-        Inventory inventory = tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id());
-        Category category = categoryService.getTitleByttLpId(ledgerDetails.getNhiemvu_id(), ledgerDetails.getLoai_phieu());
-        updateTck_forReport(ChungLoaiModel.NVDX_a.getNameChungloai(),ChungLoaiModel.TCK_a.getNameChungloai(), ledgerDetails, inventory.getTcK_nvdx());
-        updateTck_forReport(ChungLoaiModel.SSCD_a.getNameChungloai(),ChungLoaiModel.TCK_a.getNameChungloai(), ledgerDetails, inventory.getTck_sscd());
-        if (category!=null){
-            InvReportDetail invReportDetail = invReportDetailService.findByIds(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id(), category.getId());
-            if (Common.getInvCatalogField(category, inventory, invReportDetail)){
-                invReportDetailService.update(invReportDetail);
-            } else {
-                if (ledgerDetails.getLoai_phieu().equals("NHAP")){
-                    QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnx(2,ledgerDetails.getLoai_phieu(),category.getTructhuoc_id(),ledgerDetails.getLoaixd_id());
-                    if (quantity==null){
-                        invReportDetail.setSoluong(0);
-                    }else{
-                        invReportDetail.setSoluong(quantity.getSum());
-                    }
-                    invReportDetailService.update(invReportDetail);
-                } else if (ledgerDetails.getLoai_phieu().equals("XUAT")){
-                    QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnxImport(2,ledgerDetails.getLoai_phieu(),category.getTructhuoc_id(),ledgerDetails.getLoaixd_id());
-                    if (quantity==null){
-                        invReportDetail.setSoluong(0);
-                    }else{
-                        invReportDetail.setSoluong(quantity.getSum());
-                    }
-                    invReportDetailService.update(invReportDetail);
-                }
-            }
-        }else{
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Đơn vị không có nguồn trực thuộc.");
-            alert.showAndWait();
-        }
+//        Inventory inventory = tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id());
+//        Category category = categoryService.getTitleByttLpId(ledgerDetails.getNhiemvu_id(), ledgerDetails.getLoai_phieu());
+//        updateTck_forReport(ChungLoaiModel.NVDX_a.getNameChungloai(),ChungLoaiModel.TCK_a.getNameChungloai(), ledgerDetails, inventory.getTcK_nvdx());
+//        updateTck_forReport(ChungLoaiModel.SSCD_a.getNameChungloai(),ChungLoaiModel.TCK_a.getNameChungloai(), ledgerDetails, inventory.getTck_sscd());
+//        if (category!=null){
+//            InvReportDetail invReportDetail = invReportDetailService.findByIds(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id(), category.getId());
+//            if (Common.getInvCatalogField(category, inventory, invReportDetail)){
+//                invReportDetailService.update(invReportDetail);
+//            } else {
+//                if (ledgerDetails.getLoai_phieu().equals("NHAP")){
+//                    QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnx(2,ledgerDetails.getLoai_phieu(),category.getTructhuoc_id(),ledgerDetails.getLoaixd_id());
+//                    if (quantity==null){
+//                        invReportDetail.setSoluong(0);
+//                    }else{
+//                        invReportDetail.setSoluong(quantity.getSum());
+//                    }
+//                    invReportDetailService.update(invReportDetail);
+//                } else if (ledgerDetails.getLoai_phieu().equals("XUAT")){
+//                    QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnxImport(2,ledgerDetails.getLoai_phieu(),category.getTructhuoc_id(),ledgerDetails.getLoaixd_id());
+//                    if (quantity==null){
+//                        invReportDetail.setSoluong(0);
+//                    }else{
+//                        invReportDetail.setSoluong(quantity.getSum());
+//                    }
+//                    invReportDetailService.update(invReportDetail);
+//                }
+//            }
+//        }else{
+//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            alert.setContentText("Đơn vị không có nguồn trực thuộc.");
+//            alert.showAndWait();
+//        }
     }
 
     private void updateTck_forReport(String code, String type, LedgerDetails ledgerDetails, int soluong){
@@ -85,36 +79,36 @@ public class CommonFactory {
     }
 
     protected void createNewMucgia(LedgerDetails ledgerDetails, int quantity){
-        Mucgia mucgia = new Mucgia();
-        Inventory inventory = tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id());
-        if (inventory==null){
-            inventory = createInventory(ledgerDetails);
-        }
-        mucgia.setPrice(ledgerDetails.getDon_gia());
-        mucgia.setAmount(quantity);
-        mucgia.setQuarter_id(ledgerDetails.getQuarter_id());
-        mucgia.setItem_id(ledgerDetails.getLoaixd_id());
-        mucgia.setStatus(MucGiaEnum.IN_STOCK.getStatus());
-        mucgia.setAssign_type_id(DashboardController.assignType.getId());
-        mucgia.setInventory_id(inventory.getId());
-        ledgerDetails.setTonkho_id(inventory.getId());
-        mucgiaService.createNew(mucgia);
+//        Mucgia mucgia = new Mucgia();
+//        Inventory inventory = tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id());
+//        if (inventory==null){
+//            inventory = createInventory(ledgerDetails);
+//        }
+//        mucgia.setPrice(ledgerDetails.getDon_gia());
+//        mucgia.setAmount(quantity);
+//        mucgia.setQuarter_id(ledgerDetails.getQuarter_id());
+//        mucgia.setItem_id(ledgerDetails.getLoaixd_id());
+//        mucgia.setStatus(MucGiaEnum.IN_STOCK.getStatus());
+//        mucgia.setAssign_type_id(DashboardController.assignType.getId());
+//        mucgia.setInventory_id(inventory.getId());
+//        ledgerDetails.setTonkho_id(inventory.getId());
+//        mucgiaService.createNew(mucgia);
     }
 
-    private Inventory createInventory(LedgerDetails ledgerDetails){
-        Inventory inventory = new Inventory();
-        inventory.setQuarter_id(ledgerDetails.getQuarter_id());
-        inventory.setPetro_id(ledgerDetails.getLoaixd_id());
-        inventory.setPetroleumName(ledgerDetails.getTen_xd());
-        inventory.setTdk_sscd(0);
-        inventory.setTdk_nvdx(0);
-        inventory.setPre_sscd(0);
-        inventory.setPre_nvdx(ledgerDetails.getThuc_xuat());
-        inventory.setTck_sscd(0);
-        inventory.setTcK_nvdx(ledgerDetails.getThuc_xuat());
-        tonKhoService.createNew(inventory);
-        return tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id());
-    }
+//    private Inventory createInventory(LedgerDetails ledgerDetails){
+//        Inventory inventory = new Inventory();
+//        inventory.setQuarter_id(ledgerDetails.getQuarter_id());
+//        inventory.setPetro_id(ledgerDetails.getLoaixd_id());
+//        inventory.setPetroleumName(ledgerDetails.getTen_xd());
+//        inventory.setTdk_sscd(0);
+//        inventory.setTdk_nvdx(0);
+//        inventory.setPre_sscd(0);
+//        inventory.setPre_nvdx(ledgerDetails.getThuc_xuat());
+//        inventory.setTck_sscd(0);
+//        inventory.setTcK_nvdx(ledgerDetails.getThuc_xuat());
+//        tonKhoService.createNew(inventory);
+//        return tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id());
+//    }
 
     protected void updateMucgia(int quantity, Mucgia mucgia_existed){
         if (quantity == 0){

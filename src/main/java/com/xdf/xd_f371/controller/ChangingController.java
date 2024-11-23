@@ -1,12 +1,15 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.dto.AssignTypePriceDto;
+import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.Mucgia;
 import com.xdf.xd_f371.model.AssignTypeEnum;
 import com.xdf.xd_f371.model.MucGiaEnum;
+import com.xdf.xd_f371.repo.MucGiaRepo;
 import com.xdf.xd_f371.service.MucgiaService;
 import com.xdf.xd_f371.service.impl.MucgiaImp;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +23,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+@Component
 public class ChangingController implements Initializable {
     public static Stage addAff_stage;
     public static int sum = 0;
@@ -35,19 +41,25 @@ public class ChangingController implements Initializable {
     public static String quantity ;
     public static String quantity_convert =null;
     private static SpotDto tonkho_selected;
-    private static List<AssignTypePriceDto> sscd_ls_buf;
-    private static List<AssignTypePriceDto> nvdx_ls_buf;
+    private static List<Mucgia> sscd_ls_buf;
+    private static List<Mucgia> nvdx_ls_buf;
 
     @FXML
-    private TableView<AssignTypePriceDto> nvdx_tb,sscd_tb;
+    private TableView<Mucgia> nvdx_tb,sscd_tb;
     @FXML
-    private TableColumn<AssignTypePriceDto, String> nvdx_price,nvdx_quantity,sscd_price,sscd_quantity;
+    private TableColumn<Mucgia, String> nvdx_price,nvdx_quantity,sscd_price,sscd_quantity;
     @FXML
     private Label petro_name;
     @FXML
     private Button nvdx_sscd, sscd_nvdx;
 
     private MucgiaService mucgiaService = new MucgiaImp();
+
+    @Autowired
+    private MucGiaRepo mucGiaRepo;
+
+    private Purpose purpose;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,11 +76,11 @@ public class ChangingController implements Initializable {
         sscd_nvdx.setDisable(sscd);
     }
     private void setNvdxTable() {
-        nvdx_ls_buf = setDataToTable(nvdx_tb, AssignTypeEnum.NVDX.getName());
+        nvdx_ls_buf = setDataToTable(nvdx_tb, Purpose.NVDX.getName());
         setFieldFactoryTb(nvdx_price, nvdx_quantity);
     }
     private void setSScdTable() {
-        sscd_ls_buf = setDataToTable(sscd_tb, AssignTypeEnum.SSCD.getName());
+        sscd_ls_buf = setDataToTable(sscd_tb, Purpose.SSCD.getName());
         setFieldFactoryTb(sscd_price, sscd_quantity);
     }
 
@@ -100,67 +112,67 @@ public class ChangingController implements Initializable {
 
     @FXML
     public void nvdxToSscdAction(ActionEvent actionEvent) {
-        AssignTypePriceDto assignTypePriceDto = nvdx_tb.getSelectionModel().getSelectedItem();
-        if (assignTypePriceDto.getSoluong().equals("0")){
-            alert("Số lượng mức giá " + assignTypePriceDto.getPrice() + " đã hết.");
-        }else {
-            if (assignTypePriceDto!=null){
-                quantity = assignTypePriceDto.getSoluong();
-                openChangeQuantityForm();
-                resetTable(assignTypePriceDto, nvdx_ls_buf, sscd_ls_buf);
-                refreshTable();
-            }else{
-                alert("Vui lòng chọn mức giá.");
-            }
-        }
+//        Mucgia Mucgia = nvdx_tb.getSelectionModel().getSelectedItem();
+//        if (Mucgia.getAmount()==0){
+//            alert("Số lượng mức giá " + Mucgia.getPrice() + " đã hết.");
+//        }else {
+//            if (Mucgia!=null){
+//                quantity = Mucgia.getAmount();
+//                openChangeQuantityForm();
+//                resetTable(Mucgia, nvdx_ls_buf, sscd_ls_buf);
+//                refreshTable();
+//            }else{
+//                alert("Vui lòng chọn mức giá.");
+//            }
+//        }
     }
 
     @FXML
     public void sscdToNvdxAction(ActionEvent actionEvent) {
-        AssignTypePriceDto assignTypePriceDto = sscd_tb.getSelectionModel().getSelectedItem();
-        if (assignTypePriceDto.getSoluong().equals("0")){
-            alert("Số lượng mức giá " + assignTypePriceDto.getPrice() + " đã hết.");
-        }else {
-            if (assignTypePriceDto!=null){
-                quantity = assignTypePriceDto.getSoluong();
-                openChangeQuantityForm();
-                try {
-                    resetTable(assignTypePriceDto, sscd_ls_buf, nvdx_ls_buf);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                refreshTable();
-            } else {
-                alert("Vui lòng chọn mức giá.");
-            }
-        }
+//        Mucgia mucgia = sscd_tb.getSelectionModel().getSelectedItem();
+//        if (mucgia.getAmount().==("0")){
+//            alert("Số lượng mức giá " + mucgia.getPrice() + " đã hết.");
+//        }else {
+//            if (mucgia!=null){
+//                quantity = mucgia.getAmount();
+//                openChangeQuantityForm();
+//                try {
+//                    resetTable(mucgia, sscd_ls_buf, nvdx_ls_buf);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//                refreshTable();
+//            } else {
+//                alert("Vui lòng chọn mức giá.");
+//            }
+//        }
     }
 
-    private void resetTable(AssignTypePriceDto pre_convert,List<AssignTypePriceDto> pre,List<AssignTypePriceDto> after){
-        if (quantity_convert!=null || quantity_convert!="0"){
-            int sl_conlai = Integer.parseInt(pre_convert.getSoluong()) -Integer.parseInt(quantity_convert);
-            AssignTypePriceDto after_convert = after.stream().filter(x -> x.getPrice().equals(pre_convert.getPrice())).findAny().orElse(null);
-            if (after_convert==null){
-                after.add(new AssignTypePriceDto(tonkho_selected.getLxd_id(), pre_convert.getPrice(), quantity_convert));
-                for (int i = 0; i< pre.size(); i++){
-                    if (pre.get(i).getPrice().equals(pre_convert.getPrice())) {
-                        pre.get(i).setSoluong(String.valueOf(sl_conlai));
-                    }
-                }
-            }else{
-                int sl = Integer.parseInt(after_convert.getSoluong()) + Integer.parseInt(quantity_convert);
-                for (int i =0; i< pre.size(); i++){
-                    if (pre.get(i).getPrice().equals(pre_convert.getPrice())){
-                        pre.get(i).setSoluong(String.valueOf(sl_conlai));
-                    }
-                }
-                for (int i =0; i< after.size(); i++){
-                    if (after.get(i).getPrice().equals(after_convert.getPrice())){
-                        after.get(i).setSoluong(String.valueOf(sl));
-                    }
-                }
-            }
-        }
+    private void resetTable(Mucgia pre_convert,List<Mucgia> pre,List<Mucgia> after){
+//        if (quantity_convert!=null || quantity_convert!="0"){
+//            int sl_conlai = pre_convert.getAmount() -Integer.parseInt(quantity_convert);
+//            Mucgia after_convert = after.stream().filter(x -> x.getPrice()==pre_convert.getPrice()).findAny().orElse(null);
+//            if (after_convert==null){
+//                after.add(new Mucgia(tonkho_selected.getLxd_id(), pre_convert.getPrice(), quantity_convert));
+//                for (int i = 0; i< pre.size(); i++){
+//                    if (pre.get(i).getPrice()==pre_convert.getPrice()) {
+//                        pre.get(i).getAmount(String.valueOf(sl_conlai));
+//                    }
+//                }
+//            }else{
+//                int sl = Integer.parseInt(after_convert.getSoluong()) + Integer.parseInt(quantity_convert);
+//                for (int i =0; i< pre.size(); i++){
+//                    if (pre.get(i).getPrice().equals(pre_convert.getPrice())){
+//                        pre.get(i).getAmount(String.valueOf(sl_conlai));
+//                    }
+//                }
+//                for (int i =0; i< after.size(); i++){
+//                    if (after.get(i).getPrice().equals(after_convert.getPrice())){
+//                        after.get(i).setSoluong(String.valueOf(sl));
+//                    }
+//                }
+//            }
+//        }
     }
 
     private void refreshTable(){
@@ -170,20 +182,20 @@ public class ChangingController implements Initializable {
         sscd_tb.refresh();
     }
 
-    private void updateMucgia(List<AssignTypePriceDto> assignTypePriceDtoList,int ass_id){
-        for(int i = 0;i < assignTypePriceDtoList.size(); i++){
-            Mucgia mucgia = mucgiaService.findMucgiaByGia(tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),Integer.parseInt(assignTypePriceDtoList.get(i).getPrice()),ass_id);
+    private void updateMucgia(List<Mucgia> MucgiaList,String purpose){
+        for(int i = 0;i < MucgiaList.size(); i++){
+            Mucgia mucgia = mucGiaRepo.findAllMucgiaUnique(purpose,tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucgiaList.get(i).getPrice());
             if (mucgia==null){
                 Mucgia after_convert = new Mucgia();
-                after_convert.setAssign_type_id(ass_id);
-                after_convert.setPrice(Integer.parseInt(assignTypePriceDtoList.get(i).getPrice()));
-                after_convert.setAmount(Integer.parseInt(assignTypePriceDtoList.get(i).getSoluong()));
+                after_convert.setPurpose(purpose);
+                after_convert.setPrice(MucgiaList.get(i).getPrice());
+                after_convert.setAmount(MucgiaList.get(i).getAmount());
                 after_convert.setStatus(MucGiaEnum.IN_STOCK.getStatus());
                 after_convert.setItem_id(tonkho_selected.getLxd_id());
                 after_convert.setQuarter_id(DashboardController.findByTime.getId());
-                mucgiaService.createNew(after_convert);
+                mucGiaRepo.save(after_convert);
             }else{
-                mucgia.setAmount(Integer.parseInt(assignTypePriceDtoList.get(i).getSoluong()));
+                mucgia.setAmount(MucgiaList.get(i).getAmount());
                 mucgiaService.updateMucGia(mucgia);
             }
         }
@@ -192,8 +204,8 @@ public class ChangingController implements Initializable {
     @FXML
     public void changeSScd(ActionEvent actionEvent) {
         try {
-            updateMucgia(nvdx_ls_buf,mucgiaService.findByName(AssignTypeEnum.NVDX.getName()).getId());
-            updateMucgia(sscd_ls_buf,mucgiaService.findByName(AssignTypeEnum.SSCD.getName()).getId());
+//            updateMucgia(nvdx_ls_buf,mucgiaService.findByName(AssignTypeEnum.NVDX.getName()).getId());
+//            updateMucgia(sscd_ls_buf,mucgiaService.findByName(AssignTypeEnum.SSCD.getName()).getId());
             TonkhoController.ChangeSScd_stage.close();
         } catch (Exception e){
             e.printStackTrace();
@@ -209,14 +221,13 @@ public class ChangingController implements Initializable {
         setVisibleForBtn(true,false);
     }
 
-    private void setFieldFactoryTb(TableColumn<AssignTypePriceDto, String> col1,TableColumn<AssignTypePriceDto, String> col2){
-        col1.setCellValueFactory(new PropertyValueFactory<AssignTypePriceDto, String>("price"));
-        col2.setCellValueFactory(new PropertyValueFactory<AssignTypePriceDto, String>("soluong"));
+    private void setFieldFactoryTb(TableColumn<Mucgia, String> col1,TableColumn<Mucgia, String> col2){
+        col1.setCellValueFactory(new PropertyValueFactory<Mucgia, String>("price"));
+        col2.setCellValueFactory(new PropertyValueFactory<Mucgia, String>("amount"));
     }
-    private List<AssignTypePriceDto> setDataToTable(TableView<AssignTypePriceDto> tb, String assTypeName){
-        int assId = mucgiaService.findByName(assTypeName).getId();
+    private List<Mucgia> setDataToTable(TableView<Mucgia> tb, String purpose){
         int petroId = tonkho_selected.getLxd_id();
-        List<AssignTypePriceDto> list = mucgiaService.getPriceAndQuanTityByAssId(assId,petroId,DashboardController.findByTime.getId());
+        List<Mucgia> list = mucGiaRepo.findAllMucgiaByItemID(purpose, petroId,DashboardController.findByTime.getId());
         tb.setItems(FXCollections.observableList(list));
         return list;
     }

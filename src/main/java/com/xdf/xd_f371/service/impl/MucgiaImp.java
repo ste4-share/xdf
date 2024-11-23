@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.service.impl;
 
-import com.xdf.xd_f371.dto.AssignTypePriceDto;
 import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.Mucgia;
 import com.xdf.xd_f371.model.QDatabase;
@@ -14,196 +13,42 @@ import java.util.List;
 
 public class MucgiaImp implements MucgiaService {
 
-
-    @Override
-    public Mucgia findMucgiaByGia(int id_xd, int id_quarter, int gia, int assT) {
-        QDatabase.getConnectionDB();
-
-        String SQL_SELECT = "Select * from mucgia where quarter_id=? and item_id=? and price=? and asssign_type_id=?";
-        // auto close connection and preparedStatement
-        try {
-            PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
-            preparedStatement.setInt(1, id_quarter);
-            preparedStatement.setInt(2, id_xd);
-            preparedStatement.setInt(3, gia);
-            preparedStatement.setInt(4, assT);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int price = resultSet.getInt("price");
-                int amount = resultSet.getInt("amount");
-                int quarter_id = resultSet.getInt("quarter_id");
-                int item_id = resultSet.getInt("item_id");
-                String status = resultSet.getString("status");
-                int assId = resultSet.getInt("asssign_type_id");
-
-                Mucgia mucgia = new Mucgia();
-                mucgia.setId(id);
-                mucgia.setPrice(price);
-                mucgia.setStatus(status);
-                mucgia.setAmount(amount);
-                mucgia.setQuarter_id(quarter_id);
-                mucgia.setItem_id(item_id);
-                mucgia.setAssign_type_id(assId);
-                return mucgia;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
     @Override
     public Mucgia updateMucGia(Mucgia mucgia) {
         QDatabase.getConnectionDB();
 
-        String sql = "begin transaction; update mucgia set amount=?, status=? where quarter_id=? and item_id=? and price=? and asssign_type_id=?;update inventory \n" +
-                "set pre_nvdx=(select sum(amount) from mucgia where quarter_id=? and item_id=? and asssign_type_id=2),\n" +
-                "pre_sscd=(select sum(amount) from mucgia where quarter_id=? and item_id=? and asssign_type_id=1),\n" +
-                "tck_nvdx=(select sum(amount) from mucgia where quarter_id=? and item_id=? and asssign_type_id=2),\n" +
-                "tck_sscd=(select sum(amount) from mucgia where quarter_id=? and item_id=? and asssign_type_id=1)\n" +
-                "where petro_id=? and quarter_id=?;commit;";
-        try {
-            PreparedStatement statement = QDatabase.conn.prepareStatement(sql);
-            statement.setInt(1, mucgia.getAmount());
-            statement.setString(2, mucgia.getStatus());
-            statement.setInt(3, mucgia.getQuarter_id());
-            statement.setInt(4, mucgia.getItem_id());
-            statement.setInt(5, mucgia.getPrice());
-            statement.setInt(6, mucgia.getAssign_type_id());
-
-            statement.setInt(7, mucgia.getQuarter_id());
-            statement.setInt(8, mucgia.getItem_id());
-            statement.setInt(9, mucgia.getQuarter_id());
-            statement.setInt(10, mucgia.getItem_id());
-            statement.setInt(11, mucgia.getQuarter_id());
-            statement.setInt(12, mucgia.getItem_id());
-            statement.setInt(13, mucgia.getQuarter_id());
-            statement.setInt(14, mucgia.getItem_id());
-            statement.setInt(15, mucgia.getItem_id());
-            statement.setInt(16, mucgia.getQuarter_id());
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+//        String sql = "begin transaction; update mucgia set amount=?, status=? where quarter_id=? and item_id=? and price=? and asssign_type_id=?;update inventory \n" +
+//                "set pre_nvdx=(select sum(amount) from mucgia where quarter_id=? and item_id=? and asssign_type_id=2),\n" +
+//                "pre_sscd=(select sum(amount) from mucgia where quarter_id=? and item_id=? and asssign_type_id=1),\n" +
+//                "tck_nvdx=(select sum(amount) from mucgia where quarter_id=? and item_id=? and asssign_type_id=2),\n" +
+//                "tck_sscd=(select sum(amount) from mucgia where quarter_id=? and item_id=? and asssign_type_id=1)\n" +
+//                "where petro_id=? and quarter_id=?;commit;";
+//        try {
+//            PreparedStatement statement = QDatabase.conn.prepareStatement(sql);
+//            statement.setInt(1, mucgia.getAmount());
+//            statement.setString(2, mucgia.getStatus());
+//            statement.setInt(3, mucgia.getQuarter_id());
+//            statement.setInt(4, mucgia.getItem_id());
+//            statement.setInt(5, mucgia.getPrice());
+//            statement.setInt(6, mucgia.getAssign_type_id());
+//
+//            statement.setInt(7, mucgia.getQuarter_id());
+//            statement.setInt(8, mucgia.getItem_id());
+//            statement.setInt(9, mucgia.getQuarter_id());
+//            statement.setInt(10, mucgia.getItem_id());
+//            statement.setInt(11, mucgia.getQuarter_id());
+//            statement.setInt(12, mucgia.getItem_id());
+//            statement.setInt(13, mucgia.getQuarter_id());
+//            statement.setInt(14, mucgia.getItem_id());
+//            statement.setInt(15, mucgia.getItem_id());
+//            statement.setInt(16, mucgia.getQuarter_id());
+//
+//            statement.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException(e);
+//        }
         return mucgia;
-    }
-
-    @Override
-    public Mucgia findMucGiaByID(int id1, String status1) {
-        QDatabase.getConnectionDB();
-        String SQL_SELECT = "Select * from mucgia where id=? and status=?";
-        // auto close connection and preparedStatement
-        try {
-            PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
-            preparedStatement.setInt(1, id1);
-            preparedStatement.setString(2, status1);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int price = resultSet.getInt("price");
-                int amount = resultSet.getInt("amount");
-                int quarter_id = resultSet.getInt("quarter_id");
-                int item_id = resultSet.getInt("item_id");
-                String status = resultSet.getString("status");
-                int assT = resultSet.getInt("asssign_type_id");
-                int inventory_id = resultSet.getInt("inventory_id");
-
-                Mucgia result = new Mucgia();
-                result.setId(id);
-                result.setPrice(price);
-                result.setStatus(status);
-                result.setAmount(amount);
-                result.setQuarter_id(quarter_id);
-                result.setItem_id(item_id);
-                result.setInventory_id(inventory_id);
-                result.setAssign_type_id(assT);
-                return result;
-            }
-
-        } catch (SQLException e) {
-            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    @Override
-    public List<AssignTypePriceDto> getPriceAndQuanTityByAssId(int ass_id, int petroId, int quarter_id) {
-        QDatabase.getConnectionDB();
-        List<AssignTypePriceDto> result = new ArrayList<>();
-        String SQL_SELECT = "Select * from mucgia where quarter_id=? and item_id=? and asssign_type_id=?";
-        // auto close connection and preparedStatement
-        try {
-            PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
-            preparedStatement.setInt(1, quarter_id);
-            preparedStatement.setInt(2, petroId);
-            preparedStatement.setInt(3, ass_id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String quantity = String.valueOf(resultSet.getInt("amount"));
-                String price = String.valueOf(resultSet.getInt("price"));
-                result.add(new AssignTypePriceDto(petroId,price, quantity));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return result;
-    }
-
-    @Override
-    public List<Mucgia> getPriceAndQuanTityByAssId2(int ass_id, int petroId, int quarterId) {
-        QDatabase.getConnectionDB();
-        List<Mucgia> result = new ArrayList<>();
-        String SQL_SELECT = "Select * from mucgia where quarter_id=? and item_id=? and asssign_type_id=?";
-        // auto close connection and preparedStatement
-        try {
-            PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
-            preparedStatement.setInt(1, quarterId);
-            preparedStatement.setInt(2, petroId);
-            preparedStatement.setInt(3, ass_id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int price = resultSet.getInt("price");
-                int amount = resultSet.getInt("amount");
-                int quarter_id = resultSet.getInt("quarter_id");
-                int item_id = resultSet.getInt("item_id");
-                String status = resultSet.getString("status");
-                int assId = resultSet.getInt("asssign_type_id");
-
-                Mucgia mucgia = new Mucgia();
-                mucgia.setId(id);
-                mucgia.setPrice(price);
-                mucgia.setStatus(status);
-                mucgia.setAmount(amount);
-                mucgia.setQuarter_id(quarter_id);
-                mucgia.setItem_id(item_id);
-                mucgia.setAssign_type_id(assId);
-                result.add(mucgia);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return result;
     }
 
     @Override

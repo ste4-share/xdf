@@ -24,8 +24,8 @@ public class Mucgia {
     private int item_id;
     @Column(name = "inventory_id")
     private int inventory_id;
-    @Column(name = "assign_type_id")
-    private int assign_type_id;
+    @Column(name = "purpose")
+    private String purpose;
     @Column(name = "status")
     private String status;
     @Column(name = "timestamp")

@@ -1,9 +1,12 @@
 package com.xdf.xd_f371.model;
 
+import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.QuantityByTTDTO;
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
+import com.xdf.xd_f371.repo.MucGiaRepo;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.Common;
@@ -17,12 +20,16 @@ import java.util.Map;
 public class MockDataMap {
 
     private static CategoryService categoryService = new CategoryImp();
-    private static TonKhoService tonKhoService = new TonkhoImp();
     private static InvReportDetailService invReportDetailService = new invReportDetailImp();
-    private static MucgiaService mucgiaService = new MucgiaImp();
+
     private static LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
     @Autowired
     private static LoaiXangDauRepo loaiXangDauRepo;
+
+    @Autowired
+    private static MucGiaRepo mucGiaRepo;
+    @Autowired
+    private static InventoryRepo inventoryRepo;
 
     public static void initInventoryMap(){
         invReportDetailService.deleteAll();
@@ -31,7 +38,7 @@ public class MockDataMap {
         try {
             int quarter_id = DashboardController.findByTime.getId();
             for (int i =0; i< loaiXangDauList.size(); i++){
-                Inventory inventory = tonKhoService.findByUniqueId(loaiXangDauList.get(i).getId(), quarter_id);
+                Inventory inventory = inventoryRepo.findByPetro_idAndQuarter_id(loaiXangDauList.get(i).getId(), quarter_id).orElse(null);
                 for (int j=0; j< categories.size(); j++){
                     Category catelos = categories.get(j);
                     InvReportDetail invReportDetail = new InvReportDetail();
@@ -86,35 +93,35 @@ public class MockDataMap {
             inventory.setTdk_sscd(tondk_sscd_mock);
             inventory.setPre_nvdx(tondk_nvdx_mock);
             inventory.setPre_sscd(tondk_sscd_mock);
-            inventory.setTcK_nvdx(0);
+            inventory.setTck_nvdx(0);
             inventory.setTck_sscd(0);
             inventory.setImport_total(0);
             inventory.setExport_total(0);
 
             inventory.setTdk_sscd(tondk_sscd_mock);
             inventory.setStatus("RECORDING");
-            tonKhoService.createNew(inventory);
+            inventoryRepo.save(inventory);
 
-            Inventory inventory1 = tonKhoService.findByUniqueId(loaiXangDau.getId(), DashboardController.findByTime.getId());
+            Inventory inventory1 = inventoryRepo.findByPetro_idAndQuarter_id(loaiXangDau.getId(), DashboardController.findByTime.getId()).orElse(null);
             //mock mucgia
             Mucgia mucgia = new Mucgia();
             mucgia.setQuarter_id(DashboardController.findByTime.getId());
             mucgia.setAmount(tondk_nvdx_mock);
             mucgia.setPrice(142857);
             mucgia.setItem_id(loaiXangDau.getId());
-            mucgia.setAssign_type_id(mucgiaService.findByName(AssignTypeEnum.NVDX.getName()).getId());
+            mucgia.setPurpose(Purpose.NVDX.getName());
             mucgia.setStatus("IN_STOCK");
             mucgia.setInventory_id(inventory1.getId());
-            mucgiaService.createNew(mucgia);
+            mucGiaRepo.save(mucgia);
             Mucgia mucgia2 = new Mucgia();
             mucgia2.setQuarter_id(DashboardController.findByTime.getId());
             mucgia2.setAmount(tondk_nvdx_mock);
             mucgia2.setPrice(142857);
             mucgia2.setItem_id(loaiXangDau.getId());
-            mucgia2.setAssign_type_id(mucgiaService.findByName(AssignTypeEnum.SSCD.getName()).getId());
+            mucgia2.setPurpose(Purpose.SSCD.getName());
             mucgia2.setStatus("IN_STOCK");
             mucgia2.setInventory_id(inventory1.getId());
-            mucgiaService.createNew(mucgia2);
+            mucGiaRepo.save(mucgia2);
 
         }
     }
