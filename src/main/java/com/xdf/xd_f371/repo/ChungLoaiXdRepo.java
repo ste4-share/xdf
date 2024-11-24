@@ -1,8 +1,9 @@
 package com.xdf.xd_f371.repo;
 
+import com.xdf.xd_f371.entity.ChungLoaiXd;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ChungLoaiXdRepo extends JpaRepository<ChungLoaiXdRepo, Integer> {
+public interface ChungLoaiXdRepo extends JpaRepository<ChungLoaiXd, Integer> {
 }

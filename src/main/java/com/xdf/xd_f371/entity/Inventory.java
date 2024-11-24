@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Inventory {
-    private int stt;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -40,18 +39,6 @@ public class Inventory {
     private int total;
     @Column(name = "status")
     private String status;
-
-    private String tdk_nvdx_str;
-    private String tdk_sscd_str;
-    private String tdk_sum_str;
-    private String tcK_nvdx_str;
-    private String tck_sscd_str;
-    private String tck_sum_str;
-    private String pre_nvdx_str;
-    private String pre_sscd_str;
-    private String pre_sum_str;
-    private String petroleumName;
-    private String chungloai;
 
     public Inventory(int id, int petro_id, int quarter_id, int tdk_nvdx, int tdk_sscd, int pre_nvdx, int pre_sscd, int tck_nvdx, int tck_sscd, int import_total, int export_total, int total, String status) {
         this.id = id;

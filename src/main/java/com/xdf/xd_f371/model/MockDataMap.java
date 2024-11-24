@@ -65,9 +65,7 @@ public class MockDataMap {
                     invReportDetail.setTitle_lv2(catelos.getHeader_lv2());
                     invReportDetail.setTitle_lv3(catelos.getHeader_lv3());
                     Map<String, String> titleMap = ChungloaiMap.getMapChungloai();
-                    invReportDetail.setTitle_lxd_lv1(titleMap.get(loaiXangDauList.get(i).getChungloai()));
-                    invReportDetail.setTitle_lxd_lv2(titleMap.get(loaiXangDauList.get(i).getType()));
-                    invReportDetail.setTitle_lxd_lv3(titleMap.get(loaiXangDauList.get(i).getRType()));
+
                     invReportDetail.setXd_id(loaiXangDauList.get(i).getId());
                     invReportDetail.setQuarter_id(quarter_id);
                     invReportDetail.setTitle_id(catelos.getId());

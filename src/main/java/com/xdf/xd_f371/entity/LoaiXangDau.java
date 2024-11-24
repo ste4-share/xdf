@@ -18,18 +18,14 @@ public class LoaiXangDau {
     private String maxd;
     @Column(name = "tenxd")
     private String tenxd;
-    @Column(name = "chungloai")
-    private String chungloai;
     @Column(name = "ut")
     private int priority;
-    @Column(name = "type")
-    private String type;
-    @Column(name = "r_type")
-    private String rType;
     @Column(name = "ut2")
     private int ut2;
     @Column(name = "petroleum_type_id")
     private int petroleum_type_id;
+    @Column(name = "status")
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "petroleum_type_id", referencedColumnName = "id", insertable = false, updatable = false)

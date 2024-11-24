@@ -197,24 +197,24 @@ public class TonkhoController implements Initializable {
             LoaiXangDau loaiXangDau = loaiXangDauRepo.findById(inventory.getPetro_id()).orElse(null);
 
 
-            inventory.setPetroleumName(loaiXangDau.getTenxd());
-            inventory.setChungloai(loaiXangDau.getChungloai());
-            inventory.setStt(i+1);
-
-            inventory.setTcK_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getTck_nvdx()).equals("") ? "0" : String.valueOf(inventory.getTck_nvdx())));
-            inventory.setTck_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getTck_sscd()).equals("") ? "0" : String.valueOf(inventory.getTck_sscd())));
-            int sum_tck = inventory.getTck_nvdx() + inventory.getTck_sscd();
-            inventory.setTck_sum_str(TextToNumber.textToNum(String.valueOf(sum_tck).equals("") ? "0" : String.valueOf(sum_tck)));
-
-            inventory.setTdk_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getTdk_sscd()).equals("") ? "0" : String.valueOf(inventory.getTdk_sscd())));
-            inventory.setTdk_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getTdk_nvdx()).equals("") ? "0" : String.valueOf(inventory.getTdk_nvdx())));
-            int sum_tdk = inventory.getTdk_sscd() + inventory.getTdk_nvdx();
-            inventory.setTdk_sum_str(TextToNumber.textToNum(String.valueOf(sum_tdk).equals("") ? "0" : String.valueOf(sum_tdk)));
-
-            inventory.setPre_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getPre_nvdx()).equals("") ? "0" : String.valueOf(inventory.getPre_nvdx())));
-            inventory.setPre_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getPre_sscd()).equals("") ? "0" : String.valueOf(inventory.getPre_sscd())));
-            int sum_pre = inventory.getPre_sscd() + inventory.getPre_nvdx();
-            inventory.setPre_sum_str(TextToNumber.textToNum(String.valueOf(sum_pre).equals("") ? "0" : String.valueOf(sum_pre)));
+//            inventory.setPetroleumName(loaiXangDau.getTenxd());
+////            inventory.setChungloai(loaiXangDau.getChungloai());
+//            inventory.setStt(i+1);
+//
+//            inventory.setTcK_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getTck_nvdx()).equals("") ? "0" : String.valueOf(inventory.getTck_nvdx())));
+//            inventory.setTck_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getTck_sscd()).equals("") ? "0" : String.valueOf(inventory.getTck_sscd())));
+//            int sum_tck = inventory.getTck_nvdx() + inventory.getTck_sscd();
+//            inventory.setTck_sum_str(TextToNumber.textToNum(String.valueOf(sum_tck).equals("") ? "0" : String.valueOf(sum_tck)));
+//
+//            inventory.setTdk_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getTdk_sscd()).equals("") ? "0" : String.valueOf(inventory.getTdk_sscd())));
+//            inventory.setTdk_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getTdk_nvdx()).equals("") ? "0" : String.valueOf(inventory.getTdk_nvdx())));
+//            int sum_tdk = inventory.getTdk_sscd() + inventory.getTdk_nvdx();
+//            inventory.setTdk_sum_str(TextToNumber.textToNum(String.valueOf(sum_tdk).equals("") ? "0" : String.valueOf(sum_tdk)));
+//
+//            inventory.setPre_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getPre_nvdx()).equals("") ? "0" : String.valueOf(inventory.getPre_nvdx())));
+//            inventory.setPre_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getPre_sscd()).equals("") ? "0" : String.valueOf(inventory.getPre_sscd())));
+//            int sum_pre = inventory.getPre_sscd() + inventory.getPre_nvdx();
+//            inventory.setPre_sum_str(TextToNumber.textToNum(String.valueOf(sum_pre).equals("") ? "0" : String.valueOf(sum_pre)));
         };
         ObservableList<Inventory> observableList = FXCollections.observableArrayList(inventories);
         tb_quater_inv.setItems(observableList);
@@ -333,24 +333,24 @@ public class TonkhoController implements Initializable {
 
     private Map<String, Map<String, Integer>> setMapForNxtCell(XSSFSheet sheet){
         Map<String, Map<String, Integer>> n_MAp = new HashMap<>();
-
-        List<String> ls_map =List.of("NL","DMN-MD", "DMN-HK");
-        int root_num= 7;
-        int cell_num = 2;
-        for (String s : ls_map) {
-            List<LoaiXangDau> loaiXangDauList = loaiXangDauRepo.findByType(s);
-            setCEll(sheet, ChungloaiMap.type_Str_detail().get(s), root_num,cell_num);
-            int rowNum = root_num+2;
-            for (int i = 0; i<loaiXangDauList.size(); i++){
-                setCEll(sheet, loaiXangDauList.get(i).getTenxd(), rowNum+i,cell_num);
-            }
-            root_num = root_num+loaiXangDauList.size()+2;
-        }
+//
+//        List<String> ls_map =List.of("NL","DMN-MD", "DMN-HK");
+//        int root_num= 7;
+//        int cell_num = 2;
+//        for (String s : ls_map) {
+//            List<LoaiXangDau> loaiXangDauList = loaiXangDauRepo.findByType(s);
+//            setCEll(sheet, ChungloaiMap.type_Str_detail().get(s), root_num,cell_num);
+//            int rowNum = root_num+2;
+//            for (int i = 0; i<loaiXangDauList.size(); i++){
+//                setCEll(sheet, loaiXangDauList.get(i).getTenxd(), rowNum+i,cell_num);
+//            }
+//            root_num = root_num+loaiXangDauList.size()+2;
+//        }
         return n_MAp;
     }
 
     private void fillDataToNXTSheet(XSSFSheet sheet, XSSFWorkbook wb){
-        setMapForNxtCell(sheet);
+//        setMapForNxtCell(sheet);
     }
 
     private void setCEll(XSSFSheet sheet, String value, int row_num, int cell_num){

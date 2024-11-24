@@ -38,17 +38,14 @@ import java.util.stream.Collectors;
 @Component
 public class XuatController extends CommonFactory implements Initializable {
 
-    private static int stt = 0;
     private static int nguonnx_id_selected = 0;
     private static int nguonnx_id_selected_dvvc_cbb = 0;
     private static int pt_id_selected_by_cbb = 0;
     private static Mucgia mucgia_id_selected_mucgia_cbb = new Mucgia();
     private static Mucgia mucgia_id_selected_mucgia_cbb_nv = new Mucgia();
-    private static PhuongTien phuongTien_buf = new PhuongTien();
     private static int click_index;
     private boolean addedBySelection_lstb = false;
     private static List<LedgerDetails> ls_socai;
-    private static PhuongTienNhiemVu phuongTienNhiemVu_selected = new PhuongTienNhiemVu();
     private static List<NhiemVuDto> chiTietNhiemVuDTO_list = new ArrayList<>();
     private static NhiemVuDto nhiemVu_selected=  new NhiemVuDto();
 
@@ -67,7 +64,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private Button editBtn_k,addBtn_k, delBtn_k, xuatButton_k,cancelBtn_k, addBtn_nv,editBtn_nv,delBtn_nv,xuatBtn_nv,cancelBtn_nv;
     @FXML
-    private Label lb_slt_nv,lb_slt_k, tk_time, md_time;
+    private Label lb_slt_nv,lb_slt_k;
     @FXML
     private ComboBox<NguonNx> cbb_dvn_xk, cbb_dvx_k,  cbb_dvx_nv;
     @FXML
@@ -104,7 +101,6 @@ public class XuatController extends CommonFactory implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ls_socai = new ArrayList<>();
-//        ledgerList = DashboardController.ledgerList;
         sogio_md_tf_nv.setText("00");
         sophut_md_tf_nv.setText("00");
         chiTietNhiemVuDTO_list = chitietNhiemvuRepo.findAllDtoBy();
@@ -142,7 +138,6 @@ public class XuatController extends CommonFactory implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 LedgerDetails ledgerDetails =  tbXuat_k.getSelectionModel().getSelectedItem();
-                click_index = ledgerDetails.getStt() - 1;
                 if (click_index != -1 && !ls_socai.isEmpty()){
                     delBtn_k.setDisable(false);
                     editBtn_k.setDisable(false);
@@ -152,9 +147,6 @@ public class XuatController extends CommonFactory implements Initializable {
         });
         addBtn_k.setOnAction(actionEvent -> {
             LedgerDetails ledgerDetails = getDataFromField_tab_k();
-            stt = ls_socai.size();
-            stt = stt+1;
-            ledgerDetails.setStt(stt);
             setCellValueFactory_fortable_tab_k();
             ls_socai.add(ledgerDetails);
             ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
@@ -169,11 +161,10 @@ public class XuatController extends CommonFactory implements Initializable {
             a.setTitle("" +
                     "Sửa");
             a.setContentText("Xác nhận chỉnh " +
-                    "sửa: " + ls_socai.get(click_index).getStt());
+                    "sửa: ");
             a.showAndWait().ifPresent(response -> {
                 if (response==edit){
                     LedgerDetails ledgerDetails = getDataFromField_tab_k();
-                    ledgerDetails.setStt(click_index+1);
                     ls_socai.set(click_index, ledgerDetails);
                     ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
                     tbXuat_k.setItems(observableList);
@@ -187,13 +178,12 @@ public class XuatController extends CommonFactory implements Initializable {
             ButtonType cancel = new ButtonType("Cancel");
             Alert a = new Alert(Alert.AlertType.NONE, "", delete, cancel);
             a.setTitle("Delete");
-            a.setContentText("Do you really want delete number " + ls_socai.get(click_index).getStt());
+            a.setContentText("Do you really want delete number " );
             a.showAndWait().ifPresent(response -> {
                 if (response==delete){
                     ls_socai.remove(click_index);
                     int index = 1;
                     for (LedgerDetails i : ls_socai){
-                        i.setStt(index);
                         index= index +1;
                     }
                     ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
@@ -201,7 +191,6 @@ public class XuatController extends CommonFactory implements Initializable {
                     delBtn_k.setDisable(true);
                     if (ls_socai.isEmpty()){
                         click_index = -1;
-                        stt = 0;
                     }
                 } else if (response==cancel) {
                     System.out.println("CAncel");
@@ -489,7 +478,6 @@ public class XuatController extends CommonFactory implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 LedgerDetails ledgerDetails =  tbXuat_nv.getSelectionModel().getSelectedItem();
-                click_index = ledgerDetails.getStt() - 1;
                 if (click_index != -1 && !ls_socai.isEmpty()){
                     delBtn_nv.setDisable(false);
                     editBtn_nv.setDisable(false);
@@ -498,11 +486,7 @@ public class XuatController extends CommonFactory implements Initializable {
             }
         });
         addBtn_nv.setOnAction(actionEvent -> {
-            setPhuongtienNhiemVu();
             LedgerDetails ledgerDetails = getDataFromField_tab_nhiemvu();
-            stt = ls_socai.size();
-            stt = stt+1;
-            ledgerDetails.setStt(stt);
             setCellValueFactory_fortable_tab_nv();
             ls_socai.add(ledgerDetails);
             ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
@@ -517,11 +501,10 @@ public class XuatController extends CommonFactory implements Initializable {
             a.setTitle("" +
                     "Sửa");
             a.setContentText("Xác nhận chỉnh " +
-                    "sửa: " + ls_socai.get(click_index).getStt());
+                    "sửa: ");
             a.showAndWait().ifPresent(response -> {
                 if (response==edit){
                     LedgerDetails ledgerDetails = getDataFromField_tab_nhiemvu();
-                    ledgerDetails.setStt(click_index+1);
                     ls_socai.set(click_index, ledgerDetails);
                     ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
                     tbXuat_nv.setItems(observableList);
@@ -535,22 +518,19 @@ public class XuatController extends CommonFactory implements Initializable {
             ButtonType cancel = new ButtonType("Cancel");
             Alert a = new Alert(Alert.AlertType.NONE, "", delete, cancel);
             a.setTitle("Delete");
-            a.setContentText("Do you really want delete number " + ls_socai.get(click_index).getStt());
+            a.setContentText("Do you really want delete number ");
             a.showAndWait().ifPresent(response -> {
                 if (response==delete){
                     ls_socai.remove(click_index);
                     int index = 1;
                     for (LedgerDetails i : ls_socai){
-                        i.setStt(index);
                         index= index +1;
                     }
                     ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
                     tbXuat_k.setItems(observableList);
                     delBtn_k.setDisable(true);
-                    if (ls_socai.isEmpty()){
-                        click_index = -1;
-                        stt = 0;
-                    }
+//                    if (ls_socai.isEmpty()){
+//                    }
 
                 } else if (response==cancel) {
                     System.out.println("CAncel");
@@ -701,12 +681,6 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return new String[]{text.trim(), null};
     }
-
-    private void setPhuongtienNhiemVu(){
-        phuongTien_buf = cbb_dvn_nv.getValue();
-        phuongTienNhiemVu_selected.setPhuongtien_id(phuongTien_buf.getId());
-        phuongTienNhiemVu_selected.setNhiemvu_id(nhiemVu_selected.getNv_id());
-    }
     //tab nhiemvu
     private void setTenXDToCombobox_tab_nv(){
         cbb_tenxd_nv.setConverter(new StringConverter<LoaiXangDau>() {
@@ -806,7 +780,6 @@ public class XuatController extends CommonFactory implements Initializable {
             ledgerDetails.setSo_km(Integer.parseInt(sokm_tf_nv.getText().isEmpty() ? "0" : sokm_tf_nv.getText()));
             ledgerDetails.setDenngay(denngay_dp_nv.getValue()==null ? "" : denngay_dp_nv.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
             ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
-            ledgerDetails.setPhuongtien_nvu_id(phuongTienNhiemVu_selected.getId());
             ledgerDetails.setPhuongtien_id(cbb_dvn_nv.getValue().getId());
             ledgerDetails.setLoaixd_id(cbb_tenxd_nv.getSelectionModel().getSelectedItem().getId());
             ledgerDetails.setImport_unit_id(cbb_dvx_nv.getSelectionModel().getSelectedItem().getId());

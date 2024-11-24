@@ -51,25 +51,16 @@ public class ChiTietSCController implements Initializable {
     @FXML
     private TableColumn<LedgerDetails,String> fct_stt, fct_tenxd, fct_dongia,fct_phaixuat, fct_nhietdo, fct_tytrong, fct_vcf, fct_thucxuat, fct_tong;
     @FXML
-    private Label lb_dvvc, lb_dvn, lb_so, lb_nguoinhan, lb_tungay, lb_denngay, lb_tcn, lb_lenhkh, lb_soxe, lb_sokm, lb_sogio, lb_loaiphieu;
+    private Label lb_dvvc, lb_dvn, lb_so, lb_nguoinhan, lb_tungay, lb_denngay, lb_tcn, lb_lenhkh, lb_soxe, lb_loaiphieu;
     @FXML
     private Button exitBtn, printBtn;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         addNewImport();
-        ls = new ArrayList<>();
-        int index_val = 0;
 
-        List<LedgerDetails> ledgerDetailsList = ledgerDetailRepo.findBySo(DashboardController.so_clicked);
-        for (LedgerDetails ledgerDetails : ledgerDetailsList) {
-            ledgerDetails.setStt(index_val + 1);
-            ledgerDetails.setThuc_xuat_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getSoluong())));
-            ledgerDetails.setPhai_xuat_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getPhai_xuat())));
-            ledgerDetails.setThanh_tien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanh_tien())));
-            ls.add(ledgerDetails);
-            index_val = index_val + 1;
-        }
-        ObservableList<LedgerDetails> observableList = FXCollections.observableList(ledgerDetailsList);
+        ls = ledgerDetailRepo.findBySo(DashboardController.so_clicked);
+
+        ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls);
         tbChiTiet.setItems(observableList);
         fillDataToLabels();
         exitBtn.setOnAction(actionEvent -> {
@@ -77,7 +68,7 @@ public class ChiTietSCController implements Initializable {
         });
 
         printBtn.setOnAction(actionEvent -> {
-            if (ledgerDetailsList.get(0).getLoai_phieu().equals("N")){
+            if (ls.get(0).getLoai_phieu().equals("N")){
                 System.out.println("Coping ...");
                 copyFileExcel();
                 System.out.println("fill data to report...");

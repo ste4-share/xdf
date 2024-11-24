@@ -14,7 +14,6 @@ public class LedgerDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer stt;
     @Column(name = "dvi")
     private String dvi;
     @Column(name = "dvvc")
@@ -57,30 +56,17 @@ public class LedgerDetails {
     private int so_km;
     @Column(name = "denngay")
     private String denngay;
-    @Column(name = "cmt")
-    private String cmt;
 
-    private String thanh_tien_str;
-    private String thuc_xuat_str;
-    private String phai_xuat_str;
     @Column(name = "loaixd_id")
     private int loaixd_id;
     @Column(name = "nhiemvu_id")
     private int nhiemvu_id;
-    @Column(name = "nvu_tcn_id")
-    private int nvu_tcn_id;
-    @Column(name = "nvu_tructhuoc")
-    private int nvu_tructhuoc;
     @Column(name = "tcn_id")
     private int tcn_id;
     @Column(name = "phuongtien_id")
     private int phuongtien_id;
-    @Column(name = "phuongtien_nvu_id")
-    private int phuongtien_nvu_id;
     @Column(name = "quarter_id")
     private int quarter_id;
-    @Column(name = "tonkho_id")
-    private int tonkho_id;
     @Column(name = "ledger_id")
     private int ledger_id;
     @Column(name = "import_unit_id")
@@ -101,4 +87,12 @@ public class LedgerDetails {
     private int nhiemvu_hanmuc_id;
     @Column(name = "so_luong")
     private int soluong;
+    @Column(name = "thuc_nhap")
+    private int thuc_nhap;
+    @Column(name = "phai_nhap")
+    private int phai_nhap;
+
+    @ManyToOne
+    @JoinColumn(name = "ledger_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Ledger ledger;
 }

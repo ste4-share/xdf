@@ -1,8 +1,10 @@
 package com.xdf.xd_f371.repo;
 
+import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.LoaiXangDau;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,9 +13,9 @@ import java.util.List;
 public interface LoaiXangDauRepo extends JpaRepository<LoaiXangDau, Integer> {
     LoaiXangDau findByTenxd(String tenxd);
 
-    List<LoaiXangDau> findByType(String type);
+    @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, lxd.priority, lxd.ut2, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd where cl.chungloai=:type")
+    List<LoaiXangDauDto> findByType(@Param("type") String type);
 
-    List<LoaiXangDau> findByChungloai(String chungloai);
-    @Query(value = "SELECT chungloai FROM loaixd2 group by chungloai", nativeQuery = true)
-    List<String> findAllByChungloai();
+    @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, lxd.priority, lxd.ut2, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd")
+    List<LoaiXangDauDto> findAllBy();
 }

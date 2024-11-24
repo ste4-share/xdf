@@ -38,15 +38,13 @@ import java.util.stream.Collectors;
 @Component
 public class NhapController extends CommonFactory implements Initializable {
     private static List<LedgerDetails> ls_socai;
-    private static int stt = 0;
     private static int dvvc_id =0;
     private static int lxd_id_combobox_selected =0;
     private static ValidateFiledBol validateFiledBol = new ValidateFiledBol(true, true,true, true,true, true,true, true,true, true,true, true,true, true,true,true,true);
-    private static int click_index;
 
     @FXML
     private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
-            donGiaTf, phaiXuatTf,thucXuatTf,tThucTe, vcf,tyTrong;
+            donGiaTf, thucNhap,phaiNhap,tThucTe, vcf,tyTrong;
     @FXML
     private Label lb_tontheoxd;
     @FXML
@@ -73,8 +71,6 @@ public class NhapController extends CommonFactory implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        click_index = -1;
-        stt=0;
         ls_socai = new ArrayList<>();
         tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         lp_id_pre = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_NHAP);
@@ -84,21 +80,11 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvvcCombobox();
         setDvnCombobox();
 
-        if (click_index == -1 && ls_socai.isEmpty()){
-            delbtn.setDisable(true);
-            editbtn.setDisable(true);
-        }
         tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 try {
                     LedgerDetails ledgerDetails =  tableView.getSelectionModel().getSelectedItem();
-                    click_index = ledgerDetails.getStt() - 1;
-                    if (click_index != -1 && !ls_socai.isEmpty()){
-                        delbtn.setDisable(false);
-                        editbtn.setDisable(false);
-                        addbtn.setDisable(true);
-                    }
                     fillDataToTextField(ledgerDetails);
                 }catch (NullPointerException nullPointerException){
                     nullPointerException.printStackTrace();
@@ -212,6 +198,7 @@ public class NhapController extends CommonFactory implements Initializable {
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setDvi(cmb_dvn.getSelectionModel().getSelectedItem().getTen());
         ledgerDetails.setNgay(tungay.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+        ledgerDetails.setDenngay(denngay.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         ledgerDetails.setTen_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getTenxd());
         ledgerDetails.setLoai_phieu(lp_id_pre.getType());
         ledgerDetails.setSo(soTf.getText());
@@ -220,14 +207,13 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setNguoi_nhan_hang(recvTf.getText());
         ledgerDetails.setSo_xe(soXe.getText());
         ledgerDetails.setDon_gia(Integer.parseInt(donGiaTf.getText()));
-        ledgerDetails.setPhai_xuat(phaiXuatTf.getText().isEmpty() ? 0 : Integer.parseInt(phaiXuatTf.getText()));
-        ledgerDetails.setThuc_xuat(Integer.parseInt(thucXuatTf.getText()));
+        ledgerDetails.setPhai_nhap(phaiNhap.getText().isEmpty() ? 0 : Integer.parseInt(phaiNhap.getText()));
+        ledgerDetails.setThuc_nhap(Integer.parseInt(thucNhap.getText()));
         ledgerDetails.setNhiet_do_tt(tThucTe.getText().isEmpty() ? 0 : Double.parseDouble(tThucTe.getText()));
         ledgerDetails.setHe_so_vcf(vcf.getText().isEmpty() ? 0 : Integer.parseInt(vcf.getText()));
         ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
-        ledgerDetails.setThanh_tien(Long.parseLong(thucXuatTf.getText()) * Long.parseLong(donGiaTf.getText()));
+        ledgerDetails.setThanh_tien(Long.parseLong(thucNhap.getText()) * Long.parseLong(donGiaTf.getText()));
         ledgerDetails.setDvvc(cmb_dvvc.getValue().getTen());
-        ledgerDetails.setDenngay(denngay.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
         ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId());
         ledgerDetails.setImport_unit_id(cmb_dvn.getSelectionModel().getSelectedItem().getId());
@@ -238,15 +224,15 @@ public class NhapController extends CommonFactory implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        ledgerDetails.setSoluong(Integer.parseInt(thucXuatTf.getText()));
+        ledgerDetails.setSoluong(Integer.parseInt(thucNhap.getText()));
         return ledgerDetails;
     }
 
     private void fillDataToTextField(LedgerDetails ledgerDetails){
         cmb_tenxd.getSelectionModel().select(loaiXangDauRepo.findById(ledgerDetails.getLoaixd_id()).orElse(null));
         donGiaTf.setText(String.valueOf(ledgerDetails.getDon_gia()));
-        phaiXuatTf.setText(String.valueOf(ledgerDetails.getPhai_xuat()));
-        thucXuatTf.setText(String.valueOf(ledgerDetails.getThuc_xuat()));
+        phaiNhap.setText(String.valueOf(ledgerDetails.getPhai_xuat()));
+        thucNhap.setText(String.valueOf(ledgerDetails.getThuc_xuat()));
         tThucTe.setText(String.valueOf(ledgerDetails.getNhiet_do_tt()));
         vcf.setText(String.valueOf(ledgerDetails.getHe_so_vcf()));
         tyTrong.setText(String.valueOf(ledgerDetails.getTy_trong()));
@@ -268,8 +254,6 @@ public class NhapController extends CommonFactory implements Initializable {
     private void btnInsert(ActionEvent event){
         if (validField()){
             LedgerDetails ledgerDetails = getDataFromField();
-            stt = stt+1;
-            ledgerDetails.setStt(stt);
             addNewImport();
             ls_socai.add(ledgerDetails);
             ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
@@ -356,7 +340,6 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setFrom_date(java.sql.Date.valueOf(tungay.getValue()));
         ledger.setEnd_date(java.sql.Date.valueOf(denngay.getValue()));
         ledger.setStatus("ACTIVE");
-        ledger.setBillType_id(loaiPhieu.getId());
         ledgersRepo.save(ledger);
     }
 
@@ -367,13 +350,11 @@ public class NhapController extends CommonFactory implements Initializable {
         ButtonType cancel = new ButtonType("Cancel");
         Alert a = new Alert(Alert.AlertType.NONE, "", delete, cancel);
         a.setTitle("Delete");
-        a.setContentText("Do you really want delete number " + ls_socai.get(click_index).getStt());
+        a.setContentText("Do you really want delete number ");
         a.showAndWait().ifPresent(response -> {
             if (response==delete){
-                ls_socai.remove(click_index);
                 int index = 1;
                 for (LedgerDetails i : ls_socai){
-                    i.setStt(index);
                     index= index +1;
                 }
                 ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
@@ -382,9 +363,7 @@ public class NhapController extends CommonFactory implements Initializable {
                 editbtn.setDisable(true);
                 clearHH();
                 if (ls_socai.isEmpty()){
-                    click_index = -1;
                     addbtn.setDisable(false);
-                    stt = 0;
                     tableView.refresh();
                 }
 
@@ -403,12 +382,10 @@ public class NhapController extends CommonFactory implements Initializable {
         a.setTitle("" +
                 "Sửa");
         a.setContentText("Xác nhận chỉnh " +
-                "sửa: " + ls_socai.get(click_index).getStt());
+                "sửa");
         a.showAndWait().ifPresent(response -> {
             if (response==edit){
                 LedgerDetails ledgerDetails = getDataFromField();
-                ledgerDetails.setStt(click_index+1);
-                ls_socai.set(click_index, ledgerDetails);
                 delbtn.setDisable(true);
                 editbtn.setDisable(true);
                 addbtn.setDisable(false);
@@ -474,8 +451,8 @@ public class NhapController extends CommonFactory implements Initializable {
                 alert.showAndWait();
                 isValid=false;
             }else if (!validateFiledBol.getPhaixuat() || validateFiledBol.getPhaixuat()==null){
-                phaiXuatTf.requestFocus();
-                phaiXuatTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+                phaiNhap.requestFocus();
+                phaiNhap.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("INVALID");
                 alert.setContentText("Dữ liệu nhập không hợp lệ.");
@@ -520,8 +497,8 @@ public class NhapController extends CommonFactory implements Initializable {
 
     private void clearHH(){
         donGiaTf.clear();
-        phaiXuatTf.clear();
-        thucXuatTf.clear();
+        phaiNhap.clear();
+        thucNhap.clear();
         tThucTe.clear();
         vcf.clear();
         tyTrong.clear();
@@ -619,12 +596,12 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     public void validate_phaixuat(KeyEvent keyEvent) {
-        String text = phaiXuatTf.getText();
+        String text = phaiNhap.getText();
         if (!text.matches("[^0A-Za-z][0-9]{0,9}")){
-            phaiXuatTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+            phaiNhap.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
             validateFiledBol.setPhaixuat(false);
         }else{
-            phaiXuatTf.setStyle(null);
+            phaiNhap.setStyle(null);
             validateFiledBol.setPhaixuat(true);
         }
     }
@@ -652,12 +629,12 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     public void validate_thucxuat(KeyEvent keyEvent) {
-        String text = thucXuatTf.getText();
+        String text = thucNhap.getText();
         if (!text.matches("[^0A-Za-z][0-9]{0,9}")){
-            thucXuatTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+            thucNhap.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
             validateFiledBol.setThucxuat(false);
         }else{
-            thucXuatTf.setStyle(null);
+            thucNhap.setStyle(null);
             validateFiledBol.setThucxuat(true);
         }
     }

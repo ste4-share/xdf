@@ -142,18 +142,17 @@ public class DashboardController implements Initializable {
         tbTTNX.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (click_ind ==2){
+                if (event.getClickCount()==2){
                     try {
                         TTPhieuModel ttPhieuModel =  tbTTNX.getSelectionModel().getSelectedItem();
 
                         so_clicked = ttPhieuModel.getSo();
                         Parent root = null;
                         try {
-                            root = FXMLLoader.load(getClass().getResource("../chitietsc.fxml"));
+                            root = (Parent) getNodeBySource("chitietsc.fxml");
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        click_ind=1;
                         ctStage = new Stage();
                         Scene scene = new Scene(root);
                         ctStage.setScene(scene);
@@ -164,10 +163,7 @@ public class DashboardController implements Initializable {
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }
-                }else {
-                    click_ind= click_ind+1;
                 }
-
             }
         });
     }
@@ -302,17 +298,9 @@ public class DashboardController implements Initializable {
         return tb_viewlichsu;
     }
 
-    public static Stage getPrimaryStage(){
-        return primaryStage;
-    }
-
-    public DashboardController getInstance(){
-        return this;
-    };
-
     @FXML
     public void importActionClick(ActionEvent actionEvent) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("../nhap.fxml"));
+        Parent root = (Parent) getNodeBySource("nhap.fxml");
         primaryStage = new Stage();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -323,17 +311,9 @@ public class DashboardController implements Initializable {
         fillDataToLichsuTb();
     }
 
-    private void setCellVal_TTNX_Refresh(){
-        so.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getSo()));
-        loaiphieu.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getLoai_phieu()));
-        ngaytao.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getNgaytao()));
-        hanghoa.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getHang_hoa()));
-        tong.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getTong()));
-    }
-
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../xuat.fxml"));
+        Parent root = (Parent) getNodeBySource("xuat.fxml");
         xuatStage = new Stage();
         Scene scene = new Scene(root);
         xuatStage.setScene(scene);
@@ -344,6 +324,13 @@ public class DashboardController implements Initializable {
         setDataToViewTable();
 //        getDataToChart(prepare_addnew_inventory);
         fillDataToLichsuTb();
+    }
+    private void setCellVal_TTNX_Refresh(){
+        so.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getSo()));
+        loaiphieu.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getLoai_phieu()));
+        ngaytao.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getNgaytao()));
+        hanghoa.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getHang_hoa()));
+        tong.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getTong()));
     }
     @FXML
     public void nxt_menu_action(MouseEvent event) {
@@ -421,7 +408,7 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private Node getNodeBySource(String source) throws IOException {
+    public static Node getNodeBySource(String source) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
         fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
         return fxmlLoader.load();
