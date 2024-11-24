@@ -13,9 +13,9 @@ import java.util.List;
 public interface LoaiXangDauRepo extends JpaRepository<LoaiXangDau, Integer> {
     LoaiXangDau findByTenxd(String tenxd);
 
-    @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, lxd.priority, lxd.ut2, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd where cl.chungloai=:type")
+    @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd where cl.chungloai=:type")
     List<LoaiXangDauDto> findByType(@Param("type") String type);
 
-    @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, lxd.priority, lxd.ut2, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd")
+    @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd")
     List<LoaiXangDauDto> findAllBy();
 }

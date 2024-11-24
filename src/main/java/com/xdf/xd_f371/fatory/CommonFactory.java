@@ -72,10 +72,10 @@ public class CommonFactory {
 
     private void updateTck_forReport(String code, String type, LedgerDetails ledgerDetails, int soluong){
         //set tck sscd
-        Category category = categoryService.findByCode(code,type);
-        InvReportDetail invReportDetail1 = invReportDetailService.findByIds(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id(), category.getId());
-        invReportDetail1.setSoluong(soluong);
-        invReportDetailService.update(invReportDetail1);
+//        Category category = categoryService.findByCode(code,type);
+//        InvReportDetail invReportDetail1 = invReportDetailService.findByIds(ledgerDetails.getLoaixd_id(), ledgerDetails.(), category.getId());
+//        invReportDetail1.setSoluong(soluong);
+//        invReportDetailService.update(invReportDetail1);
     }
 
     protected void createNewMucgia(LedgerDetails ledgerDetails, int quantity){
@@ -128,9 +128,7 @@ public class CommonFactory {
     protected void createNewTransaction(LedgerDetails ledgerDetails, int tontruoc, int tonsau){
         LichsuXNK lichsuXNK = new LichsuXNK();
         lichsuXNK.setTen_xd(ledgerDetails.getTen_xd());
-        lichsuXNK.setLoai_phieu(ledgerDetails.getLoai_phieu());
         lichsuXNK.setSoluong(ledgerDetails.getThuc_xuat());
-        lichsuXNK.setCreateTime(ledgerDetails.getNgay());
         lichsuXNK.setTontruoc(tontruoc);
         lichsuXNK.setTonsau(tonsau);
         lichsuXNK.setMucgia(String.valueOf(ledgerDetails.getDon_gia()));

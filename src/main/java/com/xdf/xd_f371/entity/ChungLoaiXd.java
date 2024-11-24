@@ -24,6 +24,12 @@ public class ChungLoaiXd {
     private String tinhchat;
     @Column(name = "code")
     private String code;
+    @Column(name = "priority_1")
+    private int priority_1;
+    @Column(name = "priority_2")
+    private int priority_2;
+    @Column(name = "priority_3")
+    private int priority_3;
 
     @OneToMany(mappedBy = "chungLoaiXd", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LoaiXangDau> loaiXangDau;

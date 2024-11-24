@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -31,14 +32,44 @@ public class Ledger {
     private Date end_date;
     @Column(name = "status")
     private String status;
+    @Column(name = "so_km")
+    private int so_km;
     @Column(name = "giohd_md")
     private String giohd_md;
     @Column(name = "giohd_tk")
     private String giohd_tk;
     @Column(name = "sl_tieuthu_md")
-    private String sl_tieuthu_md;
+    private int sl_tieuthu_md;
     @Column(name = "sl_tieuthu_tk")
-    private String sl_tieuthu_tk;
+    private int sl_tieuthu_tk;
+    @Column(name = "inventory_id")
+    private int inventoryId;
+    @Column(name = "dvi_nhan_id")
+    private int dvi_nhan_id;
+    @Column(name = "dvi_xuat_id")
+    private int dvi_xuat_id;
+    @Column(name = "loai_phieu")
+    private String loai_phieu;
+    @Column(name = "dvi_nhan")
+    private String dvi_nhan;
+    @Column(name = "dvi_xuat")
+    private String dvi_xuat;
+    @Column(name = "loaigiobay")
+    private String loaigiobay;
+    @Column(name = "nguoi_nhan")
+    private String nguoi_nhan;
+    @Column(name = "so_xe")
+    private String so_xe;
+    @Column(name = "lenh_so")
+    private String lenh_so;
+    @Column(name = "nhiemvu")
+    private String nhiemvu;
+    @Column(name = "nhiemvu_id")
+    private String nhiemvu_id;
+    @Column(name = "tcn_id")
+    private String tcn_id;
+    @Column(name = "timestamp")
+    private LocalDate timestamp;
 
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LedgerDetails> ledgerDetails;

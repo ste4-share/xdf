@@ -2,9 +2,8 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.dto.LichsuXNK;
-import com.xdf.xd_f371.dto.TTPhieuDto;
+import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.model.TTPhieuModel;
 import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.service.*;
@@ -13,7 +12,6 @@ import com.xdf.xd_f371.util.TextToNumber;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -42,7 +39,6 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -62,14 +58,11 @@ public class DashboardController implements Initializable {
     public static Stage primaryStage;
     public static Stage xuatStage;
     public static Stage ctStage;
-    public static String so_clicked;
     public static List<Ledger> ledgerList = new ArrayList<>();
-    private static List<TTPhieuModel> ttp_ls = new ArrayList<>();
+    private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
 
     private static List<LichsuXNK> lichsuXNKS = new ArrayList<>();
     private static int rowsPerPage = 9;
-    private static int click_ind = 1;
-    private boolean addedBySelection = false;
     private boolean addedBySelection_lstb = false;
 
     @FXML
@@ -100,15 +93,12 @@ public class DashboardController implements Initializable {
 //    private TableColumn<Inventory, String> col_slton,col_loaixd,col_stt, col_mucgia;
 
     @FXML
-    public TableView<TTPhieuModel> tbTTNX;
+    public TableView<MiniLedgerDto> tbTTNX;
     @FXML
-    private TableColumn<TTPhieuModel, String> so,ngaytao, loaiphieu, hanghoa;
-    @FXML
-    private TableColumn<TTPhieuModel, String> tong;
+    private TableColumn<MiniLedgerDto, String> so,ngaytao, loaiphieu, soluong,tong;
     @FXML
     private TextField tf_search_txnt,tf_search_history;
     @FXML
-    private LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
     private LichsuNXKService lichsuNXKService = new LichsuNXKImp();
 
     public static Quarter findByTime;
@@ -144,9 +134,9 @@ public class DashboardController implements Initializable {
             public void handle(MouseEvent event) {
                 if (event.getClickCount()==2){
                     try {
-                        TTPhieuModel ttPhieuModel =  tbTTNX.getSelectionModel().getSelectedItem();
+                        MiniLedgerDto miniLedgerDto =  tbTTNX.getSelectionModel().getSelectedItem();
 
-                        so_clicked = ttPhieuModel.getSo();
+//                        so_clicked = miniLedgerDto.getSo();
                         Parent root = null;
                         try {
                             root = (Parent) getNodeBySource("chitietsc.fxml");
@@ -260,14 +250,10 @@ public class DashboardController implements Initializable {
     }
 
     public void setDataToViewTable(){
+        ledgersRepo.findInterfaceLedger().forEach(x-> System.out.println(x.getSo_str() + ", "+ x.getDvi_nhap()));
         setCellVal_TTNX_Refresh();
-        ttp_ls = new ArrayList<>();
-        List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu();
-
-        ttPhieuDtoList.forEach(item -> {
-            ttp_ls.add(new TTPhieuModel(item.getSo(), item.getNgaytao(), item.getLoai_phieu().trim().equals("NHAP") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(), item.getTcn(), item.getHang_hoa(), TextToNumber.textToNum(String.valueOf(item.getTong()))));
-        });
-        tbTTNX.setItems(FXCollections.observableArrayList(ttp_ls));
+        tbTTNX.setItems(FXCollections.observableArrayList(ledgersRepo.findInterfaceLedger()));
+        tbTTNX.refresh();
         setPagination_nxt();
     }
 
@@ -325,13 +311,15 @@ public class DashboardController implements Initializable {
 //        getDataToChart(prepare_addnew_inventory);
         fillDataToLichsuTb();
     }
+
     private void setCellVal_TTNX_Refresh(){
-        so.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getSo()));
-        loaiphieu.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getLoai_phieu()));
-        ngaytao.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getNgaytao()));
-        hanghoa.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getHang_hoa()));
-        tong.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getTong()));
+        so.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("so_str"));
+        loaiphieu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("loai_phieu"));
+        ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));
+        soluong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("count_str"));
+        tong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("tong_str"));
     }
+
     @FXML
     public void nxt_menu_action(MouseEvent event) {
         String cssLayout =
@@ -473,26 +461,26 @@ public class DashboardController implements Initializable {
     }
 
     public void loc_phieu(ActionEvent actionEvent) {
-        String lp= cbb_loaiphieu_filter.getValue().trim();
-        if (lp.equals("PHIẾU NHẬP")){
-            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu_ByLoaiPhieu("N");
-            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
-
-            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
-            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
-        }else if (lp.equals("PHIẾU XUẤT")){
-            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu_ByLoaiPhieu("X");
-            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
-
-            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
-            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
-        }else {
-            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu();
-            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
-
-            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
-            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
-        }
+//        String lp= cbb_loaiphieu_filter.getValue().trim();
+//        if (lp.equals("PHIẾU NHẬP")){
+//            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu_ByLoaiPhieu("N");
+//            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
+//
+//            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
+//            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
+//        }else if (lp.equals("PHIẾU XUẤT")){
+//            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu_ByLoaiPhieu("X");
+//            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
+//
+//            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
+//            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
+//        }else {
+//            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu();
+//            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
+//
+//            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
+//            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
+//        }
     }
 
     public void search_phieu_tnxt(ActionEvent actionEvent) {
@@ -532,14 +520,14 @@ public class DashboardController implements Initializable {
 //    }
 
     private void searching(){
-        tf_search_txnt.textProperty().addListener(e -> {
-            if (addedBySelection) {
-                List<TTPhieuModel> tkt_buf = ttp_ls.stream().filter(ttp -> ttp.getSo().equals(tf_search_txnt.getText())).toList();
-                ObservableList<TTPhieuModel> observableList = FXCollections.observableArrayList(tkt_buf);
-                tbTTNX.setItems(observableList);
-                addedBySelection = false;
-            }
-        });
+//        tf_search_txnt.textProperty().addListener(e -> {
+//            if (addedBySelection) {
+//                List<TTPhieuModel> tkt_buf = ttp_ls.stream().filter(ttp -> ttp.getSo().equals(tf_search_txnt.getText())).toList();
+//                ObservableList<TTPhieuModel> observableList = FXCollections.observableArrayList(tkt_buf);
+//                tbTTNX.setItems(observableList);
+//                addedBySelection = false;
+//            }
+//        });
     }
 
     private void setUpForSearchCompleteTion_lichsu(List<String> search_arr){

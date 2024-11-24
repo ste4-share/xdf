@@ -212,11 +212,11 @@ public class XuatController extends CommonFactory implements Initializable {
                         }else{
                             soCaiDto.setLedger_id(0);
                         }
-                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getImport_unit_id(), 2);
+//                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getImport_unit_id(), 2);
                         saveLichsuxnk(soCaiDto);
                         saveMucgia(soCaiDto);
                         recognized_tcx();
-                        soCaiDto.setTcn_id(pre_createNewTcn.getId());
+//                        soCaiDto.setTcn_id(pre_createNewTcn.getId());
                         ledgerDetailRepo.save(soCaiDto);
                         updateAllRowInv(soCaiDto);
                     });
@@ -389,35 +389,37 @@ public class XuatController extends CommonFactory implements Initializable {
     private LedgerDetails getDataFromField_tab_k(){
         LedgerDetails ledgerDetails = new LedgerDetails();
         try{
-            ledgerDetails.setNgay(tungay_dp_k.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+
             ledgerDetails.setTen_xd(cbb_tenxd_k.getSelectionModel().getSelectedItem().getTenxd());
             LoaiPhieu loaiPhieu = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_XUAT);
-            ledgerDetails.setLoai_phieu(loaiPhieu.getType());
-            ledgerDetails.setSo(so_tf_k.getText());
-            ledgerDetails.setTheo_lenh_so(lenhso_tf_k.getText());
-            ledgerDetails.setNhiem_vu(tcx_tf_k.getText());
-            ledgerDetails.setNguoi_nhan_hang(nguoinhan_tf_k.getText());
-            ledgerDetails.setSo_xe(soxe_tf_k.getText());
+//            ledgerDetails.setNgay(tungay_dp_k.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+//            ledgerDetails.setLoai_phieu(loaiPhieu.getType());
+//            ledgerDetails.setSo(so_tf_k.getText());
+//            ledgerDetails.setTheo_lenh_so(lenhso_tf_k.getText());
+//            ledgerDetails.setNhiem_vu(tcx_tf_k.getText());
+//            ledgerDetails.setNguoi_nhan_hang(nguoinhan_tf_k.getText());
+//            ledgerDetails.setSo_xe(soxe_tf_k.getText());
             ledgerDetails.setDon_gia(mucgia_id_selected_mucgia_cbb.getPrice());
             ledgerDetails.setPhai_xuat(Integer.parseInt(phaixuat_tf_k.getText()));
             ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat_tf_k.getText()));
             ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdothucte_tf_k.getText().isEmpty() ? "0" : nhietdothucte_tf_k.getText()));
             ledgerDetails.setHe_so_vcf(Integer.parseInt(vcf_tf_k.getText().isEmpty() ? "0" : vcf_tf_k.getText()));
             ledgerDetails.setTy_trong(Double.parseDouble(tytrong_tf_k.getText().isEmpty() ? "0" : tytrong_tf_k.getText()));
-            ledgerDetails.setThanh_tien(Long.parseLong(thucxuat_tf_k.getText()) * mucgia_id_selected_mucgia_cbb.getPrice());
-            ledgerDetails.setDvvc(cbb_dvx_k.getSelectionModel().getSelectedItem().getTen());
-            ledgerDetails.setDvi(cbb_dvn_xk.getSelectionModel().getSelectedItem().getTen());
-            ledgerDetails.setDenngay(denngay_dp_k.getValue()==null ? "" : denngay_dp_k.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-            ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
             ledgerDetails.setLoaixd_id(cbb_tenxd_k.getSelectionModel().getSelectedItem().getId());
-            ledgerDetails.setExport_unit_id(cbb_dvx_k.getSelectionModel().getSelectedItem().getId());
-            ledgerDetails.setImport_unit_id(cbb_dvn_xk.getSelectionModel().getSelectedItem().getId());
-            try {
-                ledgerDetails.setDur_text_md2(new PGInterval("0.00:00:00"));
-                ledgerDetails.setDur_text_tk2(new PGInterval("0.00:00:00"));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+
+//            ledgerDetails.setThanh_tien(Long.parseLong(thucxuat_tf_k.getText()) * mucgia_id_selected_mucgia_cbb.getPrice());
+//            ledgerDetails.setDvvc(cbb_dvx_k.getSelectionModel().getSelectedItem().getTen());
+//            ledgerDetails.setDvi(cbb_dvn_xk.getSelectionModel().getSelectedItem().getTen());
+//            ledgerDetails.setDenngay(denngay_dp_k.getValue()==null ? "" : denngay_dp_k.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+//            ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
+//            ledgerDetails.setExport_unit_id(cbb_dvx_k.getSelectionModel().getSelectedItem().getId());
+//            ledgerDetails.setImport_unit_id(cbb_dvn_xk.getSelectionModel().getSelectedItem().getId());
+//            try {
+//                ledgerDetails.setDur_text_md2(new PGInterval("0.00:00:00"));
+//                ledgerDetails.setDur_text_tk2(new PGInterval("0.00:00:00"));
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
             ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_k.getText()));
         } catch (NullPointerException e) {
             throw new NullPointerException(e.getMessage());
@@ -552,7 +554,7 @@ public class XuatController extends CommonFactory implements Initializable {
                         }else{
                             soCaiDto.setLedger_id(0);
                         }
-                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getImport_unit_id(), 2);
+//                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getImport_unit_id(), 2);
                         saveLichsuxnk(soCaiDto);
                         saveMucgia(soCaiDto);
                         ledgerDetailRepo.save(soCaiDto);
@@ -584,13 +586,13 @@ public class XuatController extends CommonFactory implements Initializable {
     }
 
     private void saveMucgia(LedgerDetails soCaiDto){
-        Mucgia mucgia_existed = mucGiaRepo.findAllMucgiaUnique(Purpose.NVDX.getName(),soCaiDto.getLoaixd_id(), soCaiDto.getQuarter_id(), soCaiDto.getDon_gia());
-        if (mucgia_existed==null){
-            createNewMucgia(soCaiDto, soCaiDto.getSoluong()*(-1));
-        }else{
-            int quantityPerPrice = mucgia_existed.getAmount() - soCaiDto.getSoluong();
-            updateMucgia(quantityPerPrice, mucgia_existed);
-        }
+//        Mucgia mucgia_existed = mucGiaRepo.findAllMucgiaUnique(Purpose.NVDX.getName(),soCaiDto.getLoaixd_id(), soCaiDto.getQuarter_id(), soCaiDto.getDon_gia());
+//        if (mucgia_existed==null){
+//            createNewMucgia(soCaiDto, soCaiDto.getSoluong()*(-1));
+//        }else{
+//            int quantityPerPrice = mucgia_existed.getAmount() - soCaiDto.getSoluong();
+//            updateMucgia(quantityPerPrice, mucgia_existed);
+//        }
     }
 
     private void createNewLedger(String so, LocalDate tungay, LocalDate denngay) {
@@ -759,46 +761,46 @@ public class XuatController extends CommonFactory implements Initializable {
     private LedgerDetails getDataFromField_tab_nhiemvu(){
         LedgerDetails ledgerDetails = new LedgerDetails();
         try{
-            ledgerDetails.setNgay(tungay_dp_nv.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+//            ledgerDetails.setNgay(tungay_dp_nv.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
             ledgerDetails.setTen_xd(cbb_tenxd_nv.getSelectionModel().getSelectedItem().getTenxd());
             LoaiPhieu loaiPhieu = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_XUAT);
-            ledgerDetails.setLoai_phieu(loaiPhieu.getType());
-            ledgerDetails.setSo(so_tf_nv.getText());
-            ledgerDetails.setTheo_lenh_so(lenhso_tf_nv.getText());
-            ledgerDetails.setNhiem_vu(tcx_tf_nhiemvu.getText());
-            ledgerDetails.setNguoi_nhan_hang(nguoinhan_tf_nv.getText());
-            ledgerDetails.setSo_xe(soxe_tf_nv.getText());
+//            ledgerDetails.setLoai_phieu(loaiPhieu.getType());
+//            ledgerDetails.setSo(so_tf_nv.getText());
+//            ledgerDetails.setTheo_lenh_so(lenhso_tf_nv.getText());
+//            ledgerDetails.setNhiem_vu(tcx_tf_nhiemvu.getText());
+//            ledgerDetails.setNguoi_nhan_hang(nguoinhan_tf_nv.getText());
+//            ledgerDetails.setSo_xe(soxe_tf_nv.getText());
             ledgerDetails.setDon_gia(cbb_dongia_nv.getSelectionModel().getSelectedItem().getPrice());
             ledgerDetails.setPhai_xuat(Integer.parseInt(phaixuat_tf_nv.getText()));
             ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdothucte_tf_nv.getText().isEmpty() ? "0" : nhietdothucte_tf_nv.getText()));
             ledgerDetails.setHe_so_vcf(Integer.parseInt(vcf_tf_nv.getText().isEmpty() ? "0" : vcf_tf_nv.getText()));
             ledgerDetails.setTy_trong(Double.parseDouble(tytrong_tf_nv.getText().isEmpty() ? "0" : tytrong_tf_nv.getText()));
-            ledgerDetails.setThanh_tien(Long.parseLong(thucxuat_tf_nv.getText()) * mucgia_id_selected_mucgia_cbb_nv.getPrice());
-            ledgerDetails.setDvvc(cbb_dvx_nv.getSelectionModel().getSelectedItem().getTen());
-            ledgerDetails.setDvi(cbb_dvn_nv.getValue().getName());
-            ledgerDetails.setNhiemvu_id(nhiemVu_selected.getCtnv_id());
-            ledgerDetails.setSo_km(Integer.parseInt(sokm_tf_nv.getText().isEmpty() ? "0" : sokm_tf_nv.getText()));
-            ledgerDetails.setDenngay(denngay_dp_nv.getValue()==null ? "" : denngay_dp_nv.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-            ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
+//            ledgerDetails.setThanh_tien(Long.parseLong(thucxuat_tf_nv.getText()) * mucgia_id_selected_mucgia_cbb_nv.getPrice());
+//            ledgerDetails.setDvvc(cbb_dvx_nv.getSelectionModel().getSelectedItem().getTen());
+//            ledgerDetails.setDvi(cbb_dvn_nv.getValue().getName());
+//            ledgerDetails.setNhiemvu_id(nhiemVu_selected.getCtnv_id());
+//            ledgerDetails.setSo_km(Integer.parseInt(sokm_tf_nv.getText().isEmpty() ? "0" : sokm_tf_nv.getText()));
+//            ledgerDetails.setDenngay(denngay_dp_nv.getValue()==null ? "" : denngay_dp_nv.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+//            ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
             ledgerDetails.setPhuongtien_id(cbb_dvn_nv.getValue().getId());
             ledgerDetails.setLoaixd_id(cbb_tenxd_nv.getSelectionModel().getSelectedItem().getId());
-            ledgerDetails.setImport_unit_id(cbb_dvx_nv.getSelectionModel().getSelectedItem().getId());
-            ledgerDetails.setLoaigiobay(tk_radio.isSelected() ? LoaiGB.TK.getName() : LoaiGB.MD.getName());
+//            ledgerDetails.setImport_unit_id(cbb_dvx_nv.getSelectionModel().getSelectedItem().getId());
+//            ledgerDetails.setLoaigiobay(tk_radio.isSelected() ? LoaiGB.TK.getName() : LoaiGB.MD.getName());
             ledgerDetails.setNhiemvu_hanmuc_id(getNhiemvuhanmucId());
             if (tk_radio.isSelected()){
-                ledgerDetails.setDur_text_tk2(new PGInterval(getStrInterval()));
-                ledgerDetails.setDur_text_md2(new PGInterval("00:00:00"));
+//                ledgerDetails.setDur_text_tk2(new PGInterval(getStrInterval()));
+//                ledgerDetails.setDur_text_md2(new PGInterval("00:00:00"));
                 ledgerDetails.setThuc_xuat_tk(Integer.parseInt(thucxuat_tf_nv.getText()));
                 ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_nv.getText()));
                 ledgerDetails.setThuc_xuat(0);
             }else {
-                ledgerDetails.setDur_text_tk2(new PGInterval("00:00:00"));
-                ledgerDetails.setDur_text_md2(new PGInterval(getStrInterval()));
+//                ledgerDetails.setDur_text_tk2(new PGInterval("00:00:00"));
+//                ledgerDetails.setDur_text_md2(new PGInterval(getStrInterval()));
                 ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat_tf_nv.getText()));
                 ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_nv.getText()));
                 ledgerDetails.setThuc_xuat_tk(0);
             }
-        } catch (NullPointerException | SQLException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }

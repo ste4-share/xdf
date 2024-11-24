@@ -86,15 +86,10 @@ public class MockDataMap {
             Inventory inventory = new Inventory();
             inventory.setPetro_id(loaiXangDau.getId());
             inventory.setQuarter_id(DashboardController.findByTime.getId());
-            inventory.setTotal(tondk_sum_mock);
             inventory.setTdk_nvdx(tondk_nvdx_mock);
             inventory.setTdk_sscd(tondk_sscd_mock);
             inventory.setPre_nvdx(tondk_nvdx_mock);
             inventory.setPre_sscd(tondk_sscd_mock);
-            inventory.setTck_nvdx(0);
-            inventory.setTck_sscd(0);
-            inventory.setImport_total(0);
-            inventory.setExport_total(0);
 
             inventory.setTdk_sscd(tondk_sscd_mock);
             inventory.setStatus("RECORDING");

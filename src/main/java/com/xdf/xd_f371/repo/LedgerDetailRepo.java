@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface LedgerDetailRepo extends JpaRepository<LedgerDetails, Integer> {
-    List<LedgerDetails> findBySo(String so);
 }

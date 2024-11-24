@@ -58,7 +58,7 @@ public class ChiTietSCController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle){
         addNewImport();
 
-        ls = ledgerDetailRepo.findBySo(DashboardController.so_clicked);
+//        ls = ledgerDetailRepo.findBySo(DashboardController.so_clicked);
 
         ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls);
         tbChiTiet.setItems(observableList);
@@ -68,92 +68,92 @@ public class ChiTietSCController implements Initializable {
         });
 
         printBtn.setOnAction(actionEvent -> {
-            if (ls.get(0).getLoai_phieu().equals("N")){
-                System.out.println("Coping ...");
-                copyFileExcel();
-                System.out.println("fill data to report...");
-                String file_name = "PhieuNhap_Pr.xlsx";
-                try{
-                    File file = new File(file_name);
-                    XSSFWorkbook wb = null;
-                    if (file.exists()) {
-
-                        FileInputStream fileInputStream = new FileInputStream(file);
-                        wb = new XSSFWorkbook(fileInputStream);
-                        new XSSFWorkbook(new FileInputStream(file));
-
-
-                        // Now creating Sheets using sheet object
-                        XSSFSheet sheet1 = wb.getSheet("phieu_nhap");
-
-                        fillDataToPhieuNhap(sheet1, wb);
-                        FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
-                        wb.write(fileOutputStream);
-                        fileOutputStream.close();
-                        ButtonType ok_btn = new ButtonType("OK");
-                        Alert a = new Alert(Alert.AlertType.CONFIRMATION,"Click open file to see report.", ok_btn);
-                        a.setTitle("Open file");
-                        a.showAndWait().ifPresent(response -> {
-                            if (response==ok_btn) {
-                                try {
-                                    Runtime.getRuntime().exec("cmd /c start excel PhieuNhap_Pr.xlsx");
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-            }else {
-                System.out.println("Coping ...");
-                copyFileExcel_xuat();
-                System.out.println("fill data to report...");
-                String file_name = "PhieuXuat_Pr.xlsx";
-                try{
-                    File file = new File(file_name);
-                    XSSFWorkbook wb = null;
-                    if (file.exists()) {
-
-                        FileInputStream fileInputStream = new FileInputStream(file);
-                        wb = new XSSFWorkbook(fileInputStream);
-                        new XSSFWorkbook(new FileInputStream(file));
-
-                        // Now creating Sheets using sheet object
-                        XSSFSheet sheet1 = wb.getSheet("phieu_xuat");
-
-                        fillDataToPhieuXuat(sheet1, wb);
-                        FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
-                        wb.write(fileOutputStream);
-                        fileOutputStream.close();
-
-                        ButtonType ok_btn = new ButtonType("OK");
-                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Click open file to see report", ok_btn);
-                        a.setTitle("Open file");
-                        a.showAndWait().ifPresent(response -> {
-                            if (response==ok_btn) {
-                                try {
-                                    Runtime.getRuntime().exec("cmd /c start excel PhieuXuat_Pr.xlsx");
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+//            if (ls.get(0).getLoai_phieu().equals("N")){
+//                System.out.println("Coping ...");
+//                copyFileExcel();
+//                System.out.println("fill data to report...");
+//                String file_name = "PhieuNhap_Pr.xlsx";
+//                try{
+//                    File file = new File(file_name);
+//                    XSSFWorkbook wb = null;
+//                    if (file.exists()) {
+//
+//                        FileInputStream fileInputStream = new FileInputStream(file);
+//                        wb = new XSSFWorkbook(fileInputStream);
+//                        new XSSFWorkbook(new FileInputStream(file));
+//
+//
+//                        // Now creating Sheets using sheet object
+//                        XSSFSheet sheet1 = wb.getSheet("phieu_nhap");
+//
+//                        fillDataToPhieuNhap(sheet1, wb);
+//                        FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+//
+//                        wb.write(fileOutputStream);
+//                        fileOutputStream.close();
+//                        ButtonType ok_btn = new ButtonType("OK");
+//                        Alert a = new Alert(Alert.AlertType.CONFIRMATION,"Click open file to see report.", ok_btn);
+//                        a.setTitle("Open file");
+//                        a.showAndWait().ifPresent(response -> {
+//                            if (response==ok_btn) {
+//                                try {
+//                                    Runtime.getRuntime().exec("cmd /c start excel PhieuNhap_Pr.xlsx");
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//
+//                } catch (FileNotFoundException ex) {
+//                    throw new RuntimeException(ex);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//            }else {
+//                System.out.println("Coping ...");
+//                copyFileExcel_xuat();
+//                System.out.println("fill data to report...");
+//                String file_name = "PhieuXuat_Pr.xlsx";
+//                try{
+//                    File file = new File(file_name);
+//                    XSSFWorkbook wb = null;
+//                    if (file.exists()) {
+//
+//                        FileInputStream fileInputStream = new FileInputStream(file);
+//                        wb = new XSSFWorkbook(fileInputStream);
+//                        new XSSFWorkbook(new FileInputStream(file));
+//
+//                        // Now creating Sheets using sheet object
+//                        XSSFSheet sheet1 = wb.getSheet("phieu_xuat");
+//
+//                        fillDataToPhieuXuat(sheet1, wb);
+//                        FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+//
+//                        wb.write(fileOutputStream);
+//                        fileOutputStream.close();
+//
+//                        ButtonType ok_btn = new ButtonType("OK");
+//                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Click open file to see report", ok_btn);
+//                        a.setTitle("Open file");
+//                        a.showAndWait().ifPresent(response -> {
+//                            if (response==ok_btn) {
+//                                try {
+//                                    Runtime.getRuntime().exec("cmd /c start excel PhieuXuat_Pr.xlsx");
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//
+//                } catch (FileNotFoundException ex) {
+//                    throw new RuntimeException(ex);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
 
 //            PrintService defaultPrintService =  PrintServiceLookup.lookupDefaultPrintService();
 //            DocPrintJob printerJob = defaultPrintService.createPrintJob();
@@ -252,87 +252,87 @@ public class ChiTietSCController implements Initializable {
     }
 
     private void fillDataToPhieuNhap(XSSFSheet sheet, XSSFWorkbook wb){
-        setCEll(sheet, ls.get(0).getDvi(), 3,3);
-        setCEll(sheet, ls.get(0).getDvvc(), 4,3);
-        setCEll(sheet, ls.get(0).getNhiem_vu(), 5,3);
-        setCEll(sheet, ls.get(0).getTheo_lenh_so(), 6,3);
-        setCEll(sheet, ls.get(0).getNguoi_nhan_hang(), 7,3);
-        setCEll(sheet, "ABC", 8,3);
-        setCEll(sheet, "", 3,10);
-        setCEll(sheet, ls.get(0).getSo_xe(), 4,10);
-
-        setCEll(sheet, ls.get(0).getSo(), 3,7);
-        setCEll(sheet, ls.get(0).getNgay(), 4,7);
-
-        for (int i = 0; i< ls.size(); i++) {
-            addNewRow(sheet);
-        }
-
-        int row_num = 12;
-        Long thanh_tien = 0L;
-        for (int i = 0; i< ls.size(); i++) {
-
-            setCEll(sheet, String.valueOf(i+1), row_num,1);
-            String generatedString = RandomStringUtils.randomAlphanumeric(5);
-
-            setCEll(sheet, generatedString, row_num,2);
-            setCEll(sheet, ls.get(i).getTen_xd(), row_num,3);
-            setCEll(sheet, ls.get(i).getChat_luong(), row_num,4);
-            setCEll(sheet, String.valueOf(ls.get(i).getPhai_xuat()), row_num,5);
-            setCEll(sheet, String.valueOf(ls.get(i).getNhiet_do_tt()), row_num,6);
-            setCEll(sheet, String.valueOf(ls.get(i).getTy_trong()), row_num,7);
-            setCEll(sheet, String.valueOf(ls.get(i).getHe_so_vcf()), row_num,8);
-            setCEll(sheet, String.valueOf(ls.get(i).getThuc_xuat()), row_num,9);
-            setCEll(sheet, String.valueOf(ls.get(i).getDon_gia()), row_num,10);
-            setCEll(sheet, String.valueOf(ls.get(i).getThanh_tien()), row_num,11);
-            row_num = row_num+1;
-            thanh_tien = thanh_tien + ls.get(i).getThanh_tien();
-            if (i == ls.size() - 1){
-                setCEll(sheet,String.valueOf(thanh_tien), 14+ls.size(),11);
-            }
-        }
+//        setCEll(sheet, ls.get(0).getDvi(), 3,3);
+//        setCEll(sheet, ls.get(0).getDvvc(), 4,3);
+//        setCEll(sheet, ls.get(0).getNhiem_vu(), 5,3);
+//        setCEll(sheet, ls.get(0).getTheo_lenh_so(), 6,3);
+//        setCEll(sheet, ls.get(0).getNguoi_nhan_hang(), 7,3);
+//        setCEll(sheet, "ABC", 8,3);
+//        setCEll(sheet, "", 3,10);
+//        setCEll(sheet, ls.get(0).getSo_xe(), 4,10);
+//
+//        setCEll(sheet, ls.get(0).getSo(), 3,7);
+//        setCEll(sheet, ls.get(0).getNgay(), 4,7);
+//
+//        for (int i = 0; i< ls.size(); i++) {
+//            addNewRow(sheet);
+//        }
+//
+//        int row_num = 12;
+//        Long thanh_tien = 0L;
+//        for (int i = 0; i< ls.size(); i++) {
+//
+//            setCEll(sheet, String.valueOf(i+1), row_num,1);
+//            String generatedString = RandomStringUtils.randomAlphanumeric(5);
+//
+//            setCEll(sheet, generatedString, row_num,2);
+//            setCEll(sheet, ls.get(i).getTen_xd(), row_num,3);
+//            setCEll(sheet, ls.get(i).getChat_luong(), row_num,4);
+//            setCEll(sheet, String.valueOf(ls.get(i).getPhai_xuat()), row_num,5);
+//            setCEll(sheet, String.valueOf(ls.get(i).getNhiet_do_tt()), row_num,6);
+//            setCEll(sheet, String.valueOf(ls.get(i).getTy_trong()), row_num,7);
+//            setCEll(sheet, String.valueOf(ls.get(i).getHe_so_vcf()), row_num,8);
+//            setCEll(sheet, String.valueOf(ls.get(i).getThuc_xuat()), row_num,9);
+//            setCEll(sheet, String.valueOf(ls.get(i).getDon_gia()), row_num,10);
+//            setCEll(sheet, String.valueOf(ls.get(i).getThanh_tien()), row_num,11);
+//            row_num = row_num+1;
+//            thanh_tien = thanh_tien + ls.get(i).getThanh_tien();
+//            if (i == ls.size() - 1){
+//                setCEll(sheet,String.valueOf(thanh_tien), 14+ls.size(),11);
+//            }
+//        }
     }
 
     private void fillDataToPhieuXuat(XSSFSheet sheet, XSSFWorkbook wb){
-        setCEll(sheet, ls.get(0).getDvi(), 3,3);
-        setCEll(sheet, ls.get(0).getDvvc(), 4,3);
-        setCEll(sheet, ls.get(0).getNhiem_vu(), 5,3);
-        setCEll(sheet, ls.get(0).getTheo_lenh_so(), 6,3);
-        setCEll(sheet, ls.get(0).getNguoi_nhan_hang(), 7,3);
-        setCEll(sheet, "ABC", 8,3);
-        setCEll(sheet, ls.get(0).getDenngay(), 3,10);
-        setCEll(sheet, ls.get(0).getSo_xe(), 4,10);
-        setCEll(sheet, String.valueOf(ls.get(0).getSo_km()), 6,10);
-        setCEll(sheet, ls.get(0).getSo(), 3,7);
-        setCEll(sheet, ls.get(0).getNgay(), 4,7);
-
-        for (int i = 0; i< ls.size(); i++) {
-            addNewRow(sheet);
-        }
-
-        int row_num = 12;
-        Long thanh_tien = 0L;
-        for (int i = 0; i< ls.size(); i++) {
-
-            setCEll(sheet, String.valueOf(i+1), row_num,1);
-            String generatedString = RandomStringUtils.randomAlphanumeric(5);
-
-            setCEll(sheet, generatedString, row_num,2);
-            setCEll(sheet, ls.get(i).getTen_xd(), row_num,3);
-            setCEll(sheet, ls.get(i).getChat_luong(), row_num,4);
-            setCEll(sheet, String.valueOf(ls.get(i).getPhai_xuat()), row_num,5);
-            setCEll(sheet, String.valueOf(ls.get(i).getNhiet_do_tt()), row_num,6);
-            setCEll(sheet, String.valueOf(ls.get(i).getTy_trong()), row_num,7);
-            setCEll(sheet, String.valueOf(ls.get(i).getHe_so_vcf()), row_num,8);
-            setCEll(sheet, String.valueOf(ls.get(i).getThuc_xuat()), row_num,9);
-            setCEll(sheet, String.valueOf(ls.get(i).getDon_gia()), row_num,10);
-            setCEll(sheet, String.valueOf(ls.get(i).getThanh_tien()), row_num,11);
-            row_num = row_num+1;
-            thanh_tien = thanh_tien + ls.get(i).getThanh_tien();
-            if (i == ls.size() - 1){
-                setCEll(sheet,String.valueOf(thanh_tien), 14+ls.size(),11);
-            }
-        }
+//        setCEll(sheet, ls.get(0).getDvi(), 3,3);
+//        setCEll(sheet, ls.get(0).getDvvc(), 4,3);
+//        setCEll(sheet, ls.get(0).getNhiem_vu(), 5,3);
+//        setCEll(sheet, ls.get(0).getTheo_lenh_so(), 6,3);
+//        setCEll(sheet, ls.get(0).getNguoi_nhan_hang(), 7,3);
+//        setCEll(sheet, "ABC", 8,3);
+//        setCEll(sheet, ls.get(0).getDenngay(), 3,10);
+//        setCEll(sheet, ls.get(0).getSo_xe(), 4,10);
+//        setCEll(sheet, String.valueOf(ls.get(0).getSo_km()), 6,10);
+//        setCEll(sheet, ls.get(0).getSo(), 3,7);
+//        setCEll(sheet, ls.get(0).getNgay(), 4,7);
+//
+//        for (int i = 0; i< ls.size(); i++) {
+//            addNewRow(sheet);
+//        }
+//
+//        int row_num = 12;
+//        Long thanh_tien = 0L;
+//        for (int i = 0; i< ls.size(); i++) {
+//
+//            setCEll(sheet, String.valueOf(i+1), row_num,1);
+//            String generatedString = RandomStringUtils.randomAlphanumeric(5);
+//
+//            setCEll(sheet, generatedString, row_num,2);
+//            setCEll(sheet, ls.get(i).getTen_xd(), row_num,3);
+//            setCEll(sheet, ls.get(i).getChat_luong(), row_num,4);
+//            setCEll(sheet, String.valueOf(ls.get(i).getPhai_xuat()), row_num,5);
+//            setCEll(sheet, String.valueOf(ls.get(i).getNhiet_do_tt()), row_num,6);
+//            setCEll(sheet, String.valueOf(ls.get(i).getTy_trong()), row_num,7);
+//            setCEll(sheet, String.valueOf(ls.get(i).getHe_so_vcf()), row_num,8);
+//            setCEll(sheet, String.valueOf(ls.get(i).getThuc_xuat()), row_num,9);
+//            setCEll(sheet, String.valueOf(ls.get(i).getDon_gia()), row_num,10);
+//            setCEll(sheet, String.valueOf(ls.get(i).getThanh_tien()), row_num,11);
+//            row_num = row_num+1;
+//            thanh_tien = thanh_tien + ls.get(i).getThanh_tien();
+//            if (i == ls.size() - 1){
+//                setCEll(sheet,String.valueOf(thanh_tien), 14+ls.size(),11);
+//            }
+//        }
     }
 
     private void addNewRow(XSSFSheet sheet){
@@ -383,23 +383,23 @@ public class ChiTietSCController implements Initializable {
     }
 
     private void fillDataToLabels(){
-        lb_dvvc.setText(ls.get(0).getDvvc());
-        if (ls.get(0).getNhiemvu_id()==0){
-            System.out.println("nhiemvu = 0");
-            lb_dvn.setText(ls.get(0).getDvi());
-            lb_tcn.setText(ls.get(0).getNhiem_vu());
-        }else {
-            lb_dvn.setText(phuongtienRepo.findById(ls.get(0).getPhuongtien_id()).get().getName());
-            lb_tcn.setText(nhiemvuRepository.findById(ls.get(0).getNhiemvu_id()).get().getTenNv());
-        }
-
-        lb_so.setText(ls.get(0).getSo());
-        lb_nguoinhan.setText(ls.get(0).getNguoi_nhan_hang());
-        lb_lenhkh.setText(ls.get(0).getTheo_lenh_so());
-        lb_soxe.setText(ls.get(0).getSo_xe());
-        lb_tcn.setText(ls.get(0).getNhiem_vu());
-        lb_tungay.setText(ls.get(0).getNgay());
-        lb_loaiphieu.setText(ls.get(0).getLoai_phieu().equals("N") ? "Phiếu nhập" : "Phiếu xuất");
-        lb_denngay.setText("32/12/2024");
+//        lb_dvvc.setText(ls.get(0).getDvvc());
+//        if (ls.get(0).getNhiemvu_id()==0){
+//            System.out.println("nhiemvu = 0");
+//            lb_dvn.setText(ls.get(0).getDvi());
+//            lb_tcn.setText(ls.get(0).getNhiem_vu());
+//        }else {
+//            lb_dvn.setText(phuongtienRepo.findById(ls.get(0).getPhuongtien_id()).get().getName());
+//            lb_tcn.setText(nhiemvuRepository.findById(ls.get(0).getNhiemvu_id()).get().getTenNv());
+//        }
+//
+//        lb_so.setText(ls.get(0).getSo());
+//        lb_nguoinhan.setText(ls.get(0).getNguoi_nhan_hang());
+//        lb_lenhkh.setText(ls.get(0).getTheo_lenh_so());
+//        lb_soxe.setText(ls.get(0).getSo_xe());
+//        lb_tcn.setText(ls.get(0).getNhiem_vu());
+//        lb_tungay.setText(ls.get(0).getNgay());
+//        lb_loaiphieu.setText(ls.get(0).getLoai_phieu().equals("N") ? "Phiếu nhập" : "Phiếu xuất");
+//        lb_denngay.setText("32/12/2024");
     }
 }

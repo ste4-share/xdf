@@ -15,12 +15,6 @@ public class Common {
         } else if (category.getType_title().equals(ChungLoaiModel.TDK_a.getNameChungloai()) && category.getCode().equals(ChungLoaiModel.SSCD_a.getNameChungloai())) {
             invReportDetail.setSoluong(invetory.getTdk_sscd());
             return true;
-        } else if (category.getType_title().equals(ChungLoaiModel.TCK_a.getNameChungloai()) && category.getCode().equals(ChungLoaiModel.NVDX_a.getNameChungloai())) {
-            invReportDetail.setSoluong(invetory.getTck_nvdx());
-            return true;
-        } else if (category.getType_title().equals(ChungLoaiModel.TCK_a.getNameChungloai()) && category.getCode().equals(ChungLoaiModel.SSCD_a.getNameChungloai())) {
-            invReportDetail.setSoluong(invetory.getTck_sscd());
-            return true;
         }
         return false;
     }

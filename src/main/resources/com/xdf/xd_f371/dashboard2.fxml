@@ -297,7 +297,7 @@
                                   <TableColumn fx:id="so" prefWidth="61.0" text="Số" />
                                   <TableColumn fx:id="loaiphieu" prefWidth="74.0" text="Loại phiếu" />
                                     <TableColumn fx:id="ngaytao" prefWidth="126.0" text="Ngày tạo" />
-                                    <TableColumn fx:id="hanghoa" prefWidth="198.0" text="Hàng hóa" />
+                                    <TableColumn fx:id="soluong" prefWidth="198.0" text="Số lượng" />
                                     <TableColumn fx:id="tong" prefWidth="164.0" text="Tổng" />
                                 </columns>
                                  <columnResizePolicy>

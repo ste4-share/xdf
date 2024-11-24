@@ -12,8 +12,6 @@ public class LoaiXangDauDto {
     private int loaixd_id;
     private String maxd;
     private String tenxd;
-    private int priority;
-    private int ut2;
     private String loai;
     private String chungloai;
     private String tinhchat;
