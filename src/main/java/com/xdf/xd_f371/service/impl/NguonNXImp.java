@@ -28,11 +28,9 @@ public class NguonNXImp implements NguonNXService {
             while (resultSet.next()) {
                 int id = resultSet.getInt("nguonnx_id");
                 String ten = resultSet.getString("ten");
-                String createtime = resultSet.getString("createtime");
                 NguonNx obj = new NguonNx();
                 obj.setId(id);
                 obj.setTen(ten);
-                obj.setCreatetime(createtime);
                 result.add(obj);
             }
         } catch (SQLException e) {
@@ -63,10 +61,8 @@ public class NguonNXImp implements NguonNXService {
 
                 int id = resultSet.getInt("id");
                 String ten = resultSet.getString("ten");
-                String createtime = resultSet.getString("createtime");
                 NguonNx obj = new NguonNx();
                 obj.setId(id);
-                obj.setCreatetime(createtime);
                 obj.setTen(ten);
                 result.add(obj);
             }
@@ -92,8 +88,7 @@ public class NguonNXImp implements NguonNXService {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String ten = resultSet.getString("ten");
-                String createtime = resultSet.getString("createtime");
-                result.add(new NguonNx(id, ten, createtime));
+                result.add(new NguonNx(id, ten));
             }
 
         } catch (SQLException e) {

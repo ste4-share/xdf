@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tructhuoc")
 @Getter
@@ -16,8 +18,16 @@ public class TrucThuoc {
     private String name;
     @Column(name = "type")
     private String type;
+    @Column(name = "nhom_tructhuoc")
+    private String nhom_tructhuoc;
+    @Column(name = "tennhom_tructhuoc")
+    private String tennhom_tructhuoc;
+    @Column(name = "timestamp")
+    private String timestamp;
+
+    @OneToMany(mappedBy = "trucThuoc", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<NguonNx> nxList;
 
     public TrucThuoc() {
     }
-
 }

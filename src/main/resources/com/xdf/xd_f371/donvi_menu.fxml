@@ -53,7 +53,7 @@
                                  <columns>
                                     <TableColumn fx:id="col_name_unit" prefWidth="75.0" text="Tên đơn vị" />
                                     <TableColumn fx:id="col_affilated" prefWidth="75.0" text="Trực thuộc" />
-                                    <TableColumn fx:id="col_loaiphieu" prefWidth="75.0" text="Loại phiếu" />
+                                    <TableColumn fx:id="nhomtructhuoc" prefWidth="75.0" text="Nhóm trực thuộc" />
                                     <TableColumn fx:id="col_create_time" prefWidth="75.0" text="thời gian tạo" />
                                  </columns>
                                  <columnResizePolicy>
@@ -136,7 +136,6 @@
                                     <TableView fx:id="tb_property" onMouseClicked="#tb_tcn_clicked" prefHeight="689.0" prefWidth="1237.0">
                                       <columns>
                                         <TableColumn fx:id="col_property_name" prefWidth="75.0" text="Tính chất" />
-                                          <TableColumn fx:id="col_property_btype" prefWidth="75.0" text="thuộc loại phiếu" />
                                           <TableColumn fx:id="col_property_status" prefWidth="75.0" text="trạng thái" />
                                       </columns>
                                        <columnResizePolicy>

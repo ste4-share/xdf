@@ -11,30 +11,41 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class NguonNx {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "ten")
     private String ten;
-    @Column(name = "createtime")
-    private String createtime;
     @Column(name = "status")
     private String status;
+    @Column(name = "tructhuoc_id")
+    private int tructhuoc_id;
 
-    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)
     List<HanmucNhiemvu> hanmucNhiemvuList;
 
-    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)
     List<DonViTrucThuoc> donViTrucThuocs;
 
-    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)
     List<PhuongTien> phuongTiens;
 
-    public NguonNx(int id, String ten, String createtime) {
+    @ManyToOne
+    @JoinColumn(name = "tructhuoc_id",referencedColumnName = "id", insertable = false, updatable = false)
+    TrucThuoc trucThuoc;
+
+    public NguonNx(int id, String ten) {
         this.id = id;
         this.ten = ten;
-        this.createtime = createtime;
     }
+
+    public NguonNx(int id, String ten, int tructhuoc_id) {
+        this.id = id;
+        this.ten = ten;
+        this.tructhuoc_id = tructhuoc_id;
+    }
+
     public NguonNx(String ten) {
         this.ten = ten;
     }

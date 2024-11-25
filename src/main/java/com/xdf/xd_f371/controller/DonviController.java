@@ -1,10 +1,13 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.dto.TructhuocDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.repo.TcnRepo;
+import com.xdf.xd_f371.repo.TructhuocRepo;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
+import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -32,31 +35,32 @@ import java.util.ResourceBundle;
 public class DonviController implements Initializable {
 
     public static Stage unit_stage;
-    public static NguonNx selectedUnit;
+    public static TructhuocDto selectedUnit;
     @FXML
-    private TableView<NguonNx> tb_unit;
+    private TableView<TructhuocDto> tb_unit;
     @FXML
     private TableView<Tcn> tb_property;
     @FXML
-        private TableColumn<NguonNx, String> col_name_unit,col_create_time,col_affilated,col_loaiphieu;
+        private TableColumn<TructhuocDto, String> col_name_unit,col_create_time,col_affilated,nhomtructhuoc;
     @FXML
-    private TableColumn<Tcn, String> col_property_name,col_property_btype  ,col_property_status;
+    private TableColumn<Tcn, String> col_property_name,col_property_status;
 
-    private NguonNXService nguonNXService = new NguonNXImp();
     @Autowired
     private NguonNxRepo nguonNxRepo;
     @Autowired
     private TcnRepo tcnRepo;
+    @Autowired
+    private TructhuocRepo tructhuocRepo;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        selectedUnit = new NguonNx();
+        selectedUnit = new TructhuocDto();
         fillDataForTable_tcn();
         fillDataForTable_nguonnx();
     }
 
     private void fillDataForTable_nguonnx(){
-        tb_unit.setItems(FXCollections.observableList(nguonNXService.getAllAndNguonnx()));
+        tb_unit.setItems(FXCollections.observableList(tructhuocRepo.findAllBy().stream().toList()));
         setFactoryCell_for_Nguonnx();
     }
 
@@ -66,21 +70,20 @@ public class DonviController implements Initializable {
     }
 
     private void setFactoryCell_for_Tcn() {
-        col_property_btype.setCellValueFactory(new PropertyValueFactory<Tcn, String>("lp"));
         col_property_name.setCellValueFactory(new PropertyValueFactory<Tcn, String>("name"));
         col_property_status.setCellValueFactory(new PropertyValueFactory<Tcn, String>("status"));
     }
 
     private void setFactoryCell_for_Nguonnx() {
-        col_name_unit.setCellValueFactory(new PropertyValueFactory<NguonNx, String>("ten"));
-        col_create_time.setCellValueFactory(new PropertyValueFactory<NguonNx, String>("createtime"));
-        col_affilated.setCellValueFactory(new PropertyValueFactory<NguonNx, String>("tructhuoc"));
-        col_loaiphieu.setCellValueFactory(new PropertyValueFactory<NguonNx, String>("loaiphieu"));
+        col_name_unit.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("nguonnx_name"));
+        col_affilated.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("tentructhuoc"));
+        nhomtructhuoc.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("nhomtructhuoc"));
+        col_create_time.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("timestamp"));
     }
 
     private void showUnitsDetailScreen() throws IOException {
         selectedUnit = tb_unit.getSelectionModel().getSelectedItem();
-        Parent root = FXMLLoader.load(getClass().getResource("../unit_detail.fxml"));
+        Parent root = (Parent) DashboardController.getNodeBySource("unit_detail.fxml");
         Scene scene = new Scene(root);
         unit_stage = new Stage();
         unit_stage.setScene(scene);
@@ -98,27 +101,21 @@ public class DonviController implements Initializable {
 
 
     @FXML
-    public void addUnitAction(ActionEvent actionEvent) throws IOException{
+    public void addUnitAction(ActionEvent actionEvent){
         selectedUnit = tb_unit.getSelectionModel().getSelectedItem();
-        Parent root = FXMLLoader.load(getClass().getResource("../add_unit.fxml"));
-        Scene scene = new Scene(root);
-        unit_stage = new Stage();
-        unit_stage.setScene(scene);
-        unit_stage.initStyle(StageStyle.DECORATED);
-        unit_stage.initModality(Modality.APPLICATION_MODAL);
-        unit_stage.setTitle("Thêm mới");
-        unit_stage.showAndWait();
+        Common.openNewStage("add_unit.fxml", unit_stage, "Thêm mới");
         fillDataForTable_nguonnx();
         tb_unit.refresh();
     }
 
     @FXML
     public void editUnitAction(ActionEvent actionEvent) {
+
     }
 
     @FXML
     public void deleteUnitAction(ActionEvent actionEvent) {
-        NguonNx nguonNx = tb_unit.getSelectionModel().getSelectedItem();
+        TructhuocDto nguonNx = tb_unit.getSelectionModel().getSelectedItem();
         if (nguonNx!=null){
             if (DialogMessage.callAlert()== ButtonType.OK){
                 fillDataForTable_nguonnx();

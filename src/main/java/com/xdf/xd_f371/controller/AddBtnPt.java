@@ -8,6 +8,7 @@ import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class AddBtnPt implements Initializable {
                 phuongtienRepo.save(phuongTien);
 
 //                dinhMucRepo.save(new DinhMuc(Integer.parseInt(md.getText()), Integer.parseInt(tk.getText()), Integer.parseInt(h.getText()), Integer.parseInt(km.getText()), ptId, DashboardController.findByTime.getId()));
-                DialogMessage.callAlertWithMessage("Thông báo", "Thông báo", "Thêm phương tiện thành công");
+                DialogMessage.callAlertWithMessage("Thông báo", "Thông báo", "Thêm phương tiện thành công", Alert.AlertType.CONFIRMATION);
                 DinhMucPhuongTienController.norm_stage.close();
             }else{
                 // update phuong tien
@@ -70,7 +71,7 @@ public class AddBtnPt implements Initializable {
                         Integer.parseInt(tk.getText()), Integer.parseInt(h.getText()),
                         Integer.parseInt(km.getText()), DinhMucPhuongTienController.dinhMucPhuongTienDto.getPhuongtien_id(),
                         DashboardController.findByTime.getId()));
-                DialogMessage.callAlertWithMessage("Thông báo", "Thông báo", "Cập nhật phương tiện thành công");
+                DialogMessage.callAlertWithMessage("Thông báo", "Thông báo", "Cập nhật phương tiện thành công",Alert.AlertType.CONFIRMATION);
                 DinhMucPhuongTienController.norm_stage.close();
             }
         }

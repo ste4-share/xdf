@@ -91,7 +91,6 @@ public class DashboardController implements Initializable {
     private TableColumn<LichsuXNK, String> col_lsnxk_tenxd,col_lsnxk_mucgia, col_lsnxk_loaiphieu,col_lsnxk_soluong, col_lsnxk_tontruoc,col_lsnxk_tonsau,col_lsnxk_ngay;
 //    @FXML
 //    private TableColumn<Inventory, String> col_slton,col_loaixd,col_stt, col_mucgia;
-
     @FXML
     public TableView<MiniLedgerDto> tbTTNX;
     @FXML
@@ -100,9 +99,7 @@ public class DashboardController implements Initializable {
     private TextField tf_search_txnt,tf_search_history;
     @FXML
     private LichsuNXKService lichsuNXKService = new LichsuNXKImp();
-
     public static Quarter findByTime;
-
     @FXML
     private HBox dvi_menu,nxt_menu, loai_xd_menu, haohut_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu;
     @FXML
@@ -250,10 +247,8 @@ public class DashboardController implements Initializable {
     }
 
     public void setDataToViewTable(){
-        ledgersRepo.findInterfaceLedger().forEach(x-> System.out.println(x.getSo_str() + ", "+ x.getDvi_nhap()));
         setCellVal_TTNX_Refresh();
-        tbTTNX.setItems(FXCollections.observableArrayList(ledgersRepo.findInterfaceLedger()));
-        tbTTNX.refresh();
+        tbTTNX.setItems(FXCollections.observableList(ledgersRepo.findInterfaceLedger()));
         setPagination_nxt();
     }
 

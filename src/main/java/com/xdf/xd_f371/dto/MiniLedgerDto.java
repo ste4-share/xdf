@@ -1,7 +1,5 @@
 package com.xdf.xd_f371.dto;
 
-import com.xdf.xd_f371.util.TextToNumber;
-import javafx.beans.property.*;
 import lombok.*;
 
 import java.time.LocalDate;

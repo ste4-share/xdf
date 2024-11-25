@@ -51,11 +51,9 @@ public class AddAffForm implements Initializable {
     @FXML
     public void AddAff(ActionEvent actionEvent) {
         aff_id_selected = affilatedUnitCb.getValue().getId();
-        UnitDetailController.unit_detail_stage.close();
     }
 
     @FXML
     public void exitAct(ActionEvent actionEvent) {
-        UnitDetailController.unit_detail_stage.close();
     }
 }

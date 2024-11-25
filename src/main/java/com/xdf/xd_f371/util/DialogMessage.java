@@ -27,10 +27,10 @@ public class DialogMessage {
         return result.get();
     }
 
-    public static ButtonType callAlertWithMessage(String title, String headerText, String content){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    public static ButtonType callAlertWithMessage(String title, String header, String content, Alert.AlertType alertType){
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setHeaderText(headerText);
+        alert.setHeaderText(header);
         alert.setContentText(content);
 
         Optional<ButtonType> result = alert.showAndWait();
