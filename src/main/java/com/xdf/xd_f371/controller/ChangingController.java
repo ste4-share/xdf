@@ -184,7 +184,7 @@ public class ChangingController implements Initializable {
 
     private void updateMucgia(List<Mucgia> MucgiaList,String purpose){
         for(int i = 0;i < MucgiaList.size(); i++){
-            Mucgia mucgia = mucGiaRepo.findAllMucgiaUnique(purpose,tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucgiaList.get(i).getPrice());
+            Mucgia mucgia = mucGiaRepo.findAllMucgiaUnique(purpose,tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucgiaList.get(i).getPrice()).orElse(null);
             if (mucgia==null){
                 Mucgia after_convert = new Mucgia();
                 after_convert.setPurpose(purpose);

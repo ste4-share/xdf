@@ -15,34 +15,6 @@ import java.util.List;
 public class NguonNXImp implements NguonNXService {
 
     @Override
-    public List<NguonNx> getAllAndNguonnx() {
-        QDatabase.getConnectionDB();
-        List<NguonNx> result = new ArrayList<>();
-        String SQL_SELECT = "select nguonnx_id, ten, tructhuoc.name as ttname,string_agg(code, ', '),createtime,tructhuoc.id as ttid from nguon_nx \n" +
-                "join nguonnx_title on nguon_nx.id=nguonnx_title.nguonnx_id\n" +
-                "join tructhuoc on tructhuoc.id=title_id join category on category.tructhuoc_id=tructhuoc.id\n" +
-                "group by nguonnx_id, ten, ttname,createtime,ttid";
-        try {
-            PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("nguonnx_id");
-                String ten = resultSet.getString("ten");
-                NguonNx obj = new NguonNx();
-                obj.setId(id);
-                obj.setTen(ten);
-                result.add(obj);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return result;
-    }
-
-    @Override
     public List<NguonNx> findNguonnxTructhuocF() {
         QDatabase.getConnectionDB();
         List<NguonNx> result = new ArrayList<>();

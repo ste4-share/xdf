@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "mucgia")
 @Getter
@@ -29,7 +31,7 @@ public class Mucgia {
     @Column(name = "status")
     private String status;
     @Column(name = "timestamp")
-    private String timestamp;
+    private LocalDate timestamp;
 
     public Mucgia(int price, int amount, int quarter_id, int item_id, int inventory_id, String purpose, String status) {
         this.price = price;

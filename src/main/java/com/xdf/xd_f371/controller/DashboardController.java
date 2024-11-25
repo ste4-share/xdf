@@ -246,12 +246,14 @@ public class DashboardController implements Initializable {
     }
 
     public void setDataToViewTable(){
+        ttp_ls =ledgersRepo.findInterfaceLedger();
         so.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("so_str"));
         loaiphieu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("loai_phieu"));
         ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));
         soluong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("count_str"));
         tong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("tong_str"));
         tbTTNX.setItems(FXCollections.observableList(ttp_ls));
+        tbTTNX.refresh();
         setPagination_nxt();
     }
 
@@ -292,7 +294,7 @@ public class DashboardController implements Initializable {
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.showAndWait();
         setDataToViewTable();
-        fillDataToLichsuTb();
+//        fillDataToLichsuTb();
     }
 
     @FXML

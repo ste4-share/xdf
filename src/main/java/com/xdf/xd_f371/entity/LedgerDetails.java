@@ -51,6 +51,8 @@ public class LedgerDetails {
     private int phai_nhap;
     @Column(name = "px_soluong")
     private int px_soluong;
+    @Column(name = "thanhtien")
+    private int thanhtien;
 
     @ManyToOne
     @JoinColumn(name = "ledger_id", referencedColumnName = "id", insertable = false, updatable = false)

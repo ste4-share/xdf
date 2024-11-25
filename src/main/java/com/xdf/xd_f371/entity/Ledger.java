@@ -1,10 +1,9 @@
 package com.xdf.xd_f371.entity;
 
+import jakarta.annotation.Generated;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.GenerationTime;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -65,10 +64,10 @@ public class Ledger {
     @Column(name = "nhiemvu")
     private String nhiemvu;
     @Column(name = "nhiemvu_id")
-    private String nhiemvu_id;
+    private int nhiemvu_id;
     @Column(name = "tcn_id")
-    private String tcn_id;
-    @Column(name = "timestamp")
+    private int tcn_id;
+    @Column(name = "timestamp",insertable = false)
     private LocalDate timestamp;
 
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)

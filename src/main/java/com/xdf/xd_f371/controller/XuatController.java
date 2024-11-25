@@ -604,7 +604,7 @@ public class XuatController extends CommonFactory implements Initializable {
             LedgerDetails ledgerDetails = ls_socai.get(i);
             amount = amount + (ledgerDetails.getDon_gia()*ledgerDetails.getSoluong());
         }
-        ledger.setAmount(amount);
+//        ledger.setAmount(amount);
         ledger.setFrom_date(java.sql.Date.valueOf(tungay));
         ledger.setEnd_date(java.sql.Date.valueOf(denngay));
         ledger.setStatus("ACTIVE");
