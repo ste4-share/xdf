@@ -78,22 +78,6 @@ public class CommonFactory {
 //        invReportDetailService.update(invReportDetail1);
     }
 
-    protected void createNewMucgia(LedgerDetails ledgerDetails, int quantity){
-//        Mucgia mucgia = new Mucgia();
-//        Inventory inventory = tonKhoService.findByUniqueId(ledgerDetails.getLoaixd_id(), ledgerDetails.getQuarter_id());
-//        if (inventory==null){
-//            inventory = createInventory(ledgerDetails);
-//        }
-//        mucgia.setPrice(ledgerDetails.getDon_gia());
-//        mucgia.setAmount(quantity);
-//        mucgia.setQuarter_id(ledgerDetails.getQuarter_id());
-//        mucgia.setItem_id(ledgerDetails.getLoaixd_id());
-//        mucgia.setStatus(MucGiaEnum.IN_STOCK.getStatus());
-//        mucgia.setAssign_type_id(DashboardController.assignType.getId());
-//        mucgia.setInventory_id(inventory.getId());
-//        ledgerDetails.setTonkho_id(inventory.getId());
-//        mucgiaService.createNew(mucgia);
-    }
 
 //    private Inventory createInventory(LedgerDetails ledgerDetails){
 //        Inventory inventory = new Inventory();

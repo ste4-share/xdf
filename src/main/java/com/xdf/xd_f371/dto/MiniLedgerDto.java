@@ -36,4 +36,9 @@ public class MiniLedgerDto {
         this.tong = tong;
         this.tong_str = String.valueOf(tong);
     }
+
+    @Override
+    public String toString() {
+        return "{object: " + so + " - " + loai_phieu+ " - "+dvi_nhap + " - " +dvi_xuat + " - "+ timestamp + " - "  +count_str  + " - " + tong_str + "}\n";
+    }
 }

@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface TructhuocRepo extends JpaRepository<TrucThuoc, Integer> {
-    @Query("select new com.xdf.xd_f371.dto.TructhuocDto(tt.id, t.id, tt.ten,t.name, t.tennhom_tructhuoc,t.timestamp) from TrucThuoc t join t.nxList tt order by tt.id")
+    @Query("select new com.xdf.xd_f371.dto.TructhuocDto(tt.id, t.id, tt.ten,t.name, t.tennhom_tructhuoc,t.timestamp, tt.status) from TrucThuoc t join t.nxList tt order by tt.id")
     List<TructhuocDto> findAllBy();
 }

@@ -8,7 +8,10 @@ import com.xdf.xd_f371.model.*;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
+import com.xdf.xd_f371.repo.TcnRepo;
+import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.TextToNumber;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,14 +27,11 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.controlsfx.control.textfield.TextFields;
-import org.postgresql.util.PGInterval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.URL;
-import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -67,12 +67,15 @@ public class NhapController extends CommonFactory implements Initializable {
     private LoaiXangDauRepo loaiXangDauRepo;
     @Autowired
     private InventoryRepo inventoryRepo;
+    @Autowired
+    private TcnRepo tcnRepo;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         ls_socai = new ArrayList<>();
+
         tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         lp_id_pre = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_NHAP);
         ls_tcn = tcnService.getAllByBillTypeId(lp_id_pre.getId());
@@ -81,23 +84,12 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvvcCombobox();
         setDvnCombobox();
 
-        tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                try {
-                    LedgerDetails ledgerDetails =  tableView.getSelectionModel().getSelectedItem();
-                    fillDataToTextField(ledgerDetails);
-                }catch (NullPointerException nullPointerException){
-                    nullPointerException.printStackTrace();
-                }
-            }
-        });
-
         refresh_btn.setOnAction(event -> {
             clearHH();
             addbtn.setDisable(false);
         });
         setUpForSearchCompleteTion();
+        setTonKhoLabel();
     }
 
     private void setUpForSearchCompleteTion(){
@@ -113,21 +105,6 @@ public class NhapController extends CommonFactory implements Initializable {
             }).collect(Collectors.toList());
         });
     }
-
-    private void recognized_tcn(){
-        List<Tcn> tcnList = ls_tcn.stream().filter(x -> tcNhap.getText().toLowerCase().trim().equals(x.getName().toLowerCase().trim())).toList();
-        if (!tcnList.isEmpty()){
-            pre_createNewTcn = tcnList.get(0);
-        } else {
-            pre_createNewTcn.setStatus("ACTIVE");
-            pre_createNewTcn.setName(tcNhap.getText());
-            pre_createNewTcn.setLoaiphieu_id(lp_id_pre.getId());
-            pre_createNewTcn.setConcert(1);
-            tcnService.create(pre_createNewTcn);
-            pre_createNewTcn = tcnService.findByName(tcNhap.getText());
-        }
-    }
-
 
     private void setTenXDToCombobox(){
         cmb_tenxd.setConverter(new StringConverter<LoaiXangDau>() {
@@ -153,27 +130,21 @@ public class NhapController extends CommonFactory implements Initializable {
                 setTonKhoLabel();
             }
         });
-        setTonKhoLabel();
     }
 
     private void setDvvcCombobox(){
+        cmb_dvvc.setItems(FXCollections.observableList(nguonNxRepo.findByStatus("NORMAL")));
         cmb_dvvc.setConverter(new StringConverter<NguonNx>() {
             @Override
             public String toString(NguonNx object) {
-                if (object !=null){
-                    dvvc_id = object.getId();
-                }
                 return object==null ? "" : object.getTen();
             }
             @Override
             public NguonNx fromString(String string) {
-                return nguonNxRepo.findById(dvvc_id).get();
+                return nguonNxRepo.findById(dvvc_id).orElse(null);
             }
         });
 
-        ObservableList<NguonNx> observableArrayList =
-                FXCollections.observableArrayList(nguonNXService.getAllUnless(LoaiPhieu_cons.ROOT_NAME_NGUONNX));
-        cmb_dvvc.setItems(observableArrayList);
         cmb_dvvc.getSelectionModel().selectFirst();
     }
 
@@ -186,55 +157,53 @@ public class NhapController extends CommonFactory implements Initializable {
 
             @Override
             public NguonNx fromString(String string) {
-                return nguonNxRepo.findByTen(LoaiPhieu_cons.ROOT_NAME_NGUONNX).get(0);
+                return nguonNxRepo.findById(cmb_dvn.getValue().getId()).orElse(null);
             }
         });
-        ObservableList<NguonNx> observableArrayList =
-                FXCollections.observableArrayList(nguonNxRepo.findByTen((LoaiPhieu_cons.ROOT_NAME_NGUONNX)));
-        cmb_dvn.setItems(observableArrayList);
+        cmb_dvn.setItems(FXCollections.observableList(nguonNxRepo.findByStatus("ROOT")));
         cmb_dvn.getSelectionModel().selectFirst();
     }
 
     private LedgerDetails getDataFromField(){
         LedgerDetails ledgerDetails = new LedgerDetails();
-//        ledgerDetails.setDvi(cmb_dvn.getSelectionModel().getSelectedItem().getTen());
-//        ledgerDetails.setNgay(tungay.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-//        ledgerDetails.setDenngay(denngay.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+        ledgerDetails.setMa_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getMaxd());
         ledgerDetails.setTen_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getTenxd());
+        ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId());
         ledgerDetails.setDon_gia(Integer.parseInt(donGiaTf.getText()));
         ledgerDetails.setPhai_nhap(phaiNhap.getText().isEmpty() ? 0 : Integer.parseInt(phaiNhap.getText()));
         ledgerDetails.setThuc_nhap(Integer.parseInt(thucNhap.getText()));
         ledgerDetails.setNhiet_do_tt(tThucTe.getText().isEmpty() ? 0 : Double.parseDouble(tThucTe.getText()));
         ledgerDetails.setHe_so_vcf(vcf.getText().isEmpty() ? 0 : Integer.parseInt(vcf.getText()));
         ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
-//        ledgerDetails.setThanh_tien(Long.parseLong(thucNhap.getText()) * Long.parseLong(donGiaTf.getText()));
-//        ledgerDetails.setDvvc(cmb_dvvc.getValue().getTen());
-//        ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
         ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId());
-//        ledgerDetails.setImport_unit_id(cmb_dvn.getSelectionModel().getSelectedItem().getId());
-//        ledgerDetails.setExport_unit_id(cmb_dvvc.getSelectionModel().getSelectedItem().getId());
-//        try {
-//            ledgerDetails.setDur_text_md2(new PGInterval("0.00:00:00"));
-//            ledgerDetails.setDur_text_tk2(new PGInterval("0.00:00:00"));
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
         ledgerDetails.setSoluong(Integer.parseInt(thucNhap.getText()));
+        ledgerDetails.setPx_soluong(Integer.parseInt(thucNhap.getText()));
         return ledgerDetails;
     }
 
     private void fillDataToTextField(LedgerDetails ledgerDetails){
         cmb_tenxd.getSelectionModel().select(loaiXangDauRepo.findById(ledgerDetails.getLoaixd_id()).orElse(null));
         donGiaTf.setText(String.valueOf(ledgerDetails.getDon_gia()));
-        phaiNhap.setText(String.valueOf(ledgerDetails.getPhai_xuat()));
-        thucNhap.setText(String.valueOf(ledgerDetails.getThuc_xuat()));
+        phaiNhap.setText(String.valueOf(ledgerDetails.getPhai_nhap()));
+        thucNhap.setText(String.valueOf(ledgerDetails.getThuc_nhap()));
         tThucTe.setText(String.valueOf(ledgerDetails.getNhiet_do_tt()));
         vcf.setText(String.valueOf(ledgerDetails.getHe_so_vcf()));
         tyTrong.setText(String.valueOf(ledgerDetails.getTy_trong()));
     }
 
-    private void addNewImport(){
-        tbTT.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("stt"));
+    private void addNewPreparedledgerDetail(LedgerDetails ledgerDetails){
+        TableColumn<LedgerDetails, Void> indexCol = new TableColumn<>("stt");
+        indexCol.setCellFactory(col -> {
+            TableCell<LedgerDetails, Void> cell = new TableCell<>();
+            cell.textProperty().bind(Bindings.createStringBinding(() -> {
+                if (cell.isEmpty()) {
+                    return null ;
+                } else {
+                    return Integer.toString(cell.getIndex() + 1);
+                }
+            }, cell.emptyProperty(), cell.indexProperty()));
+            return cell ;
+        });
         tbTenXD.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
         tbDonGia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("don_gia"));
         tbPx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phai_xuat"));
@@ -243,63 +212,37 @@ public class NhapController extends CommonFactory implements Initializable {
         tbVCf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
         tbTyTrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
         tbThanhTien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanh_tien"));
+        ls_socai.add(ledgerDetails);
+        tableView.setItems(FXCollections.observableList(ls_socai));
     }
 
     @FXML
     private void btnInsert(ActionEvent event){
-        if (validField()){
-            LedgerDetails ledgerDetails = getDataFromField();
-            addNewImport();
-            ls_socai.add(ledgerDetails);
-            ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-            tableView.setItems(observableList);
-            clearHH();
-        }
+        addNewPreparedledgerDetail(getDataFromField());
+        clearHH();
     }
 
     @FXML
     private void btnImport(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("NHẬP");
-        alert.setHeaderText("Tạo phiếu nhập.");
-        alert.setContentText("Xác nhận tạo phiếu nhập ?");
-        if (alert.showAndWait().get() == ButtonType.OK){
-            if (!ls_socai.isEmpty()){
-                try {
-                    createNewLedger();
-                    Ledger l = ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.findByTime.getId(), Integer.parseInt(soTf.getText()));
-                    ls_socai.forEach(soCaiDto -> {
-                        if (l!=null){
-                            soCaiDto.setLedger_id(l.getId());
-                        }else{
-                            soCaiDto.setLedger_id(0);
-                        }
-                        // add new so_cai
-//                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getExport_unit_id(), 2);
-                        saveLichsunxk(soCaiDto);
-                        saveMucGia(soCaiDto);
-                        recognized_tcn();
-//                        soCaiDto.setTcn_id(pre_createNewTcn.getId());
-                        ledgerDetailRepo.save(soCaiDto);
-                        updateAllRowInv(soCaiDto);
-                    });
-                } catch (Exception e) {
-                    Alert error= new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Lỗi");
-                    error.setContentText("Có lỗi xảy ra");
-                    error.showAndWait();
-                    throw new RuntimeException(e);
-                }
-                ls_socai = new ArrayList<>();
+        if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Bạn có muốn tạo phiếu nhập mới?",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+            Ledger l = createNewLedger();
+            ls_socai.forEach(ld -> {
+                ld.setLedger_id(l.getId());
+//                saveLichsunxk(soCaiDto);
+                saveMucGia(ld, l);
+                updateInventory(l, ld);
+                ledgerDetailRepo.save(ld);
+            });
+            if (DialogMessage.callAlertWithMessage("THÔNG BÁO", "Thành công", "Thêm phiếu nhập thành công",Alert.AlertType.INFORMATION) == ButtonType.OK){
                 DashboardController.primaryStage.close();
             }
-            else {
-                Alert error= new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Lỗi");
-                error.setContentText("Phiếu nhập trống");
-                error.showAndWait();
-            }
         }
+    }
+
+    private void updateInventory(Ledger l, LedgerDetails ld) {
+        Inventory i = inventoryRepo.findById(l.getInventoryId()).orElseThrow();
+        i.setPre_nvdx(i.getPre_nvdx() + ld.getThuc_nhap());
+        inventoryRepo.save(i);
     }
 
     private void saveLichsunxk(LedgerDetails soCaiDto) {
@@ -309,30 +252,34 @@ public class NhapController extends CommonFactory implements Initializable {
         createNewTransaction(soCaiDto, tontruoc, tonsau);
     }
 
-    private void saveMucGia(LedgerDetails ledgerDetails){
-//        Mucgia mucgia_existed = mucGiaRepo.findAllMucgiaUnique(Purpose.NVDX.getName(), ledgerDetails.getLoaixd_id(), DashboardController.findByTime.get, ledgerDetails.getDon_gia());
-//        if (mucgia_existed==null){
-//            createNewMucgia(ledgerDetails, ledgerDetails.getThuc_nhap());
-//        } else {
-//            int quantityPerPrice = mucgia_existed.getAmount() + ledgerDetails.getThuc_nhap();
-//            updateMucgia(quantityPerPrice, mucgia_existed);
-//        }
+    private Mucgia saveMucGia(LedgerDetails ld, Ledger l){
+        Mucgia m = mucGiaRepo.findAllMucgiaUnique(Purpose.NVDX.getName(), ld.getLoaixd_id(), DashboardController.findByTime.getId(), ld.getDon_gia()).orElse(null);
+        if (m == null){
+            return mucGiaRepo.save(new Mucgia(ld.getDon_gia(), ld.getThuc_nhap(),l.getQuarter_id(),ld.getLoaixd_id(),l.getInventoryId(),Purpose.NVDX.getName(),MucGiaEnum.IN_STOCK.getStatus()));
+        }
+        m.setAmount(m.getAmount() + ld.getThuc_nhap());
+        return mucGiaRepo.save(m);
     }
 
-    private void createNewLedger() {
+    private Ledger createNewLedger() {
         Ledger ledger = new Ledger();
         ledger.setBill_id(Integer.parseInt(soTf.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
-        int amount = 0;
-        for (int i =0; i< ls_socai.size(); i++){
-            LedgerDetails ledgerDetails = ls_socai.get(i);
-            amount = amount + (ledgerDetails.getDon_gia()*ledgerDetails.getThuc_xuat());
-        }
-        ledger.setAmount(amount);
+        ledger.setAmount(ls_socai.stream().mapToLong(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
         ledger.setFrom_date(java.sql.Date.valueOf(tungay.getValue()));
         ledger.setEnd_date(java.sql.Date.valueOf(denngay.getValue()));
         ledger.setStatus("ACTIVE");
-        ledgersRepo.save(ledger);
+        ledger.setInventoryId(inventoryRepo.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElseThrow().getId());
+        ledger.setDvi_nhan(cmb_dvn.getValue().getTen());
+        ledger.setDvi_xuat(cmb_dvvc.getValue().getTen());
+        ledger.setLoai_phieu("NHAP");
+        ledger.setDvi_nhan_id(cmb_dvn.getValue().getId());
+        ledger.setDvi_xuat_id(cmb_dvvc.getValue().getId());
+        ledger.setNguoi_nhan(recvTf.getText());
+        ledger.setSo_xe(soXe.getText());
+        ledger.setLenh_so(lenhKHso.getText());
+        ledger.setTcn_id(tcnRepo.findByName(tcNhap.getText()));
+        return ledgersRepo.save(ledger);
     }
 
 
@@ -389,104 +336,6 @@ public class NhapController extends CommonFactory implements Initializable {
             }
         });
     }
-
-    private boolean validField(){
-        boolean isValid = true;
-        try{
-            if (!validateFiledBol.getSo() || validateFiledBol.getSo()==null){
-                soTf.requestFocus();
-                soTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            }
-            else if (validateFiledBol.getDongia() == null || !validateFiledBol.getDongia()){
-                donGiaTf.requestFocus();
-                donGiaTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            } else if (!validateFiledBol.getLenhso() || validateFiledBol.getLenhso()==null){
-                lenhKHso.requestFocus();
-                lenhKHso.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            } else if (!validateFiledBol.getNguoinhanhang() || validateFiledBol.getNguoinhanhang()==null){
-                recvTf.requestFocus();
-                recvTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            }else if (!validateFiledBol.getSoxe() || validateFiledBol.getSoxe()==null){
-                soXe.requestFocus();
-                soXe.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            }else if (!validateFiledBol.getNhietdo() || validateFiledBol.getNhietdo()==null){
-                tThucTe.requestFocus();
-                tThucTe.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            }else if (!validateFiledBol.getPhaixuat() || validateFiledBol.getPhaixuat()==null){
-                phaiNhap.requestFocus();
-                phaiNhap.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            }else if (!validateFiledBol.getTinhchatnhap() || validateFiledBol.getTinhchatnhap()==null){
-                tcNhap.requestFocus();
-                tcNhap.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            }else if (!validateFiledBol.getTytrong() || validateFiledBol.getTytrong()==null){
-                tyTrong.requestFocus();
-                tyTrong.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            }else if (!validateFiledBol.getVcf() || validateFiledBol.getVcf()==null){
-                vcf.requestFocus();
-                vcf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID");
-                alert.setContentText("Dữ liệu nhập không hợp lệ.");
-                alert.showAndWait();
-                isValid=false;
-            }
-        } catch (NullPointerException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("INVALID");
-            alert.setContentText("Dữ liệu nhập không được để trống.");
-            alert.showAndWait();
-            isValid=false;
-            e.printStackTrace();
-        }
-
-        return isValid;
-    }
-
     private void clearHH(){
         donGiaTf.clear();
         phaiNhap.clear();
@@ -681,17 +530,22 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setTonKhoLabel(){
-        Inventory inventory = inventoryRepo.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElse(null);
-        if (inventory!=null){
-            String sl_ton = TextToNumber.textToNum(String.valueOf(inventory.getPre_nvdx()));
-            lb_tontheoxd.setText("Số lượng tồn: "+ sl_ton +" (Lit)");
-        }else{
-            lb_tontheoxd.setText("Số lượng tồn: "+ 0 +" (Lit)");
-        }
+        Inventory i = inventoryRepo.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElseThrow();
+        lb_tontheoxd.setText("Số lượng tồn: "+ i.getPre_nvdx() +" (Lit)");
     }
 
     @FXML
     public void printTestData(ActionEvent actionEvent) {
         insertToDataExcel();
+    }
+
+    @FXML
+    public void select_item(MouseEvent mouseEvent) {
+        try {
+            LedgerDetails ledgerDetails =  tableView.getSelectionModel().getSelectedItem();
+            fillDataToTextField(ledgerDetails);
+        }catch (NullPointerException nullPointerException){
+            nullPointerException.printStackTrace();
+        }
     }
 }

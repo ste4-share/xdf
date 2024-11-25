@@ -17,5 +17,5 @@ public interface MucGiaRepo extends JpaRepository<Mucgia, Integer> {
     List<Mucgia> findAllMucgiaByItemID(@Param("pur") String purpose,@Param("petroId") int itemID,@Param("qId") int quarter_id);
 
     @Query(value = "Select * from mucgia where quarter_id=:qId and item_id=:petroId and purpose like :pur and price=:price", nativeQuery = true)
-    Mucgia findAllMucgiaUnique(@Param("pur") String purpose,@Param("petroId") int itemID,@Param("qId") int quarter_id, @Param("price") int price);
+    Optional<Mucgia> findAllMucgiaUnique(@Param("pur") String purpose,@Param("petroId") int itemID,@Param("qId") int quarter_id, @Param("price") int price);
 }

@@ -42,39 +42,6 @@ public class NguonNXImp implements NguonNXService {
         return result;
     }
 
-
-    @Override
-    public List<NguonNx> getAllUnless(String ten_1) {
-        QDatabase.getConnectionDB();
-        List<NguonNx> result = new ArrayList<>();
-
-
-        String SQL_SELECT = "Select * from nguon_nx where ten <> ?";
-
-        // auto close connection and preparedStatement
-        try {
-            PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
-            preparedStatement.setString(1,ten_1);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-
-                int id = resultSet.getInt("id");
-                String ten = resultSet.getString("ten");
-                NguonNx obj = new NguonNx();
-                obj.setId(id);
-                obj.setTen(ten);
-                result.add(obj);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
-        return result;
-    }
-
     @Override
     public List<NguonNx> findNguonnxTructhuocF() {
         QDatabase.getConnectionDB();
@@ -157,21 +124,6 @@ public class NguonNXImp implements NguonNXService {
             throw new RuntimeException(e);
         }
         return result;
-    }
-
-    @Override
-    public int updateNguonnxTitle(NguonnxTitle nguonnxTitle) {
-        QDatabase.getConnectionDB();
-        String sql = "begin transaction;update nguonnx_title set title_id=? where nguonnx_id=? and group_id=?;commit;";
-        try {
-            PreparedStatement statement = QDatabase.conn.prepareStatement(sql);
-            statement.setInt(1, nguonnxTitle.getTitle_id());
-            statement.setInt(2, nguonnxTitle.getNguonnx_id());
-            statement.setInt(3, nguonnxTitle.getGroup_id());
-            return statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

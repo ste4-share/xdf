@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TcnRepo extends JpaRepository<Tcn, Integer> {
+    String findByName(String name);
 }

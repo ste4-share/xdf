@@ -30,4 +30,14 @@ public class Mucgia {
     private String status;
     @Column(name = "timestamp")
     private String timestamp;
+
+    public Mucgia(int price, int amount, int quarter_id, int item_id, int inventory_id, String purpose, String status) {
+        this.price = price;
+        this.amount = amount;
+        this.quarter_id = quarter_id;
+        this.item_id = item_id;
+        this.inventory_id = inventory_id;
+        this.purpose = purpose;
+        this.status = status;
+    }
 }

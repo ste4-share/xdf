@@ -57,7 +57,7 @@ public class UnitDetailController implements Initializable {
     @FXML
     public void saveUnit(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage("Thông báo", "Lưu thay đổi", "Xác nhận Lưu thay đổi?",Alert.AlertType.CONFIRMATION)== ButtonType.OK){
-            nguonNxRepo.save(new NguonNx(DonviController.selectedUnit.getNguonnx_id(),unit_name_tf.getText(),tructhuoc_cbb.getValue().getId()));
+            nguonNxRepo.save(new NguonNx(DonviController.selectedUnit.getNguonnx_id(),unit_name_tf.getText(),DonviController.selectedUnit.getStatus(),tructhuoc_cbb.getValue().getId()));
             if (DialogMessage.callAlertWithMessage("Thông báo", "Thành công", "Đã lưu thay đổi",Alert.AlertType.INFORMATION)== ButtonType.OK){
                 DonviController.unit_stage.close();
             }

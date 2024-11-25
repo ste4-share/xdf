@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="803.0" prefWidth="1173.0" style="-fx-background-color: #ffffff;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23" fx:controller="com.xdf.xd_f371.controller.NhapController">
+<AnchorPane prefHeight="803.0" prefWidth="1173.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.NhapController">
    <children>
       <AnchorPane layoutX="7.0" layoutY="34.0" prefHeight="540.0" prefWidth="1161.0">
          <children>
@@ -366,7 +366,7 @@
             <Button id="cancelbtn" fx:id="cancelbtn1" cancelButton="true" layoutX="728.0" layoutY="494.0" mnemonicParsing="false" onAction="#printTestData" prefHeight="32.0" prefWidth="87.0" style="-fx-background-color: #595959;" stylesheets="@css/nhapform.css" text="print data" textFill="WHITE" />
          </children>
       </AnchorPane>
-      <TableView id="billViewTb" fx:id="tableView" layoutX="10.0" layoutY="582.0" prefHeight="158.0" prefWidth="1142.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;">
+      <TableView id="billViewTb" fx:id="tableView" layoutX="10.0" layoutY="582.0" onMouseClicked="#select_item" prefHeight="158.0" prefWidth="1142.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;">
         <columns>
           <TableColumn fx:id="tbTT" prefWidth="31.0" text="TT" />
           <TableColumn fx:id="tbTenXD" prefWidth="127.0" text="Tên Xăng dầu" />

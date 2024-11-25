@@ -53,8 +53,6 @@ import java.util.stream.Collectors;
 @Component
 public class DashboardController implements Initializable {
 
-//    private static final ApplicationContext applicationContext = new AnnotationConfigApplicationContext(XdF371Application.class);
-
     public static Stage primaryStage;
     public static Stage xuatStage;
     public static Stage ctStage;
@@ -112,7 +110,7 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ttp_ls = new ArrayList<>();
+        ttp_ls = ledgersRepo.findInterfaceLedger();
         lichsuXNKS = new ArrayList<>();
         ledgerList = ledgersRepo.findAll();
 //        getDataToChart(root_inventory);
@@ -122,9 +120,9 @@ public class DashboardController implements Initializable {
         customStyleMenu();
         setDataToPhieuCombobox();
         setDataToViewTable();
-        setColLichSuNXK();
+
 //        setUpForSearchCompleteTion();
-        searching();
+//        searching();
         fillDataToLichsuTb();
         tbTTNX.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -153,6 +151,7 @@ public class DashboardController implements Initializable {
                 }
             }
         });
+        setColLichSuNXK();
     }
 
     private void resetStyleField() {
@@ -247,8 +246,12 @@ public class DashboardController implements Initializable {
     }
 
     public void setDataToViewTable(){
-        setCellVal_TTNX_Refresh();
-        tbTTNX.setItems(FXCollections.observableList(ledgersRepo.findInterfaceLedger()));
+        so.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("so_str"));
+        loaiphieu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("loai_phieu"));
+        ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));
+        soluong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("count_str"));
+        tong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("tong_str"));
+        tbTTNX.setItems(FXCollections.observableList(ttp_ls));
         setPagination_nxt();
     }
 
@@ -306,15 +309,6 @@ public class DashboardController implements Initializable {
 //        getDataToChart(prepare_addnew_inventory);
         fillDataToLichsuTb();
     }
-
-    private void setCellVal_TTNX_Refresh(){
-        so.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("so_str"));
-        loaiphieu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("loai_phieu"));
-        ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));
-        soluong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("count_str"));
-        tong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("tong_str"));
-    }
-
     @FXML
     public void nxt_menu_action(MouseEvent event) {
         String cssLayout =

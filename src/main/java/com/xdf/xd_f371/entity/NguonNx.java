@@ -40,9 +40,10 @@ public class NguonNx {
         this.ten = ten;
     }
 
-    public NguonNx(int id, String ten, int tructhuoc_id) {
+    public NguonNx(int id, String ten,String status, int tructhuoc_id) {
         this.id = id;
         this.ten = ten;
+        this.status = status;
         this.tructhuoc_id = tructhuoc_id;
     }
 
