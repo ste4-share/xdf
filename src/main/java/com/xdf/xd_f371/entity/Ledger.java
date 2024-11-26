@@ -69,6 +69,8 @@ public class Ledger {
     private int tcn_id;
     @Column(name = "timestamp",insertable = false)
     private LocalDate timestamp;
+    @Column(name = "loainv")
+    private String loainv;
 
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LedgerDetails> ledgerDetails;

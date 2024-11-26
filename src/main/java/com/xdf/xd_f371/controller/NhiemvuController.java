@@ -44,7 +44,7 @@ public class NhiemvuController implements Initializable {
     }
 
     private void initNvTb() {
-        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuRepo.findAllDtoBy()));
+        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuRepo.findAllDtoBy(3)));
         tennv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_nv"));
         ctnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("chitiet"));
         lnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_loai_nv"));

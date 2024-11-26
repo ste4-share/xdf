@@ -53,6 +53,17 @@ public class LedgerDetails {
     private int px_soluong;
     @Column(name = "thanhtien")
     private int thanhtien;
+    @Column(name = "haohut_sl")
+    private int haohut_sl;
+
+    @Column(insertable = false, updatable = false)
+    private String thanhtien_str;
+    @Column(insertable = false, updatable = false)
+    private String thucxuat_str;
+    @Column(insertable = false, updatable = false)
+    private String phaixuat_str;
+    @Column(insertable = false, updatable = false)
+    private String dongia_str;
 
     @ManyToOne
     @JoinColumn(name = "ledger_id", referencedColumnName = "id", insertable = false, updatable = false)

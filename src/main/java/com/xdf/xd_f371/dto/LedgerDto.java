@@ -16,7 +16,7 @@ public class LedgerDto {
     private int ledger_detail_id;
     private int quarter_id;
     private int bill_id;
-    private int amount;
+    private Long amount;
     private Date from_date;
     private Date end_date;
     private String status;
@@ -37,15 +37,15 @@ public class LedgerDto {
     private String lenh_so;
     private String nhiemvu;
     private String nhiemvu_id;
-    private String tcn_id;
+    private int tcn_id;
 
     private String ma_xd;
     private String ten_xd;
     private String chung_loai;
     private String chat_luong;
     private int phai_xuat;
-    private double nhiet_do_tt;
-    private double ty_trong;
+    private String nhiet_do_tt;
+    private int ty_trong;
     private int he_so_vcf;
     private int don_gia;
     private int loaixd_id;
@@ -57,5 +57,6 @@ public class LedgerDto {
     private int thuc_nhap;
     private int phai_nhap;
     private int px_soluong;
-
+    private Long haohut_sl;
+    private String loainv;
 }
