@@ -78,8 +78,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ls_socai = new ArrayList<>();
 
         tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
-        lp_id_pre = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_NHAP);
-        ls_tcn = tcnService.getAllByBillTypeId(lp_id_pre.getId());
+        tcnx_ls = tcnRepo.findByLoaiphieu(LoaiPhieu_cons.PHIEU_NHAP);
 
         setTenXDToCombobox();
         setDvvcCombobox();
@@ -96,8 +95,8 @@ public class NhapController extends CommonFactory implements Initializable {
     private void setUpForSearchCompleteTion(){
         List<String> search_arr = new ArrayList<>();
 
-        for(int i = 0; i< ls_tcn.size(); i++){
-            search_arr.add(ls_tcn.get(i).getName());
+        for(int i = 0; i< tcnx_ls.size(); i++){
+            search_arr.add(tcnx_ls.get(i).getName());
         }
         TextFields.bindAutoCompletion(tcNhap, t -> {
             return search_arr.stream().filter(elem
@@ -216,7 +215,7 @@ public class NhapController extends CommonFactory implements Initializable {
 
     @FXML
     private void btnImport(ActionEvent actionEvent) {
-        if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Bạn có muốn tạo phiếu nhập mới?",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+        if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
             Ledger l = createNewLedger();
             ls_socai.forEach(ld -> {
                 ld.setLedger_id(l.getId());
@@ -376,7 +375,7 @@ public class NhapController extends CommonFactory implements Initializable {
 
     private void fillDataToSocaiSheet(XSSFSheet sheet, XSSFWorkbook wb) {
         int begin_data_current = 2;
-        List<Tcn> soCaiDtoList = tcnService.getAll();
+        List<Tcn> soCaiDtoList = tcnRepo.findAll();
         for(int i =0; i< soCaiDtoList.size(); i++){
             Tcn soCaiDto = soCaiDtoList.get(i);
             XSSFRow row = sheet.createRow(begin_data_current+i);

@@ -1,34 +1,29 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.Purpose;
+import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
 import com.xdf.xd_f371.repo.*;
+import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.TextToNumber;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.textfield.TextFields;
-import org.postgresql.util.PGInterval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,52 +33,37 @@ import java.util.stream.Collectors;
 @Component
 public class XuatController extends CommonFactory implements Initializable {
 
-    private static int nguonnx_id_selected = 0;
-    private static int nguonnx_id_selected_dvvc_cbb = 0;
-    private static int pt_id_selected_by_cbb = 0;
     private static Mucgia mucgia_id_selected_mucgia_cbb = new Mucgia();
-    private static Mucgia mucgia_id_selected_mucgia_cbb_nv = new Mucgia();
-    private static int click_index;
     private boolean addedBySelection_lstb = false;
     private static List<LedgerDetails> ls_socai;
     private static List<NhiemVuDto> chiTietNhiemVuDTO_list = new ArrayList<>();
     private static NhiemVuDto nhiemVu_selected=  new NhiemVuDto();
 
+
     @FXML
-    private TextField so_tf_k,nguoinhan_tf_k,tcx_tf_k,lenhso_tf_k,soxe_tf_k,phaixuat_tf_k,nhietdothucte_tf_k,vcf_tf_k,tytrong_tf_k,thucxuat_tf_k,
-            so_tf_nv,nguoinhan_tf_nv,tcx_tf_nhiemvu,lenhso_tf_nv,soxe_tf_nv,sokm_tf_nv,
-            sogio_md_tf_nv,
-            sophut_md_tf_nv,
-            phaixuat_tf_nv,nhietdothucte_tf_nv,vcf_tf_nv,tytrong_tf_nv,thucxuat_tf_nv;
+    private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong;
     @FXML
-    private CheckBox maybay_chkbox,xe_chkbox,may_chkbox;
+    private DatePicker tungay,denngay;
     @FXML
-    private RadioButton tk_radio,md_radio;
+    private RadioButton md_rd,tk_rd,may_rd, xe_rd, mb_rd;
     @FXML
-    private HBox lgb_hbox;
+    private ComboBox<PhuongTien> xmt_cbb;
     @FXML
-    private Button editBtn_k,addBtn_k, delBtn_k, xuatButton_k,cancelBtn_k, addBtn_nv,editBtn_nv,delBtn_nv,xuatBtn_nv,cancelBtn_nv;
+    private Label inv_lb;
     @FXML
-    private Label lb_slt_nv,lb_slt_k;
+    private ComboBox<NguonNx> dvn_cbb,dvx_cbb;
     @FXML
-    private ComboBox<NguonNx> cbb_dvn_xk, cbb_dvx_k,  cbb_dvx_nv;
+    private ComboBox<String> loai_xuat;
     @FXML
-    private ComboBox<PhuongTien> cbb_dvn_nv;
+    private ComboBox<LoaiXangDau> cbb_tenxd;
     @FXML
-    private ComboBox<LoaiXangDau> cbb_tenxd_k,cbb_tenxd_nv;
+    private ComboBox<Mucgia> cbb_dongia;
     @FXML
-    private ComboBox<Mucgia> cbb_dongia_k, cbb_dongia_nv;
+    private TableView<LedgerDetails> tbXuat;
     @FXML
-    private TableView<LedgerDetails> tbXuat_k, tbXuat_nv;
+    private TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phaixuat,col_nhietdo,col_tytrong,col_vcf,col_thucxuat,col_thanhtien;
     @FXML
-    private Tab tab_khac, tab_nhiemvu;
-    @FXML
-    private DatePicker tungay_dp_k, denngay_dp_k,tungay_dp_nv,denngay_dp_nv;
-    @FXML
-    private TableColumn<LedgerDetails, String> col_stt_k, col_tenxd_k, col_dongia_k,col_phaixuat_k,col_nhietdo_k,col_tytrong_k,col_vcf_k,col_thucxuat_k,col_thanh_tien_k;
-    @FXML
-    private TableColumn<LedgerDetails, String> col_stt_nv, col_tenxd_nv, col_dongia_nv,col_phaixuat_nv,col_nhietdo_nv,
-            col_tytrong_nv,col_vcf_nv, col_thucxuat_nv, col_thanh_tien_nv;
+    private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan;
 
     @Autowired
     private ChitietNhiemvuRepo chitietNhiemvuRepo;
@@ -97,176 +77,39 @@ public class XuatController extends CommonFactory implements Initializable {
     private PhuongtienRepo phuongtienRepo;
     @Autowired
     private InventoryRepo inventoryRepo;
+    @Autowired
+    private TcnRepo tcnRepo;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ls_socai = new ArrayList<>();
-        sogio_md_tf_nv.setText("00");
-        sophut_md_tf_nv.setText("00");
         chiTietNhiemVuDTO_list = chitietNhiemvuRepo.findAllDtoBy();
-        lp_id_pre = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_XUAT);
-        ls_tcn = tcnService.getAllByBillTypeId(lp_id_pre.getId());
-        tabKhac_assignment();
-        setActionForTab();
+        tcnx_ls = tcnRepo.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
+        initLoaiXuatCbb();
+        searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
+        mapXdForCombobox("ALL");
     }
 
-    private void setActionForTab(){
-        tab_khac.setOnSelectionChanged(event -> {
-            if (tab_khac.isSelected()){
-                tabKhac_assignment();
-            }
-        });
-        tab_nhiemvu.setOnSelectionChanged(event -> {
-            if (tab_nhiemvu.isSelected()){
-                tabNhiemVu_assignment();
-            }
-        });
+    private void initLoaiXuatCbb() {
+        loai_xuat.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName())));
+        loai_xuat.getSelectionModel().selectFirst();
+        mapItemsForDonViXuat(nguonNxRepo.findByStatus(StatusEnum.ROOT_STATUS.getName()));
+        mapItemsForDonViNhap(nguonNxRepo.findAll());
+        List<PhuongTien> pt= new ArrayList<>();
+        mapItemsForXeMayTau(pt);
+        disableFeature(true);
     }
-
-    private void tabKhac_assignment(){
-        ls_socai = new ArrayList<>();
-        setTenXDToCombobox_tab_k();
-        setDvnCombobox_tab_k();
-        setDvxCombobox_tab_k();
-        setUpTcx_tab_k_ForSearchCompleteTion();
-
-        if (click_index == -1 || ls_socai.isEmpty()){
-            delBtn_k.setDisable(true);
-            editBtn_k.setDisable(true);
-        }
-        tbXuat_k.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                LedgerDetails ledgerDetails =  tbXuat_k.getSelectionModel().getSelectedItem();
-                if (click_index != -1 && !ls_socai.isEmpty()){
-                    delBtn_k.setDisable(false);
-                    editBtn_k.setDisable(false);
-                }
-                fillDataToTextField_tab_k(ledgerDetails);
-            }
-        });
-        addBtn_k.setOnAction(actionEvent -> {
-            LedgerDetails ledgerDetails = getDataFromField_tab_k();
-            setCellValueFactory_fortable_tab_k();
-            ls_socai.add(ledgerDetails);
-            ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-            tbXuat_k.setItems(observableList);
-            clear_textfield_tab_k();
-        });
-        editBtn_k.setOnAction(actionEvent -> {
-            ButtonType edit = new ButtonType("Sửa");
-            ButtonType cancel = new ButtonType("Hủy " +
-                    "bỏ");
-            Alert a = new Alert(Alert.AlertType.WARNING, "", edit, cancel);
-            a.setTitle("" +
-                    "Sửa");
-            a.setContentText("Xác nhận chỉnh " +
-                    "sửa: ");
-            a.showAndWait().ifPresent(response -> {
-                if (response==edit){
-                    LedgerDetails ledgerDetails = getDataFromField_tab_k();
-                    ls_socai.set(click_index, ledgerDetails);
-                    ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-                    tbXuat_k.setItems(observableList);
-                } else if (response==cancel) {
-                    System.out.println("CAncel");
-                }
-            });
-        });
-        delBtn_k.setOnAction(actionEvent -> {
-            ButtonType delete = new ButtonType("Delete");
-            ButtonType cancel = new ButtonType("Cancel");
-            Alert a = new Alert(Alert.AlertType.NONE, "", delete, cancel);
-            a.setTitle("Delete");
-            a.setContentText("Do you really want delete number " );
-            a.showAndWait().ifPresent(response -> {
-                if (response==delete){
-                    ls_socai.remove(click_index);
-                    int index = 1;
-                    for (LedgerDetails i : ls_socai){
-                        index= index +1;
-                    }
-                    ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-                    tbXuat_k.setItems(observableList);
-                    delBtn_k.setDisable(true);
-                    if (ls_socai.isEmpty()){
-                        click_index = -1;
-                    }
-                } else if (response==cancel) {
-                    System.out.println("CAncel");
-                }
-            });
-        });
-        xuatButton_k.setOnAction(actionEvent -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("XUẤT");
-            alert.setHeaderText("Tạo phiếu XUẤT.");
-            alert.setContentText("Xác nhận tạo phiếu XUẤT ?");
-            if (alert.showAndWait().get() == ButtonType.OK){
-                if (!ls_socai.isEmpty()){
-                    createNewLedger(so_tf_k.getText(), tungay_dp_k.getValue(), denngay_dp_k.getValue());
-                    Ledger l = ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.findByTime.getId(), Integer.parseInt(so_tf_k.getText()));
-                    ls_socai.forEach(soCaiDto -> {
-                        if (l!=null){
-                            soCaiDto.setLedger_id(l.getId());
-                        }else{
-                            soCaiDto.setLedger_id(0);
-                        }
-//                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getImport_unit_id(), 2);
-                        saveLichsuxnk(soCaiDto);
-                        saveMucgia(soCaiDto);
-                        recognized_tcx();
-//                        soCaiDto.setTcn_id(pre_createNewTcn.getId());
-                        ledgerDetailRepo.save(soCaiDto);
-                        updateAllRowInv(soCaiDto);
-                    });
-                    ls_socai = new ArrayList<>();
-                    DashboardController.xuatStage.close();
-                } else {
-                    Alert error= new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Lỗi");
-                    error.setContentText("Phiếu xuất trống");
-                    error.showAndWait();
-                }
-            }
-        });
-        cancelBtn_k.setOnAction(actionEvent -> {
-            DashboardController.xuatStage.close();
-        });
-        cbb_tenxd_k.setOnAction(event -> {
-            setDongiaCombobox_tab_k(cbb_tenxd_k.getSelectionModel().getSelectedItem().getId());
-        });
-        cbb_dvn_xk.setOnAction(event -> {
-        });
-    }
-
-    private void setUpTcx_tab_k_ForSearchCompleteTion(){
-        List<String> search_arr = new ArrayList<>();
-        for(int i = 0; i< ls_tcn.size(); i++){
-            search_arr.add(ls_tcn.get(i).getName());
-        }
-        TextFields.bindAutoCompletion(tcx_tf_k, t -> {
+    private void searchCompleteTion(List<String> search_arr){
+        TextFields.bindAutoCompletion(tcx, t -> {
             return search_arr.stream().filter(elem
                     -> {
                 return elem.toLowerCase().startsWith(t.getUserText().toLowerCase().trim());
             }).collect(Collectors.toList());
         });
     }
-    private void recognized_tcx(){
-        List<Tcn> tcnList = ls_tcn.stream().filter(x -> tcx_tf_k.getText().toLowerCase().trim().equals(x.getName().toLowerCase().trim())).toList();
-        if (!tcnList.isEmpty()){
-            pre_createNewTcn = tcnList.get(0);
-        } else {
-            pre_createNewTcn.setStatus("ACTIVE");
-            pre_createNewTcn.setName(tcx_tf_k.getText());
-            pre_createNewTcn.setLoaiphieu_id(lp_id_pre.getId());
-            pre_createNewTcn.setConcert(1);
-            tcnService.create(pre_createNewTcn);
-            pre_createNewTcn = tcnService.findByName(tcx_tf_k.getText());
-        }
-    }
-    private void setTenXDToCombobox_tab_k(){
-        cbb_tenxd_k.setConverter(new StringConverter<LoaiXangDau>() {
+
+    private void mapXdForCombobox(String type){
+        cbb_tenxd.setConverter(new StringConverter<LoaiXangDau>() {
             @Override
             public String toString(LoaiXangDau object) {
                 return object == null ? "": object.getTenxd();
@@ -276,52 +119,13 @@ public class XuatController extends CommonFactory implements Initializable {
                 return loaiXangDauRepo.findByTenxd(string);
             }
         });
-        cbb_tenxd_k.getItems().addAll(loaiXangDauRepo.findAll());
-        cbb_tenxd_k.getSelectionModel().selectFirst();
-        setDongiaCombobox_tab_k(cbb_tenxd_k.getSelectionModel().getSelectedItem().getId());
+        cbb_tenxd.getItems().addAll(loaiXangDauRepo.findAll());
+        cbb_tenxd.getSelectionModel().selectFirst();
+        mapPrice(cbb_tenxd.getSelectionModel().getSelectedItem().getId());
     }
-    private void setDvxCombobox_tab_k(){
-        ObservableList<NguonNx> observableArrayList =
-                FXCollections.observableArrayList(nguonNxRepo.findByTen(LoaiPhieu_cons.ROOT_NAME_NGUONNX));
-        cbb_dvx_k.setItems(observableArrayList);
-        cbb_dvx_k.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                if (object!=null){
-                    nguonnx_id_selected_dvvc_cbb = object.getId();
-                }
-                return object==null ? "" : object.getTen();
-            }
 
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxRepo.findById(nguonnx_id_selected_dvvc_cbb).get();
-            }
-        });
-        cbb_dvx_k.getSelectionModel().selectFirst();
-    }
-    private void setDvnCombobox_tab_k(){
-        cbb_dvn_xk.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                if (object!=null){
-                    nguonnx_id_selected = object.getId();
-                }
-                return object==null ? "" : object.getTen();
-            }
-
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxRepo.findById(nguonnx_id_selected).get();
-            }
-        });
-        ObservableList<NguonNx> observableArrayList =
-                FXCollections.observableArrayList(nguonNxRepo.findAll());
-        cbb_dvn_xk.setItems(observableArrayList);
-        cbb_dvn_xk.getSelectionModel().selectFirst();
-    }
-    private void setDongiaCombobox_tab_k(int xd_id){
-        cbb_dongia_k.setConverter(new StringConverter<Mucgia>() {
+    private void mapPrice(int xd_id){
+        cbb_dongia.setConverter(new StringConverter<Mucgia>() {
             @Override
             public String toString(Mucgia object) {
                 if (object!=null){
@@ -336,246 +140,77 @@ public class XuatController extends CommonFactory implements Initializable {
             }
         });
         List<Mucgia> mucgials = mucGiaRepo.findAllMucgiaByItemID(Purpose.NVDX.getName(),xd_id,DashboardController.findByTime.getId());
-        cbb_dongia_k.setItems(FXCollections.observableArrayList(mucgials));
-        cbb_dongia_k.getSelectionModel().selectFirst();
-        setDongia_k_Label();
+        cbb_dongia.setItems(FXCollections.observableArrayList(mucgials));
+        cbb_dongia.getSelectionModel().selectFirst();
+        setInv_lb();
     }
     private void fillDataToTextField_tab_k(LedgerDetails ledgerDetails){
-        cbb_tenxd_k.getSelectionModel().select(loaiXangDauRepo.findById(ledgerDetails.getLoaixd_id()).orElse(null));
-        phaixuat_tf_k.setText(String.valueOf(ledgerDetails.getPhai_xuat()));
-        thucxuat_tf_k.setText(String.valueOf(ledgerDetails.getThuc_xuat()));
-        nhietdothucte_tf_k.setText(String.valueOf(ledgerDetails.getNhiet_do_tt()));
-        vcf_tf_k.setText(String.valueOf(ledgerDetails.getHe_so_vcf()));
-        tytrong_tf_k.setText(String.valueOf(ledgerDetails.getTy_trong()));
+        cbb_tenxd.getSelectionModel().select(loaiXangDauRepo.findById(ledgerDetails.getLoaixd_id()).orElse(null));
+        phaixuat.setText(String.valueOf(ledgerDetails.getPhai_xuat()));
+        thucxuat.setText(String.valueOf(ledgerDetails.getThuc_xuat()));
+        nhietdo.setText(String.valueOf(ledgerDetails.getNhiet_do_tt()));
+        vcf.setText(String.valueOf(ledgerDetails.getHe_so_vcf()));
+        tytrong.setText(String.valueOf(ledgerDetails.getTy_trong()));
     }
 
-    private void setCellValueFactory_fortable_tab_k(){
-        col_stt_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("stt"));
-        col_tenxd_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
-        col_dongia_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("don_gia"));
-        col_phaixuat_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phai_xuat"));
-        col_thucxuat_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thuc_xuat"));
-        col_nhietdo_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
-        col_vcf_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
-        col_tytrong_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
-        col_thanh_tien_k.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanh_tien"));
+    private void setCellValueFactory(LedgerDetails l){
+        stt.setSortable(false);
+        stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tbXuat.getItems().indexOf(column.getValue())+1).asString());
+        tenxd.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
+        dongia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("don_gia"));
+        col_phaixuat.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phai_xuat"));
+        col_thucxuat.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("so_luong"));
+        col_nhietdo.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
+        col_vcf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
+        col_tytrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
+        col_thanhtien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien"));
+    }
+    private void clearFields(){
+        phaixuat.clear();
+        thucxuat.clear();
+        nhietdo.clear();
+        vcf.clear();
+        tytrong.clear();
     }
 
-    private void setCellValueFactory_fortable_tab_nv(){
-        col_stt_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("stt"));
-        col_tenxd_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
-        col_dongia_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("don_gia"));
-        col_phaixuat_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phai_xuat"));
-        col_thucxuat_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("soluong"));
-        col_nhietdo_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
-        col_vcf_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
-        col_tytrong_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
-        col_thanh_tien_nv.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanh_tien"));
-    }
-    private void clear_textfield_tab_k(){
-        phaixuat_tf_k.clear();
-        thucxuat_tf_k.clear();
-        nhietdothucte_tf_k.clear();
-        vcf_tf_k.clear();
-        tytrong_tf_k.clear();
-    }
-    private void clear_textfield_tab_nv(){
-        phaixuat_tf_nv.clear();
-        thucxuat_tf_nv.clear();
-        nhietdothucte_tf_nv.clear();
-        vcf_tf_nv.clear();
-        tytrong_tf_nv.clear();
-    }
-    private LedgerDetails getDataFromField_tab_k(){
+    private LedgerDetails getLedgerDetails(){
         LedgerDetails ledgerDetails = new LedgerDetails();
-        try{
+        ledgerDetails.setTen_xd(cbb_tenxd.getSelectionModel().getSelectedItem().getTenxd());
+        ledgerDetails.setMa_xd(cbb_tenxd.getSelectionModel().getSelectedItem().getMaxd());
+        ledgerDetails.setChung_loai(cbb_tenxd.getSelectionModel().getSelectedItem().getChungLoaiXd().getChungloai());
+        ledgerDetails.setDon_gia(Integer.parseInt(dongia.getText()));
+        ledgerDetails.setPhai_xuat(Integer.parseInt(phaixuat.getText()));
+        ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText()));
+        ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText()));
+        ledgerDetails.setHe_so_vcf(Integer.parseInt(vcf.getText()));
+        ledgerDetails.setTy_trong(Double.parseDouble(tytrong.getText()));
+        ledgerDetails.setLoaixd_id(cbb_tenxd.getSelectionModel().getSelectedItem().getId());
+        ledgerDetails.setSoluong(Integer.parseInt(thucxuat.getText()));
+        ledgerDetails.setThuc_nhap(0);
+        ledgerDetails.setPhai_nhap(0);
 
-            ledgerDetails.setTen_xd(cbb_tenxd_k.getSelectionModel().getSelectedItem().getTenxd());
-            LoaiPhieu loaiPhieu = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_XUAT);
-//            ledgerDetails.setNgay(tungay_dp_k.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-//            ledgerDetails.setLoai_phieu(loaiPhieu.getType());
-//            ledgerDetails.setSo(so_tf_k.getText());
-//            ledgerDetails.setTheo_lenh_so(lenhso_tf_k.getText());
-//            ledgerDetails.setNhiem_vu(tcx_tf_k.getText());
-//            ledgerDetails.setNguoi_nhan_hang(nguoinhan_tf_k.getText());
-//            ledgerDetails.setSo_xe(soxe_tf_k.getText());
-            ledgerDetails.setDon_gia(mucgia_id_selected_mucgia_cbb.getPrice());
-            ledgerDetails.setPhai_xuat(Integer.parseInt(phaixuat_tf_k.getText()));
-            ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat_tf_k.getText()));
-            ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdothucte_tf_k.getText().isEmpty() ? "0" : nhietdothucte_tf_k.getText()));
-            ledgerDetails.setHe_so_vcf(Integer.parseInt(vcf_tf_k.getText().isEmpty() ? "0" : vcf_tf_k.getText()));
-            ledgerDetails.setTy_trong(Double.parseDouble(tytrong_tf_k.getText().isEmpty() ? "0" : tytrong_tf_k.getText()));
-            ledgerDetails.setLoaixd_id(cbb_tenxd_k.getSelectionModel().getSelectedItem().getId());
-
-//            ledgerDetails.setThanh_tien(Long.parseLong(thucxuat_tf_k.getText()) * mucgia_id_selected_mucgia_cbb.getPrice());
-//            ledgerDetails.setDvvc(cbb_dvx_k.getSelectionModel().getSelectedItem().getTen());
-//            ledgerDetails.setDvi(cbb_dvn_xk.getSelectionModel().getSelectedItem().getTen());
-//            ledgerDetails.setDenngay(denngay_dp_k.getValue()==null ? "" : denngay_dp_k.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-//            ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
-//            ledgerDetails.setExport_unit_id(cbb_dvx_k.getSelectionModel().getSelectedItem().getId());
-//            ledgerDetails.setImport_unit_id(cbb_dvn_xk.getSelectionModel().getSelectedItem().getId());
-//            try {
-//                ledgerDetails.setDur_text_md2(new PGInterval("0.00:00:00"));
-//                ledgerDetails.setDur_text_tk2(new PGInterval("0.00:00:00"));
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-            ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_k.getText()));
-        } catch (NullPointerException e) {
-            throw new NullPointerException(e.getMessage());
+        if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.X_K.getName())){
+            ledgerDetails.setPhuongtien_id(0);
+            ledgerDetails.setThuc_xuat_tk(0);
+            ledgerDetails.setNhiemvu_hanmuc_id(0);
+            ledgerDetails.setPx_soluong(Integer.parseInt(thucxuat.getText()));
+        }else {
+            ledgerDetails.setPhuongtien_id(xmt_cbb.getValue().getId());
+            ledgerDetails.setNhiemvu_hanmuc_id(hanmucNhiemvuRepo.findByUniqueIds(dvx_cbb.getValue().getId(),nhiemVu_selected.getCtnv_id(),DashboardController.findByTime.getId()).get().getId());
+            if (tk_rd.isSelected()){
+                ledgerDetails.setThuc_xuat_tk(Integer.parseInt(thucxuat.getText()));
+                ledgerDetails.setThuc_xuat(0);
+            } else if (md_rd.isSelected()) {
+                ledgerDetails.setThuc_xuat_tk(0);
+                ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText()));
+            }
         }
+        ledgerDetails.setThanhtien(ledgerDetails.getSoluong() * Integer.parseInt(dongia.getText()));
         return ledgerDetails;
     }
-    private void setDongia_k_Label() {
-        try {
-            Mucgia mucgia = mucGiaRepo.findMucGiaByIdAndStatus(cbb_dongia_k.getSelectionModel().getSelectedItem().getId(), MucGiaEnum.IN_STOCK.getStatus()).orElse(null);
-            if (mucgia!=null){
-                lb_slt_k.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(mucgia.getAmount())));
-            } else {
-                lb_slt_k.setText("Số lượng tồn: "+ "0");
-            }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
-    private void setDongia_nv_Label() {
-        try {
-            Mucgia mucgia = mucGiaRepo.findMucGiaByIdAndStatus(cbb_dongia_nv.getSelectionModel().getSelectedItem().getId(),MucGiaEnum.IN_STOCK.getStatus()).orElse(null);
-            if (mucgia!=null){
-                lb_slt_nv.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(mucgia.getAmount())));
-            } else {
-                lb_slt_nv.setText("Số lượng tồn: "+ "0");
-            }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void tabNhiemVu_assignment(){
-        ls_socai = new ArrayList<>();
-        setTenXDToCombobox_tab_nv();
-        setDvxCombobox_tab_nv();
-        setNhiemVuForTextField();
-
-        if (maybay_chkbox.isSelected()){
-            lgb_hbox.setDisable(false);
-            setPhuongTienNhan(LoaiPTEnum.MAYBAY_a.getNameVehicle());
-        } else if (may_chkbox.isSelected()) {
-            lgb_hbox.setDisable(true);
-            setPhuongTienNhan(LoaiPTEnum.MAY.getNameVehicle());
-        }else if (xe_chkbox.isSelected()) {
-            lgb_hbox.setDisable(true);
-            setPhuongTienNhan(LoaiPTEnum.XE.getNameVehicle());
-        }else{
-            lgb_hbox.setDisable(false);
-            maybay_chkbox.setSelected(true);
-            tk_radio.setSelected(true);
-            setPhuongTienNhan(LoaiPTEnum.MAYBAY_a.getNameVehicle());
-        }
-        if (click_index == -1 || ls_socai.isEmpty()){
-            delBtn_nv.setDisable(true);
-            editBtn_nv.setDisable(true);
-        }
-        tbXuat_nv.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                LedgerDetails ledgerDetails =  tbXuat_nv.getSelectionModel().getSelectedItem();
-                if (click_index != -1 && !ls_socai.isEmpty()){
-                    delBtn_nv.setDisable(false);
-                    editBtn_nv.setDisable(false);
-                }
-                fillDataToTextField_tab_k(ledgerDetails);
-            }
-        });
-        addBtn_nv.setOnAction(actionEvent -> {
-            LedgerDetails ledgerDetails = getDataFromField_tab_nhiemvu();
-            setCellValueFactory_fortable_tab_nv();
-            ls_socai.add(ledgerDetails);
-            ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-            tbXuat_nv.setItems(observableList);
-            clear_textfield_tab_nv();
-        });
-        editBtn_nv.setOnAction(actionEvent -> {
-            ButtonType edit = new ButtonType("Sửa");
-            ButtonType cancel = new ButtonType("Hủy " +
-                    "bỏ");
-            Alert a = new Alert(Alert.AlertType.WARNING, "", edit, cancel);
-            a.setTitle("" +
-                    "Sửa");
-            a.setContentText("Xác nhận chỉnh " +
-                    "sửa: ");
-            a.showAndWait().ifPresent(response -> {
-                if (response==edit){
-                    LedgerDetails ledgerDetails = getDataFromField_tab_nhiemvu();
-                    ls_socai.set(click_index, ledgerDetails);
-                    ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-                    tbXuat_nv.setItems(observableList);
-                } else if (response==cancel) {
-                    System.out.println("CAncel");
-                }
-            });
-        });
-        delBtn_nv.setOnAction(actionEvent -> {
-            ButtonType delete = new ButtonType("Delete");
-            ButtonType cancel = new ButtonType("Cancel");
-            Alert a = new Alert(Alert.AlertType.NONE, "", delete, cancel);
-            a.setTitle("Delete");
-            a.setContentText("Do you really want delete number ");
-            a.showAndWait().ifPresent(response -> {
-                if (response==delete){
-                    ls_socai.remove(click_index);
-                    int index = 1;
-                    for (LedgerDetails i : ls_socai){
-                        index= index +1;
-                    }
-                    ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-                    tbXuat_k.setItems(observableList);
-                    delBtn_k.setDisable(true);
-//                    if (ls_socai.isEmpty()){
-//                    }
-
-                } else if (response==cancel) {
-                    System.out.println("CAncel");
-                }
-            });
-        });
-        xuatBtn_nv.setOnAction(actionEvent -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("XUẤT");
-            alert.setHeaderText("Tạo phiếu XUẤT.");
-            alert.setContentText("Xác nhận tạo phiếu XUẤT ?");
-            if (alert.showAndWait().get() == ButtonType.OK){
-                if (!ls_socai.isEmpty()){
-                    createNewLedger(so_tf_nv.getText(), tungay_dp_nv.getValue(), denngay_dp_nv.getValue());
-                    Ledger l = ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.findByTime.getId(), Integer.parseInt(so_tf_nv.getText()));
-                    ls_socai.forEach(soCaiDto -> {
-                        if (l!=null){
-                            soCaiDto.setLedger_id(l.getId());
-                        }else{
-                            soCaiDto.setLedger_id(0);
-                        }
-//                        TrucThuoc trucThuoc = trucThuocService.findByNguonnx(soCaiDto.getImport_unit_id(), 2);
-                        saveLichsuxnk(soCaiDto);
-                        saveMucgia(soCaiDto);
-                        ledgerDetailRepo.save(soCaiDto);
-                        updateAllRowInv(soCaiDto);
-                    });
-                    ls_socai = new ArrayList<>();
-                    DashboardController.xuatStage.close();
-                } else {
-                    Alert error= new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Lỗi");
-                    error.setContentText("Phiếu xuất trống");
-                    error.showAndWait();
-                }
-            }
-        });
-        cancelBtn_nv.setOnAction(actionEvent -> {
-            DashboardController.xuatStage.close();
-        });
-        cbb_tenxd_nv.setOnAction(event -> {
-            setDongiaCombobox_tab_nv(cbb_tenxd_nv.getSelectionModel().getSelectedItem().getId());
-        });
+    private void setInv_lb() {
+        Mucgia mucgia = mucGiaRepo.findMucGiaByIdAndStatus(cbb_dongia.getSelectionModel().getSelectedItem().getId(), MucGiaEnum.IN_STOCK.getStatus()).orElseThrow();
+        inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(mucgia.getAmount())) + " (Lit)");
     }
 
     private void saveLichsuxnk(LedgerDetails soCaiDto) {
@@ -585,59 +220,88 @@ public class XuatController extends CommonFactory implements Initializable {
         createNewTransaction(soCaiDto, tontruoc, tonsau);
     }
 
-    private void saveMucgia(LedgerDetails soCaiDto){
-//        Mucgia mucgia_existed = mucGiaRepo.findAllMucgiaUnique(Purpose.NVDX.getName(),soCaiDto.getLoaixd_id(), soCaiDto.getQuarter_id(), soCaiDto.getDon_gia());
-//        if (mucgia_existed==null){
-//            createNewMucgia(soCaiDto, soCaiDto.getSoluong()*(-1));
-//        }else{
-//            int quantityPerPrice = mucgia_existed.getAmount() - soCaiDto.getSoluong();
-//            updateMucgia(quantityPerPrice, mucgia_existed);
-//        }
-    }
-
-    private void createNewLedger(String so, LocalDate tungay, LocalDate denngay) {
-        Ledger ledger = new Ledger();
-        ledger.setBill_id(Integer.parseInt(so));
-        ledger.setQuarter_id(DashboardController.findByTime.getId());
-        int amount = 0;
-        for (int i =0; i< ls_socai.size(); i++){
-            LedgerDetails ledgerDetails = ls_socai.get(i);
-            amount = amount + (ledgerDetails.getDon_gia()*ledgerDetails.getSoluong());
+    private Mucgia saveMucgia(LedgerDetails ld, Ledger l){
+        Mucgia m = mucGiaRepo.findAllMucgiaUnique(Purpose.NVDX.getName(), ld.getLoaixd_id(), DashboardController.findByTime.getId(), ld.getDon_gia()).orElse(null);
+        if (m == null){
+            return mucGiaRepo.save(new Mucgia(ld.getDon_gia(), ld.getSoluong(),l.getQuarter_id(),ld.getLoaixd_id(),l.getInventoryId(),Purpose.NVDX.getName(),MucGiaEnum.IN_STOCK.getStatus()));
         }
-//        ledger.setAmount(amount);
-        ledger.setFrom_date(java.sql.Date.valueOf(tungay));
-        ledger.setEnd_date(java.sql.Date.valueOf(denngay));
-        ledger.setStatus("ACTIVE");
-        ledgersRepo.save(ledger);
+        m.setAmount(m.getAmount() - ld.getSoluong());
+        return mucGiaRepo.save(m);
+    }
+    private void updateInventory(Ledger l, LedgerDetails ld) {
+        Inventory i = inventoryRepo.findById(l.getInventoryId()).orElseThrow();
+        i.setPre_nvdx(i.getPre_nvdx() - ld.getSoluong());
+        inventoryRepo.save(i);
     }
 
-    private void setNhiemVuForTextField() {
-        setUpForSearchCompleteTion();
+    private Ledger createNewLedger() {
+        Ledger ledger = new Ledger();
+        ledger.setBill_id(Integer.parseInt(so.getText()));
+        ledger.setQuarter_id(DashboardController.findByTime.getId());
+        ledger.setAmount(ls_socai.stream().mapToLong(x->(x.getThuc_xuat()*x.getDon_gia())).sum());
+        ledger.setFrom_date(java.sql.Date.valueOf(tungay.getValue()));
+        ledger.setEnd_date(java.sql.Date.valueOf(denngay.getValue()));
+        ledger.setStatus("ACTIVE");
+        if (tk_rd.isSelected()){
+            ledger.setSl_tieuthu_md(0);
+            ledger.setSl_tieuthu_tk(Integer.parseInt(thucxuat.getText()));
+        }else if (md_rd.isSelected()){
+            ledger.setSl_tieuthu_md(Integer.parseInt(thucxuat.getText()));
+            ledger.setSl_tieuthu_tk(0);
+        }else{
+            ledger.setSl_tieuthu_md(0);
+            ledger.setSl_tieuthu_tk(0);
+        }
+        ledger.setInventoryId(inventoryRepo.findByPetro_idAndQuarter_id(cbb_tenxd.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElseThrow().getId());
+        ledger.setDvi_nhan(dvn_cbb.getValue().getTen());
+        ledger.setDvi_xuat(dvx_cbb.getValue().getTen());
+        ledger.setLoai_phieu(LoaiPhieuCons.PHIEU_XUAT.getName());
+        ledger.setDvi_nhan_id(dvn_cbb.getValue().getId());
+        ledger.setDvi_xuat_id(dvx_cbb.getValue().getId());
+        ledger.setNguoi_nhan(nguoinhan.getText());
+        ledger.setSo_xe(soxe.getText());
+        ledger.setLenh_so(lenhso.getText());
+        ledger.setTcn_id(tcnRepo.findByName(tcx.getText()).orElseThrow().getId());
+        if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.NV.getName())){
+            ledger.setLoaigiobay(tk_rd.isSelected() ? TypeCons.TREN_KHONG.getName() : TypeCons.MAT_DAT.getName());
+            ledger.setNhiemvu(nhiemVu_selected.getTen_nv() + " | " + nhiemVu_selected.getChitiet());
+            ledger.setNhiemvu_id(nhiemVu_selected.getCtnv_id());
+            if (tk_rd.isSelected()){
+                ledger.setSo_km(0);
+                ledger.setGiohd_tk(getStrInterval());
+                ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
+            } else if (md_rd.isSelected()) {
+                ledger.setSo_km(Integer.parseInt(sokm.getText()));
+                ledger.setGiohd_tk(DefaultVarCons.GIO_HD.getName());
+                ledger.setGiohd_md(getStrInterval());
+            }
+            ledger.setTcn_id(0);
+        }else {
+            ledger.setLoaigiobay("");
+            ledger.setNhiemvu("");
+            ledger.setNhiemvu_id(0);
+            ledger.setTcn_id(tcnRepo.findByName(tcx.getText()).orElseThrow().getId());
+            ledger.setSo_km(0);
+            ledger.setGiohd_tk(DefaultVarCons.GIO_HD.getName());
+            ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
+        }
+        return ledgersRepo.save(ledger);
     }
 
     private void setUpForSearchCompleteTion(){
-        List<String> search_arr = new ArrayList<>();
-        for(int i = 0; i< chiTietNhiemVuDTO_list.size(); i++){
-            if (chiTietNhiemVuDTO_list.get(i).getChitiet()==null){
-                search_arr.add(chiTietNhiemVuDTO_list.get(i).getTen_nv());
-            }else{
-                search_arr.add(chiTietNhiemVuDTO_list.get(i).getTen_nv() + " - "+chiTietNhiemVuDTO_list.get(i).getChitiet());
-            }
-        }
-        TextFields.bindAutoCompletion(tcx_tf_nhiemvu, t -> {
-            return search_arr.stream().filter(elem
+        TextFields.bindAutoCompletion(tcx, t -> {
+            return chiTietNhiemVuDTO_list.stream().map(NhiemVuDto::getChitiet).toList().stream().filter(elem
                     -> {
                 return elem.toLowerCase().startsWith(t.getUserText().toLowerCase().trim());
             }).collect(Collectors.toList());
         });
-        tcx_tf_nhiemvu.setOnKeyPressed(e -> {
+        tcx.setOnKeyPressed(e -> {
             addedBySelection_lstb = false;
         });
-
-        tcx_tf_nhiemvu.setOnKeyReleased(e -> {
+        tcx.setOnKeyReleased(e -> {
             addedBySelection_lstb = true;
         });
-        tcx_tf_nhiemvu.textProperty().addListener(e -> {
+        tcx.textProperty().addListener(e -> {
             if (addedBySelection_lstb) {
                 identifyNhiemvu();
                 addedBySelection_lstb = false;
@@ -645,7 +309,7 @@ public class XuatController extends CommonFactory implements Initializable {
         });
     }
     private boolean identifyNhiemvu(){
-        String text = tcx_tf_nhiemvu.getText();
+        String text = tcx.getText();
         String[] arr = splitAssignment(text);
         if (arr[1]==null){
             for (int i = 0; i< chiTietNhiemVuDTO_list.size(); i++){
@@ -683,137 +347,10 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return new String[]{text.trim(), null};
     }
-    //tab nhiemvu
-    private void setTenXDToCombobox_tab_nv(){
-        cbb_tenxd_nv.setConverter(new StringConverter<LoaiXangDau>() {
-            @Override
-            public String toString(LoaiXangDau object) {
-                return object == null ? "": object.getTenxd();
-            }
-            @Override
-            public LoaiXangDau fromString(String string) {
-                return loaiXangDauRepo.findByTenxd(string);
-            }
-        });
-        cbb_tenxd_nv.getItems().addAll(loaiXangDauRepo.findAll());
-        cbb_tenxd_nv.getSelectionModel().selectFirst();
-        setDongiaCombobox_tab_nv(cbb_tenxd_nv.getSelectionModel().getSelectedItem().getId());
-    }
-    private void setDvxCombobox_tab_nv(){
-        ObservableList<NguonNx> observableArrayList =
-                FXCollections.observableArrayList(nguonNXService.findNguonnxTructhuocF());
-        cbb_dvx_nv.setItems(observableArrayList);
-        cbb_dvx_nv.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                if (object!=null){
-                    nguonnx_id_selected_dvvc_cbb = object.getId();
-                }
-                return object==null ? "" : object.getTen();
-            }
-
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxRepo.findById(nguonnx_id_selected_dvvc_cbb).get();
-            }
-        });
-        cbb_dvx_nv.getSelectionModel().selectFirst();
-    }
-    private void setPhuongTienNhan(String type){
-        List<PhuongTien> pt = phuongtienRepo.findPhuongTienByLoaiPhuongTien(type);
-        cbb_dvn_nv.setConverter(new StringConverter<PhuongTien>() {
-            @Override
-            public String toString(PhuongTien object) {
-                if (object!=null){
-                    pt_id_selected_by_cbb = object.getId();
-                }
-                return object==null ? "": object.getName();
-            }
-
-            @Override
-            public PhuongTien fromString(String string) {
-                return phuongtienRepo.findById(pt_id_selected_by_cbb).orElse(null);
-            }
-        });
-        cbb_dvn_nv.setItems(FXCollections.observableArrayList(pt));
-        cbb_dvn_nv.getSelectionModel().selectFirst();
-    }
-    private void setDongiaCombobox_tab_nv(int xd_id){
-        cbb_dongia_nv.setConverter(new StringConverter<Mucgia>() {
-            @Override
-            public String toString(Mucgia object) {
-                if (object!=null){
-                    mucgia_id_selected_mucgia_cbb_nv = object;
-                }
-                return object==null ? "": TextToNumber.textToNum(String.valueOf(object.getPrice()));
-            }
-
-            @Override
-            public Mucgia fromString(String string) {
-                return mucGiaRepo.findMucGiaByIdAndStatus(mucgia_id_selected_mucgia_cbb_nv.getId(), MucGiaEnum.IN_STOCK.getStatus()).orElse(null);
-            }
-        });
-        List<Mucgia> mucgials = mucGiaRepo.findAllMucgiaByItemID(Purpose.NVDX.getName(),xd_id,DashboardController.findByTime.getId());
-        cbb_dongia_nv.setItems(FXCollections.observableArrayList(mucgials));
-        cbb_dongia_nv.getSelectionModel().selectFirst();
-        setDongia_nv_Label();
-    }
-    private LedgerDetails getDataFromField_tab_nhiemvu(){
-        LedgerDetails ledgerDetails = new LedgerDetails();
-        try{
-//            ledgerDetails.setNgay(tungay_dp_nv.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-            ledgerDetails.setTen_xd(cbb_tenxd_nv.getSelectionModel().getSelectedItem().getTenxd());
-            LoaiPhieu loaiPhieu = loaiPhieuService.findLoaiPhieuByType(LoaiPhieu_cons.PHIEU_XUAT);
-//            ledgerDetails.setLoai_phieu(loaiPhieu.getType());
-//            ledgerDetails.setSo(so_tf_nv.getText());
-//            ledgerDetails.setTheo_lenh_so(lenhso_tf_nv.getText());
-//            ledgerDetails.setNhiem_vu(tcx_tf_nhiemvu.getText());
-//            ledgerDetails.setNguoi_nhan_hang(nguoinhan_tf_nv.getText());
-//            ledgerDetails.setSo_xe(soxe_tf_nv.getText());
-            ledgerDetails.setDon_gia(cbb_dongia_nv.getSelectionModel().getSelectedItem().getPrice());
-            ledgerDetails.setPhai_xuat(Integer.parseInt(phaixuat_tf_nv.getText()));
-            ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdothucte_tf_nv.getText().isEmpty() ? "0" : nhietdothucte_tf_nv.getText()));
-            ledgerDetails.setHe_so_vcf(Integer.parseInt(vcf_tf_nv.getText().isEmpty() ? "0" : vcf_tf_nv.getText()));
-            ledgerDetails.setTy_trong(Double.parseDouble(tytrong_tf_nv.getText().isEmpty() ? "0" : tytrong_tf_nv.getText()));
-//            ledgerDetails.setThanh_tien(Long.parseLong(thucxuat_tf_nv.getText()) * mucgia_id_selected_mucgia_cbb_nv.getPrice());
-//            ledgerDetails.setDvvc(cbb_dvx_nv.getSelectionModel().getSelectedItem().getTen());
-//            ledgerDetails.setDvi(cbb_dvn_nv.getValue().getName());
-//            ledgerDetails.setNhiemvu_id(nhiemVu_selected.getCtnv_id());
-//            ledgerDetails.setSo_km(Integer.parseInt(sokm_tf_nv.getText().isEmpty() ? "0" : sokm_tf_nv.getText()));
-//            ledgerDetails.setDenngay(denngay_dp_nv.getValue()==null ? "" : denngay_dp_nv.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-//            ledgerDetails.setQuarter_id(DashboardController.findByTime.getId());
-            ledgerDetails.setPhuongtien_id(cbb_dvn_nv.getValue().getId());
-            ledgerDetails.setLoaixd_id(cbb_tenxd_nv.getSelectionModel().getSelectedItem().getId());
-//            ledgerDetails.setImport_unit_id(cbb_dvx_nv.getSelectionModel().getSelectedItem().getId());
-//            ledgerDetails.setLoaigiobay(tk_radio.isSelected() ? LoaiGB.TK.getName() : LoaiGB.MD.getName());
-            ledgerDetails.setNhiemvu_hanmuc_id(getNhiemvuhanmucId());
-            if (tk_radio.isSelected()){
-//                ledgerDetails.setDur_text_tk2(new PGInterval(getStrInterval()));
-//                ledgerDetails.setDur_text_md2(new PGInterval("00:00:00"));
-                ledgerDetails.setThuc_xuat_tk(Integer.parseInt(thucxuat_tf_nv.getText()));
-                ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_nv.getText()));
-                ledgerDetails.setThuc_xuat(0);
-            }else {
-//                ledgerDetails.setDur_text_tk2(new PGInterval("00:00:00"));
-//                ledgerDetails.setDur_text_md2(new PGInterval(getStrInterval()));
-                ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat_tf_nv.getText()));
-                ledgerDetails.setSoluong(Integer.parseInt(thucxuat_tf_nv.getText()));
-                ledgerDetails.setThuc_xuat_tk(0);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw new NullPointerException(e.getMessage());
-        }
-        return ledgerDetails;
-    }
-
-    private int getNhiemvuhanmucId(){
-        return hanmucNhiemvuRepo.findByUniqueIds(cbb_dvx_nv.getValue().getId(),nhiemVu_selected.getCtnv_id(),DashboardController.findByTime.getId()).get().getId();
-    }
 
     private String getStrInterval(){
-        String hour_str = sogio_md_tf_nv.getText().trim();
-        String m_str = sophut_md_tf_nv.getText().trim();
+        String hour_str = sogio.getText().trim();
+        String m_str = sophut.getText().trim();
 
         int hour1 = getHourMinute(Integer.parseInt(m_str)).get(0);
         int minute = getHourMinute(Integer.parseInt(m_str)).get(1);
@@ -826,35 +363,6 @@ public class XuatController extends CommonFactory implements Initializable {
             return "0"+sum_hour+":"+minute+":00";
         }
         return sum_hour+":"+minute+":00";
-    }
-    private String getStrIntervalText(){
-        String hour_str = sogio_md_tf_nv.getText().trim();
-        String m_str = sophut_md_tf_nv.getText().trim();
-
-        int hour1 = getHourMinute(Integer.parseInt(m_str)).get(0);
-        int minute = getHourMinute(Integer.parseInt(m_str)).get(1);
-        int sum_hour = Integer.parseInt(hour_str) + hour1;
-        int day = getDayHours(sum_hour).get(0);
-        int hour = getDayHours(sum_hour).get(1);
-        if (minute <10){
-            return day+"."+hour+":0"+minute+":00";
-        }
-        if (hour<10){
-            return day+"."+"0"+hour+":"+minute+":00";
-        }
-        return day+"."+hour+":"+minute+":00";
-    }
-
-    private List<Integer> getDayHours(int hour){
-        if (hour>=0 && hour <24){
-            return List.of(0,hour);
-        }
-        else if (hour>=24){
-            int day = hour/24;
-            int remainder_hour = hour%24;
-            return List.of(day, remainder_hour);
-        }
-        return List.of();
     }
 
     private List<Integer> getHourMinute(int minute){
@@ -869,79 +377,149 @@ public class XuatController extends CommonFactory implements Initializable {
         return List.of();
     }
 
-    @FXML
-    public void setActionDongia_tab_k(ActionEvent actionEvent) {
-        setDongia_k_Label();
-    }
-    @FXML
-    public void setActionDongia_tab_nhiemvu(ActionEvent actionEvent) {
-        setDongia_nv_Label();
+    private void mapItemsForXeMayTau(List<PhuongTien> phuongTiens) {
+        xmt_cbb.setItems(FXCollections.observableList(phuongTiens));
+        xmt_cbb.setConverter(new StringConverter<PhuongTien>() {
+            @Override
+            public String toString(PhuongTien object) {
+                return object==null ? "" : object.getName();
+            }
+
+            @Override
+            public PhuongTien fromString(String string) {
+                return phuongtienRepo.findById(xmt_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
+            }
+        });
+        xmt_cbb.getSelectionModel().selectFirst();
     }
 
-    @FXML
-    public void maybay_chk_onAction(ActionEvent actionEvent) {
-        setCheckBox(true, false,false);
-        lgb_hbox.setDisable(false);
-        if (maybay_chkbox.isSelected()){
-            setPhuongTienNhan(LoaiPTEnum.MAYBAY_a.getNameVehicle());
-            sokm_tf_nv.setDisable(true);
-        }
+    private void mapItemsForDonViXuat(List<NguonNx> nxList) {
+        dvx_cbb.setItems(FXCollections.observableArrayList(nxList));
+        dvx_cbb.setConverter(new StringConverter<NguonNx>() {
+            @Override
+            public String toString(NguonNx object) {
+                return object==null ? "" : object.getTen();
+            }
+
+            @Override
+            public NguonNx fromString(String string) {
+                return nguonNxRepo.findByTen(string).orElse(null);
+            }
+        });
+        dvx_cbb.getSelectionModel().selectLast();
     }
 
-    @FXML
-    public void xe_chk_onAction(ActionEvent actionEvent) {
-        setCheckBox(false,false, true);
-        lgb_hbox.setDisable(true);
-        md_radio.setSelected(true);
-        if (xe_chkbox.isSelected()){
-            setPhuongTienNhan(LoaiPTEnum.XE.getNameVehicle());
-            sokm_tf_nv.setDisable(false);
-        }
-    }
+    private void mapItemsForDonViNhap(List<NguonNx> by) {
+        dvn_cbb.setItems(FXCollections.observableArrayList(by));
+        dvn_cbb.setConverter(new StringConverter<NguonNx>() {
+            @Override
+            public String toString(NguonNx object) {
+                return object==null ? "" : object.getTen();
+            }
 
-    @FXML
-    public void may_chk_onAction(ActionEvent actionEvent) {
-        lgb_hbox.setDisable(true);
-        md_radio.setSelected(true);
-        setCheckBox(false, true, false);
-        if (may_chkbox.isSelected()){
-            setPhuongTienNhan(LoaiPTEnum.MAY.getNameVehicle());
-            sokm_tf_nv.setDisable(false);
-        }
+            @Override
+            public NguonNx fromString(String string) {
+                return nguonNxRepo.findByTen(string).orElse(null);
+            }
+        });
+        dvn_cbb.getSelectionModel().selectLast();
     }
-
-    private void setCheckBox(Boolean mb, boolean m, boolean x){
-        maybay_chkbox.setSelected(mb);
-        may_chkbox.setSelected(m);
-        xe_chkbox.setSelected(x);
+    private void disableFeature(boolean ex) {
+        lgb_hb.setDisable(ex);
+        giohd.setDisable(ex);
+        sokm_hb.setDisable(ex);
+        xmt_hb.setDisable(ex);
+        loaixemaytau.setDisable(ex);
+        dvi_nhan.setDisable(!ex);
+        tk_rd.setSelected(!ex);
+        mb_rd.setSelected(!ex);
+    }
+    @FXML
+    public void dongiaSelected(ActionEvent actionEvent) {
+        setInv_lb();
     }
 
     @FXML
     public void dvnSelectedAction(ActionEvent actionEvent) {
     }
-
     @FXML
-    public void so_x1(KeyEvent keyEvent) {
+    public void soKeyRealed(KeyEvent keyEvent) {
         try {
-            if (!so_tf_k.getText().isEmpty()){
-                if (DashboardController.ledgerList.stream().filter(x->x.getBill_id()==Integer.parseInt(so_tf_k.getText())).findFirst().isPresent()){
-                    so_tf_k.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+            if (!so.getText().isEmpty()){
+                if (DashboardController.ledgerList.stream().filter(x->x.getBill_id()==Integer.parseInt(so.getText())).findFirst().isPresent()){
+                    so.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
                 } else {
-                    so_tf_k.setStyle(null);
+                    so.setStyle(null);
                 }
             }
         }catch (Exception e){
             throw new RuntimeException(e);
         }
     }
+
     @FXML
-    public void so_keyboard(KeyEvent keyEvent) {
-        if (!so_tf_nv.getText().isEmpty()){
-            if (DashboardController.ledgerList.stream().filter(x->x.getBill_id()==Integer.parseInt(so_tf_nv.getText())).findFirst().isPresent()){
-                so_tf_nv.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            } else {
-                so_tf_nv.setStyle(null);
+    public void nvSelected(ActionEvent actionEvent) {
+        
+    }
+    @FXML
+    public void loaixuatAction(ActionEvent actionEvent) {
+        if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.X_K.getName())){
+            disableFeature(true);
+            mapItemsForDonViXuat(nguonNxRepo.findByStatus(StatusEnum.ROOT_STATUS.getName()));
+            mapItemsForDonViNhap(nguonNxRepo.findAll());
+            List<PhuongTien> pt= new ArrayList<>();
+            mapItemsForXeMayTau(pt);
+        } else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.NV.getName())) {
+            disableFeature(false);
+            List<NguonNx> nxListw = new ArrayList<>();
+            mapItemsForDonViNhap(nxListw);
+            mapItemsForDonViXuat(nguonNxRepo.findByAllBy());
+            mapItemsForXeMayTau(phuongtienRepo.findAll());
+        }
+    }
+
+    @FXML
+    public void mbRadioSel(ActionEvent actionEvent) {
+        mapItemsForXeMayTau(phuongtienRepo.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()));
+    }
+    @FXML
+    public void xeRadioSelec(ActionEvent actionEvent) {
+        mapItemsForXeMayTau(phuongtienRepo.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle()));
+    }
+    @FXML
+    public void mayRadioSelec(ActionEvent actionEvent) {
+        mapItemsForXeMayTau(phuongtienRepo.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAY.getNameVehicle()));
+    }
+
+    @FXML
+    public void add(ActionEvent actionEvent) {
+        setCellValueFactory(getLedgerDetails());
+        clearFields();
+    }
+
+    @FXML
+    public void xuat(ActionEvent actionEvent) {
+        if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+            Ledger l = createNewLedger();
+            ls_socai.forEach(ld -> {
+                ld.setLedger_id(l.getId());
+//                saveLichsunxk(soCaiDto);
+                saveMucgia(ld, l);
+                updateInventory(l, ld);
+                ledgerDetailRepo.save(ld);
+            });
+            if (DialogMessage.callAlertWithMessage("THÔNG BÁO", "Thành công", "Thêm phiếu nhập thành công",Alert.AlertType.INFORMATION) == ButtonType.OK){
+                DashboardController.primaryStage.close();
             }
         }
+    }
+    @FXML
+    public void cancel(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void edit(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void del(ActionEvent actionEvent) {
     }
 }

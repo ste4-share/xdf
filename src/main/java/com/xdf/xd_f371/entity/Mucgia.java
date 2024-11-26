@@ -30,7 +30,7 @@ public class Mucgia {
     private String purpose;
     @Column(name = "status")
     private String status;
-    @Column(name = "timestamp")
+    @Column(name = "timestamp", insertable = false)
     private LocalDate timestamp;
 
     public Mucgia(int price, int amount, int quarter_id, int item_id, int inventory_id, String purpose, String status) {

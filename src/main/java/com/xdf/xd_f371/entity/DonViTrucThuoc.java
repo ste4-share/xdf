@@ -20,6 +20,6 @@ public class DonViTrucThuoc {
     private int dvi_tructhuoc_id;
 
     @ManyToOne
-    @JoinColumn(name = "root_id", referencedColumnName = "id", updatable = false, insertable = false)
+    @JoinColumn(name = "dvi_tructhuoc_id", referencedColumnName = "id", updatable = false, insertable = false)
     private NguonNx nguonNx;
 }

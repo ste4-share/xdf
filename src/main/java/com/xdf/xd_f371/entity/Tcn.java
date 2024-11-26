@@ -16,8 +16,8 @@ public class Tcn {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "loaiphieu_id")
-    private int loaiphieu_id;
+    @Column(name = "loaiphieu")
+    private String loaiphieu;
     @Column(name = "name")
     private String name;
     @Column(name = "concert")
