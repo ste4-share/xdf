@@ -302,33 +302,11 @@ public class TonkhoController implements Initializable {
         }
     }
 
-    protected void setMerge(XSSFSheet sheet, int numRow, int untilRow, int numCol, int untilCol, boolean border) {
-        CellRangeAddress cellMerge = new CellRangeAddress(numRow, untilRow, numCol, untilCol);
-        sheet.addMergedRegion(cellMerge);
-        if (border) {
-            setBordersToMergedCells(sheet, cellMerge);
-        }
-    }
-
     protected void setBordersToMergedCells(XSSFSheet sheet, CellRangeAddress rangeAddress) {
         RegionUtil.setBorderTop(BorderStyle.THIN, rangeAddress, sheet);
         RegionUtil.setBorderLeft(BorderStyle.THIN, rangeAddress, sheet);
         RegionUtil.setBorderRight(BorderStyle.THIN, rangeAddress, sheet);
         RegionUtil.setBorderBottom(BorderStyle.THIN, rangeAddress, sheet);
-    }
-    private void setCellAlightment(XSSFCell cell){
-        CellUtil.setAlignment(cell,HorizontalAlignment.CENTER);
-        CellUtil.setVerticalAlignment(cell, VerticalAlignment.CENTER);
-    }
-
-    private CellStyle setDefaulCellStyle(XSSFWorkbook wb){
-        CellStyle cellStyle = wb.createCellStyle();
-        Font font = wb.createFont();
-        font.setFontName("Times New Roman");
-        font.setBold(true);
-        cellStyle.setFont(font);
-        cellStyle.setWrapText(true);
-        return cellStyle;
     }
 
     private Map<String, Map<String, Integer>> setMapForNxtCell(XSSFSheet sheet){
@@ -352,14 +330,6 @@ public class TonkhoController implements Initializable {
     private void fillDataToNXTSheet(XSSFSheet sheet, XSSFWorkbook wb){
 //        setMapForNxtCell(sheet);
     }
-
-    private void setCEll(XSSFSheet sheet, String value, int row_num, int cell_num){
-        sheet.createRow(row_num).createCell(cell_num).setCellValue(value);
-    }
-    private void getAndsetCEll(XSSFSheet sheet, String value, int row_num, int cell_num){
-        sheet.getRow(row_num).getCell(cell_num).setCellValue(value);
-    }
-
 
     public static void copyFileExcel(String sourceName, String destName){
         deleteExcel(destName);

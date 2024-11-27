@@ -111,8 +111,6 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        primaryStage = new Stage();
-        xuatStage = new Stage();
         ctStage = new Stage();
         ttp_ls = ledgersRepo.findInterfaceLedger();
         lichsuXNKS = new ArrayList<>();
@@ -276,6 +274,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     public void importActionClick(ActionEvent actionEvent) throws IOException{
+        primaryStage = new Stage();
         Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP");
         setDataToViewTable();
 //        fillDataToLichsuTb();
@@ -283,6 +282,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
+        xuatStage = new Stage();
         Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT");
         setDataToViewTable();
 //        getDataToChart(prepare_addnew_inventory);

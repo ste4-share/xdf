@@ -39,7 +39,6 @@ public class XuatController extends CommonFactory implements Initializable {
     private static List<NhiemVuDto> chiTietNhiemVuDTO_list = new ArrayList<>();
     private static AutoCompletionBinding<String> acbLogin;
 
-
     @FXML
     private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong;
     @FXML

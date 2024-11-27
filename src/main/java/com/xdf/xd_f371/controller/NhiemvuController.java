@@ -1,26 +1,30 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.ChitietNhiemvuRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
+import net.sf.jasperreports.engine.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 @Component
 public class NhiemvuController implements Initializable {
@@ -74,42 +78,16 @@ public class NhiemvuController implements Initializable {
     }
 
     @FXML
-    public void bcNlbayTheoKh(ActionEvent actionEvent) {
+    public void bcNlbayTheoKh(ActionEvent actionEvent) throws FileNotFoundException, SQLException,JRException {
+        generatePdf();
     }
-
-    private String formatFlightHours(int hours, int minutes){
-        if (minutes >= 60){
-            int pre_hour = minutes/60;
-            int remainder = minutes%60;
-            hours = hours+pre_hour;
-            return String.valueOf(hours+":"+ remainder);
-        }
-        if (minutes >=0 && minutes<60){
-            return String.valueOf(hours+":"+minutes);
-        }
-        return null;
-    }
-    private List<Integer> convertM_H(int minutes){
-        if (minutes >= 60){
-            int pre_hour = minutes/60;
-            int remainder = minutes%60;
-            return List.of(pre_hour, remainder);
-        }
-        if (minutes >=0 && minutes<60){
-            return List.of(0, minutes);
-        }
-        return List.of();
-    }
-    private Map<Integer, Integer> getTimeFromString(String time){
-        Map<Integer, Integer> map = new HashMap<>();
-        try {
-            int hours = Integer.parseInt(time.substring(0, time.indexOf(":")));
-            int minutes = Integer.parseInt(time.substring(time.indexOf(":")+1));
-            map.put(1, hours);
-            map.put(2, minutes);
-        }catch (NumberFormatException e){
-            throw new RuntimeException(e);
-        }
-        return map;
+    private void generatePdf() throws FileNotFoundException, SQLException, JRException {
+        HashMap<String, Object> map = new HashMap<>();
+        DataSource ds = (DataSource) MainApplicationApp.context.getBean("dataSource");
+        Connection c = ds.getConnection();
+        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/com/xdf/xd_f371/templates/bc_01.jrxml"));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map,c);
+        JasperExportManager.exportReportToPdfFile(jasperPrint,("report/baocaokehoachbay.pdf"));
+        DialogMessage.message("Thông báo", "Đã tạo báo cáo", "Thành công", Alert.AlertType.INFORMATION);
     }
 }

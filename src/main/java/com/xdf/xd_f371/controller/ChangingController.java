@@ -5,25 +5,18 @@ import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.Mucgia;
 import com.xdf.xd_f371.model.MucGiaEnum;
 import com.xdf.xd_f371.repo.MucGiaRepo;
-import com.xdf.xd_f371.service.MucgiaService;
-import com.xdf.xd_f371.service.impl.MucgiaImp;
+import com.xdf.xd_f371.util.Common;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +26,6 @@ import java.util.ResourceBundle;
 public class ChangingController implements Initializable {
     public static Stage addAff_stage;
     public static int sum = 0;
-    public static String nvdx ;
-    public static String sscd ;
     public static String quantity ;
     public static String quantity_convert =null;
     private static SpotDto tonkho_selected;
@@ -50,16 +41,13 @@ public class ChangingController implements Initializable {
     @FXML
     private Button nvdx_sscd, sscd_nvdx;
 
-    private MucgiaService mucgiaService = new MucgiaImp();
 
     @Autowired
     private MucGiaRepo mucGiaRepo;
 
-    private Purpose purpose;
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        addAff_stage = new Stage();
         petro_name.setText(TonkhoController.pickTonKho.getTenxd());
         tonkho_selected = TonkhoController.pickTonKho;
         sscd_ls_buf = new ArrayList<>();
@@ -82,25 +70,7 @@ public class ChangingController implements Initializable {
     }
 
     private void openChangeQuantityForm(){
-        Parent root = null;
-        try {
-            root = FXMLLoader.load(getClass().getResource("../quantity_form.fxml"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Scene scene = new Scene(root);
-        addAff_stage = new Stage();
-        addAff_stage.setScene(scene);
-        addAff_stage.initStyle(StageStyle.DECORATED);
-        addAff_stage.initModality(Modality.APPLICATION_MODAL);
-        addAff_stage.showAndWait();
-
-    }
-    private void alert(String message){
-        Alert info= new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("Lỗi");
-        info.setContentText(message);
-        info.showAndWait();
+        Common.openNewStage("quantity_form.fxml", addAff_stage, "EDIT");
     }
 
     public void cancelForm(ActionEvent actionEvent) {
@@ -193,7 +163,7 @@ public class ChangingController implements Initializable {
                 mucGiaRepo.save(after_convert);
             }else{
                 mucgia.setAmount(MucgiaList.get(i).getAmount());
-                mucgiaService.updateMucGia(mucgia);
+                mucGiaRepo.save(mucgia);
             }
         }
     }

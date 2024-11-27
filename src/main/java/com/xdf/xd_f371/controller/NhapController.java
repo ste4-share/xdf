@@ -11,8 +11,6 @@ import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.repo.TcnRepo;
 import com.xdf.xd_f371.util.DialogMessage;
-import com.xdf.xd_f371.util.TextToNumber;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,7 +41,7 @@ public class NhapController extends CommonFactory implements Initializable {
     private static List<LedgerDetails> ls_socai;
     private static int dvvc_id =0;
     private static int lxd_id_combobox_selected =0;
-    private static t ValidateFiledBol validateFiledBol = new ValidateFiledBol(true, true,true, true,true, true,true, true,true, true,true, true,true, true,true,true,true);
+    private static ValidateFiledBol validateFiledBol = new ValidateFiledBol(true, true,true, true,true, true,true, true,true, true,true, true,true, true,true,true,true);
 
     @FXML
     private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
