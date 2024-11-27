@@ -13,12 +13,13 @@ concat(extract(hour from SUM(case when dur_tk+dur_md is null then '00:00' else d
 SUM(case when tx_md is null then 0 else tx_md end) sum_txmd, 
 SUM(case when tx_tk is null then 0 else tx_tk end) as sum_txtk,
 SUM(case when tx_md+tx_tk is null then 0 else tx_md+tx_tk end) as sum_tieuthu,
+SUM(case when haohut is null then 0 else haohut end) as haohut,
 grouping(ten) as ten_gr,grouping(ten_nv) as tennv_gr,grouping(nhiemvu) as nhiemvu_gr, count(nhiemvu) as nv_count
 from hanmuc_nhiemvu
 join chitiet_nhiemvu on hanmuc_nhiemvu.nhiemvu_id=chitiet_nhiemvu.id
 join nhiemvu on nhiemvu.id= chitiet_nhiemvu.nhiemvu_id
 join nguon_nx on nguon_nx.id = hanmuc_nhiemvu.unit_id
-left join (select nhiemvu_hanmuc_id, sum(l.giohd_md::interval) as dur_md, sum(l.giohd_tk::interval) as dur_tk, sum(ld.thuc_xuat) as tx_md,sum(ld.thuc_xuat_tk) as tx_tk from ledger_details ld join ledgers l on ld.ledger_id=l.id  group by nhiemvu_hanmuc_id) lsd on lsd.nhiemvu_hanmuc_id=hanmuc_nhiemvu.id
+left join (select nhiemvu_hanmuc_id, sum(l.giohd_md::interval) as dur_md, sum(l.giohd_tk::interval) as dur_tk, sum(ld.thuc_xuat) as tx_md,sum(ld.thuc_xuat_tk) as tx_tk,sum(haohut_sl) as haohut from ledger_details ld join ledgers l on ld.ledger_id=l.id  group by nhiemvu_hanmuc_id) lsd on lsd.nhiemvu_hanmuc_id=hanmuc_nhiemvu.id
 GROUP BY ROLLUP(ten,ten_nv,priority,nhiemvu)
 order by ten desc, grouping(priority) asc, priority asc,grouping(nhiemvu) desc, nhiemvu desc) abss 
 where abss.ten_gr <> 1 and (abss.nv_count + abss.nhiemvu_gr<>2 and priority is not null)

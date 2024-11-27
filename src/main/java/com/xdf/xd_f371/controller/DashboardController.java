@@ -8,6 +8,7 @@ import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.service.impl.*;
+import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -54,7 +55,7 @@ import java.util.stream.Collectors;
 public class DashboardController implements Initializable {
 
     public static Stage primaryStage;
-    public static Stage xuatStage;
+    public static Stage xuatStage ;
     public static Stage ctStage;
     public static List<Ledger> ledgerList = new ArrayList<>();
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
@@ -110,6 +111,9 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        primaryStage = new Stage();
+        xuatStage = new Stage();
+        ctStage = new Stage();
         ttp_ls = ledgersRepo.findInterfaceLedger();
         lichsuXNKS = new ArrayList<>();
         ledgerList = ledgersRepo.findAll();
@@ -130,21 +134,7 @@ public class DashboardController implements Initializable {
                 if (event.getClickCount()==2){
                     try {
                         MiniLedgerDto miniLedgerDto =  tbTTNX.getSelectionModel().getSelectedItem();
-
-//                        so_clicked = miniLedgerDto.getSo();
-                        Parent root = null;
-                        try {
-                            root = (Parent) getNodeBySource("chitietsc.fxml");
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        ctStage = new Stage();
-                        Scene scene = new Scene(root);
-                        ctStage.setScene(scene);
-                        ctStage.initStyle(StageStyle.DECORATED);
-                        ctStage.initModality(Modality.APPLICATION_MODAL);
-                        ctStage.setTitle("CHI TIẾT");
-                        ctStage.show();
+                        Common.openNewStage("chitietsc.fxml", xuatStage,"CHI TIẾT");
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }
@@ -286,27 +276,14 @@ public class DashboardController implements Initializable {
 
     @FXML
     public void importActionClick(ActionEvent actionEvent) throws IOException{
-        Parent root = (Parent) getNodeBySource("nhap.fxml");
-        primaryStage = new Stage();
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.initStyle(StageStyle.DECORATED);
-        primaryStage.initModality(Modality.APPLICATION_MODAL);
-        primaryStage.showAndWait();
+        Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP");
         setDataToViewTable();
 //        fillDataToLichsuTb();
     }
 
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
-        Parent root = (Parent) getNodeBySource("xuat.fxml");
-        xuatStage = new Stage();
-        Scene scene = new Scene(root);
-        xuatStage.setScene(scene);
-        xuatStage.initStyle(StageStyle.DECORATED);
-        xuatStage.initModality(Modality.APPLICATION_MODAL);
-        xuatStage.setTitle("XUẤT");
-        xuatStage.showAndWait();
+        Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT");
         setDataToViewTable();
 //        getDataToChart(prepare_addnew_inventory);
         fillDataToLichsuTb();
@@ -471,7 +448,7 @@ public class DashboardController implements Initializable {
 //
 //            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
 //            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
-//        }
+//        } 
     }
 
     public void search_phieu_tnxt(ActionEvent actionEvent) {

@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
@@ -42,7 +43,7 @@ public class NhapController extends CommonFactory implements Initializable {
     private static List<LedgerDetails> ls_socai;
     private static int dvvc_id =0;
     private static int lxd_id_combobox_selected =0;
-    private static ValidateFiledBol validateFiledBol = new ValidateFiledBol(true, true,true, true,true, true,true, true,true, true,true, true,true, true,true,true,true);
+    private static t ValidateFiledBol validateFiledBol = new ValidateFiledBol(true, true,true, true,true, true,true, true,true, true,true, true,true, true,true,true,true);
 
     @FXML
     private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
@@ -78,7 +79,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ls_socai = new ArrayList<>();
 
         tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
-        tcnx_ls = tcnRepo.findByLoaiphieu(LoaiPhieu_cons.PHIEU_NHAP);
+        tcnx_ls = tcnRepo.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
 
         setTenXDToCombobox();
         setDvvcCombobox();
