@@ -53,6 +53,10 @@ public class LedgerDetails {
     private int thanhtien;
     @Column(name = "haohut_sl")
     private int haohut_sl;
+    @Column(name = "nl_gio")
+    private Long nl_gio;
+    @Column(name = "nl_km")
+    private Long nl_km;
 
     @Column(insertable = false, updatable = false)
     private String thanhtien_str;
@@ -62,6 +66,7 @@ public class LedgerDetails {
     private String phaixuat_str;
     @Column(insertable = false, updatable = false)
     private String dongia_str;
+
 
     @ManyToOne
     @JoinColumn(name = "ledger_id", referencedColumnName = "id", insertable = false, updatable = false)

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "chitiet_nhiemvu")
 @Setter
@@ -22,6 +24,9 @@ public class ChitietNhiemVu {
     @ManyToOne
     @JoinColumn(name = "nhiemvu_id", referencedColumnName = "id", insertable = false, updatable = false)
     private NhiemVu nhiemVu;
+
+    @OneToMany(mappedBy = "chitietNhiemVu", cascade = CascadeType.ALL)
+    private List<HanmucNhiemvu> hanmucNhiemvuList;
 
     public ChitietNhiemVu(int id, int nhiemvu_id, String nhiemvu) {
         this.id = id;

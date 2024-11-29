@@ -540,5 +540,13 @@ public class DashboardController implements Initializable {
         });
     }
 
-
+    @FXML
+    public void report_menu_action(MouseEvent mouseEvent) {
+        try {
+            HBox hBox = (HBox) getNodeBySource("reporters.fxml");
+            borderpane_base.setCenter(hBox);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

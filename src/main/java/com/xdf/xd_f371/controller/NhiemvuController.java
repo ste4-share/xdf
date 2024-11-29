@@ -6,6 +6,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,14 +43,20 @@ public class NhiemvuController implements Initializable {
     @Autowired
     private HanmucNhiemvu2Repository hanmucNhiemvu2Repository;
     @Autowired
-    private NhiemvuRepository nhiemvuRepository;
+    private HanmucNhiemvuRepo hanmucNhiemvuRepo;
 
     @FXML
     TableView<HanmucNhiemvu2Dto> tieuthunhiemvu;
     @FXML
+    TableView<ChitieuNhiemvuDto> ctnv_tb;
+    @FXML
+    TableColumn<ChitieuNhiemvuDto, String> t2_tt,t2_nv,t2_ct,t2_tk,t2_md,t2_nl;
+    @FXML
     TableColumn<HanmucNhiemvu2Dto, String> nv,ct,xang,diezel,daubay;
     @FXML
     ComboBox<Quarter> quy_cbb;
+    @FXML
+    ComboBox<NguonNx> dvi_cbb;
     @FXML
     ComboBox<String> donvi;
     @FXML
@@ -64,6 +71,35 @@ public class NhiemvuController implements Initializable {
         donvi.getSelectionModel().selectFirst();
         inithanmucTb();
         initNvTb();
+        initDviTb();
+    }
+
+    private void initDviTb() {
+        dvi_cbb.setItems(FXCollections.observableList(nguonNxRepo.findByAllBy()));
+        dvi_cbb.setConverter(new StringConverter<NguonNx>() {
+            @Override
+            public String toString(NguonNx object) {
+                return object==null ? "": object.getTen();
+            }
+
+            @Override
+            public NguonNx fromString(String string) {
+                return nguonNxRepo.findByTen(string).orElse(null);
+            }
+        });
+        dvi_cbb.getSelectionModel().selectFirst();
+    }
+
+    private void setCtnv_tb(int dvi_id){
+        ctnv_tb.setItems(FXCollections.observableList(hanmucNhiemvuRepo.findAllByUnit(dvi_id, DashboardController.findByTime.getId())));
+        t2_tt.setSortable(false);
+        t2_tt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_tb.getItems().indexOf(column.getValue())+1).asString());
+        t2_nv.setCellValueFactory(new PropertyValueFactory<>("ten_nv"));
+        t2_ct.setCellValueFactory(new PropertyValueFactory<>("chitiet"));
+        t2_tk.setCellValueFactory(new PropertyValueFactory<>("ct_tk"));
+        t2_md.setCellValueFactory(new PropertyValueFactory<>("ct_md"));
+        t2_nl.setCellValueFactory(new PropertyValueFactory<>("consumpt_str"));
+        ctnv_tb.refresh();
     }
 
     private void initNvTb() {
@@ -132,5 +168,24 @@ public class NhiemvuController implements Initializable {
         nvStage = new Stage();
         Common.openNewStage("addnew_nvhanmuc.fxml", nvStage,"HANMUC");
         inithanmucTb();
+    }
+    @FXML
+    public void chitieunvSelected(MouseEvent mouseEvent) {
+
+    }
+
+    @FXML
+    public void dviSelected(ActionEvent actionEvent) {
+        if (dvi_cbb.getSelectionModel().getSelectedItem()!=null) {
+            setCtnv_tb(dvi_cbb.getSelectionModel().getSelectedItem().getId());
+        }
+    }
+    @FXML
+    public void addnewchitieubay(ActionEvent actionEvent) {
+        nvStage = new Stage();
+        Common.openNewStage("add_chitieunv.fxml", nvStage,"FORM");
+        if (dvi_cbb.getSelectionModel().getSelectedItem()==null) {
+            setCtnv_tb(dvi_cbb.getSelectionModel().getSelectedItem().getId());
+        }
     }
 }

@@ -30,7 +30,7 @@ public class HanmucNhiemvu implements Serializable {
     @Column(name = "unit_id")
     private int unit_id;
     @Column(name = "nhiemvu_id")
-    private int nhiemvu_id;
+    private int ctnhiemvu_id;
     @Column(name = "ct_tk")
     private String ct_tk;
     @Column(name = "ct_md")
@@ -44,6 +44,6 @@ public class HanmucNhiemvu implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "nhiemvu_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private NhiemVu nhiemVu;
+    private ChitietNhiemVu chitietNhiemVu;
 
 }

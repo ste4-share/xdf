@@ -58,4 +58,6 @@ public class LedgerDto {
     private int phai_nhap;
     private Long haohut_sl;
     private String loainv;
+    private Long nl_gio;
+    private Long nl_km;
 }

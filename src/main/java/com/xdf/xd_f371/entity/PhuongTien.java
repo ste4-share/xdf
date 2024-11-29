@@ -29,7 +29,7 @@ public class PhuongTien {
     @Column(name = "status")
     private String status;
 
-    @OneToMany(mappedBy = "phuongTien", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "phuongTien", cascade = CascadeType.ALL)
     private List<DinhMuc> dinhmuc;
 
     @ManyToOne

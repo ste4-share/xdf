@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.repo;
 
+import com.xdf.xd_f371.dto.ChitietNhiemVuDto;
 import com.xdf.xd_f371.dto.NhiemVuDto;
 import com.xdf.xd_f371.entity.ChitietNhiemVu;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,9 @@ public interface ChitietNhiemvuRepo extends JpaRepository<ChitietNhiemVu, Intege
 
     @Query("select new ChitietNhiemVu(ct.id,ct.nhiemvu_id,ct.nhiemvu) from ChitietNhiemVu ct where ct.nhiemvu_id=:od")
     List<ChitietNhiemVu> findByNhiemvuId(@Param("od") int id);
+
+    @Query("select new com.xdf.xd_f371.dto.ChitietNhiemVuDto(n.id,ct.id,n.tenNv,ct.nhiemvu) from ChitietNhiemVu ct join ct.nhiemVu n where n.assignmentTypeId=:loainv or n.assignmentTypeId=:loainv1")
+    List<ChitietNhiemVuDto> findAllByLoaiNv(@Param("loainv") int loainv_id,@Param("loainv1") int loainv_id1);
+    @Query("select new com.xdf.xd_f371.dto.ChitietNhiemVuDto(n.id,ct.id,n.tenNv,ct.nhiemvu) from ChitietNhiemVu ct join ct.nhiemVu n where ct.nhiemvu like :tennv")
+    Optional<ChitietNhiemVuDto> findByTenNhiemvu(@Param("tennv") String tennv);
 }
