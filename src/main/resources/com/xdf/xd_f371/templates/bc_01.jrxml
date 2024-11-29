@@ -1,5 +1,5 @@
 <!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.0  -->
-<jasperReport name="bc_01" language="java" columnCount="1" pageWidth="842" pageHeight="595" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
+<jasperReport name="bc_01" language="java" columnCount="1" pageWidth="842" pageHeight="595" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -54,7 +54,37 @@
 	<dataset name="hanmucbay" uuid="5003dbfe-3624-4f86-b64d-1e285fe39418">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
-		<query language="SQL"><![CDATA[(select *,chr(cast(abss.seqnum as int)+64),dense_rank() over (order by priority asc) as seqnum2 
+		<query language="SQL"><![CDATA[(select charseq,case when ten is not null then 'ten' else 'ten' end as ten, seqnum,nhiem_vu,priority,sum_cttk,sum_ctmd,sum_dinhmuc,sum_csump,sum_durmd,sum_durtk,sum_giobay,sum_txmd,sum_txtk,sum_tieuthu,haohut,ten_gr,tennv_gr,nhiemvu_gr,nv_count,seqnum2
+from (select 'B' as charseq,* from (select *,rank() over (partition by ten order by nhiem_vu desc) as seqnum2
+from (select CASE WHEN ten_nv is null then 'Cộng Nhiệm vụ' else ten_nv end as ten,dense_rank() over (order by ten_nv asc) as seqnum,
+CASE WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=1 then 'Cộng Nhiệm vụ' 
+WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=0 then ten_nv else nhiemvu end as nhiem_vu,
+CASE WHEN GROUPING(ten_nv)=1 then 0 else priority end,
+concat(extract(hour from SUM(case when ct_tk is null then '00:00' else ct_tk end)),':',extract(minute from SUM(case when ct_tk is null then '00:00' else ct_tk end))) as sum_cttk,
+concat(extract(hour from SUM(case when ct_md is null then '00:00' else ct_md end)),':',extract(minute from SUM(case when ct_md is null then '00:00' else ct_md end))) as sum_ctmd,
+concat(extract(hour from SUM(case when ct_md+ct_tk is null then '00:00' else ct_md+ct_tk end)),':',extract(minute from SUM(case when ct_md+ct_tk is null then '00:00' else ct_md+ct_tk end))) as sum_dinhmuc,
+SUM(consumpt) AS sum_csump, 
+concat(extract(hour from SUM(case when dur_md is null then '00:00' else dur_md end)),':',extract(minute from SUM(case when dur_md is null then '00:00' else dur_md end))) as sum_durmd,
+concat(extract(hour from SUM(case when dur_tk is null then '00:00' else dur_tk end)),':',extract(minute from SUM(case when dur_tk is null then '00:00' else dur_tk end))) as sum_durtk,
+concat(extract(hour from SUM(case when dur_tk+dur_md is null then '00:00' else dur_tk+dur_md end)),':',extract(minute from SUM(case when dur_tk+dur_md is null then '00:00' else dur_tk+dur_md end))) as sum_giobay,
+SUM(case when tx_md is null then 0 else tx_md end) sum_txmd,
+SUM(case when tx_tk is null then 0 else tx_tk end) as sum_txtk,
+SUM(case when tx_md+tx_tk is null then 0 else tx_md+tx_tk end) as sum_tieuthu,
+SUM(case when haohut is null then 0 else haohut end) as haohut,
+0 as ten_gr,grouping(ten_nv) as tennv_gr,grouping(nhiemvu) as nhiemvu_gr, count(nhiemvu) as nv_count
+from hanmuc_nhiemvu
+join chitiet_nhiemvu on hanmuc_nhiemvu.nhiemvu_id=chitiet_nhiemvu.id
+join nhiemvu on nhiemvu.id= chitiet_nhiemvu.nhiemvu_id
+left join (select nhiemvu_hanmuc_id, sum(l.giohd_md::interval) as dur_md, sum(l.giohd_tk::interval) as dur_tk, sum(ld.thuc_xuat) as tx_md,sum(ld.thuc_xuat_tk) as tx_tk,sum(haohut_sl) as haohut 
+from ledger_details ld join ledgers l on ld.ledger_id=l.id 
+where l.quarter_id=20 group by nhiemvu_hanmuc_id) lsd on lsd.nhiemvu_hanmuc_id=hanmuc_nhiemvu.id
+where nhiemvu.assignment_type_id=1 or nhiemvu.assignment_type_id=3 
+GROUP BY ROLLUP(ten_nv,priority,nhiemvu)
+order by ten desc, grouping(priority) asc, priority asc,grouping(nhiemvu) desc, nhiemvu desc) abss 
+where (abss.nv_count + abss.nhiemvu_gr<>2 and priority is not null)
+order by priority asc, abss.nv_count desc) ssg
+where (nhiemvu_gr+seqnum2<>2) or tennv_gr=1 or seqnum2=2) sxd)
+union (select 'A' as charseq,*, dense_rank() over (order by priority asc) as seqnum2 
 from (select pts.name as ten,dense_rank() over (order by pts.name) as seqnum,
 CASE WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=1 then pts.name
 WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=0 then ten_nv else nhiemvu end as nhiem_vu,
@@ -77,12 +107,40 @@ join nhiemvu nv on nv.id= ctnv.nhiemvu_id
 join nguon_nx u on u.id = hmnv.unit_id
 join (select pt.name,nguonnx_id from phuongtien pt join loai_phuongtien lpt on pt.loaiphuongtien_id=lpt.id where lpt.type like 'MAYBAY') pts on pts.nguonnx_id=u.id
 left join (select nhiemvu_hanmuc_id, sum(l.giohd_md::interval) as dur_md, sum(l.giohd_tk::interval) as dur_tk, sum(ld.thuc_xuat) as tx_md,sum(ld.thuc_xuat_tk) as tx_tk,sum(haohut_sl) as haohut 
-from ledger_details ld join ledgers l on ld.ledger_id=l.id  group by nhiemvu_hanmuc_id) lsd on lsd.nhiemvu_hanmuc_id=hmnv.id
+from ledger_details ld join ledgers l on ld.ledger_id=l.id where l.quarter_id=20 group by nhiemvu_hanmuc_id) lsd on lsd.nhiemvu_hanmuc_id=hmnv.id
+GROUP BY ROLLUP(pts.name,ten_nv,priority,nhiemvu)
+order by ten desc, grouping(priority) asc, priority asc,grouping(nhiemvu) desc, nhiemvu desc) abss 
+where ten_gr <> 1 and (abss.nv_count + abss.nhiemvu_gr<>2 and priority is not null) and priority=0)
+union 
+(select 'C' as charseq,*,dense_rank() over (order by priority asc) as seqnum2 
+from (select pts.name as ten,dense_rank() over (order by pts.name) as seqnum,
+CASE WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=1 then pts.name
+WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=0 then ten_nv else nhiemvu end as nhiem_vu,
+CASE WHEN GROUPING(ten_nv)=1 then 0 else priority end,
+concat(extract(hour from SUM(case when ct_tk is null then '00:00' else ct_tk end)),':',extract(minute from SUM(case when ct_tk is null then '00:00' else ct_tk end))) as sum_cttk,
+concat(extract(hour from SUM(case when ct_md is null then '00:00' else ct_md end)),':',extract(minute from SUM(case when ct_md is null then '00:00' else ct_md end))) as sum_ctmd,
+concat(extract(hour from SUM(case when ct_md+ct_tk is null then '00:00' else ct_md+ct_tk end)),':',extract(minute from SUM(case when ct_md+ct_tk is null then '00:00' else ct_md+ct_tk end))) as sum_dinhmuc,
+SUM(consumpt) AS sum_csump, 
+concat(extract(hour from SUM(case when dur_md is null then '00:00' else dur_md end)),':',extract(minute from SUM(case when dur_md is null then '00:00' else dur_md end))) as sum_durmd,
+concat(extract(hour from SUM(case when dur_tk is null then '00:00' else dur_tk end)),':',extract(minute from SUM(case when dur_tk is null then '00:00' else dur_tk end))) as sum_durtk,
+concat(extract(hour from SUM(case when dur_tk+dur_md is null then '00:00' else dur_tk+dur_md end)),':',extract(minute from SUM(case when dur_tk+dur_md is null then '00:00' else dur_tk+dur_md end))) as sum_giobay,
+SUM(case when tx_md is null then 0 else tx_md end) sum_txmd,
+SUM(case when tx_tk is null then 0 else tx_tk end) as sum_txtk,
+SUM(case when tx_md+tx_tk is null then 0 else tx_md+tx_tk end) as sum_tieuthu,
+SUM(case when haohut is null then 0 else haohut end) as haohut,
+grouping(pts.name) as ten_gr,grouping(ten_nv) as tennv_gr,grouping(nhiemvu) as nhiemvu_gr, count(nhiemvu) as nv_count
+from hanmuc_nhiemvu hmnv
+join chitiet_nhiemvu ctnv on hmnv.nhiemvu_id=ctnv.id
+join nhiemvu nv on nv.id= ctnv.nhiemvu_id
+join nguon_nx u on u.id = hmnv.unit_id
+join (select pt.name,nguonnx_id from phuongtien pt join loai_phuongtien lpt on pt.loaiphuongtien_id=lpt.id where lpt.type like 'MAYBAY') pts on pts.nguonnx_id=u.id
+left join (select nhiemvu_hanmuc_id, sum(l.giohd_md::interval) as dur_md, sum(l.giohd_tk::interval) as dur_tk, sum(ld.thuc_xuat) as tx_md,sum(ld.thuc_xuat_tk) as tx_tk,sum(haohut_sl) as haohut 
+from ledger_details ld join ledgers l on ld.ledger_id=l.id where l.quarter_id=20 group by nhiemvu_hanmuc_id) lsd on lsd.nhiemvu_hanmuc_id=hmnv.id
 GROUP BY ROLLUP(pts.name,ten_nv,priority,nhiemvu)
 order by ten desc, grouping(priority) asc, priority asc,grouping(nhiemvu) desc, nhiemvu desc) abss 
 where ten_gr <> 1 and (abss.nv_count + abss.nhiemvu_gr<>2 and priority is not null))
 union 
-(select *,chr(cast(abss.seqnum as int)+64),dense_rank() over (order by priority asc) as seqnum2 
+(select 'D' as charseq,*,dense_rank() over (order by priority asc) as seqnum2 
 from (select ten,dense_rank() over (order by ten) as seqnum,
 CASE WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=1 then ten 
 WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=0 then ten_nv else nhiemvu end as nhiem_vu,
@@ -104,12 +162,17 @@ join chitiet_nhiemvu ctnv on hmnv.nhiemvu_id=ctnv.id
 join nhiemvu nv on nv.id= ctnv.nhiemvu_id
 join nguon_nx u on u.id = hmnv.unit_id
 left join (select nhiemvu_hanmuc_id, sum(l.giohd_md::interval) as dur_md, sum(l.giohd_tk::interval) as dur_tk, sum(ld.thuc_xuat) as tx_md,sum(ld.thuc_xuat_tk) as tx_tk,sum(haohut_sl) as haohut 
-from ledger_details ld join ledgers l on ld.ledger_id=l.id  group by nhiemvu_hanmuc_id) lsd on lsd.nhiemvu_hanmuc_id=hmnv.id
+from ledger_details ld join ledgers l on ld.ledger_id=l.id where l.quarter_id=20 group by nhiemvu_hanmuc_id) lsd on lsd.nhiemvu_hanmuc_id=hmnv.id
 GROUP BY ROLLUP(ten,ten_nv,priority,nhiemvu)
 order by ten desc, grouping(priority) asc, priority asc,grouping(nhiemvu) desc, nhiemvu desc) abss 
-where abss.ten_gr <> 1 and (abss.nv_count + abss.nhiemvu_gr<>2 and priority is not null)) order by ten desc, priority asc, nv_count desc
+where abss.ten_gr <> 1 and (abss.nv_count + abss.nhiemvu_gr<>2 and priority is not null)) 
+order by charseq asc,ten desc, priority asc, nv_count desc
 
 ]]></query>
+		<field name="charseq" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="charseq"/>
+			<property name="com.jaspersoft.studio.field.label" value="charseq"/>
+		</field>
 		<field name="ten" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.name" value="ten"/>
 			<property name="com.jaspersoft.studio.field.label" value="ten"/>
@@ -187,10 +250,6 @@ where abss.ten_gr <> 1 and (abss.nv_count + abss.nhiemvu_gr<>2 and priority is n
 			<property name="com.jaspersoft.studio.field.name" value="nv_count"/>
 			<property name="com.jaspersoft.studio.field.label" value="nv_count"/>
 		</field>
-		<field name="chr" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="chr"/>
-			<property name="com.jaspersoft.studio.field.label" value="chr"/>
-		</field>
 		<field name="seqnum2" class="java.lang.Long">
 			<property name="com.jaspersoft.studio.field.name" value="seqnum2"/>
 			<property name="com.jaspersoft.studio.field.label" value="seqnum2"/>
@@ -198,8 +257,9 @@ where abss.ten_gr <> 1 and (abss.nv_count + abss.nhiemvu_gr<>2 and priority is n
 		<variable name="tongcong" resetType="None" class="java.lang.Long">
 			<expression><![CDATA[$F{sum_tieuthu}.longValue()+$F{haohut}.longValue()]]></expression>
 		</variable>
-		<group name="tendv">
-			<expression><![CDATA[$F{ten}]]></expression>
+		<variable name="count1" class="java.lang.String"/>
+		<group name="alpha">
+			<expression><![CDATA[$F{charseq}]]></expression>
 		</group>
 	</dataset>
 	<query language="SQL"><![CDATA[select *,chr(cast(abss.seqnum as int)+64),dense_rank() over (order by priority asc) as seqnum2 
@@ -314,6 +374,573 @@ order by abss.ten desc, priority asc, abss.nv_count desc
 		<property name="com.jaspersoft.studio.field.name" value="seqnum2"/>
 		<property name="com.jaspersoft.studio.field.label" value="seqnum2"/>
 	</field>
+	<group name="Group1">
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="92">
+				<element kind="component" uuid="1513030b-7adc-4376-86e0-8cde4f5c7311" x="0" y="10" width="792" height="80" style="Style1">
+					<component kind="table">
+						<datasetRun uuid="44829ec0-49f0-4d0e-b829-a05d4ec32c61" subDataset="hanmucbay">
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<column kind="single" uuid="8f888d62-07bf-4bd8-b42d-15e2e7e693ce" width="20">
+							<tableHeader height="60" rowSpan="3" style="Table_TH">
+								<element kind="staticText" uuid="110f622f-c1dc-41e4-98a6-1970c45e4682" x="0" y="0" width="20" height="60" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[TT]]></text>
+								</element>
+							</tableHeader>
+							<tableFooter height="0" rowSpan="1" style="Table_TH">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</tableFooter>
+							<detailCell height="15" style="Table_TD"/>
+							<groupHeader groupName="alpha">
+								<cell height="15" rowSpan="3" style="Table_CH">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</cell>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						</column>
+						<column kind="single" uuid="05937909-a346-4f91-8c8a-cbfe0bc27446" width="80">
+							<tableHeader height="60" rowSpan="3" style="Table_TH">
+								<element kind="staticText" uuid="d8b37347-c92e-4fd4-aa50-b19d13236ce6" x="0" y="0" width="80" height="60" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Đơn vị, NV bay]]></text>
+								</element>
+							</tableHeader>
+							<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+							<detailCell height="15" style="Table_TD">
+								<element kind="textField" uuid="8f8087a4-1d52-4311-9310-9cefb08afe0c" x="0" y="0" width="80" height="15" fontName="Times New Roman" linkType="None" linkTarget="Self" bold="false" hTextAlign="Left" vTextAlign="Middle" style="Style2">
+									<expression><![CDATA[$F{nhiem_vu}]]></expression>
+								</element>
+							</detailCell>
+							<groupHeader groupName="alpha">
+								<cell height="15" rowSpan="3" style="Table_CH">
+									<element kind="textField" uuid="a5f86305-d3bc-4cee-8c6f-287e7235999a" x="0" y="0" width="80" height="15">
+										<expression><![CDATA[$F{charseq}]]></expression>
+									</element>
+								</cell>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						</column>
+						<column kind="group" uuid="699ae52b-406d-4139-8ba7-42ad4544cc5d" width="160">
+							<tableHeader height="20" rowSpan="1" style="Table_TH">
+								<element kind="staticText" uuid="32cb9054-c776-408a-b93a-06cacf87bff3" x="0" y="0" width="160" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Chỉ tiêu giờ bay, HM dầu bay]]></text>
+								</element>
+							</tableHeader>
+							<groupHeader groupName="alpha">
+								<cell height="0" rowSpan="1" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [4]"/>
+							<column kind="group" uuid="e09fd0e0-eafd-4fce-9f9f-7ea14b32b45f" width="120">
+								<tableHeader height="20" rowSpan="1" style="Table_TH">
+									<element kind="staticText" uuid="bf9bc105-b35b-49f7-9b43-151b569e971f" x="0" y="0" width="120" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[Giờ bay]]></text>
+									</element>
+								</tableHeader>
+								<groupHeader groupName="alpha">
+									<cell height="0" rowSpan="1" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+								<column kind="single" uuid="7867be8e-a1e4-4613-a858-af6ce801d700" width="40">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="6bda960b-167b-41b0-903e-db029fc49fad" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[TK]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD">
+										<element kind="textField" uuid="5d9e4b40-7f55-47a3-86c1-4f7f28299a6b" x="0" y="0" width="40" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+											<expression><![CDATA[$F{sum_cttk}]]></expression>
+										</element>
+									</detailCell>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+								</column>
+								<column kind="single" uuid="ac7ab2cc-631e-4271-b6a5-488794f33147" width="40">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="ab51c905-0fc7-4ded-8e4e-838acb4c50b2" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[MĐ]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD">
+										<element kind="textField" uuid="ff3e4fb6-0939-49de-8208-dfee72fdaad5" x="0" y="0" width="40" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+											<expression><![CDATA[$F{sum_ctmd}]]></expression>
+										</element>
+									</detailCell>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+								</column>
+								<column kind="single" uuid="4e6e108e-6721-447d-82e6-ff97d98e75a1" width="40">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="b9014212-3e8e-4a3a-97e6-8667e1807cb7" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Cộng]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD">
+										<element kind="textField" uuid="c6147881-d33e-4f9e-a3cf-ddf4fc0b3d05" x="0" y="0" width="40" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+											<expression><![CDATA[$F{sum_dinhmuc}]]></expression>
+										</element>
+									</detailCell>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+								</column>
+							</column>
+							<column kind="single" uuid="5c365b33-203a-4605-9ac7-e25d7d817fca" width="40">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="83f644b2-a81a-44e4-8fa9-a8840a64e47c" x="0" y="0" width="40" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[Nhiên liệu]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD">
+									<element kind="textField" uuid="85fa952c-37ee-47bb-9860-ec9186abf33a" x="0" y="0" width="40" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+										<expression><![CDATA[$F{sum_csump}]]></expression>
+									</element>
+								</detailCell>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+							</column>
+						</column>
+						<column kind="group" uuid="7a86bf10-7b9d-4eef-8f02-8c2b4fd7954f" width="90">
+							<tableHeader height="20" rowSpan="1" style="Table_TH">
+								<element kind="staticText" uuid="14969d17-93b7-48af-95ae-a3ae53553b5b" x="0" y="0" width="90" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Giờ hoạt động của đ.cơ]]></text>
+								</element>
+							</tableHeader>
+							<groupHeader groupName="alpha">
+								<cell height="0" rowSpan="1" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+							<column kind="single" uuid="34cd58bf-8cc6-4730-8dbf-980a3395c64b" width="30">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="e8e013bb-ec0a-44f8-bedd-5685d0739058" x="0" y="0" width="30" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[T.không]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD">
+									<element kind="textField" uuid="afb45d0e-c50a-46ea-bdc6-216067a398c5" x="0" y="0" width="30" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+										<expression><![CDATA[$F{sum_durtk}]]></expression>
+									</element>
+								</detailCell>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+							</column>
+							<column kind="single" uuid="f0e617d0-7f52-4cc4-a8df-0881b2b8d904" width="30">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="9811c3d8-a358-4fcf-9456-7ca62464df63" x="0" y="0" width="30" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[M.đất]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD">
+									<element kind="textField" uuid="215e5a3b-55a8-4a2d-b601-8301ff34117f" x="0" y="0" width="30" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+										<expression><![CDATA[$F{sum_durmd}]]></expression>
+									</element>
+								</detailCell>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+							</column>
+							<column kind="single" uuid="74dc28db-46cd-4b74-b2a8-a971286248bb" width="30">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="6d6ac125-19c5-4824-bd20-83f9a46977ac" x="0" y="0" width="30" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[Cộng]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD">
+									<element kind="textField" uuid="91317c3d-ca54-4bd4-857e-defdb09c91a0" x="0" y="0" width="30" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+										<expression><![CDATA[$F{sum_giobay}]]></expression>
+									</element>
+								</detailCell>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+							</column>
+						</column>
+						<column kind="group" uuid="c8611cbb-206d-4337-951c-79a09dd9586c" width="90">
+							<tableHeader height="20" rowSpan="1" style="Table_TH">
+								<element kind="staticText" uuid="ae540476-77c8-414c-bbc2-be6206a43493" x="0" y="0" width="90" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Nhiên liệu tiêu thụ]]></text>
+								</element>
+							</tableHeader>
+							<groupHeader groupName="alpha">
+								<cell height="0" rowSpan="1" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+							<column kind="single" uuid="2acfe813-830a-42ec-bda7-44a770f93595" width="30">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="dc824146-9f07-4482-bada-f5b867936f15" x="0" y="0" width="30" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[T.không]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD">
+									<element kind="textField" uuid="f3c29325-2779-47ba-a650-3d8c6d3957b2" x="0" y="0" width="30" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+										<expression><![CDATA[$F{sum_txtk}]]></expression>
+									</element>
+								</detailCell>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+							</column>
+							<column kind="single" uuid="7db4f961-ef11-40ee-bee6-900ada52272e" width="30">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="911118a4-3548-4868-9fd3-04650cdd6f7f" x="0" y="0" width="30" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[M.đất]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD">
+									<element kind="textField" uuid="d8f02a6f-ac4e-40f4-a4ad-7ec3e6d88746" x="0" y="0" width="30" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+										<expression><![CDATA[$F{sum_txmd}]]></expression>
+									</element>
+								</detailCell>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+							</column>
+							<column kind="single" uuid="2b53b4f1-9118-4e23-a318-1970f2fba82c" width="30">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="ae218969-4967-4668-aaf2-72b554cbb112" x="0" y="0" width="30" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[Cộng]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD">
+									<element kind="textField" uuid="252e800a-e8ad-46ee-b546-3a93ec183d81" x="0" y="0" width="30" height="15" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+										<expression><![CDATA[$F{sum_tieuthu}]]></expression>
+									</element>
+								</detailCell>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+							</column>
+						</column>
+						<column kind="single" uuid="6a1d86d0-124c-49e9-9c9a-44688ee8cb7b" width="30">
+							<tableHeader height="60" rowSpan="3" style="Table_TH">
+								<element kind="staticText" uuid="f4e6873a-18ad-4d9c-aa47-b96dfcd31bc5" x="0" y="0" width="30" height="60" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Hao hụt]]></text>
+								</element>
+							</tableHeader>
+							<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+							<detailCell height="15" style="Table_TD">
+								<element kind="textField" uuid="6b604613-97f8-476e-862a-e8f0a1ad4c49" x="0" y="0" width="30" height="15" fontName="Times New Roman" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+									<expression><![CDATA[$F{haohut}]]></expression>
+								</element>
+							</detailCell>
+							<groupHeader groupName="alpha">
+								<cell height="15" rowSpan="3" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+						</column>
+						<column kind="single" uuid="b5d6a639-4434-41e0-a555-1a41285636bd" width="50">
+							<tableHeader height="60" rowSpan="3" style="Table_TH">
+								<element kind="staticText" uuid="8a2b3066-0b3f-40fd-be5f-b7c70d734f7b" x="0" y="0" width="50" height="60" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Tổng cộng]]></text>
+								</element>
+							</tableHeader>
+							<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+							<detailCell height="15" style="Table_TD">
+								<element kind="textField" uuid="8930267d-ade9-4968-9668-b3b5138f7ee4" x="0" y="0" width="50" height="15" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
+									<expression><![CDATA[$V{tongcong}]]></expression>
+								</element>
+							</detailCell>
+							<groupHeader groupName="alpha">
+								<cell height="15" rowSpan="3" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+						</column>
+						<column kind="group" uuid="245edbf5-c28e-4d18-9cff-a69ae38d06f1" width="80">
+							<tableHeader height="20" rowSpan="1" style="Table_TH">
+								<element kind="staticText" uuid="4253bc54-ddba-4193-8926-b0343780832a" x="0" y="0" width="80" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[So sánh với KH giờ bay và HM]]></text>
+								</element>
+							</tableHeader>
+							<groupHeader groupName="alpha">
+								<cell height="0" rowSpan="1" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [4]"/>
+							<column kind="group" uuid="1c3b7488-b432-4c7c-bfd1-ea1dcec2d48e" width="40">
+								<tableHeader height="20" rowSpan="1" style="Table_TH">
+									<element kind="staticText" uuid="64e0ca8a-6827-4c57-83fc-5f3c9994c4a6" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[Giờ bay]]></text>
+									</element>
+								</tableHeader>
+								<groupHeader groupName="alpha">
+									<cell height="0" rowSpan="1" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+								<column kind="single" uuid="79e9fca6-8506-4d3a-a266-ab53583ae959" width="20">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="2d80fba6-3aa8-413e-8c6e-6c63294497ce" x="0" y="0" width="20" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Còn]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD"/>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
+								</column>
+								<column kind="single" uuid="9befa95a-c561-4a1d-a882-ef0b7b790989" width="20">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="1afc5610-3c54-4747-94cf-975eaced737f" x="0" y="0" width="20" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Quá]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD"/>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
+								</column>
+							</column>
+							<column kind="group" uuid="cfc903c8-e074-46da-8048-b4f4f7276100" width="40">
+								<tableHeader height="20" rowSpan="1" style="Table_TH">
+									<element kind="staticText" uuid="6153e60d-197a-4b31-9e32-9d49a5dbff18" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[N.liệu]]></text>
+									</element>
+								</tableHeader>
+								<groupHeader groupName="alpha">
+									<cell height="0" rowSpan="1" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+								<column kind="single" uuid="959c3429-92f6-42e0-ad92-92a49cb54669" width="20">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="c395de75-15bd-4f63-8119-51a6152c58c8" x="0" y="0" width="20" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Còn]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD"/>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column17"/>
+								</column>
+								<column kind="single" uuid="825d45c7-2462-477b-b457-0080dbdc2b35" width="20">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="95d8a154-443c-45b3-8a2a-e534c79ffef3" x="0" y="0" width="20" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Quá]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD"/>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column18"/>
+								</column>
+							</column>
+						</column>
+						<column kind="group" uuid="e8295d15-eb02-4818-89cb-566d85e71943" width="40">
+							<tableHeader height="20" rowSpan="1" style="Table_TH">
+								<element kind="staticText" uuid="ac86d230-fc57-44ef-a04c-4c1b97e0fe5e" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Theo ĐM]]></text>
+								</element>
+							</tableHeader>
+							<groupHeader groupName="alpha">
+								<cell height="0" rowSpan="1" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+							<column kind="single" uuid="f8742be7-f4b6-407f-b09b-3bff09e37272" width="20">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="192ef3bf-9a1e-43f2-85c2-68a1435beed7" x="0" y="0" width="20" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[TK]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD"/>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column19"/>
+							</column>
+							<column kind="single" uuid="b0ca504e-f8fd-4cd2-b34f-80e57abe2213" width="20">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="9e0324d5-edd8-472a-8bbb-87478ee0683e" x="0" y="0" width="20" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[MĐ]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD"/>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column20"/>
+							</column>
+						</column>
+						<column kind="group" uuid="d29fabdb-9abb-45c8-a488-1b54d51f34d3" width="40">
+							<tableHeader height="20" rowSpan="1" style="Table_TH">
+								<element kind="staticText" uuid="1873dec3-2f6d-4a0c-bf52-bb183139dd88" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[T.tế T.thụ]]></text>
+								</element>
+							</tableHeader>
+							<groupHeader groupName="alpha">
+								<cell height="0" rowSpan="1" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+							<column kind="single" uuid="f169799e-1776-4d34-af43-17a4e9d456f4" width="20">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="f813164c-c868-4533-94b8-27b11c982634" x="0" y="0" width="20" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[TK]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</detailCell>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column21"/>
+							</column>
+							<column kind="single" uuid="11a0201b-16e0-45bf-bc99-66e9f60e2393" width="20">
+								<tableHeader height="40" rowSpan="2" style="Table_TH">
+									<element kind="staticText" uuid="28da2d0b-6335-4483-acd9-6ab2e85fdc58" x="0" y="0" width="20" height="40" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[MĐ]]></text>
+									</element>
+								</tableHeader>
+								<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+								<detailCell height="15" style="Table_TD"/>
+								<groupHeader groupName="alpha">
+									<cell height="15" rowSpan="2" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column22"/>
+							</column>
+						</column>
+						<column kind="group" uuid="8313c398-2d3f-49a1-ae0d-12a034d889fe" width="80">
+							<tableHeader height="20" rowSpan="1" style="Table_TH">
+								<element kind="staticText" uuid="879304c0-b419-4f87-8bc7-f38410a69521" x="0" y="0" width="80" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[So sánh]]></text>
+								</element>
+							</tableHeader>
+							<groupHeader groupName="alpha">
+								<cell height="0" rowSpan="1" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [4]"/>
+							<column kind="group" uuid="932717a8-8610-4a6f-80a8-a25b1a8f69bf" width="40">
+								<tableHeader height="20" rowSpan="1" style="Table_TH">
+									<element kind="staticText" uuid="cc2ee4fd-98aa-4ad5-b1ca-dadf8655a04d" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[T.không]]></text>
+									</element>
+								</tableHeader>
+								<groupHeader groupName="alpha">
+									<cell height="0" rowSpan="1" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+								<column kind="single" uuid="7f5d5f89-951a-46fe-8192-8b2e73725a94" width="20">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="d60d0483-eb88-4911-90d3-4d1ec8629f43" x="0" y="0" width="20" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Quá]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD"/>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column23"/>
+								</column>
+								<column kind="single" uuid="7a0d892f-1685-46f8-aa7d-1d4e282122f1" width="20">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="9418877b-d37a-4163-9f29-0c99d061227e" x="0" y="0" width="20" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Rút]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD"/>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column24"/>
+								</column>
+							</column>
+							<column kind="group" uuid="aa3e3742-13c9-40ef-94f9-03ff2736694f" width="40">
+								<tableHeader height="20" rowSpan="1" style="Table_TH">
+									<element kind="staticText" uuid="00cdfd47-ffba-417e-866f-b1cf75de3306" x="0" y="0" width="40" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+										<text><![CDATA[M.Đất]]></text>
+									</element>
+								</tableHeader>
+								<groupHeader groupName="alpha">
+									<cell height="0" rowSpan="1" style="Table_CH"/>
+								</groupHeader>
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+								<column kind="single" uuid="a55ce13f-d76e-45c1-974a-02ac1ceb2447" width="20">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="6b1e440d-6847-4dd0-9bbd-ff3124e1c659" x="0" y="0" width="20" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Quá]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD"/>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column25"/>
+								</column>
+								<column kind="single" uuid="c7b4d6ee-d6a5-4f1a-9a7e-4c66aebb6cea" width="20">
+									<tableHeader height="20" rowSpan="1" style="Table_TH">
+										<element kind="staticText" uuid="01f67e99-3740-42db-b52e-65c70dda0271" x="0" y="0" width="20" height="20" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+											<text><![CDATA[Rút]]></text>
+										</element>
+									</tableHeader>
+									<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+									<detailCell height="15" style="Table_TD"/>
+									<groupHeader groupName="alpha">
+										<cell height="15" rowSpan="1" style="Table_CH"/>
+									</groupHeader>
+									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column26"/>
+								</column>
+							</column>
+						</column>
+						<column kind="single" uuid="6065d413-0370-482e-b213-241f1febdfbf" width="30">
+							<tableHeader height="60" rowSpan="3" style="Table_TH">
+								<element kind="staticText" uuid="1de838f3-9be9-4e93-9cec-eec476192c82" x="0" y="0" width="30" height="60" fontName="Times New Roman" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[T.lệ MĐ/TK]]></text>
+								</element>
+							</tableHeader>
+							<tableFooter height="0" rowSpan="1" style="Table_TH"/>
+							<detailCell height="15" style="Table_TD"/>
+							<groupHeader groupName="alpha">
+								<cell height="15" rowSpan="3" style="Table_CH"/>
+							</groupHeader>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column27"/>
+						</column>
+					</component>
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</element>
+			</band>
+		</groupFooter>
+	</group>
 	<background splitType="Stretch"/>
 	<pageHeader height="57" splitType="Stretch">
 		<element kind="staticText" uuid="520a1790-ca3e-492c-abb1-2fa0d7a9d949" x="0" y="0" width="200" height="41" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
@@ -332,316 +959,45 @@ order by abss.ten desc, priority asc, abss.nv_count desc
 			</box>
 		</element>
 	</pageHeader>
-	<summary height="221">
-		<element kind="component" uuid="1513030b-7adc-4376-86e0-8cde4f5c7311" x="0" y="10" width="792" height="200" style="Style1">
-			<component kind="table">
-				<datasetRun uuid="44829ec0-49f0-4d0e-b829-a05d4ec32c61" subDataset="hanmucbay">
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				</datasetRun>
-				<column kind="single" uuid="8f888d62-07bf-4bd8-b42d-15e2e7e693ce" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-				</column>
-				<column kind="single" uuid="05937909-a346-4f91-8c8a-cbfe0bc27446" width="70">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="8f8087a4-1d52-4311-9310-9cefb08afe0c" x="0" y="0" width="70" height="20" fontName="Times New Roman" linkType="None" linkTarget="Self" bold="false" hTextAlign="Left" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{nhiem_vu}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH">
-							<element kind="textField" uuid="6aae738a-fd5c-4539-84f2-60ce5dc769d0" x="0" y="0" width="60" height="20" fontName="Times New Roman" hTextAlign="Left" vTextAlign="Middle">
-								<expression><![CDATA[$F{ten}]]></expression>
-							</element>
-						</cell>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-				</column>
-				<column kind="single" uuid="7867be8e-a1e4-4613-a858-af6ce801d700" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="5d9e4b40-7f55-47a3-86c1-4f7f28299a6b" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_cttk}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-				</column>
-				<column kind="single" uuid="ac7ab2cc-631e-4271-b6a5-488794f33147" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="ff3e4fb6-0939-49de-8208-dfee72fdaad5" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_ctmd}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
-				</column>
-				<column kind="single" uuid="4e6e108e-6721-447d-82e6-ff97d98e75a1" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="c6147881-d33e-4f9e-a3cf-ddf4fc0b3d05" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_dinhmuc}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
-				</column>
-				<column kind="single" uuid="5c365b33-203a-4605-9ac7-e25d7d817fca" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="85fa952c-37ee-47bb-9860-ec9186abf33a" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_csump}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
-				</column>
-				<column kind="single" uuid="34cd58bf-8cc6-4730-8dbf-980a3395c64b" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="afb45d0e-c50a-46ea-bdc6-216067a398c5" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_durtk}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
-				</column>
-				<column kind="single" uuid="f0e617d0-7f52-4cc4-a8df-0881b2b8d904" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="215e5a3b-55a8-4a2d-b601-8301ff34117f" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_durmd}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
-				</column>
-				<column kind="single" uuid="74dc28db-46cd-4b74-b2a8-a971286248bb" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="91317c3d-ca54-4bd4-857e-defdb09c91a0" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_giobay}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
-				</column>
-				<column kind="single" uuid="2acfe813-830a-42ec-bda7-44a770f93595" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="f3c29325-2779-47ba-a650-3d8c6d3957b2" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_txtk}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
-				</column>
-				<column kind="single" uuid="7db4f961-ef11-40ee-bee6-900ada52272e" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="d8f02a6f-ac4e-40f4-a4ad-7ec3e6d88746" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_txmd}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
-				</column>
-				<column kind="single" uuid="2b53b4f1-9118-4e23-a318-1970f2fba82c" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="252e800a-e8ad-46ee-b546-3a93ec183d81" x="0" y="0" width="30" height="20" fontName="Times New Roman" fontSize="10.0" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{sum_tieuthu}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
-				</column>
-				<column kind="single" uuid="6a1d86d0-124c-49e9-9c9a-44688ee8cb7b" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="6b604613-97f8-476e-862a-e8f0a1ad4c49" x="0" y="0" width="30" height="20" fontName="Times New Roman" linkTarget="Self" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$F{haohut}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
-				</column>
-				<column kind="single" uuid="b5d6a639-4434-41e0-a555-1a41285636bd" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD">
-						<element kind="textField" uuid="8930267d-ade9-4968-9668-b3b5138f7ee4" x="0" y="0" width="30" height="20" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Style2">
-							<expression><![CDATA[$V{tongcong}]]></expression>
-						</element>
-					</detailCell>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
-				</column>
-				<column kind="single" uuid="79e9fca6-8506-4d3a-a266-ab53583ae959" width="40">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
-				</column>
-				<column kind="single" uuid="9befa95a-c561-4a1d-a882-ef0b7b790989" width="40">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
-				</column>
-				<column kind="single" uuid="959c3429-92f6-42e0-ad92-92a49cb54669" width="40">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column17"/>
-				</column>
-				<column kind="single" uuid="825d45c7-2462-477b-b457-0080dbdc2b35" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column18"/>
-				</column>
-				<column kind="single" uuid="f8742be7-f4b6-407f-b09b-3bff09e37272" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column19"/>
-				</column>
-				<column kind="single" uuid="b0ca504e-f8fd-4cd2-b34f-80e57abe2213" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column20"/>
-				</column>
-				<column kind="single" uuid="11a0201b-16e0-45bf-bc99-66e9f60e2393" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column21"/>
-				</column>
-				<column kind="single" uuid="f169799e-1776-4d34-af43-17a4e9d456f4" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column22"/>
-				</column>
-				<column kind="single" uuid="7a0d892f-1685-46f8-aa7d-1d4e282122f1" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column23"/>
-				</column>
-				<column kind="single" uuid="7f5d5f89-951a-46fe-8192-8b2e73725a94" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column24"/>
-				</column>
-				<column kind="single" uuid="a55ce13f-d76e-45c1-974a-02ac1ceb2447" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column25"/>
-				</column>
-				<column kind="single" uuid="c7b4d6ee-d6a5-4f1a-9a7e-4c66aebb6cea" width="20">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column26"/>
-				</column>
-				<column kind="single" uuid="6065d413-0370-482e-b213-241f1febdfbf" width="30">
-					<tableHeader height="30" rowSpan="1" style="Table_TH"/>
-					<tableFooter height="30" rowSpan="1" style="Table_TH"/>
-					<detailCell height="20" style="Table_TD"/>
-					<groupHeader groupName="tendv">
-						<cell height="20" rowSpan="1" style="Table_CH"/>
-					</groupHeader>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column27"/>
-				</column>
-			</component>
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-			<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
-			<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
-			<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+	<summary height="113">
+		<element kind="staticText" uuid="4b695383-0287-4fcb-ba3c-637a6877fd5f" x="0" y="30" width="140" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[NGƯỜI LẬP BÁO CÁO]]></text>
+		</element>
+		<element kind="staticText" uuid="5ac679fd-0bba-44d4-a57e-54a3c9e80f28" x="0" y="80" width="140" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[1// Cao Tiến Hanh]]></text>
+		</element>
+		<element kind="staticText" uuid="e661496f-21ea-4731-9228-25d18cb6714a" x="150" y="80" width="130" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[2// Nguyễn Việt Tiến]]></text>
+		</element>
+		<element kind="staticText" uuid="e4ee8b1d-c377-4b11-8432-d045b554f517" x="150" y="30" width="130" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[TB. XĂNG DẦU]]></text>
+		</element>
+		<element kind="staticText" uuid="54fa7b47-edde-4db0-a2e2-2f825217d045" x="420" y="30" width="120" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[P. QUÂN HUẤN]]></text>
+		</element>
+		<element kind="staticText" uuid="493ade67-2b34-4747-b5d2-f69f71b9e554" x="420" y="80" width="120" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[3// Tạ Hữu Cường]]></text>
+		</element>
+		<element kind="staticText" uuid="d1f3baab-d026-4ac9-a6a1-313a458660f5" x="280" y="30" width="130" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[P.HẬU CẦN KỸ THUẬT]]></text>
+		</element>
+		<element kind="staticText" uuid="da5455f8-acf9-4572-a6b4-7ab517b805e6" x="280" y="80" width="120" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[3// Nguyễn Văn Thìn]]></text>
+		</element>
+		<element kind="staticText" uuid="47554be8-12ce-4021-ac14-9ec9b56f4cd6" x="680" y="30" width="110" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[SƯ ĐOÀN TRƯỞNG]]></text>
+		</element>
+		<element kind="staticText" uuid="e7b951ca-f206-48a2-8c23-3a897b046a93" x="680" y="80" width="112" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Đại tá Lê Chung Nam]]></text>
+		</element>
+		<element kind="staticText" uuid="a30f8c44-496c-4412-b8af-9db963b65bf2" x="560" y="30" width="90" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[P. THAM MƯU]]></text>
+		</element>
+		<element kind="staticText" uuid="03bf0b70-feb4-4701-a652-15468f16ce9c" x="550" y="80" width="120" height="20" fontName="Times New Roman" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[2// Luyện Huy Quỳnh]]></text>
+		</element>
+		<element kind="staticText" uuid="631f5493-7672-440e-9eb3-cd4cd74e9947" x="660" y="10" width="132" height="16" fontName="Times New Roman" bold="false" hTextAlign="Center" vTextAlign="Top">
+			<text><![CDATA[Ngày 20 tháng 01 năm 2024]]></text>
 		</element>
 	</summary>
 </jasperReport>

@@ -22,4 +22,10 @@ public class ChitietNhiemVu {
     @ManyToOne
     @JoinColumn(name = "nhiemvu_id", referencedColumnName = "id", insertable = false, updatable = false)
     private NhiemVu nhiemVu;
+
+    public ChitietNhiemVu(int id, int nhiemvu_id, String nhiemvu) {
+        this.id = id;
+        this.nhiemvu_id = nhiemvu_id;
+        this.nhiemvu = nhiemvu;
+    }
 }

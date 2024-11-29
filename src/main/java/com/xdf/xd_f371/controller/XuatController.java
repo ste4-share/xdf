@@ -133,7 +133,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_tenxd.getSelectionModel().selectFirst();
         mapPrice(cbb_tenxd.getSelectionModel().getSelectedItem().getId());
     }
-
     private void mapPrice(int xd_id){
         cbb_dongia.setConverter(new StringConverter<Mucgia>() {
             @Override
@@ -162,7 +161,6 @@ public class XuatController extends CommonFactory implements Initializable {
         vcf.setText(String.valueOf(ledgerDetails.getHe_so_vcf()));
         tytrong.setText(String.valueOf(ledgerDetails.getTy_trong()));
     }
-
     private void setCellValueFactory(LedgerDetails l){
         tbXuat.setItems(FXCollections.observableList(ls_socai));
         stt.setSortable(false);
@@ -278,7 +276,12 @@ public class XuatController extends CommonFactory implements Initializable {
         }else {
             ledgerDetails.setHaohut_sl(0);
             ledgerDetails.setPhuongtien_id(xmt_cbb.getValue().getId());
-            ledgerDetails.setNhiemvu_hanmuc_id(hanmucNhiemvuRepo.findByUniqueIds(dvx_cbb.getValue().getId(),identifyNhiemvu().getId(),DashboardController.findByTime.getId()).get().getId());
+
+            if (mb_rd.isSelected()){
+                ledgerDetails.setNhiemvu_hanmuc_id(hanmucNhiemvuRepo.findByUniqueIds(dvx_cbb.getValue().getId(),identifyNhiemvu().getId(),DashboardController.findByTime.getId()).get().getId());
+            }else{
+                ledgerDetails.setNhiemvu_hanmuc_id(0);
+            }
             if (tk_rd.isSelected()){
                 ledgerDetails.setThuc_xuat_tk(Integer.parseInt(thucxuat.getText()));
                 ledgerDetails.setThuc_xuat(0);
@@ -475,14 +478,19 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void mbRadioSel(ActionEvent actionEvent) {
         mapItemsForXeMayTau(phuongtienRepo.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()));
+        lgb_hb.setDisable(false);
     }
     @FXML
     public void xeRadioSelec(ActionEvent actionEvent) {
         mapItemsForXeMayTau(phuongtienRepo.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle()));
+        md_rd.setSelected(true);
+        lgb_hb.setDisable(true);
     }
     @FXML
     public void mayRadioSelec(ActionEvent actionEvent) {
         mapItemsForXeMayTau(phuongtienRepo.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAY.getNameVehicle()));
+        md_rd.setSelected(true);
+        lgb_hb.setDisable(true);
     }
 
     @FXML

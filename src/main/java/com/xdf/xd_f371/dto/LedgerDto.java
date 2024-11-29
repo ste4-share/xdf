@@ -56,7 +56,6 @@ public class LedgerDto {
     private int soluong;
     private int thuc_nhap;
     private int phai_nhap;
-    private int px_soluong;
     private Long haohut_sl;
     private String loainv;
 }

@@ -1,4 +1,4 @@
-select * from (select * from (select *,'9' as seqnum2
+select * from (select * from (select *,'A' as chr,'9' as seqnum2
 from (select 'ten' as ten,'10' as seqnum,
 CASE WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=1 then 'Cộng Nhiệm vụ' 
 WHEN GROUPING(nhiemvu)=1 and GROUPING(ten_nv)=0 then ten_nv else nhiemvu end as nhiem_vu,

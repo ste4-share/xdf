@@ -21,8 +21,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -34,9 +32,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -352,6 +348,7 @@ public class DashboardController implements Initializable {
         dvi_menu.setStyle(resetStyle());
         loai_xd_menu.setStyle(resetStyle());
         haohut_menu.setStyle(resetStyle());
+        tonkho_menu.setStyle(resetStyle());
         dinhmuc_menu.setStyle(resetStyle());
         nxt_menu.setStyle(resetStyle());
 

@@ -23,6 +23,10 @@ public class Team {
     private String name;
     @Column(name = "team_code")
     private String team_code;
+    @Column(name = "priority")
+    private int priority;
+    @Column(name = "tt")
+    private String tt;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     List<NhiemVu> nhiemVuList;
