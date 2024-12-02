@@ -2,6 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.Purpose;
+import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
@@ -59,7 +60,7 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<NguonNx> cmb_dvvc, cmb_dvn;
     @FXML
-    private ComboBox<LoaiXangDau> cmb_tenxd;
+    private ComboBox<LoaiXangDauDto> cmb_tenxd;
 
     @Autowired
     private NguonNxRepo nguonNxRepo;
@@ -106,26 +107,23 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setTenXDToCombobox(){
-        cmb_tenxd.setConverter(new StringConverter<LoaiXangDau>() {
+        cmb_tenxd.setConverter(new StringConverter<LoaiXangDauDto>() {
             @Override
-            public String toString(LoaiXangDau loaiXangDau) {
-                if (loaiXangDau!=null){
-                    lxd_id_combobox_selected = loaiXangDau.getId();
-                }
+            public String toString(LoaiXangDauDto loaiXangDau) {
                 return loaiXangDau==null ? "" : loaiXangDau.getTenxd();
             }
 
             @Override
-            public LoaiXangDau fromString(String s) {
-                return loaiXangDauRepo.findById(lxd_id_combobox_selected).orElse(null);
+            public LoaiXangDauDto fromString(String s) {
+                return loaiXangDauRepo.findById(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id()).orElse(null);
             }
         });
-        cmb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findAll()));
+        cmb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findAllBy()));
         cmb_tenxd.getSelectionModel().selectFirst();
         cmb_tenxd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                lxd_id_combobox_selected = cmb_tenxd.getSelectionModel().getSelectedItem().getId();
+                lxd_id_combobox_selected = cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id();
                 setTonKhoLabel();
             }
         });
@@ -167,16 +165,15 @@ public class NhapController extends CommonFactory implements Initializable {
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setMa_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getMaxd());
         ledgerDetails.setTen_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getTenxd());
-        ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId());
+        ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id());
         ledgerDetails.setDon_gia(Integer.parseInt(donGiaTf.getText()));
         ledgerDetails.setPhai_nhap(phaiNhap.getText().isEmpty() ? 0 : Integer.parseInt(phaiNhap.getText()));
         ledgerDetails.setThuc_nhap(Integer.parseInt(thucNhap.getText()));
         ledgerDetails.setNhiet_do_tt(tThucTe.getText().isEmpty() ? 0 : Double.parseDouble(tThucTe.getText()));
         ledgerDetails.setHe_so_vcf(vcf.getText().isEmpty() ? 0 : Integer.parseInt(vcf.getText()));
         ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
-        ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId());
         ledgerDetails.setSoluong(Integer.parseInt(thucNhap.getText()));
-        ledgerDetails.setThanhtien(Integer.parseInt(thucNhap.getText()) * Integer.parseInt(donGiaTf.getText()));
+        ledgerDetails.setThanhtien((long) Integer.parseInt(thucNhap.getText()) * Integer.parseInt(donGiaTf.getText()));
         return ledgerDetails;
     }
 
@@ -258,7 +255,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setFrom_date(java.sql.Date.valueOf(tungay.getValue()));
         ledger.setEnd_date(java.sql.Date.valueOf(denngay.getValue()));
         ledger.setStatus("ACTIVE");
-        ledger.setInventoryId(inventoryRepo.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElseThrow().getId());
+        ledger.setInventoryId(inventoryRepo.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow().getId());
         ledger.setDvi_nhan(cmb_dvn.getValue().getTen());
         ledger.setDvi_xuat(cmb_dvvc.getValue().getTen());
         ledger.setLoai_phieu("NHAP");
@@ -519,7 +516,7 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setTonKhoLabel(){
-        Inventory i = inventoryRepo.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElseThrow();
+        Inventory i = inventoryRepo.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
         lb_tontheoxd.setText("Số lượng tồn: "+ i.getPre_nvdx() +" (Lit)");
     }
 

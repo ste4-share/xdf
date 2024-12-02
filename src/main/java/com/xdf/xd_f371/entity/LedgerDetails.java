@@ -50,7 +50,7 @@ public class LedgerDetails {
     @Column(name = "phai_nhap")
     private int phai_nhap;
     @Column(name = "thanhtien")
-    private int thanhtien;
+    private Long thanhtien;
     @Column(name = "haohut_sl")
     private int haohut_sl;
     @Column(name = "nl_gio")

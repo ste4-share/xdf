@@ -174,9 +174,9 @@
                                     <ComboBox fx:id="dvi_cbb" onAction="#dviSelected" prefHeight="45.0" prefWidth="377.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" />
                                  </children>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="10.0" prefHeight="655.0" prefWidth="1165.0">
+                              <HBox layoutX="10.0" layoutY="10.0" prefHeight="324.0" prefWidth="1165.0">
                                  <children>
-                                    <TableView fx:id="ctnv_tb" onMouseClicked="#chitieunvSelected" prefHeight="521.0" prefWidth="1145.0" style="-fx-background-color: #ffffff;">
+                                    <TableView fx:id="ctnv_tb" onMouseClicked="#chitieunvSelected" prefHeight="489.0" prefWidth="1158.0" style="-fx-background-color: #ffffff;">
                                       <columns>
                                         <TableColumn fx:id="t2_tt" prefWidth="33.0" text="TT" />
                                         <TableColumn fx:id="t2_nv" prefWidth="150.0" text="Nhiệm vụ" />
@@ -201,7 +201,7 @@
                                     </TableView>
                                  </children>
                               </HBox>
-                              <HBox alignment="TOP_RIGHT" prefHeight="71.0" prefWidth="1155.0">
+                              <HBox alignment="TOP_RIGHT" prefHeight="42.0" prefWidth="1155.0">
                                  <children>
                                     <Button fx:id="t2_them" mnemonicParsing="false" onAction="#addnewchitieubay" prefHeight="36.0" prefWidth="118.0" text="Thêm">
                                        <cursor>
@@ -218,6 +218,34 @@
                                  <VBox.margin>
                                     <Insets right="10.0" top="10.0" />
                                  </VBox.margin>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="60.0" prefHeight="324.0" prefWidth="1165.0">
+                                 <children>
+                                    <TableView fx:id="ctnv_tb1" onMouseClicked="#chitieunvSelected" prefHeight="489.0" prefWidth="1158.0" style="-fx-background-color: #ffffff;">
+                                       <columns>
+                                          <TableColumn fx:id="t2_tt1" prefWidth="33.0" text="TT" />
+                                          <TableColumn fx:id="t2_nv11" prefWidth="150.0" text="Phương tiện" />
+                                          <TableColumn fx:id="t2_nv1" prefWidth="150.0" text="Nhiệm vụ" />
+                                          <TableColumn fx:id="t2_ct1" prefWidth="162.0" text="Chi tiết nhiệm vụ" />
+                                          <TableColumn prefWidth="162.0" text="Chi tiết nhiệm vụ">
+                                             <columns>
+                                                <TableColumn fx:id="t2_tk1" prefWidth="162.0" text="Trên không" />
+                                                <TableColumn fx:id="t2_md1" prefWidth="162.0" text="Mặt đất" />
+                                                <TableColumn fx:id="t2_nl1" prefWidth="162.0" text="Nhiên liệu" />
+                                             </columns>
+                                          </TableColumn>
+                                       </columns>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                       <HBox.margin>
+                                          <Insets left="10.0" right="10.0" />
+                                       </HBox.margin>
+                                    </TableView>
+                                 </children>
                               </HBox>
                            </children>
                         </VBox>
