@@ -14,4 +14,6 @@ public interface NguonNxRepo extends JpaRepository<NguonNx,Integer> {
     List<NguonNx> findByStatus(String status);
     @Query("select n from NguonNx n join n.donViTrucThuocs dvtt")
     List<NguonNx> findByAllBy();
+
+
 }

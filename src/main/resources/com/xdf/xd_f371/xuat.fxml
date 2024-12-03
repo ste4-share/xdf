@@ -497,29 +497,6 @@
                                                    </font></TextField>
                                              </children>
                                           </HBox>
-                                          <HBox fx:id="thucxuatgio_hb" layoutX="45.0" layoutY="225.0" prefHeight="40.0" prefWidth="523.0">
-                                             <children>
-                                                <Label fx:id="tx_gio_label" prefHeight="40.0" prefWidth="162.0" text="T.Xuất theo giờ:">
-                                                   <font>
-                                                      <Font name="Cambria Bold" size="16.0" />
-                                                   </font>
-                                                   <HBox.margin>
-                                                      <Insets />
-                                                   </HBox.margin>
-                                                </Label>
-                                                <TextField fx:id="thucxuat_gio" prefHeight="40.0" prefWidth="327.0">
-                                                   <cursor>
-                                                      <Cursor fx:constant="TEXT" />
-                                                   </cursor>
-                                                   <font>
-                                                      <Font name="Times New Roman" size="12.0" />
-                                                   </font>
-                                                </TextField>
-                                             </children>
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </HBox>
                                           <HBox layoutX="45.0" layoutY="235.0" prefHeight="40.0" prefWidth="523.0">
                                              <children>
                                                 <Label prefHeight="40.0" prefWidth="162.0" text="N.liệu theo Km:">

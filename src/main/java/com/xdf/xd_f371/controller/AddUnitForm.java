@@ -134,7 +134,6 @@ public class AddUnitForm implements Initializable {
                 String typeTitle = type_title_cbb.getSelectionModel().getSelectedItem();
                 String code = code_cbb.getSelectionModel().getSelectedItem();
 
-                categoryService.create(new Category(header_lv1, header_lv2, header_lv3, typeTitle, tructhuoc_cbb.getSelectionModel().getSelectedItem().getId(), code));
             }
             DonviController.unit_stage.close();
         }

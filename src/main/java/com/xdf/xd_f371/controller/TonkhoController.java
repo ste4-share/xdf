@@ -194,7 +194,7 @@ public class TonkhoController implements Initializable {
         List<Inventory> inventories = inventoryRepo.findByQuarter_id(DashboardController.findByTime.getId());
         for(int i =0; i< inventories.size(); i++){
             Inventory inventory = inventories.get(i);
-            LoaiXangDau loaiXangDau = loaiXangDauRepo.findById(inventory.getPetro_id()).orElse(null);
+//            LoaiXangDau loaiXangDau = loaiXangDauRepo.findById(inventory.getPetro_id()).orElse(null);
 
 
 //            inventory.setPetroleumName(loaiXangDau.getTenxd());

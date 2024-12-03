@@ -42,7 +42,7 @@ public class XuatController extends CommonFactory implements Initializable {
     private static DinhMuc dinhMuc;
 
     @FXML
-    private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong,nl_gio,nl_km,thucxuat_gio;
+    private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong,nl_gio,nl_km;
     @FXML
     private DatePicker tungay,denngay;
     @FXML
@@ -64,7 +64,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phaixuat,col_nhietdo,col_tytrong,col_vcf,col_thucxuat,col_thanhtien;
     @FXML
-    private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox,thucxuatgio_hb;
+    private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox;
 
     @Autowired
     private ChitietNhiemvuRepo chitietNhiemvuRepo;
@@ -78,6 +78,8 @@ public class XuatController extends CommonFactory implements Initializable {
     private PhuongtienRepo phuongtienRepo;
     @Autowired
     private InventoryRepo inventoryRepo;
+    @Autowired
+    private TructhuocRepo tructhuocRepo;
     @Autowired
     private TcnRepo tcnRepo;
 
@@ -102,7 +104,6 @@ public class XuatController extends CommonFactory implements Initializable {
         vcf.setText("0");
         nl_gio.setText("0");
         nl_km.setText("0");
-        thucxuat_gio.setText("0");
     }
 
     private void initLoaiXuatCbb() {
@@ -217,6 +218,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledger.setSo_xe(soxe.getText());
         ledger.setLenh_so(lenhso.getText());
         if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.NV.getName())){
+            ledger.setTructhuoc(TructhuocEnum.NV.getName());
             ledger.setLoaigiobay(tk_rd.isSelected() ? TypeCons.TREN_KHONG.getName() : TypeCons.MAT_DAT.getName());
             ledger.setNhiemvu(identifyNhiemvu().getNhiemvu());
             ledger.setNhiemvu_id(identifyNhiemvu().getId());
@@ -231,6 +233,7 @@ public class XuatController extends CommonFactory implements Initializable {
             }
             ledger.setTcn_id(0);
         } else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())){
+            ledger.setTructhuoc(TructhuocEnum.HH.getName());
             ledger.setLoaigiobay("");
             ledger.setNhiemvu("");
             ledger.setNhiemvu_id(0);
@@ -240,6 +243,7 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
             ledger.setLoainv(identifyNhiemvu().getNhiemvu());
         } else {
+            ledger.setTructhuoc(tructhuocRepo.findById(dvn_cbb.getValue().getId()).orElseThrow().getType());
             ledger.setLoaigiobay("");
             ledger.setNhiemvu("");
             ledger.setNhiemvu_id(0);
@@ -271,12 +275,10 @@ public class XuatController extends CommonFactory implements Initializable {
         if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.X_K.getName())){
             ledgerDetails.setPhuongtien_id(0);
             ledgerDetails.setThuc_xuat_tk(0);
-            ledgerDetails.setNhiemvu_hanmuc_id(0);
             ledgerDetails.setHaohut_sl(0);
             ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText()));
         }else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())){
             ledgerDetails.setPhuongtien_id(0);
-//            ledgerDetails.setNhiemvu_hanmuc_id(hanmucNhiemvuRepo.findByUniqueIds(dvx_cbb.getValue().getId(),identifyNhiemvu().getId(),DashboardController.findByTime.getId()).get().getId());
             ledgerDetails.setThuc_xuat_tk(0);
             ledgerDetails.setThuc_xuat(0);
             ledgerDetails.setHaohut_sl(ledgerDetails.getSoluong());
@@ -284,12 +286,6 @@ public class XuatController extends CommonFactory implements Initializable {
             ledgerDetails.setHaohut_sl(0);
             ledgerDetails.setPhuongtien_id(xmt_cbb.getValue().getId());
 
-            if (mb_rd.isSelected()){
-                ledgerDetails.setNhiemvu_hanmuc_id(0);
-//                ledgerDetails.setNhiemvu_hanmuc_id(hanmucNhiemvuRepo.findByUniqueIds(dvx_cbb.getValue().getId(),identifyNhiemvu().getId(),DashboardController.findByTime.getId()).get().getId());
-            } else {
-                ledgerDetails.setNhiemvu_hanmuc_id(0);
-            }
             if (tk_rd.isSelected()){
                 ledgerDetails.setThuc_xuat_tk(Integer.parseInt(thucxuat.getText()));
                 ledgerDetails.setThuc_xuat(0);
@@ -476,7 +472,6 @@ public class XuatController extends CommonFactory implements Initializable {
             cbb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findAllOrderby()));
             cbb_tenxd.getSelectionModel().selectFirst();
             px_hbox.setDisable(false);
-            thucxuatgio_hb.setDisable(true);
         } else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.NV.getName())) {
             disableFeature(false);
             List<NguonNx> nxListw = new ArrayList<>();
@@ -489,7 +484,6 @@ public class XuatController extends CommonFactory implements Initializable {
             cbb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName())));
             cbb_tenxd.getSelectionModel().selectFirst();
             px_hbox.setDisable(true);
-            thucxuatgio_hb.setDisable(true);
         } else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())) {
             disableFeature(true);
             mapItemsForDonViXuat(nguonNxRepo.findByAllBy());
@@ -503,7 +497,6 @@ public class XuatController extends CommonFactory implements Initializable {
             cbb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findAllOrderby()));
             cbb_tenxd.getSelectionModel().selectFirst();
             px_hbox.setDisable(false);
-            thucxuatgio_hb.setDisable(true);
         }
     }
 
@@ -515,7 +508,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findByType(LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName())));
         cbb_tenxd.getSelectionModel().selectFirst();
         px_hbox.setDisable(true);
-        thucxuatgio_hb.setDisable(true);
     }
     @FXML
     public void xeRadioSelec(ActionEvent actionEvent) {
@@ -525,7 +517,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findByType(LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName())));
         cbb_tenxd.getSelectionModel().selectFirst();
         px_hbox.setDisable(false);
-        thucxuatgio_hb.setDisable(false);
     }
     @FXML
     public void mayRadioSelec(ActionEvent actionEvent) {
@@ -535,7 +526,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_tenxd.setItems(FXCollections.observableList(loaiXangDauRepo.findByType(LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName())));
         cbb_tenxd.getSelectionModel().selectFirst();
         px_hbox.setDisable(false);
-        thucxuatgio_hb.setDisable(false);
     }
 
     @FXML

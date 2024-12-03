@@ -41,8 +41,6 @@ public class LedgerDetails {
     private int thuc_xuat;
     @Column(name = "thuc_xuat_tk")
     private int thuc_xuat_tk;
-    @Column(name = "nhiemvu_hanmuc_id")
-    private int nhiemvu_hanmuc_id;
     @Column(name = "so_luong")
     private int soluong;
     @Column(name = "thuc_nhap")

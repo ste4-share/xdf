@@ -7,10 +7,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
-import com.xdf.xd_f371.repo.InventoryRepo;
-import com.xdf.xd_f371.repo.LoaiXangDauRepo;
-import com.xdf.xd_f371.repo.NguonNxRepo;
-import com.xdf.xd_f371.repo.TcnRepo;
+import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -66,6 +63,8 @@ public class NhapController extends CommonFactory implements Initializable {
     private NguonNxRepo nguonNxRepo;
     @Autowired
     private LoaiXangDauRepo loaiXangDauRepo;
+    @Autowired
+    private TructhuocRepo tructhuocRepo;
     @Autowired
     private InventoryRepo inventoryRepo;
     @Autowired
@@ -174,6 +173,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
         ledgerDetails.setSoluong(Integer.parseInt(thucNhap.getText()));
         ledgerDetails.setThanhtien((long) Integer.parseInt(thucNhap.getText()) * Integer.parseInt(donGiaTf.getText()));
+
         return ledgerDetails;
     }
 
@@ -265,9 +265,9 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setSo_xe(soXe.getText());
         ledger.setLenh_so(lenhKHso.getText());
         ledger.setTcn_id(tcnRepo.findByName(tcNhap.getText()).orElseThrow().getId());
+        ledger.setTructhuoc(tructhuocRepo.findById(cmb_dvvc.getSelectionModel().getSelectedItem().getTructhuoc_id()).orElseThrow().getType());
         return ledgersRepo.save(ledger);
     }
-
 
     @FXML
     public void delAction(ActionEvent actionEvent) {

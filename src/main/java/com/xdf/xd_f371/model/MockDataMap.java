@@ -34,46 +34,45 @@ public class MockDataMap {
     public static void initInventoryMap(){
         invReportDetailService.deleteAll();
         List<LoaiXangDau> loaiXangDauList = loaiXangDauRepo.findAll();
-        List<Category> categories = categoryService.getAll();
-        try {
-            int quarter_id = DashboardController.findByTime.getId();
-            for (int i =0; i< loaiXangDauList.size(); i++){
-                Inventory inventory = inventoryRepo.findByPetro_idAndQuarter_id(loaiXangDauList.get(i).getId(), quarter_id).orElse(null);
-                for (int j=0; j< categories.size(); j++){
-                    Category catelos = categories.get(j);
-                    InvReportDetail invReportDetail = new InvReportDetail();
-                    Common.getInvCatalogField(catelos, inventory, invReportDetail);
-                    if (catelos.getCode().equals("NHAP")){
-                        QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnx(2,"NHAP",catelos.getTructhuoc_id(),loaiXangDauList.get(i).getId());
-                        if (quantity==null){
-                            invReportDetail.setSoluong(0);
-                        }else{
-                            invReportDetail.setSoluong(quantity.getSum());
-                        }
-
-                    } else if(catelos.getCode().equals("XUAT")) {
-                        QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnxImport(2,"XUAT",catelos.getTructhuoc_id(),loaiXangDauList.get(i).getId());
-                        if (quantity==null){
-                            invReportDetail.setSoluong(0);
-                        }else{
-                            invReportDetail.setSoluong(quantity.getSum());
-                        }
-                    }
-                    //inventory detail
-                    invReportDetail.setLoaixd(loaiXangDauList.get(i).getTenxd());
-                    invReportDetail.setTitle_lv1(catelos.getHeader_lv1());
-                    invReportDetail.setTitle_lv2(catelos.getHeader_lv2());
-                    invReportDetail.setTitle_lv3(catelos.getHeader_lv3());
-
-                    invReportDetail.setXd_id(loaiXangDauList.get(i).getId());
-                    invReportDetail.setQuarter_id(quarter_id);
-                    invReportDetail.setTitle_id(catelos.getId());
-                    invReportDetailService.createNew(invReportDetail);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            int quarter_id = DashboardController.findByTime.getId();
+//            for (int i =0; i< loaiXangDauList.size(); i++){
+//                Inventory inventory = inventoryRepo.findByPetro_idAndQuarter_id(loaiXangDauList.get(i).getId(), quarter_id).orElse(null);
+//                for (int j=0; j< categories.size(); j++){
+//                    Category catelos = categories.get(j);
+//                    InvReportDetail invReportDetail = new InvReportDetail();
+//                    Common.getInvCatalogField(catelos, inventory, invReportDetail);
+//                    if (catelos.getCode().equals("NHAP")){
+//                        QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnx(2,"NHAP",catelos.getTructhuoc_id(),loaiXangDauList.get(i).getId());
+//                        if (quantity==null){
+//                            invReportDetail.setSoluong(0);
+//                        }else{
+//                            invReportDetail.setSoluong(quantity.getSum());
+//                        }
+//
+//                    } else if(catelos.getCode().equals("XUAT")) {
+//                        QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnxImport(2,"XUAT",catelos.getTructhuoc_id(),loaiXangDauList.get(i).getId());
+//                        if (quantity==null){
+//                            invReportDetail.setSoluong(0);
+//                        }else{
+//                            invReportDetail.setSoluong(quantity.getSum());
+//                        }
+//                    }
+//                    //inventory detail
+//                    invReportDetail.setLoaixd(loaiXangDauList.get(i).getTenxd());
+//                    invReportDetail.setTitle_lv1(catelos.getHeader_lv1());
+//                    invReportDetail.setTitle_lv2(catelos.getHeader_lv2());
+//                    invReportDetail.setTitle_lv3(catelos.getHeader_lv3());
+//
+//                    invReportDetail.setXd_id(loaiXangDauList.get(i).getId());
+//                    invReportDetail.setQuarter_id(quarter_id);
+//                    invReportDetail.setTitle_id(catelos.getId());
+//                    invReportDetailService.createNew(invReportDetail);
+//                }
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public static void mockInventoryData(){

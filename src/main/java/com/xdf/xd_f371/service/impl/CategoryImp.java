@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.service.impl;
 
-import com.xdf.xd_f371.entity.Category;
 import com.xdf.xd_f371.model.QDatabase;
 import com.xdf.xd_f371.service.CategoryService;
 
@@ -36,7 +35,6 @@ public class CategoryImp implements CategoryService {
         }
         return result;
     }
-
     @Override
     public List<String> getAllCode() {
         QDatabase.getConnectionDB();
@@ -116,11 +114,9 @@ public class CategoryImp implements CategoryService {
         try {
             PreparedStatement preparedStatement = QDatabase.conn.prepareStatement(SQL_SELECT);
             ResultSet resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 result.add(resultSet.getString("header_lv3"));
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {

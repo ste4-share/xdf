@@ -1,17 +1,28 @@
 package com.xdf.xd_f371.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity(name = "category")
+@Table
 @Getter
 @Setter
 public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "header_lv1")
     private String header_lv1;
+    @Column(name = "header_lv2")
     private String header_lv2;
+    @Column(name = "header_lv3")
     private String header_lv3;
+    @Column(name = "type_title")
     private String type_title;
+    @Column(name = "tructhuoc_id")
     private int tructhuoc_id;
+    @Column(name = "code")
     private String code;
 
     public Category() {

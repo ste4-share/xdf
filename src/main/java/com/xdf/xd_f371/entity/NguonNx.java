@@ -17,6 +17,8 @@ public class NguonNx {
     private int id;
     @Column(name = "ten")
     private String ten;
+    @Column(name = "code")
+    private String code;
     @Column(name = "status")
     private String status;
     @Column(name = "tructhuoc_id")
