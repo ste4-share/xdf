@@ -73,6 +73,10 @@ public class Ledger {
     private String loainv;
     @Column(name = "tructhuoc")
     private String tructhuoc;
+    @Column(name = "lpt")
+    private String lpt;
+    @Column(name = "lpt_2")
+    private String lpt_2;
 
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LedgerDetails> ledgerDetails;

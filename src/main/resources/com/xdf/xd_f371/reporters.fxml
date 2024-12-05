@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Tab?>
@@ -9,6 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <HBox fx:id="reporters" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="1004.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.BaoCaoController">
    <children>
@@ -35,8 +38,31 @@
                                     </TableView>
                                  </children>
                               </HBox>
-                              <Button mnemonicParsing="false" onAction="#createbc" prefHeight="90.0" prefWidth="368.0" text="print bc" />
-                              <ComboBox fx:id="dvi_cbb" onAction="#dvi_selected" prefHeight="33.0" prefWidth="166.0" />
+                              <ComboBox fx:id="dvi_cbb" onAction="#dvi_selected" prefHeight="33.0" prefWidth="166.0">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor></ComboBox>
+                              <Button mnemonicParsing="false" onAction="#createbcnxt" prefHeight="90.0" prefWidth="368.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="In báo cáo nhập xuất tồn">
+                                 <font>
+                                    <Font name="Cambria Bold" size="18.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <VBox.margin>
+                                    <Insets left="10.0" top="10.0" />
+                                 </VBox.margin></Button>
+                              <Button layoutX="20.0" layoutY="497.0" mnemonicParsing="false" onAction="#createxd_nv" prefHeight="90.0" prefWidth="368.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="B.cáo t.thụ xăng dầu theo Nhiệm vụ">
+                                 <font>
+                                    <Font name="Cambria Bold" size="18.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <VBox.margin>
+                                    <Insets left="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Button>
                            </children>
                         </VBox>
                      </children>

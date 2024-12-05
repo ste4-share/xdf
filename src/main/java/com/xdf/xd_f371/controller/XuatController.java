@@ -222,6 +222,8 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setLoaigiobay(tk_rd.isSelected() ? TypeCons.TREN_KHONG.getName() : TypeCons.MAT_DAT.getName());
             ledger.setNhiemvu(identifyNhiemvu().getNhiemvu());
             ledger.setNhiemvu_id(identifyNhiemvu().getId());
+            ledger.setLpt(phuongtienRepo.findById(xmt_cbb.getValue().getId()).orElse(null).getLoaiPhuongTien().getTypeName());
+            ledger.setLpt_2(phuongtienRepo.findById(xmt_cbb.getValue().getId()).orElse(null).getLoaiPhuongTien().getType());
             if (tk_rd.isSelected()){
                 ledger.setSo_km(0);
                 ledger.setGiohd_tk(getStrInterval());
