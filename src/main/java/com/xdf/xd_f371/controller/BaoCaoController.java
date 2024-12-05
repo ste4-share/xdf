@@ -66,13 +66,14 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
     public void createxd_nv(ActionEvent actionEvent) {
         saveBcTieuthuXdTheoNhiemvu();
     }
-
+    @FXML
+    public void createttNlTheoKH(ActionEvent actionEvent) {
+    }
     private void saveBcTieuthuXdTheoNhiemvu() {
         String file_name = "data.xlsx";
         String sheetName = "t_thu_xd_theo_n_vu";
         try{
             File file = new File(file_name);
-
             if (!file.exists()){
                 file.createNewFile();
                 FileInputStream fis = new FileInputStream(file);
@@ -111,17 +112,19 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
     }
 
     private void mapDataToSheet(XSSFSheet sheet,  int begin_data_current){
+        ReportDAO reportDAO = new ReportDAO();
+        List<Object[]> nxtls = reportDAO.findByWhatEver(SubQueryEnum.ttxd_nv.getName());
         for(int i =0; i< nxtls.size(); i++){
             Object[] rows_data = nxtls.get(i);
             XSSFRow row = sheet.getRow(begin_data_current+i);
             for (int j =0;j<rows_data.length;j++){
                 String val = rows_data[j]==null ?"" : rows_data[j].toString();
                 if (val==null){
-                    row.getCell(j+1).setCellValue(val);
+                    row.getCell(j+4).setCellValue(val);
                 } else if (StringUtils.isNumeric(val)){
-                    row.getCell(j+1).setCellValue(new BigDecimal(val).intValue());
+                    row.getCell(j+4).setCellValue(new BigDecimal(val).intValue());
                 } else {
-                    row.getCell(j+1).setCellValue(val);
+                    row.getCell(j+4).setCellValue(val);
                 }
             }
         }
@@ -253,4 +256,5 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
 //        String cwd = Path.of("").toAbsolutePath().toString();
 //        Runtime.getRuntime().exec("cmd /c explorer " + cwd+"\\report");
     }
+
 }
