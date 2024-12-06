@@ -32,6 +32,8 @@ public class NguonNx {
 
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)
     List<PhuongTien> phuongTiens;
+    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)
+    List<NhiemvuTaubay> nhiemvuTaubayList;
 
     @ManyToOne
     @JoinColumn(name = "tructhuoc_id",referencedColumnName = "id", insertable = false, updatable = false)

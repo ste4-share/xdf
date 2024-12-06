@@ -31,6 +31,8 @@ public class PhuongTien {
 
     @OneToMany(mappedBy = "phuongTien", cascade = CascadeType.ALL)
     private List<DinhMuc> dinhmuc;
+    @OneToMany(mappedBy = "phuongTien", cascade = CascadeType.ALL)
+    private List<NhiemvuTaubay> nhiemvuTaubays;
 
     @ManyToOne
     @JoinColumn(name = "loaiphuongtien_id" , referencedColumnName = "id", insertable = false, updatable = false)

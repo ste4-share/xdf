@@ -44,11 +44,16 @@ public class NhiemvuController implements Initializable {
     private HanmucNhiemvu2Repository hanmucNhiemvu2Repository;
     @Autowired
     private HanmucNhiemvuRepo hanmucNhiemvuRepo;
-
+    @Autowired
+    private HanmucNhiemvuTauBayRepo hanmucNhiemvuTauBayRepo;
     @FXML
     TableView<HanmucNhiemvu2Dto> tieuthunhiemvu;
     @FXML
     TableView<ChitieuNhiemvuDto> ctnv_tb;
+    @FXML
+    TableView<HanmucNhiemvuTaubayDto> ctnv_pt;
+    @FXML
+    TableColumn<HanmucNhiemvuTaubayDto, String> t2_tt1,dvi_x,t2_pt,t2_nv_2,ct_nv_2,t2_tk_2,t2_md_2,t2_nl_2;
     @FXML
     TableColumn<ChitieuNhiemvuDto, String> t2_tt,t2_nv,t2_ct,t2_tk,t2_md,t2_nl;
     @FXML
@@ -72,6 +77,81 @@ public class NhiemvuController implements Initializable {
         inithanmucTb();
         initNvTb();
         initDviTb();
+        initHanmucNhiemvuTaubay();
+    }
+
+    private void initHanmucNhiemvuTaubay() {
+        ctnv_pt.setItems(FXCollections.observableList(hanmucNhiemvuTauBayRepo.getAllBy()));
+        t2_tt1.setSortable(false);
+        t2_tt1.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_tb.getItems().indexOf(column.getValue())+1).asString());
+        dvi_x.setCellValueFactory(new PropertyValueFactory<>("donvi"));
+        t2_pt.setCellValueFactory(new PropertyValueFactory<>("tenpt"));
+        t2_nv_2.setCellValueFactory(new PropertyValueFactory<>("nhiemvu"));
+        ct_nv_2.setCellValueFactory(new PropertyValueFactory<>("ct_nhiemvu"));
+        t2_tk_2.setCellValueFactory(new PropertyValueFactory<>("tk"));
+        t2_md_2.setCellValueFactory(new PropertyValueFactory<>("md"));
+        t2_nl_2.setCellValueFactory(new PropertyValueFactory<>("nhienlieu"));
+        ctnv_pt.refresh();
+    }
+
+    @FXML
+    public void nhiemvu_selected(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount()==2){
+
+        }
+    }
+    @FXML
+    public void bcNlbayTheoKh(ActionEvent actionEvent) throws IOException, SQLException, JRException {
+        generatePdf();
+    }
+    private void generatePdf() throws IOException, SQLException, JRException {
+        HashMap<String, Object> map = new HashMap<>();
+        DataSource ds = (DataSource) MainApplicationApp.context.getBean("dataSource");
+        Connection c = ds.getConnection();
+        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/com/xdf/xd_f371/templates/bc_01.jrxml"));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map,c);
+        JasperExportManager.exportReportToPdfFile(jasperPrint,("report/baocaokehoachbay.pdf"));
+        DialogMessage.message("Thông báo", "Đã tạo báo cáo", "Thành công", Alert.AlertType.INFORMATION);
+        String cwd = Path.of("").toAbsolutePath().toString();
+        try {
+            Runtime.getRuntime().exec("cmd /c explorer " + cwd+"\\report");
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
+    }
+    @FXML
+    public void donviselected(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void addhanmucxangdau(ActionEvent actionEvent) {
+        nvStage = new Stage();
+        Common.openNewStage("addnew_nvhanmuc.fxml", nvStage,"HANMUC");
+        inithanmucTb();
+    }
+    @FXML
+    public void chitieunvSelected(MouseEvent mouseEvent) {
+
+    }
+
+    @FXML
+    public void dviSelected(ActionEvent actionEvent) {
+        if (dvi_cbb.getSelectionModel().getSelectedItem()!=null) {
+            setCtnv_tb(dvi_cbb.getSelectionModel().getSelectedItem().getId());
+        }
+    }
+    @FXML
+    public void addnewchitieubay(ActionEvent actionEvent) {
+        nvStage = new Stage();
+        Common.openNewStage("add_chitieunv.fxml", nvStage,"FORM");
+        if (dvi_cbb.getSelectionModel().getSelectedItem()==null) {
+            setCtnv_tb(dvi_cbb.getSelectionModel().getSelectedItem().getId());
+        }
+    }
+    @FXML
+    public void addnewpt_nvbay(ActionEvent actionEvent) {
+        nvStage = new Stage();
+        Common.openNewStage("add_hanmuc_pt_taubay.fxml", nvStage,"FORM");
+        initHanmucNhiemvuTaubay();
     }
 
     private void initDviTb() {
@@ -133,59 +213,5 @@ public class NhiemvuController implements Initializable {
                 return quarterRepository.findByName(quy_cbb.getValue().getName()).isPresent()?quy_cbb.getValue():null;
             }
         });
-    }
-
-    @FXML
-    public void nhiemvu_selected(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount()==2){
-
-        }
-    }
-    @FXML
-    public void bcNlbayTheoKh(ActionEvent actionEvent) throws IOException, SQLException, JRException {
-        generatePdf();
-    }
-    private void generatePdf() throws IOException, SQLException, JRException {
-        HashMap<String, Object> map = new HashMap<>();
-        DataSource ds = (DataSource) MainApplicationApp.context.getBean("dataSource");
-        Connection c = ds.getConnection();
-        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/com/xdf/xd_f371/templates/bc_01.jrxml"));
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map,c);
-        JasperExportManager.exportReportToPdfFile(jasperPrint,("report/baocaokehoachbay.pdf"));
-        DialogMessage.message("Thông báo", "Đã tạo báo cáo", "Thành công", Alert.AlertType.INFORMATION);
-        String cwd = Path.of("").toAbsolutePath().toString();
-        try {
-            Runtime.getRuntime().exec("cmd /c explorer " + cwd+"\\report");
-        } catch (IOException e) {
-            throw new IOException(e);
-        }
-    }
-    @FXML
-    public void donviselected(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void addhanmucxangdau(ActionEvent actionEvent) {
-        nvStage = new Stage();
-        Common.openNewStage("addnew_nvhanmuc.fxml", nvStage,"HANMUC");
-        inithanmucTb();
-    }
-    @FXML
-    public void chitieunvSelected(MouseEvent mouseEvent) {
-
-    }
-
-    @FXML
-    public void dviSelected(ActionEvent actionEvent) {
-        if (dvi_cbb.getSelectionModel().getSelectedItem()!=null) {
-            setCtnv_tb(dvi_cbb.getSelectionModel().getSelectedItem().getId());
-        }
-    }
-    @FXML
-    public void addnewchitieubay(ActionEvent actionEvent) {
-        nvStage = new Stage();
-        Common.openNewStage("add_chitieunv.fxml", nvStage,"FORM");
-        if (dvi_cbb.getSelectionModel().getSelectedItem()==null) {
-            setCtnv_tb(dvi_cbb.getSelectionModel().getSelectedItem().getId());
-        }
     }
 }

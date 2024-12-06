@@ -68,6 +68,7 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
     }
     @FXML
     public void createttNlTheoKH(ActionEvent actionEvent) {
+
     }
     private void saveBcTieuthuXdTheoNhiemvu() {
         String file_name = "data.xlsx";
@@ -198,7 +199,7 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
         return nxtls.size()+11;
     }
 
-    private int fillDataToSocaiSheet(XSSFSheet sheet,  int begin_data_current,String query) {
+    private int fillDataToSocaiSheet(XSSFSheet sheet, int begin_data_current,String query) {
         int sizett = arr_tt.size();
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(query);

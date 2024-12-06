@@ -221,17 +221,18 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="60.0" prefHeight="324.0" prefWidth="1165.0">
                                  <children>
-                                    <TableView fx:id="ctnv_tb1" onMouseClicked="#chitieunvSelected" prefHeight="489.0" prefWidth="1158.0" style="-fx-background-color: #ffffff;">
+                                    <TableView fx:id="ctnv_pt" onMouseClicked="#chitieunvSelected" prefHeight="489.0" prefWidth="1158.0" style="-fx-background-color: #ffffff;">
                                        <columns>
                                           <TableColumn fx:id="t2_tt1" prefWidth="33.0" text="TT" />
-                                          <TableColumn fx:id="t2_nv11" prefWidth="150.0" text="Phương tiện" />
-                                          <TableColumn fx:id="t2_nv1" prefWidth="150.0" text="Nhiệm vụ" />
-                                          <TableColumn fx:id="t2_ct1" prefWidth="162.0" text="Chi tiết nhiệm vụ" />
+                                          <TableColumn fx:id="dvi_x" prefWidth="150.0" text="Đơn vị" />
+                                          <TableColumn fx:id="t2_pt" prefWidth="150.0" text="Phương tiện" />
+                                          <TableColumn fx:id="t2_nv_2" prefWidth="150.0" text="Nhiệm vụ" />
+                                          <TableColumn fx:id="ct_nv_2" prefWidth="162.0" text="Chi tiết nhiệm vụ" />
                                           <TableColumn prefWidth="162.0" text="Chi tiết nhiệm vụ">
                                              <columns>
-                                                <TableColumn fx:id="t2_tk1" prefWidth="162.0" text="Trên không" />
-                                                <TableColumn fx:id="t2_md1" prefWidth="162.0" text="Mặt đất" />
-                                                <TableColumn fx:id="t2_nl1" prefWidth="162.0" text="Nhiên liệu" />
+                                                <TableColumn fx:id="t2_tk_2" prefWidth="162.0" text="Trên không" />
+                                                <TableColumn fx:id="t2_md_2" prefWidth="162.0" text="Mặt đất" />
+                                                <TableColumn fx:id="t2_nl_2" prefWidth="162.0" text="Nhiên liệu" />
                                              </columns>
                                           </TableColumn>
                                        </columns>
@@ -246,6 +247,21 @@
                                        </HBox.margin>
                                     </TableView>
                                  </children>
+                              </HBox>
+                              <HBox alignment="TOP_RIGHT" layoutX="10.0" layoutY="394.0" prefHeight="42.0" prefWidth="1155.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#addnewpt_nvbay" prefHeight="36.0" prefWidth="118.0" text="Thêm">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font name="Cambria Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
                               </HBox>
                            </children>
                         </VBox>
