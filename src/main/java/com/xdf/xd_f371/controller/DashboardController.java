@@ -32,6 +32,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.textfield.TextFields;
@@ -46,7 +47,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 @Component
 public class DashboardController implements Initializable {
 
@@ -55,10 +55,9 @@ public class DashboardController implements Initializable {
     public static Stage ctStage;
     public static List<Ledger> ledgerList = new ArrayList<>();
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
+    int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
 
-    private static List<LichsuXNK> lichsuXNKS = new ArrayList<>();
     private static int rowsPerPage = 9;
-    private boolean addedBySelection_lstb = false;
 
     @FXML
     private BorderPane borderpane_base;
@@ -72,28 +71,15 @@ public class DashboardController implements Initializable {
     @FXML
     private VBox nx_vbox, vb_nxt_tb;
     @FXML
-    private TableView<LichsuXNK> tb_viewlichsu;
-    @FXML
     private ComboBox<String> cbb_loaiphieu_filter;
     @FXML
     private Label lb_from, lb_to,datetime_showing;
     @FXML
-    private Pagination pagination_tbnxt,pagination_lichsu;
-
-//    @FXML
-//    private TableColumn<Inventory, String> col_tkt_loaixd, col_tkt_soluong;
-    @FXML
-    private TableColumn<LichsuXNK, String> col_lsnxk_tenxd,col_lsnxk_mucgia, col_lsnxk_loaiphieu,col_lsnxk_soluong, col_lsnxk_tontruoc,col_lsnxk_tonsau,col_lsnxk_ngay;
-//    @FXML
-//    private TableColumn<Inventory, String> col_slton,col_loaixd,col_stt, col_mucgia;
+    private Pagination pagination_tbnxt;
     @FXML
     public TableView<MiniLedgerDto> tbTTNX;
     @FXML
     private TableColumn<MiniLedgerDto, String> so,ngaytao, loaiphieu, soluong,tong;
-    @FXML
-    private TextField tf_search_txnt,tf_search_history;
-    @FXML
-    private LichsuNXKService lichsuNXKService = new LichsuNXKImp();
     public static Quarter findByTime;
     @FXML
     private HBox dvi_menu,nxt_menu, loai_xd_menu, haohut_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu;
@@ -109,7 +95,6 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ctStage = new Stage();
         ttp_ls = ledgersRepo.findInterfaceLedger();
-        lichsuXNKS = new ArrayList<>();
         ledgerList = ledgersRepo.findAll();
 //        getDataToChart(root_inventory);
         getCurrentQuarter();
@@ -121,7 +106,6 @@ public class DashboardController implements Initializable {
 
 //        setUpForSearchCompleteTion();
 //        searching();
-        fillDataToLichsuTb();
         tbTTNX.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -135,7 +119,7 @@ public class DashboardController implements Initializable {
                 }
             }
         });
-        setColLichSuNXK();
+        tbTTNX.setPrefWidth(screenWidth);
     }
 
     private void resetStyleField() {
@@ -176,26 +160,6 @@ public class DashboardController implements Initializable {
         main_menu.setStyle(cssLayout);
     }
 
-    private void fillDataToLichsuTb(){
-        lichsuXNKS = new ArrayList<>();
-        lichsuXNKS = lichsuNXKService.getAll();
-        lichsuXNKS.forEach(x -> {
-            x.setTonsau_str(TextToNumber.textToNum(String.valueOf(x.getTonsau())));
-            x.setMucgia(TextToNumber.textToNum(x.getMucgia()));
-            x.setSoluong_str(TextToNumber.textToNum(String.valueOf(x.getSoluong())));
-            x.setTontruoc_str(TextToNumber.textToNum(String.valueOf(x.getTontruoc())));
-        });
-        tb_viewlichsu.setItems(FXCollections.observableArrayList(lichsuXNKS));
-        pagination_lichsu.setPageCount((lichsuXNKS.size()/rowsPerPage)+1);
-        pagination_lichsu.setPrefHeight(400);
-        setPagination_lichsu();
-        List<String> search_arr_forLs = new ArrayList<>();
-        for(int i=0; i< lichsuXNKS.size(); i++){
-            search_arr_forLs.add(lichsuXNKS.get(i).getTen_xd());
-        }
-//        setUpForSearchCompleteTion_lichsu(search_arr_forLs);
-        searchingFor_lichsuTb();
-    }
 
 //    private void getDataToChart(List<TonkhoTong> tongs){
 //        if (!tongs.isEmpty()){
@@ -217,16 +181,6 @@ public class DashboardController implements Initializable {
         );
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
-    }
-
-    private void setColLichSuNXK(){
-        col_lsnxk_ngay.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("createTime"));
-        col_lsnxk_tenxd.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("ten_xd"));
-        col_lsnxk_loaiphieu.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("loai_phieu"));
-        col_lsnxk_tontruoc.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tontruoc_str"));
-        col_lsnxk_tonsau.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tonsau_str"));
-        col_lsnxk_soluong.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("soluong_str"));
-        col_lsnxk_mucgia.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("mucgia"));
     }
 
     public void setDataToViewTable(){
@@ -254,20 +208,6 @@ public class DashboardController implements Initializable {
         return tbTTNX;
     }
 
-    private void setPagination_lichsu(){
-        pagination_lichsu.setPageFactory(this::createPage_lichsu);
-        pagination_lichsu.setPrefHeight(400);
-        pagination_lichsu.setPageCount((lichsuXNKS.size()/rowsPerPage) +1);
-    }
-
-    private Node createPage_lichsu(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage;
-        int toIndex = Math.min(fromIndex + rowsPerPage, lichsuXNKS.size());
-        tb_viewlichsu.setItems(FXCollections.observableArrayList(lichsuXNKS.subList(fromIndex, toIndex)));
-
-        return tb_viewlichsu;
-    }
-
     @FXML
     public void importActionClick(ActionEvent actionEvent) throws IOException{
         primaryStage = new Stage();
@@ -282,7 +222,6 @@ public class DashboardController implements Initializable {
         Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT");
         setDataToViewTable();
 //        getDataToChart(prepare_addnew_inventory);
-        fillDataToLichsuTb();
     }
     @FXML
     public void nxt_menu_action(MouseEvent event) {
@@ -494,51 +433,51 @@ public class DashboardController implements Initializable {
 //            }
 //        });
     }
-
-    private void setUpForSearchCompleteTion_lichsu(List<String> search_arr){
-        TextFields.bindAutoCompletion(tf_search_history, t -> {
-            return search_arr.stream().filter(elem
-                    -> {
-                return elem.toLowerCase().trim().startsWith(t.getUserText().toLowerCase().trim());
-            }).collect(Collectors.toList());
-        });
-        tf_search_history.setOnKeyPressed(e -> {
-            addedBySelection_lstb = false;
-        });
-
-        tf_search_history.setOnKeyReleased(e -> {
-            if (tf_search_history.getText().trim().isEmpty()){
-                // reset
-                tb_viewlichsu.setItems(FXCollections.observableArrayList(new ArrayList<>()));
-                lichsuXNKS = lichsuNXKService.getAll();
-                lichsuXNKS.forEach(ttp -> {
-                    ttp.setTonsau_str(TextToNumber.textToNum(String.valueOf(ttp.getTonsau())));
-                    ttp.setSoluong_str(TextToNumber.textToNum(String.valueOf(ttp.getSoluong())));
-                    ttp.setMucgia(TextToNumber.textToNum(ttp.getMucgia()));
-                    ttp.setTontruoc_str(TextToNumber.textToNum(String.valueOf(ttp.getTontruoc())));
-                });
-                tb_viewlichsu.setItems(FXCollections.observableArrayList(lichsuXNKS));
-            }
-            addedBySelection_lstb = true;
-        });
-    }
-
-    private void searchingFor_lichsuTb(){
-        tf_search_history.textProperty().addListener(e -> {
-            if (addedBySelection_lstb) {
-                List<LichsuXNK> tkt_buf = lichsuXNKS.stream().filter(ttp ->
-                    ttp.getTen_xd().equals(tf_search_history.getText())).toList();
-                tkt_buf.forEach(ttp -> {
-                    ttp.setTonsau_str(TextToNumber.textToNum(String.valueOf(ttp.getTonsau())));
-                    ttp.setSoluong_str(TextToNumber.textToNum(String.valueOf(ttp.getSoluong())));
-                    ttp.setTontruoc_str(TextToNumber.textToNum(String.valueOf(ttp.getTontruoc())));
-                });
-                ObservableList<LichsuXNK> observableList = FXCollections.observableArrayList(tkt_buf);
-                tb_viewlichsu.setItems(observableList);
-                addedBySelection_lstb = false;
-            }
-        });
-    }
+//
+//    private void setUpForSearchCompleteTion_lichsu(List<String> search_arr){
+//        TextFields.bindAutoCompletion(tf_search_history, t -> {
+//            return search_arr.stream().filter(elem
+//                    -> {
+//                return elem.toLowerCase().trim().startsWith(t.getUserText().toLowerCase().trim());
+//            }).collect(Collectors.toList());
+//        });
+//        tf_search_history.setOnKeyPressed(e -> {
+//            addedBySelection_lstb = false;
+//        });
+//
+//        tf_search_history.setOnKeyReleased(e -> {
+//            if (tf_search_history.getText().trim().isEmpty()){
+//                // reset
+//                tb_viewlichsu.setItems(FXCollections.observableArrayList(new ArrayList<>()));
+//                lichsuXNKS = lichsuNXKService.getAll();
+//                lichsuXNKS.forEach(ttp -> {
+//                    ttp.setTonsau_str(TextToNumber.textToNum(String.valueOf(ttp.getTonsau())));
+//                    ttp.setSoluong_str(TextToNumber.textToNum(String.valueOf(ttp.getSoluong())));
+//                    ttp.setMucgia(TextToNumber.textToNum(ttp.getMucgia()));
+//                    ttp.setTontruoc_str(TextToNumber.textToNum(String.valueOf(ttp.getTontruoc())));
+//                });
+//                tb_viewlichsu.setItems(FXCollections.observableArrayList(lichsuXNKS));
+//            }
+//            addedBySelection_lstb = true;
+//        });
+//    }
+//
+//    private void searchingFor_lichsuTb(){
+//        tf_search_history.textProperty().addListener(e -> {
+//            if (addedBySelection_lstb) {
+//                List<LichsuXNK> tkt_buf = lichsuXNKS.stream().filter(ttp ->
+//                    ttp.getTen_xd().equals(tf_search_history.getText())).toList();
+//                tkt_buf.forEach(ttp -> {
+//                    ttp.setTonsau_str(TextToNumber.textToNum(String.valueOf(ttp.getTonsau())));
+//                    ttp.setSoluong_str(TextToNumber.textToNum(String.valueOf(ttp.getSoluong())));
+//                    ttp.setTontruoc_str(TextToNumber.textToNum(String.valueOf(ttp.getTontruoc())));
+//                });
+//                ObservableList<LichsuXNK> observableList = FXCollections.observableArrayList(tkt_buf);
+//                tb_viewlichsu.setItems(observableList);
+//                addedBySelection_lstb = false;
+//            }
+//        });
+//    }
 
     @FXML
     public void report_menu_action(MouseEvent mouseEvent) {

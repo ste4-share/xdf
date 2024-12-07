@@ -1,4 +1,5 @@
-select 'C' as stt,ten,ten_nv,nhiemvu,
+select 'C' as stt,ten,ten_nv,
+case when nhiemvu is null then ten else nhiemvu end as nhiemvu,
 case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,
 case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,
 case when EXTRACT(epoch FROM max(congiobay)) is null then 0 else EXTRACT(epoch FROM max(congiobay)) end as congiobay,

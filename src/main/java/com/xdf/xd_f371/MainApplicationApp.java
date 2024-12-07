@@ -24,7 +24,7 @@ public class MainApplicationApp extends Application {
         fxmlLoader.setControllerFactory(context::getBean);
         rootScence = new Scene(fxmlLoader.load());
         rootScence.setFill(Color.TRANSPARENT);
-//        stage.setMaximized(true);
+        stage.setMaximized(true);
         stage.setTitle("Xăng dầu F371");
         stage.setScene(rootScence);
         rootStage = stage;
