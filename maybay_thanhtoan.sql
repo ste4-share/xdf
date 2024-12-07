@@ -1,6 +1,19 @@
-select pt_id,ct_id,quy,pri,name_pt,ten_nv,nhiemvu,max(tk) as tk,max(md) as md,max(congiobay) as congiobay, max(nhienlieu) as nhienlieu,max(giohd_md) as giohd_md,
-max(giohd_tk) as giohd_tk,max(tonggiohd) as tonggiohd, max(nltt_md) as nltt_md, max(nltt_tk) as nltt_tk,max(cong_nltt) as cong_nltt,max(haohut) as haohut,
-max(tongcong) as tongcong, max(dm_tk) as dm_tk, max(dm_md) as dm_md, max(namept_gr) as ten_gr,max(tennv_gr) as tennv_gr,max(nv_gr) as nv_gr
+select 'D' as stt,name_pt as ten,ten_nv,case when nhiemvu is null then name_pt else nhiemvu end as nhiemvu,
+case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,
+case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,
+case when EXTRACT(epoch FROM max(congiobay)) is null then 0 else EXTRACT(epoch FROM max(congiobay)) end as congiobay,
+max(nhienlieu) as nhienlieu,
+case when EXTRACT(epoch FROM max(giohd_md)) is null then 0 else EXTRACT(epoch FROM max(giohd_md)) end as giohd_md,
+case when EXTRACT(epoch FROM max(giohd_tk)) is null then 0 else EXTRACT(epoch FROM max(giohd_tk)) end as giohd_tk,
+case when EXTRACT(epoch FROM max(tonggiohd)) is null then 0 else EXTRACT(epoch FROM max(tonggiohd)) end as tonggiohd,
+case when max(nltt_md) is null then 0 else max(nltt_md) end as nltt_md, 
+case when max(nltt_tk) is null then 0 else max(nltt_tk) end as nltt_tk,
+case when max(cong_nltt) is null then 0 else max(cong_nltt) end as cong_nltt,
+case when max(haohut) is null then 0 else max(haohut) end as haohut,
+case when max(tongcong) is null then 0 else max(tongcong) end as tongcong, 
+max(dm_tk) as dm_tk, 
+max(dm_md) as dm_md, 
+max(namept_gr) as ten_gr,max(tennv_gr) as tennv_gr,max(nv_gr) as nv_gr,pri
 from (select max(pt_id) as pt_id,max(ct_id) as ct_id,max(quy_id) as quy,max(pri) as pri,
 name_pt,ten_nv,
 case when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end as nhiemvu,sum(tk) as tk,sum(md) as md,sum(cong_giobay) as congiobay,sum(nhienlieu) as nhienlieu,
@@ -23,5 +36,6 @@ sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tong
 join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id 
 group by quarter_id,phuongtien_id,l.nhiemvu_id) a on (quy_id=a.quarter_id and a.phuongtien_id=rat.pt_id and a.ctnv_id=rat.ct_id)
 group by rollup(name_pt,ten_nv,nhiemvu)) b
-group by pt_id,ct_id,quy,pri,name_pt,ten_nv,nhiemvu
+where name_pt is not null
+group by pri,name_pt,ten_nv,nhiemvu
 order by ten_gr desc, name_pt desc,tennv_gr desc,pri asc,ten_nv,nv_gr desc

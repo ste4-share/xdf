@@ -60,7 +60,142 @@ public enum SubQueryEnum {
             "where l.lpt_2 like 'MAYBAY' and (chung_loai like 'Dầu bay' or chung_loai like 'Dầu Hạ cấp') group by 1,2) h on (ct.id=h.nhiemvu_id and hm2.dvi_id=h.dvi_xuat_id)) zz\n" +
             "group by rollup(n,ten_nv,nhiemvu)) zxy\n" +
             "group by n,ten_nv,nhiemvu\n" +
-            "order by name_gr desc,tt,tennv_gr desc,pri,ten_nv,nv_gr desc) xxx\n");
+            "order by name_gr desc,tt,tennv_gr desc,pri,ten_nv,nv_gr desc) xxx\n"),
+    ttnlbtkh_for_mb("select 'A' as stt,'maybay' as ten,'Cho máy bay' as ten_nv,name_pt as nhiemvu,\n" +
+            "EXTRACT(epoch FROM sum(tk)) as tk,EXTRACT(epoch FROM sum(md)) as md, EXTRACT(epoch FROM sum(cong_giobay)) as cong_giobay,\n" +
+            "sum(nhienlieu) as nhienlieu,\n" +
+            "case when EXTRACT(epoch FROM sum(giohd_md)) is null then 0 else EXTRACT(epoch FROM sum(giohd_md)) end as giohd_md,\n" +
+            "case when EXTRACT(epoch FROM sum(giohd_tk)) is null then 0 else EXTRACT(epoch FROM sum(giohd_tk)) end as giohd_tk, \n" +
+            "case when EXTRACT(epoch FROM sum(tong_giohd)) is null then 0 else EXTRACT(epoch FROM sum(tong_giohd)) end as tong_giohd,\n" +
+            "case when sum(nltt_md) is null then 0 else sum(nltt_md) end as nltt_md,\n" +
+            "case when sum(nltt_tk) is null then 0 else sum(nltt_tk) end as nltt_tk,\n" +
+            "case when sum(cong_nltt) is null then 0 else sum(cong_nltt) end as cong_nltt,\n" +
+            "case when sum(haohut) is null then 0 else sum(haohut) end as haohut,\n" +
+            "case when sum(tongcong) is null then 0 else sum(tongcong) end as tongcong,'1' as pri,\n" +
+            "grouping(name_pt) as ten_gr,'0' as tennv_gr,'0' as nv_gr\n" +
+            "from (select * from (SELECT quy_id as quy,pt_id,pt.name as name_pt,sum(tk::interval) as tk,sum(md::interval) as md,sum(tk::interval+md::interval) as cong_giobay,sum(nhienlieu) as nhienlieu\n" +
+            "FROM hanmuc_nhiemvu_taubay hmnvtb \n" +
+            "left join phuongtien pt on pt.id=hmnvtb.pt_id \n" +
+            "where quy_id=20 and pt_id <> 0\n" +
+            "group by quy_id,pt_id,name_pt) a\n" +
+            "left join (SELECT quarter_id,phuongtien_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,\n" +
+            "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
+            "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
+            "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
+            "where lpt_2 like 'MAYBAY'\n" +
+            "group by quarter_id,phuongtien_id) b on (a.quy=b.quarter_id and a.pt_id=b.phuongtien_id)) c\n" +
+            "group by rollup(name_pt) order by ten_gr desc,name_pt desc"),
+    ttnlbtkh_for_all("select 'B' as stt,'nhiemvu' as ten,ten_nv, nhiemvu, \n" +
+            "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
+            "case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,\n" +
+            "case when EXTRACT(epoch FROM max(cong_giobay)) is null then 0 else EXTRACT(epoch FROM max(cong_giobay)) end as cong_giobay,max(nhienlieu) as nhienlieu, \n" +
+            "case when EXTRACT(epoch FROM max(giohd_md)) is null then 0 else EXTRACT(epoch FROM max(giohd_md)) end as giohd_md,\n" +
+            "case when EXTRACT(epoch FROM max(giohd_tk)) is null then 0 else EXTRACT(epoch FROM max(giohd_tk)) end as giohd_tk,\n" +
+            "case when EXTRACT(epoch FROM max(tong_giohd)) is null then 0 else EXTRACT(epoch FROM max(tong_giohd)) end as tong_giohd,\n" +
+            "case when max(nltt_md) is null then 0 else max(nltt_md) end as nltt_md,\n" +
+            "case when max(nltt_tk) is null then 0 else max(nltt_tk) end as nltt_tk, \n" +
+            "case when max(cong_nltt) is null then 0 else max(cong_nltt) end as cong_nltt, \n" +
+            "case when max(haohut) is null then 0 else max(haohut) end as haohut,\n" +
+            "case when max(tongcong) is null then 0 else max(tongcong) end as tongcong,\n" +
+            "'0' as ten_gr,max(tennv_gr) as tennv_gr,max(nv_gr) as nv_gr,max(pri) as pri\n" +
+            "from (select max(ct_id) as ct_id,ten_nv,case when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end as nhiemvu,\n" +
+            "max(pri) as pri, sum(tk) as tk,sum(md) as md,sum(cong_giobay) as cong_giobay,\n" +
+            "sum(nhienlieu) as nhienlieu,sum(giohd_md) as giohd_md,sum(giohd_tk) as giohd_tk,sum(tong_giohd) as tong_giohd,sum(nltt_md) as nltt_md,\n" +
+            "sum(nltt_tk) as nltt_tk, sum(cong_nltt) as cong_nltt, sum(haohut) as haohut, sum(tongcong) as tongcong,\n" +
+            "grouping(ten_nv) as tennv_gr, grouping(nhiemvu) as nv_gr\n" +
+            "from (select * from (SELECT quy_id as quy,hmnvtb.ctnv_id as ct_id,ten_nv,nhiemvu,\n" +
+            "max(priority_bc2) as pri,sum(tk::interval) as tk,sum(md::interval) as md,sum(tk::interval+md::interval) as cong_giobay,sum(nhienlieu) as nhienlieu\n" +
+            "FROM hanmuc_nhiemvu_taubay hmnvtb \n" +
+            "left join phuongtien pt on pt.id=hmnvtb.pt_id \n" +
+            "left join chitiet_nhiemvu ct on ct.id=hmnvtb.ctnv_id \n" +
+            "left join nhiemvu nv on nv.id=ct.nhiemvu_id\n" +
+            "where quy_id=20 group by quy_id,ct_id,ten_nv,nhiemvu) rat2\n" +
+            "left join (SELECT quarter_id,l.nhiemvu_id as ctnv_id,ct.nhiemvu as nv,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,\n" +
+            "sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,\n" +
+            "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
+            "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
+            "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
+            "group by quarter_id,l.nhiemvu_id,nv) c on (rat2.quy=c.quarter_id and c.ctnv_id=rat2.ct_id)) d\n" +
+            "group by rollup(ten_nv,nhiemvu)) z\n" +
+            "group by ten_nv, nhiemvu order by tennv_gr desc,pri,ten_nv, nv_gr desc,nhiemvu"),
+    ttnlbtkh_for_dv("select 'C' as stt,ten,ten_nv,\n" +
+            "case when nhiemvu is null then ten else nhiemvu end as nhiemvu,\n" +
+            "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
+            "case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,\n" +
+            "case when EXTRACT(epoch FROM max(congiobay)) is null then 0 else EXTRACT(epoch FROM max(congiobay)) end as congiobay,\n" +
+            "max(nhienlieu) as nhienlieu,\n" +
+            "case when EXTRACT(epoch FROM max(giohd_md)) is null then 0 else EXTRACT(epoch FROM max(giohd_md)) end as giohd_md,\n" +
+            "case when EXTRACT(epoch FROM max(giohd_tk)) is null then 0 else EXTRACT(epoch FROM max(giohd_tk)) end as giohd_tk,\n" +
+            "case when EXTRACT(epoch FROM max(tonggiohd)) is null then 0 else EXTRACT(epoch FROM max(tonggiohd)) end as tonggiohd,\n" +
+            "case when max(nltt_md) is null then 0 else max(nltt_md) end as nltt_md, \n" +
+            "case when max(nltt_tk) is null then 0 else max(nltt_tk) end as nltt_tk,\n" +
+            "case when max(cong_nltt) is null then 0 else max(cong_nltt) end as cong_nltt,\n" +
+            "case when max(haohut) is null then 0 else max(haohut) end as haohut,\n" +
+            "case when max(tongcong) is null then 0 else max(tongcong) end as tongcong, \n" +
+            "max(dm_tk) as dm_tk, max(dm_md) as dm_md, max(ten_gr) as ten_gr,max(tennv_gr) as tennv_gr,max(nv_gr) as nv_gr,pri\n" +
+            "from (select max(nnx) as pt_id,max(ct_id) as ct_id,max(quy_id) as quy,max(pri) as pri,\n" +
+            "ten,ten_nv,case when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end as nhiemvu,sum(tk) as tk,sum(md) as md,sum(cong_giobay) as congiobay,sum(nhienlieu) as nhienlieu,\n" +
+            "sum(giohd_md) as giohd_md,sum(giohd_tk) as giohd_tk,sum(tong_giohd) as tonggiohd,\n" +
+            "sum(nltt_md) as nltt_md,sum(nltt_tk) as nltt_tk,sum(cong_nltt) as cong_nltt,sum(haohut) as haohut,sum(tongcong) as tongcong,\n" +
+            "max(dm_tk) as dm_tk,max(dm_md) as dm_md,\n" +
+            "grouping(ten) as ten_gr, grouping(ten_nv) as tennv_gr,grouping(nhiemvu) as nv_gr\n" +
+            "from (SELECT hmnvtb.dvi_xuat_id as nnx,hmnvtb.ctnv_id as ct_id,quy_id,ten,ten_nv,nhiemvu,max(priority_bc2) as pri,\n" +
+            "sum(tk::interval) as tk,sum(md::interval) as md,sum(tk::interval+md::interval) as cong_giobay,sum(nhienlieu) as nhienlieu,max(dm_tk_gio) as dm_tk,max(dm_md_gio) as dm_md\n" +
+            "FROM hanmuc_nhiemvu_taubay hmnvtb left join nguon_nx n on hmnvtb.dvi_xuat_id=n.id \n" +
+            "left join phuongtien pt on pt.id=hmnvtb.pt_id \n" +
+            "left join chitiet_nhiemvu ct on ct.id=hmnvtb.ctnv_id \n" +
+            "left join nhiemvu nv on nv.id=ct.nhiemvu_id \n" +
+            "left join dinhmuc dm on (dm.phuongtien_id=pt.id and dm.quarter_id=hmnvtb.quy_id)\n" +
+            "where quy_id=20 group by hmnvtb.dvi_xuat_id,hmnvtb.ctnv_id,quy_id,ten,ten_nv,nhiemvu order by ten) rat \n" +
+            "left join (SELECT quarter_id,dvi_xuat_id,l.nhiemvu_id as ctnv_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,\n" +
+            "sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
+            "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
+            "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
+            "group by quarter_id,dvi_xuat_id,l.nhiemvu_id) a on (quy_id=a.quarter_id and a.dvi_xuat_id=rat.nnx and a.ctnv_id=rat.ct_id)\n" +
+            "group by rollup(ten,ten_nv,nhiemvu)) b\n" +
+            "group by pri,ten,ten_nv,nhiemvu\n" +
+            "order by ten_gr desc, ten desc,tennv_gr desc,pri asc,ten_nv,nv_gr desc"),
+    ttnlbtkh_for_tongmaybay("select 'D' as stt,name_pt as ten,ten_nv,case when nhiemvu is null then name_pt else nhiemvu end as nhiemvu,\n" +
+            "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
+            "case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,\n" +
+            "case when EXTRACT(epoch FROM max(congiobay)) is null then 0 else EXTRACT(epoch FROM max(congiobay)) end as congiobay,\n" +
+            "max(nhienlieu) as nhienlieu,\n" +
+            "case when EXTRACT(epoch FROM max(giohd_md)) is null then 0 else EXTRACT(epoch FROM max(giohd_md)) end as giohd_md,\n" +
+            "case when EXTRACT(epoch FROM max(giohd_tk)) is null then 0 else EXTRACT(epoch FROM max(giohd_tk)) end as giohd_tk,\n" +
+            "case when EXTRACT(epoch FROM max(tonggiohd)) is null then 0 else EXTRACT(epoch FROM max(tonggiohd)) end as tonggiohd,\n" +
+            "case when max(nltt_md) is null then 0 else max(nltt_md) end as nltt_md, \n" +
+            "case when max(nltt_tk) is null then 0 else max(nltt_tk) end as nltt_tk,\n" +
+            "case when max(cong_nltt) is null then 0 else max(cong_nltt) end as cong_nltt,\n" +
+            "case when max(haohut) is null then 0 else max(haohut) end as haohut,\n" +
+            "case when max(tongcong) is null then 0 else max(tongcong) end as tongcong, \n" +
+            "max(dm_tk) as dm_tk, \n" +
+            "max(dm_md) as dm_md, \n" +
+            "max(namept_gr) as ten_gr,max(tennv_gr) as tennv_gr,max(nv_gr) as nv_gr,pri\n" +
+            "from (select max(pt_id) as pt_id,max(ct_id) as ct_id,max(quy_id) as quy,max(pri) as pri,\n" +
+            "name_pt,ten_nv,\n" +
+            "case when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end as nhiemvu,sum(tk) as tk,sum(md) as md,sum(cong_giobay) as congiobay,sum(nhienlieu) as nhienlieu,\n" +
+            "sum(giohd_md) as giohd_md,sum(giohd_tk) as giohd_tk,sum(tong_giohd) as tonggiohd,\n" +
+            "sum(nltt_md) as nltt_md,sum(nltt_tk) as nltt_tk,sum(cong_nltt) as cong_nltt,sum(haohut) as haohut,sum(tongcong) as tongcong,\n" +
+            "max(dm_tk) as dm_tk,max(dm_md) as dm_md,\n" +
+            "grouping(name_pt) as namept_gr, grouping(ten_nv) as tennv_gr,grouping(nhiemvu) as nv_gr\n" +
+            "from (SELECT hmnvtb.pt_id as pt_id,hmnvtb.ctnv_id as ct_id,quy_id,pt.name as name_pt,ten_nv,nhiemvu,max(priority_bc2) as pri,\n" +
+            "sum(tk::interval) as tk,sum(md::interval) as md,sum(tk::interval+md::interval) as cong_giobay,\n" +
+            "sum(nhienlieu) as nhienlieu,max(dm_tk_gio) as dm_tk,max(dm_md_gio) as dm_md\n" +
+            "FROM hanmuc_nhiemvu_taubay hmnvtb \n" +
+            "left join phuongtien pt on pt.id=hmnvtb.pt_id \n" +
+            "left join chitiet_nhiemvu ct on ct.id=hmnvtb.ctnv_id \n" +
+            "left join nhiemvu nv on nv.id=ct.nhiemvu_id \n" +
+            "left join dinhmuc dm on (dm.phuongtien_id=pt.id and dm.quarter_id=hmnvtb.quy_id)\n" +
+            "where quy_id=20 group by hmnvtb.pt_id,hmnvtb.ctnv_id,quy_id,name_pt,ten_nv,nhiemvu order by name_pt) rat \n" +
+            "left join (SELECT quarter_id,phuongtien_id,l.nhiemvu_id as ctnv_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,\n" +
+            "sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
+            "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
+            "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
+            "group by quarter_id,phuongtien_id,l.nhiemvu_id) a on (quy_id=a.quarter_id and a.phuongtien_id=rat.pt_id and a.ctnv_id=rat.ct_id)\n" +
+            "group by rollup(name_pt,ten_nv,nhiemvu)) b\n" +
+            "where name_pt is not null\n" +
+            "group by pri,name_pt,ten_nv,nhiemvu\n" +
+            "order by ten_gr desc, name_pt desc,tennv_gr desc,pri asc,ten_nv,nv_gr desc");
 
 
     public final String name;

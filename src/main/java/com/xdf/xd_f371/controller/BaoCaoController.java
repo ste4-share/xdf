@@ -16,6 +16,7 @@ import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import net.sf.jasperreports.engine.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -68,8 +69,59 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
     }
     @FXML
     public void createttNlTheoKH(ActionEvent actionEvent) {
-
+        saveBcThanhtoanNhienlieuBayTheoKeHoach();
     }
+
+    private void saveBcThanhtoanNhienlieuBayTheoKeHoach() {
+        String file_name = "data.xlsx";
+        String sheetName = "bc_ttnl_theo_kh";
+        try{
+            File file = new File(file_name);
+            if (!file.exists()){
+                file.createNewFile();
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook wb = new XSSFWorkbook();
+                // Now creating Sheets using sheet object
+                mapDataToSheet(wb.getSheet(sheetName), 8,SubQueryEnum.ttnlbtkh_for_mb.getName(),1);
+                fis.close();
+                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+
+                wb.write(fileOutputStream);
+                fileOutputStream.close();
+                wb.close();
+            }else{
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook wb = new XSSFWorkbook(fis);
+
+                // Now creating Sheets using sheet object
+                if (wb!=null){
+                    int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,SubQueryEnum.ttnlbtkh_for_mb.getName(),1);
+                    int row_index2 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,SubQueryEnum.ttnlbtkh_for_all.getName(),1);
+                    int row_index3 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,SubQueryEnum.ttnlbtkh_for_dv.getName(),1);
+                    mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,SubQueryEnum.ttnlbtkh_for_tongmaybay.getName(),1);
+                }else{
+                    mapDataToSheet(wb.createSheet(sheetName), 8,SubQueryEnum.ttnlbtkh_for_mb.getName(),1);
+                }
+
+                fis.close();
+                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+                XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
+                wb.write(fileOutputStream);
+                fileOutputStream.close();
+                wb.close();
+            }
+            try {
+                Runtime.getRuntime().exec("cmd /c start excel "+ file_name);
+            }catch (IOException io){
+                throw new RuntimeException(io);
+            }
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void saveBcTieuthuXdTheoNhiemvu() {
         String file_name = "data.xlsx";
         String sheetName = "t_thu_xd_theo_n_vu";
@@ -80,8 +132,7 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
                 FileInputStream fis = new FileInputStream(file);
                 XSSFWorkbook wb = new XSSFWorkbook();
                 // Now creating Sheets using sheet object
-                int row_ind= createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQueryEnum.nl_begin_q1.getName(),SubQueryEnum.nl_end_q1.getName(), SubQueryEnum.nl_end.getName()));
-                createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(SubQueryEnum.dmn_begin_q1.getName(),SubQueryEnum.dmn_end_q1.getName(), SubQueryEnum.dmn_end.getName()));
+                mapDataToSheet(wb.createSheet(sheetName), 8,SubQueryEnum.ttxd_nv.getName(),4);
                 fis.close();
                 FileOutputStream fileOutputStream = new FileOutputStream(file_name);
 
@@ -92,7 +143,7 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
                 FileInputStream fis = new FileInputStream(file);
                 XSSFWorkbook wb = new XSSFWorkbook(fis);
                 // Now creating Sheets using sheet object
-                mapDataToSheet(wb.getSheet(sheetName), 8);
+                mapDataToSheet(wb.getSheet(sheetName), 8,SubQueryEnum.ttxd_nv.getName(),4);
                 fis.close();
                 FileOutputStream fileOutputStream = new FileOutputStream(file_name);
 
@@ -112,23 +163,37 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
         }
     }
 
-    private void mapDataToSheet(XSSFSheet sheet,  int begin_data_current){
+    private int mapDataToSheet(XSSFSheet sheet,  int begin_data_current,String query, int begin_col){
         ReportDAO reportDAO = new ReportDAO();
-        List<Object[]> nxtls = reportDAO.findByWhatEver(SubQueryEnum.ttxd_nv.getName());
+        List<Object[]> nxtls = reportDAO.findByWhatEver(query);
         for(int i =0; i< nxtls.size(); i++){
             Object[] rows_data = nxtls.get(i);
             XSSFRow row = sheet.getRow(begin_data_current+i);
+            if (row==null){
+                row = sheet.createRow(begin_data_current+i);
+            }
             for (int j =0;j<rows_data.length;j++){
                 String val = rows_data[j]==null ?"" : rows_data[j].toString();
-                if (val==null){
-                    row.getCell(j+4).setCellValue(val);
-                } else if (StringUtils.isNumeric(val)){
-                    row.getCell(j+4).setCellValue(new BigDecimal(val).intValue());
-                } else {
-                    row.getCell(j+4).setCellValue(val);
+                if (row.getCell(j+begin_col)==null){
+                    if (val==null){
+                        row.createCell(j+begin_col).setCellValue(val);
+                    } else if (StringUtils.isNumeric(val)){
+                        row.createCell(j+begin_col).setCellValue(new BigDecimal(val).intValue());
+                    } else {
+                        row.createCell(j+begin_col).setCellValue(val);
+                    }
+                }else{
+                    if (val==null){
+                        row.getCell(j+begin_col).setCellValue(val);
+                    } else if (StringUtils.isNumeric(val)){
+                        row.getCell(j+begin_col).setCellValue(new BigDecimal(val).intValue());
+                    } else {
+                        row.getCell(j+begin_col).setCellValue(val);
+                    }
                 }
             }
         }
+        return nxtls.size();
     }
 
     private void writeDataToExcelFile() {
