@@ -270,6 +270,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setTy_trong(Double.parseDouble(tytrong.getText()));
         ledgerDetails.setLoaixd_id(cbb_tenxd.getSelectionModel().getSelectedItem().getXd_id());
         ledgerDetails.setSoluong(Integer.parseInt(thucxuat.getText()));
+        ledgerDetails.setSoluong_px(Long.parseLong(phaixuat.getText()));
         ledgerDetails.setThuc_nhap(0);
         ledgerDetails.setPhai_nhap(0);
         ledgerDetails.setNl_gio(Long.parseLong(nl_gio.getText()));

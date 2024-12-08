@@ -55,7 +55,8 @@ public class LedgerDetails {
     private Long nl_gio;
     @Column(name = "nl_km")
     private Long nl_km;
-
+    @Column(name = "so_luong_px")
+    private Long soluong_px;
     @Column(insertable = false, updatable = false)
     private String thanhtien_str;
     @Column(insertable = false, updatable = false)

@@ -35,6 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,29 +50,26 @@ import java.util.List;
 import java.util.ResourceBundle;
 @Component
 public class DashboardController implements Initializable {
-
+    public static Long so_select = 0L;
     public static Stage primaryStage;
     public static Stage xuatStage ;
     public static Stage ctStage;
+    public static Quarter findByTime;
     public static List<Ledger> ledgerList = new ArrayList<>();
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
     int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
+    int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
 
     private static int rowsPerPage = 9;
 
     @FXML
     private BorderPane borderpane_base;
     @FXML
-    private BarChart<?, ?> bc_barchart;
-
-    @FXML
-    private CategoryAxis x;
-    @FXML
-    private NumberAxis y;
-    @FXML
     private VBox nx_vbox, vb_nxt_tb;
     @FXML
     private ComboBox<String> cbb_loaiphieu_filter;
+    @FXML
+    private ComboBox<Quarter> quy_cbb;
     @FXML
     private Label lb_from, lb_to,datetime_showing;
     @FXML
@@ -80,7 +78,6 @@ public class DashboardController implements Initializable {
     public TableView<MiniLedgerDto> tbTTNX;
     @FXML
     private TableColumn<MiniLedgerDto, String> so,ngaytao, loaiphieu, soluong,tong;
-    public static Quarter findByTime;
     @FXML
     private HBox dvi_menu,nxt_menu, loai_xd_menu, haohut_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu;
     @FXML
@@ -94,32 +91,33 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ctStage = new Stage();
+        so_select=0L;
         ttp_ls = ledgersRepo.findInterfaceLedger();
         ledgerList = ledgersRepo.findAll();
-//        getDataToChart(root_inventory);
         getCurrentQuarter();
         getCurrentTiming();
         resetStyleField();
         customStyleMenu();
         setDataToPhieuCombobox();
         setDataToViewTable();
+        initQuyCombobox();
+        tbTTNX.setPrefWidth(screenWidth);
+        tbTTNX.setPrefHeight(screenHeigh);
+    }
 
-//        setUpForSearchCompleteTion();
-//        searching();
-        tbTTNX.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    private void initQuyCombobox(){
+        quy_cbb.setItems(FXCollections.observableArrayList(quarterRepository.findAll()));
+        quy_cbb.setConverter(new StringConverter<Quarter>() {
             @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount()==2){
-                    try {
-                        MiniLedgerDto miniLedgerDto =  tbTTNX.getSelectionModel().getSelectedItem();
-                        Common.openNewStage("chitietsc.fxml", xuatStage,"CHI TIẾT");
-                    }catch (NullPointerException e){
-                        e.printStackTrace();
-                    }
-                }
+            public String toString(Quarter object) {
+                return object==null?"":object.getName();
+            }
+            @Override
+            public Quarter fromString(String string) {
+                return quarterRepository.findByName(string).orElse(null);
             }
         });
-        tbTTNX.setPrefWidth(screenWidth);
+        quy_cbb.getSelectionModel().selectFirst();
     }
 
     private void resetStyleField() {
@@ -159,20 +157,6 @@ public class DashboardController implements Initializable {
                         "-fx-background-radius: 0 150 0 0;\n" ;
         main_menu.setStyle(cssLayout);
     }
-
-
-//    private void getDataToChart(List<TonkhoTong> tongs){
-//        if (!tongs.isEmpty()){
-//            XYChart.Series set1 = new XYChart.Series<>();
-//            tongs.forEach(x -> {
-//
-//                LoaiXangDau loaiXangDau = loaiXdService.findLoaiXdByID_non(x.getId_xd());
-//                set1.getData().add(new XYChart.Data<>(loaiXangDau.getTenxd(),x.getTck_sum()));
-//            });
-//            bc_barchart.getData().addAll(set1);
-//        }
-//    }
-
     private void getCurrentTiming(){
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e ->
                 datetime_showing.setText("Ngày: "+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
@@ -197,7 +181,7 @@ public class DashboardController implements Initializable {
 
     private void setPagination_nxt(){
         pagination_tbnxt.setPageFactory(this::createPage);
-        pagination_tbnxt.setPrefHeight(400);
+        pagination_tbnxt.setPrefHeight(800);
         pagination_tbnxt.setPageCount((ttp_ls.size()/rowsPerPage) +1);
     }
 
@@ -305,7 +289,6 @@ public class DashboardController implements Initializable {
         fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
         return fxmlLoader.load();
     }
-
     @FXML
     public void haohut_menu_action(MouseEvent event) {
         String cssLayout =
@@ -364,65 +347,8 @@ public class DashboardController implements Initializable {
         return cssLayout;
     }
 
-    public void loc_phieu(ActionEvent actionEvent) {
-//        String lp= cbb_loaiphieu_filter.getValue().trim();
-//        if (lp.equals("PHIẾU NHẬP")){
-//            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu_ByLoaiPhieu("N");
-//            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
-//
-//            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
-//            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
-//        }else if (lp.equals("PHIẾU XUẤT")){
-//            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu_ByLoaiPhieu("X");
-//            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
-//
-//            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
-//            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
-//        }else {
-//            List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu();
-//            List<TTPhieuModel> ttPhieuModelList = new ArrayList<>();
-//
-//            ttPhieuDtoList.forEach(item -> ttPhieuModelList.add(new TTPhieuModel(item.getSo(),item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(),item.getTcn(),item.getHang_hoa(),TextToNumber.textToNum(String.valueOf(item.getTong())))));
-//            tbTTNX.setItems(FXCollections.observableArrayList(ttPhieuModelList));
-//        } 
-    }
-
     public void search_phieu_tnxt(ActionEvent actionEvent) {
     }
-
-    public void search_history(ActionEvent actionEvent) {
-    }
-//
-//    private void setUpForSearchCompleteTion(){
-//        List<String> search_arr = new ArrayList<>();
-//        for(int i=0; i< ttp_ls.size(); i++){
-//            search_arr.add(ttp_ls.get(i).getSo());
-//        }
-//        TextFields.bindAutoCompletion(tf_search_txnt, t -> {
-//            return search_arr.stream().filter(elem
-//                    -> {
-//                return String.valueOf(elem).startsWith(t.getUserText().trim());
-//            }).collect(Collectors.toList());
-//        });
-//        tf_search_txnt.setOnKeyPressed(e -> {
-//            addedBySelection = false;
-//        });
-//
-//        tf_search_txnt.setOnKeyReleased(e -> {
-//            if (tf_search_txnt.getText().trim().isEmpty()){
-//                ttp_ls = new ArrayList<>();
-//                tbTTNX.setItems(FXCollections.observableArrayList(new ArrayList<>()));
-//                List<TTPhieuDto> ttPhieuDtoList = ledgerDetailsService.getTTPhieu();
-//
-//                ttPhieuDtoList.forEach(item -> {
-//                    ttp_ls.add(new TTPhieuModel(item.getSo(), item.getNgaytao(), item.getLoai_phieu().trim().equals("N") ? "Nhập" : "Xuất", item.getDvn(), item.getDvvc(), item.getTcn(), item.getHang_hoa(), TextToNumber.textToNum(String.valueOf(item.getTong()))));
-//                });
-//                tbTTNX.setItems(FXCollections.observableArrayList(ttp_ls));
-//            }
-//            addedBySelection = true;
-//        });
-//    }
-
     private void searching(){
 //        tf_search_txnt.textProperty().addListener(e -> {
 //            if (addedBySelection) {
@@ -487,5 +413,26 @@ public class DashboardController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    public void quy_selected(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void loc_phieu(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void tb_selected(MouseEvent mouseEvent) {
+        ctStage = new Stage();
+        if (mouseEvent.getClickCount()==2){
+            try {
+                so_select = (long) tbTTNX.getSelectionModel().getSelectedItem().getSo();
+                Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT");
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 }
