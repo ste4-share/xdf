@@ -1,7 +1,9 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.repo.*;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -65,56 +67,59 @@ public class ChiTietSCController implements Initializable {
     }
 
     private void printBill(){
-        String temp_file_name="phieu_mau.xlsx";
-        String file_name = "PhieuNhap_Pr.xlsx";
-        String sheetName = null;
-        copyFileExcel(temp_file_name, file_name);
-        if (ls.get(0).getLoai_phieu().equals("NHAP")){
-            sheetName = "phieu_nhap";
-        }else if (ls.get(0).getLoai_phieu().equals("XUAT")){
-            sheetName = "phieu_xuat";
-        }
-        try{
-            File file = new File(file_name);
-            if (!file.exists()){
-                file.createNewFile();
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook();
-                // Now creating Sheets using sheet object
-                fillDataToPhieuNhap(wb.getSheet(sheetName));
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
-            }else{
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook(fis);
-
-                // Now creating Sheets using sheet object
-                if (wb!=null){
+        if (DialogMessage.callAlertWithMessage(MessageCons.TITLE_PRINT.getName(), MessageCons.HEADER_PRINT.getName(), MessageCons.CONTENT.getName(), Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+            String temp_file_name="phieu_mau.xlsx";
+            String file_name = "PhieuNhap_Pr.xlsx";
+            String sheetName = null;
+            copyFileExcel(temp_file_name, file_name);
+            if (ls.get(0).getLoai_phieu().equals("NHAP")){
+                sheetName = "phieu_nhap";
+            }else if (ls.get(0).getLoai_phieu().equals("XUAT")){
+                sheetName = "phieu_xuat";
+            }
+            try{
+                File file = new File(file_name);
+                if (!file.exists()){
+                    file.createNewFile();
+                    FileInputStream fis = new FileInputStream(file);
+                    XSSFWorkbook wb = new XSSFWorkbook();
+                    // Now creating Sheets using sheet object
                     fillDataToPhieuNhap(wb.getSheet(sheetName));
+                    fis.close();
+                    FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+
+                    wb.write(fileOutputStream);
+                    fileOutputStream.close();
+                    wb.close();
                 }else{
-                    fillDataToPhieuNhap(wb.createSheet(sheetName));
+                    FileInputStream fis = new FileInputStream(file);
+                    XSSFWorkbook wb = new XSSFWorkbook(fis);
+
+                    // Now creating Sheets using sheet object
+                    if (wb!=null){
+                        fillDataToPhieuNhap(wb.getSheet(sheetName));
+                    }else{
+                        fillDataToPhieuNhap(wb.createSheet(sheetName));
+                    }
+
+                    fis.close();
+                    FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+                    XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
+                    wb.write(fileOutputStream);
+                    fileOutputStream.close();
+                    wb.close();
+                }
+                try {
+                    Runtime.getRuntime().exec("cmd /c start excel "+ file_name);
+                }catch (IOException io){
+                    throw new RuntimeException(io);
                 }
 
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-                XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            try {
-                Runtime.getRuntime().exec("cmd /c start excel "+ file_name);
-            }catch (IOException io){
-                throw new RuntimeException(io);
-            }
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -173,11 +178,11 @@ public class ChiTietSCController implements Initializable {
             setCEll(sheet, String.valueOf(ls.get(i).getHe_so_vcf()), row_num,8);
             setCEll(sheet, String.valueOf(ls.get(i).getSoluong()), row_num,9);
             setCEll(sheet, String.valueOf(ls.get(i).getDon_gia()), row_num,10);
-            setCEll(sheet, String.valueOf(ls.get(i).getThanhtien()), row_num,11);
+            setCEll(sheet, String.valueOf(ls.get(i).getSoluong()*ls.get(i).getDon_gia()), row_num,11);
             row_num = row_num+1;
             thanh_tien = thanh_tien + ((long) ls.get(i).getDon_gia() * ls.get(i).getSoluong());
             if (i == ls.size() - 1){
-                setCEll(sheet,String.valueOf(thanh_tien), 14+ls.size(),11);
+                setCEll(sheet,String.valueOf(ls.get(0).getAmount()), 14+ls.size(),11);
             }
         }
     }

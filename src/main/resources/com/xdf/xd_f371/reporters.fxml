@@ -6,8 +6,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -24,20 +22,6 @@
                         <VBox prefHeight="719.0" prefWidth="1004.0">
                            <children>
                               <HBox prefHeight="45.0" prefWidth="1004.0" />
-                              <HBox layoutX="10.0" layoutY="10.0" prefHeight="432.0" prefWidth="1004.0">
-                                 <children>
-                                    <TableView prefHeight="330.0" prefWidth="1004.0">
-                                      <columns>
-                                        <TableColumn prefWidth="75.0" text="Tiêu đề 3" />
-                                          <TableColumn prefWidth="75.0" text="Tiêu đề 2" />
-                                          <TableColumn prefWidth="75.0" text="Tiêu đề 1" />
-                                      </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
-                                 </children>
-                              </HBox>
                               <ComboBox fx:id="dvi_cbb" onAction="#dvi_selected" prefHeight="33.0" prefWidth="166.0">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
