@@ -154,7 +154,12 @@ public class ChiTietSCController implements Initializable {
     private void fillDataToPhieuNhap(XSSFSheet sheet){
         setCEll(sheet, ls.get(0).getDvi_nhan(), 3,3);
         setCEll(sheet, ls.get(0).getDvi_xuat(), 4,3);
-        setCEll(sheet, tcnRepo.findById(ls.get(0).getTcn_id()).orElse(null).getName(), 5,3);
+        if (tcnRepo.findById(ls.get(0).getTcn_id()).orElse(null)==null){
+            setCEll(sheet, chitietNhiemvuRepo.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu(), 5,3);
+        }else{
+            setCEll(sheet, tcnRepo.findById(ls.get(0).getTcn_id()).orElse(null).getName(), 5,3);
+        }
+
         setCEll(sheet, ls.get(0).getLenh_so(), 6,3);
         setCEll(sheet, ls.get(0).getNguoi_nhan(), 7,3);
         setCEll(sheet, "ABC", 8,3);
@@ -185,48 +190,6 @@ public class ChiTietSCController implements Initializable {
                 setCEll(sheet,String.valueOf(ls.get(0).getAmount()), 14+ls.size(),11);
             }
         }
-    }
-
-    private void fillDataToPhieuXuat(XSSFSheet sheet, XSSFWorkbook wb){
-//        setCEll(sheet, ls.get(0).getDvi(), 3,3);
-//        setCEll(sheet, ls.get(0).getDvvc(), 4,3);
-//        setCEll(sheet, ls.get(0).getNhiem_vu(), 5,3);
-//        setCEll(sheet, ls.get(0).getTheo_lenh_so(), 6,3);
-//        setCEll(sheet, ls.get(0).getNguoi_nhan_hang(), 7,3);
-//        setCEll(sheet, "ABC", 8,3);
-//        setCEll(sheet, ls.get(0).getDenngay(), 3,10);
-//        setCEll(sheet, ls.get(0).getSo_xe(), 4,10);
-//        setCEll(sheet, String.valueOf(ls.get(0).getSo_km()), 6,10);
-//        setCEll(sheet, ls.get(0).getSo(), 3,7);
-//        setCEll(sheet, ls.get(0).getNgay(), 4,7);
-//
-//        for (int i = 0; i< ls.size(); i++) {
-//            addNewRow(sheet);
-//        }
-//
-//        int row_num = 12;
-//        Long thanh_tien = 0L;
-//        for (int i = 0; i< ls.size(); i++) {
-//
-//            setCEll(sheet, String.valueOf(i+1), row_num,1);
-//            String generatedString = RandomStringUtils.randomAlphanumeric(5);
-//
-//            setCEll(sheet, generatedString, row_num,2);
-//            setCEll(sheet, ls.get(i).getTen_xd(), row_num,3);
-//            setCEll(sheet, ls.get(i).getChat_luong(), row_num,4);
-//            setCEll(sheet, String.valueOf(ls.get(i).getPhai_xuat()), row_num,5);
-//            setCEll(sheet, String.valueOf(ls.get(i).getNhiet_do_tt()), row_num,6);
-//            setCEll(sheet, String.valueOf(ls.get(i).getTy_trong()), row_num,7);
-//            setCEll(sheet, String.valueOf(ls.get(i).getHe_so_vcf()), row_num,8);
-//            setCEll(sheet, String.valueOf(ls.get(i).getThuc_xuat()), row_num,9);
-//            setCEll(sheet, String.valueOf(ls.get(i).getDon_gia()), row_num,10);
-//            setCEll(sheet, String.valueOf(ls.get(i).getThanh_tien()), row_num,11);
-//            row_num = row_num+1;
-//            thanh_tien = thanh_tien + ls.get(i).getThanh_tien();
-//            if (i == ls.size() - 1){
-//                setCEll(sheet,String.valueOf(thanh_tien), 14+ls.size(),11);
-//            }
-//        }
     }
 
     private void addNewRow(XSSFSheet sheet){
