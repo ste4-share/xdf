@@ -2,7 +2,6 @@ package com.xdf.xd_f371.fatory;
 
 import com.xdf.xd_f371.dto.LichsuXNK;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.model.MucGiaEnum;
 import com.xdf.xd_f371.repo.LedgerDetailRepo;
 import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.MucGiaRepo;
@@ -17,7 +16,6 @@ import java.util.List;
 @Component
 public class CommonFactory {
     protected LichsuNXKService lichsuNXKService = new LichsuNXKImp();
-    protected static Tcn txnx = new Tcn();
     protected static List<Tcn> tcnx_ls = new ArrayList<>();
 
     @Autowired

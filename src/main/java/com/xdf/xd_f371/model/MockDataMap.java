@@ -14,15 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class MockDataMap {
 
-    private static CategoryService categoryService = new CategoryImp();
     private static InvReportDetailService invReportDetailService = new invReportDetailImp();
 
-    private static LedgerDetailsService ledgerDetailsService = new LedgerDetailsImp();
     @Autowired
     private static LoaiXangDauRepo loaiXangDauRepo;
 
