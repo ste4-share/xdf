@@ -2,7 +2,6 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.model.ChungloaiMap;
 import com.xdf.xd_f371.model.MockDataMap;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
@@ -112,9 +111,7 @@ public class TonkhoController implements Initializable {
                 }
             });
 
-            ObservableList<Quarter> observableArrayList =
-                    FXCollections.observableArrayList(quarterRepository.findAll());
-            cbb_quarter.setItems(observableArrayList);
+            cbb_quarter.setItems(FXCollections.observableArrayList(quarterRepository.findAll()));
             cbb_quarter.getSelectionModel().select(findByTime);
             lb_end_date.setText(cbb_quarter.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
             lb_start_date.setText(cbb_quarter.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
@@ -262,75 +259,12 @@ public class TonkhoController implements Initializable {
         });
     }
 
-    @FXML
-    public void printtingBcNXT(ActionEvent actionEvent) {
-        printing_xnt();
-    }
-
-    private void printing_xnt(){
-        String file_name = "bao_cao_xnt.xlsx";
-        String source_name = "baocao.xlsx";
-        String sheetName = "NXT";
-        copyFileExcel(source_name, file_name);
-        try{
-            File file = new File(file_name);
-            XSSFWorkbook wb = null;
-            if (file.exists()) {
-
-                FileInputStream fileInputStream = new FileInputStream(file);
-                wb = new XSSFWorkbook(fileInputStream);
-                new XSSFWorkbook(new FileInputStream(file));
-                // Now creating Sheets using sheet object
-                XSSFSheet sheet1 = wb.getSheet(sheetName);
-
-                fillDataToNXTSheet(sheet1, wb);
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                try {
-                    Runtime.getRuntime().exec("start excel "+ file_name);
-                }catch (IOException io){
-                    throw new RuntimeException(io);
-                }
-
-            }
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     protected void setBordersToMergedCells(XSSFSheet sheet, CellRangeAddress rangeAddress) {
         RegionUtil.setBorderTop(BorderStyle.THIN, rangeAddress, sheet);
         RegionUtil.setBorderLeft(BorderStyle.THIN, rangeAddress, sheet);
         RegionUtil.setBorderRight(BorderStyle.THIN, rangeAddress, sheet);
         RegionUtil.setBorderBottom(BorderStyle.THIN, rangeAddress, sheet);
     }
-
-    private Map<String, Map<String, Integer>> setMapForNxtCell(XSSFSheet sheet){
-        Map<String, Map<String, Integer>> n_MAp = new HashMap<>();
-//
-//        List<String> ls_map =List.of("NL","DMN-MD", "DMN-HK");
-//        int root_num= 7;
-//        int cell_num = 2;
-//        for (String s : ls_map) {
-//            List<LoaiXangDau> loaiXangDauList = loaiXangDauRepo.findByType(s);
-//            setCEll(sheet, ChungloaiMap.type_Str_detail().get(s), root_num,cell_num);
-//            int rowNum = root_num+2;
-//            for (int i = 0; i<loaiXangDauList.size(); i++){
-//                setCEll(sheet, loaiXangDauList.get(i).getTenxd(), rowNum+i,cell_num);
-//            }
-//            root_num = root_num+loaiXangDauList.size()+2;
-//        }
-        return n_MAp;
-    }
-
-    private void fillDataToNXTSheet(XSSFSheet sheet, XSSFWorkbook wb){
-//        setMapForNxtCell(sheet);
-    }
-
     public static void copyFileExcel(String sourceName, String destName){
         deleteExcel(destName);
         File source = new File(sourceName);
@@ -349,8 +283,7 @@ public class TonkhoController implements Initializable {
 
     private static void deleteExcel(String f){
         File file = new File(f);
-        try
-        {
+        try{
             if(file.delete())                      //returns Boolean value
             {
                 System.out.println(file.getName() + " deleted");   //getting and printing the file name
@@ -370,17 +303,4 @@ public class TonkhoController implements Initializable {
     private static void copyFileUsingJava7Files(File source, File dest) throws IOException {
         Files.copy(source.toPath(), dest.toPath());
     }
-
-    @FXML
-    public void mockdataAction(ActionEvent actionEvent) {
-        MockDataMap.mockInventoryData();
-        fillDataToTableTonkho();
-    }
-
-    @FXML
-    public void mapDataNxt(ActionEvent actionEvent) {
-        MockDataMap.initInventoryMap();
-    }
-
-
 }

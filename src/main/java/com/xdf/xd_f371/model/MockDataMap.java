@@ -2,23 +2,16 @@ package com.xdf.xd_f371.model;
 
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.controller.DashboardController;
-import com.xdf.xd_f371.dto.QuantityByTTDTO;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.MucGiaRepo;
-import com.xdf.xd_f371.service.*;
-import com.xdf.xd_f371.service.impl.*;
-import com.xdf.xd_f371.util.Common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class MockDataMap {
 
-    private static InvReportDetailService invReportDetailService = new invReportDetailImp();
 
     @Autowired
     private static LoaiXangDauRepo loaiXangDauRepo;
@@ -27,55 +20,9 @@ public class MockDataMap {
     private static MucGiaRepo mucGiaRepo;
     @Autowired
     private static InventoryRepo inventoryRepo;
-
-    public static void initInventoryMap(){
-        invReportDetailService.deleteAll();
-        List<LoaiXangDau> loaiXangDauList = loaiXangDauRepo.findAll();
-//        try {
-//            int quarter_id = DashboardController.findByTime.getId();
-//            for (int i =0; i< loaiXangDauList.size(); i++){
-//                Inventory inventory = inventoryRepo.findByPetro_idAndQuarter_id(loaiXangDauList.get(i).getId(), quarter_id).orElse(null);
-//                for (int j=0; j< categories.size(); j++){
-//                    Category catelos = categories.get(j);
-//                    InvReportDetail invReportDetail = new InvReportDetail();
-//                    Common.getInvCatalogField(catelos, inventory, invReportDetail);
-//                    if (catelos.getCode().equals("NHAP")){
-//                        QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnx(2,"NHAP",catelos.getTructhuoc_id(),loaiXangDauList.get(i).getId());
-//                        if (quantity==null){
-//                            invReportDetail.setSoluong(0);
-//                        }else{
-//                            invReportDetail.setSoluong(quantity.getSum());
-//                        }
-//
-//                    } else if(catelos.getCode().equals("XUAT")) {
-//                        QuantityByTTDTO quantity = ledgerDetailsService.selectQuantityNguonnxImport(2,"XUAT",catelos.getTructhuoc_id(),loaiXangDauList.get(i).getId());
-//                        if (quantity==null){
-//                            invReportDetail.setSoluong(0);
-//                        }else{
-//                            invReportDetail.setSoluong(quantity.getSum());
-//                        }
-//                    }
-//                    //inventory detail
-//                    invReportDetail.setLoaixd(loaiXangDauList.get(i).getTenxd());
-//                    invReportDetail.setTitle_lv1(catelos.getHeader_lv1());
-//                    invReportDetail.setTitle_lv2(catelos.getHeader_lv2());
-//                    invReportDetail.setTitle_lv3(catelos.getHeader_lv3());
-//
-//                    invReportDetail.setXd_id(loaiXangDauList.get(i).getId());
-//                    invReportDetail.setQuarter_id(quarter_id);
-//                    invReportDetail.setTitle_id(catelos.getId());
-//                    invReportDetailService.createNew(invReportDetail);
-//                }
-//            }
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-    }
-
     public static void mockInventoryData(){
         int tondk_nvdx_mock = 20000;
         int tondk_sscd_mock = 20000;
-        int tondk_sum_mock = tondk_sscd_mock+tondk_nvdx_mock;
         for (LoaiXangDau loaiXangDau : loaiXangDauRepo.findAll()) {
 
             Inventory inventory = new Inventory();

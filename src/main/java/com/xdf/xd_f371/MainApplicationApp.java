@@ -6,20 +6,30 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.reactive.TransactionSynchronizationManager;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class MainApplicationApp extends Application {
     public static ConfigurableApplicationContext context;
     public static Scene rootScence;
     public static Stage rootStage;
+
     @Override
     public void init() {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(XdF371Application.class);
@@ -28,7 +38,8 @@ public class MainApplicationApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Thread.setDefaultUncaughtExceptionHandler(MainApplicationApp::showError);
+        checkConnection();
+//        Thread.setDefaultUncaughtExceptionHandler(MainApplicationApp::showError);
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource("dashboard2.fxml"));
         fxmlLoader.setControllerFactory(context::getBean);
         rootScence = new Scene(fxmlLoader.load());
@@ -38,6 +49,14 @@ public class MainApplicationApp extends Application {
         stage.setScene(rootScence);
         rootStage = stage;
         stage.show();
+    }
+    @Override
+    public void stop() {
+        context.close();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
     private static void showError(Thread t, Throwable e) {
@@ -66,14 +85,32 @@ public class MainApplicationApp extends Application {
         }
     }
 
-
-
-    @Override
-    public void stop() {
-        context.close();
+    public void checkConnection() {
+        // Simulate a database connection check or any other connection
+        try {
+            // Simulate checking the database
+            System.out.println("Checking database connection...");
+            DataSource ds = context.getBean(DataSource.class);
+            try (Connection connection = ds.getConnection()) {
+                // If the connection is successful, it won't throw an exception
+                System.out.println("Database connection successful!");
+            } catch (SQLException e) {
+                showErrorDialog("Get error when connect to database. ",e.getMessage());
+                return;
+            }
+            // Simulate success
+            Thread.sleep(3000);
+        } catch (Exception e) {
+            System.out.println("Connection failed: " + e.getMessage());
+        }
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    private void showErrorDialog(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
+
 }

@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="nxt_menu_bar" prefHeight="873.0" prefWidth="1377.0" stylesheets="@css/tonkho.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.TonkhoController">
+<HBox fx:id="nxt_menu_bar" prefHeight="873.0" prefWidth="1377.0" stylesheets="@css/tonkho.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.TonkhoController">
    <children>
       <VBox>
          <children>
@@ -61,14 +61,6 @@
                      <HBox.margin>
                         <Insets bottom="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="mockdata" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#mockdataAction" prefHeight="28.0" prefWidth="108.0" text="mock tdk">
-                     <font>
-                        <Font name="Times New Roman Bold" size="12.0" />
-                     </font>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -130,14 +122,6 @@
                                           <Insets right="10.0" />
                                        </VBox.margin>
                                     </TableView>
-                                    <Button fx:id="exportDataBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#mapDataNxt" prefHeight="40.0" prefWidth="119.0" text="export data">
-                                       <font>
-                                          <Font name="Times New Roman Bold" size="12.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
                                  </children>
                               </VBox>
                            </content>
@@ -208,15 +192,7 @@
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
                                     </TableView>
-                                    <HBox alignment="CENTER">
-                                       <children>
-                                          <Button fx:id="printBcNxt" mnemonicParsing="false" onAction="#printtingBcNXT" prefHeight="39.0" prefWidth="108.0" style="-fx-border-radius: 10; -fx-border-width: 1;" text="In báo cáo">
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </Button>
-                                       </children>
-                                    </HBox>
+                                    <HBox alignment="CENTER" />
                                  </children>
                               </VBox>
                            </content>

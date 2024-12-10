@@ -5,13 +5,10 @@ public enum ChungLoaiModel {
     NVDX_a("NVDX"),
     TDK_a("TDK"),
     TCK_a("TCK");
-
     public final String name;
-
     ChungLoaiModel(String name) {
         this.name = name;
     }
-
     public String getNameChungloai(){
         return name;
     }

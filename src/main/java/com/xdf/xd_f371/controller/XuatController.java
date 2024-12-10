@@ -245,7 +245,7 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
             ledger.setLoainv(identifyNhiemvu().getNhiemvu());
         } else {
-            ledger.setTructhuoc(tructhuocRepo.findById(dvn_cbb.getValue().getId()).orElseThrow().getType());
+            ledger.setTructhuoc(tructhuocRepo.findById(dvn_cbb.getValue().getTructhuoc_id()).orElseThrow().getType());
             ledger.setLoaigiobay("");
             ledger.setNhiemvu("");
             ledger.setNhiemvu_id(0);
