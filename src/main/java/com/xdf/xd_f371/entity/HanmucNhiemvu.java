@@ -5,11 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.postgresql.util.PGInterval;
 
 import java.io.Serializable;
-import java.time.Duration;
 
 @Entity
 @Table(name = "hanmuc_nhiemvu")

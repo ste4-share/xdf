@@ -1,9 +1,7 @@
 package com.xdf.xd_f371.entity;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenerationTime;
 
 import java.sql.Date;
 import java.time.LocalDate;

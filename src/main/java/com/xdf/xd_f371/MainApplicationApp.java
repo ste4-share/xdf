@@ -7,7 +7,6 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -50,7 +49,6 @@ public class MainApplicationApp extends Application {
                 Thread.sleep(3000);  // Simulating loading time (e.g., 3 seconds)
                 return null;
             }
-
             @Override
             protected void succeeded() {
                 // Once the task is finished, close the splash screen and show the main UI
@@ -64,10 +62,8 @@ public class MainApplicationApp extends Application {
                 });
             }
         };
-
         // Start loading task in the background
         new Thread(loadingTask).start();
-
     }
     @Override
     public void stop() {

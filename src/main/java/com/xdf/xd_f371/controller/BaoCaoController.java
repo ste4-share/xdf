@@ -18,7 +18,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.util.StringConverter;
-import net.sf.jasperreports.engine.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -36,7 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
-public class BaoCaoController extends JRDefaultScriptlet implements Initializable {
+public class BaoCaoController implements Initializable {
     private static List<String> arr_tt = new ArrayList<>();
     @Autowired
     private TructhuocRepo tructhuocRepo;
@@ -56,7 +55,7 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
         initquycbb();
     }
     @FXML
-    public void createbcnxt(ActionEvent actionEvent) throws SQLException, JRException, IOException {
+    public void createbcnxt(ActionEvent actionEvent) throws SQLException, IOException {
         mapdataToNxtSheet();
     }
     @FXML
@@ -319,16 +318,5 @@ public class BaoCaoController extends JRDefaultScriptlet implements Initializabl
         return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
     }
 
-    private void createReportByJasper() throws SQLException, JRException, IOException{
-//        HashMap<String, Object> map = new HashMap<>();
-//        DataSource ds = (DataSource) MainApplicationApp.context.getBean("dataSource");
-//        Connection c = ds.getConnection();
-//        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/com/xdf/xd_f371/templates/test.jrxml"));
-//        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map,c);
-//        JasperExportManager.exportReportToPdfFile(jasperPrint,("report/test.pdf"));
-//        DialogMessage.message("Thông báo", "Đã tạo báo cáo", "Thành công", Alert.AlertType.INFORMATION);
-//        String cwd = Path.of("").toAbsolutePath().toString();
-//        Runtime.getRuntime().exec("cmd /c explorer " + cwd+"\\report");
-    }
 
 }

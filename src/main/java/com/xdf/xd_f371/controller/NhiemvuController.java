@@ -1,11 +1,9 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.Common;
-import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -16,18 +14,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import net.sf.jasperreports.engine.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 @Component
@@ -101,24 +93,10 @@ public class NhiemvuController implements Initializable {
         }
     }
     @FXML
-    public void bcNlbayTheoKh(ActionEvent actionEvent) throws IOException, SQLException, JRException {
-        generatePdf();
+    public void bcNlbayTheoKh(ActionEvent actionEvent) throws IOException, SQLException {
+
     }
-    private void generatePdf() throws IOException, SQLException, JRException {
-        HashMap<String, Object> map = new HashMap<>();
-        DataSource ds = (DataSource) MainApplicationApp.context.getBean("dataSource");
-        Connection c = ds.getConnection();
-        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/com/xdf/xd_f371/templates/bc_01.jrxml"));
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map,c);
-        JasperExportManager.exportReportToPdfFile(jasperPrint,("report/baocaokehoachbay.pdf"));
-        DialogMessage.message("Thông báo", "Đã tạo báo cáo", "Thành công", Alert.AlertType.INFORMATION);
-        String cwd = Path.of("").toAbsolutePath().toString();
-        try {
-            Runtime.getRuntime().exec("cmd /c explorer " + cwd+"\\report");
-        } catch (IOException e) {
-            throw new IOException(e);
-        }
-    }
+
     @FXML
     public void donviselected(ActionEvent actionEvent) {
     }
