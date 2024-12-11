@@ -3,31 +3,25 @@ package com.xdf.xd_f371;
 import com.xdf.xd_f371.controller.ErrorController;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.reactive.TransactionSynchronizationManager;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class MainApplicationApp extends Application {
     public static ConfigurableApplicationContext context;
-    public static Scene rootScence;
     public static Stage rootStage;
 
     @Override
@@ -38,17 +32,42 @@ public class MainApplicationApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        checkConnection();
-//        Thread.setDefaultUncaughtExceptionHandler(MainApplicationApp::showError);
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource("dashboard2.fxml"));
-        fxmlLoader.setControllerFactory(context::getBean);
-        rootScence = new Scene(fxmlLoader.load());
-        rootScence.setFill(Color.TRANSPARENT);
-        stage.setMaximized(true);
-        stage.setTitle("Xăng dầu F371");
-        stage.setScene(rootScence);
-        rootStage = stage;
-        stage.show();
+        StackPane splashRoot = new StackPane();
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        splashRoot.getChildren().add(progressIndicator);
+
+        Scene splashScene = new Scene(splashRoot, 200, 200);
+        Stage splashStage = new Stage();
+        splashStage.setTitle("Loading...");
+        splashStage.setScene(splashScene);
+        splashStage.show();
+
+        // Run a background task to simulate loading
+        Task<Void> loadingTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                // Simulate loading by sleeping for a few seconds
+                Thread.sleep(3000);  // Simulating loading time (e.g., 3 seconds)
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                // Once the task is finished, close the splash screen and show the main UI
+                Platform.runLater(() -> {
+                    splashStage.close();  // Close splash screen
+                    try {
+                        showMainUI(stage);  // Show main UI
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+        };
+
+        // Start loading task in the background
+        new Thread(loadingTask).start();
+
     }
     @Override
     public void stop() {
@@ -57,6 +76,19 @@ public class MainApplicationApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void showMainUI(Stage stage) throws IOException {
+//        checkConnection();
+//        Thread.setDefaultUncaughtExceptionHandler(MainApplicationApp::showError);
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource("connect_lan.fxml"));
+        fxmlLoader.setControllerFactory(context::getBean);
+        Scene scene = new Scene(fxmlLoader.load());
+        scene.setFill(Color.TRANSPARENT);
+        stage.setTitle("Connection to Server in LAN Network");
+        stage.setScene(scene);
+        rootStage = stage;
+        stage.show();
     }
 
     private static void showError(Thread t, Throwable e) {
@@ -83,34 +115,6 @@ public class MainApplicationApp extends Application {
         } catch (IOException exc) {
             exc.printStackTrace();
         }
-    }
-
-    public void checkConnection() {
-        // Simulate a database connection check or any other connection
-        try {
-            // Simulate checking the database
-            System.out.println("Checking database connection...");
-            DataSource ds = context.getBean(DataSource.class);
-            try (Connection connection = ds.getConnection()) {
-                // If the connection is successful, it won't throw an exception
-                System.out.println("Database connection successful!");
-            } catch (SQLException e) {
-                showErrorDialog("Get error when connect to database. ",e.getMessage());
-                return;
-            }
-            // Simulate success
-            Thread.sleep(3000);
-        } catch (Exception e) {
-            System.out.println("Connection failed: " + e.getMessage());
-        }
-    }
-
-    private void showErrorDialog(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
 }

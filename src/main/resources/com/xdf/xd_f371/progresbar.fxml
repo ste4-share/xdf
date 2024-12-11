@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="130.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.ProgressBarController">
+   <children>
+      <ProgressBar fx:id="progresbar" layoutX="29.0" layoutY="20.0" prefHeight="45.0" prefWidth="543.0" progress="0.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
+      <Label fx:id="percentage_lb" alignment="CENTER" layoutX="235.0" layoutY="79.0" prefHeight="37.0" prefWidth="131.0" text="percents" textAlignment="CENTER">
+         <font>
+            <Font name="Cambria Bold" size="21.0" />
+         </font>
+      </Label>
+   </children>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
+</AnchorPane>

@@ -256,7 +256,6 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return ledgersRepo.save(ledger);
     }
-
     private LedgerDetails getLedgerDetails(){
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setTen_xd(cbb_tenxd.getSelectionModel().getSelectedItem().getTenxd());
