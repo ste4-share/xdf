@@ -2,6 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +16,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
 @Component
 public class ConnectLan implements Initializable {
 
@@ -35,13 +37,24 @@ public class ConnectLan implements Initializable {
     }
     @FXML
     public void exit(ActionEvent actionEvent) {
+        MainApplicationApp.rootStage.close();
     }
     @FXML
     public void checkConnection(ActionEvent actionEvent) {
-        checkConnection();
+       checkConnection();
+       DialogMessage.message("Thong bao", "Ket noi thanh cong", "Thanh cong", Alert.AlertType.CONFIRMATION);
     }
 
-    public void checkConnection() {
+//    private void setHintForIp(List<String> list){
+//        TextFields.bindAutoCompletion(ip, t -> {
+//            return list.stream().filter(elem
+//                    -> {
+//                return elem.toLowerCase().startsWith(t.getUserText().toLowerCase().trim());
+//            }).collect(Collectors.toList());
+//        });
+//    }
+
+    private void checkConnection() {
         // Simulate a database connection check or any other connection
         try {
             // Simulate checking the database
@@ -50,9 +63,9 @@ public class ConnectLan implements Initializable {
             try (Connection connection = ds.getConnection()) {
                 // If the connection is successful, it won't throw an exception
                 System.out.println("Database connection successful!");
+                return ;
             } catch (SQLException e) {
                 showErrorDialog("Get error when connect to database. ",e.getMessage());
-                return;
             }
             // Simulate success
             Thread.sleep(3000);
