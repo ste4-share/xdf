@@ -68,8 +68,8 @@ public class ChiTietSCController implements Initializable {
 
     private void printBill(){
         if (DialogMessage.callAlertWithMessage(MessageCons.TITLE_PRINT.getName(), MessageCons.HEADER_PRINT.getName(), MessageCons.CONTENT.getName(), Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-            String temp_file_name="phieu_mau.xlsx";
-            String file_name = "PhieuNhap_Pr.xlsx";
+            String temp_file_name="src/main/resources/com/xdf/xd_f371/xlsx_template/phieu_mau.xlsx";
+            String file_name = "baocao/phieu_nhap_xuat.xlsx";
             String sheetName = null;
             copyFileExcel(temp_file_name, file_name);
             if (ls.get(0).getLoai_phieu().equals("NHAP")){

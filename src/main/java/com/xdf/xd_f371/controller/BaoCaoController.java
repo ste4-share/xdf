@@ -1,7 +1,6 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.SubQuery;
-import com.xdf.xd_f371.cons.SubQueryEnum;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.entity.TrucThuoc;
@@ -10,11 +9,13 @@ import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.repo.TructhuocRepo;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.util.StringConverter;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -56,26 +58,27 @@ public class BaoCaoController implements Initializable {
     }
     @FXML
     public void createbcnxt(ActionEvent actionEvent) throws SQLException, IOException {
-        mapdataToNxtSheet();
+        String file_name = "src/main/resources/com/xdf/xd_f371/xlsx_template/data.xlsx";
+        String dest_file = "baocao/baocao.xlsx";
+        mapdataToNxtSheet(file_name);
+        saveBcTieuthuXdTheoNhiemvu(file_name);
+        saveBcThanhtoanNhienlieuBayTheoKeHoach(file_name);
+        copyFileExcel(file_name,dest_file);
+        try {
+            Runtime.getRuntime().exec("cmd /c start excel "+ dest_file);
+        }catch (IOException io){
+            throw new RuntimeException(io);
+        }
+        DialogMessage.message("Message", "Cap nhat thanh cong.", "Successfully!", Alert.AlertType.INFORMATION);
     }
     @FXML
     public void dvi_selected(ActionEvent actionEvent) {
 
     }
     @FXML
-    public void createxd_nv(ActionEvent actionEvent) {
-        System.out.println("query: " + SubQueryEnum.ttxd_nv.getName());
-        saveBcTieuthuXdTheoNhiemvu();
-    }
-    @FXML
-    public void createttNlTheoKH(ActionEvent actionEvent) {
-        saveBcThanhtoanNhienlieuBayTheoKeHoach();
-    }
-    @FXML
     public void quy_selected(ActionEvent actionEvent) {
 
     }
-
     private void initquycbb() {
         quy_cbb.setConverter(new StringConverter<Quarter>() {
             @Override
@@ -92,7 +95,6 @@ public class BaoCaoController implements Initializable {
         todate.setText(quy_cbb.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         fromdate.setText(quy_cbb.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
     }
-
     private void initdvcbb(){
         dvi_cbb.setItems(FXCollections.observableList(nguonNxRepo.findByStatus(StatusEnum.ROOT_STATUS.getName())));
         dvi_cbb.setConverter(new StringConverter<NguonNx>() {
@@ -108,9 +110,7 @@ public class BaoCaoController implements Initializable {
         });
         dvi_cbb.getSelectionModel().selectFirst();
     }
-
-    private void saveBcThanhtoanNhienlieuBayTheoKeHoach() {
-        String file_name = "data.xlsx";
+    private void saveBcThanhtoanNhienlieuBayTheoKeHoach(String file_name) {
         String sheetName = "bc_ttnl_theo_kh";
         try{
             File file = new File(file_name);
@@ -148,20 +148,13 @@ public class BaoCaoController implements Initializable {
                 fileOutputStream.close();
                 wb.close();
             }
-            try {
-                Runtime.getRuntime().exec("cmd /c start excel "+ file_name);
-            }catch (IOException io){
-                throw new RuntimeException(io);
-            }
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
+
         } catch (IOException e) {
+            DialogMessage.message("THÔNG BÁO LỖI", e.getMessage(), "Có lỗi xảy ra!", Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         }
     }
-
-    private void saveBcTieuthuXdTheoNhiemvu() {
-        String file_name = "data.xlsx";
+    private void saveBcTieuthuXdTheoNhiemvu(String file_name) {
         String sheetName = "t_thu_xd_theo_n_vu";
         try{
             File file = new File(file_name);
@@ -189,18 +182,46 @@ public class BaoCaoController implements Initializable {
                 fileOutputStream.close();
                 wb.close();
             }
-            try {
-                Runtime.getRuntime().exec("cmd /c start excel "+ file_name);
-            }catch (IOException io){
-                throw new RuntimeException(io);
-            }
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+    private void mapdataToNxtSheet(String file_name) {
+        String sheetName = "bc_nxt";
+        try{
+            File file = new File(file_name);
+            SubQuery subQuery = new SubQuery();
+            if (!file.exists()){
+                file.createNewFile();
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook wb = new XSSFWorkbook();
+                // Now creating Sheets using sheet object
+                int row_ind= createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+                createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+                fis.close();
+                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+                wb.write(fileOutputStream);
+                fileOutputStream.close();
+                wb.close();
+            }else{
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook wb = new XSSFWorkbook(fis);
+                // Now creating Sheets using sheet object
+                int row_ind= createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+                createDataSheet(wb.getSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+                fis.close();
+                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
 
+                wb.write(fileOutputStream);
+                fileOutputStream.close();
+                wb.close();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private int mapDataToSheet(XSSFSheet sheet,  int begin_data_current,String query, int begin_col){
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(query);
@@ -233,50 +254,32 @@ public class BaoCaoController implements Initializable {
         }
         return nxtls.size();
     }
-
-    private void mapdataToNxtSheet() {
-        String file_name = "data.xlsx";
-        String sheetName = "bc_nxt";
-        try{
-            File file = new File(file_name);
-            SubQuery subQuery = new SubQuery();
-            if (!file.exists()){
-                file.createNewFile();
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook();
-                // Now creating Sheets using sheet object
-                int row_ind= createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-                createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
-            }else{
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook(fis);
-                // Now creating Sheets using sheet object
-                int row_ind= createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-                createDataSheet(wb.getSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
+    public void copyFileExcel(String sour, String target){
+        if (deleteExcel(target)){
+            File source = new File(sour);
+            File dest = new File(target);
+            if (source.exists()){
+                long start = System.nanoTime();
+                try {
+                    Files.copy(source.toPath(), dest.toPath());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Time taken by Java7 Files Copy = "+(System.nanoTime()-start));
+            }else {
+                System.out.println("source file doesn't exists");
             }
-            try {
-                Runtime.getRuntime().exec("cmd /c start excel "+ file_name);
-            }catch (IOException io){
-                throw new RuntimeException(io);
-            }
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException e) {
+        }
+    }
+    private boolean deleteExcel(String file_name){
+        File file = new File(file_name);
+        try {
+            return file.delete();
+        }
+        catch(Exception e) {
             throw new RuntimeException(e);
         }
     }
-
     private int createDataSheet(XSSFSheet sheet, int begin_data_current,String query) {
         int sizett = arr_tt.size();
         ReportDAO reportDAO = new ReportDAO();
@@ -300,7 +303,6 @@ public class BaoCaoController implements Initializable {
         arr_tt.clear();
         return nxtls.size()+11;
     }
-
     private String getCusQueryNl(String begin_1,String end_q1, String end){
         arr_tt.clear();
         String n_sum1="";
@@ -317,6 +319,4 @@ public class BaoCaoController implements Initializable {
         }
         return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
     }
-
-
 }
