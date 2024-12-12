@@ -65,8 +65,22 @@ public class BaoCaoController implements Initializable {
         saveBcThanhtoanNhienlieuBayTheoKeHoach(file_name);
         copyFileExcel(file_name,dest_file);
         try {
-            Runtime.getRuntime().exec("cmd /c start excel "+ dest_file);
-        }catch (IOException io){
+            String[] env = {"ComSpec='C:\\WINDOWS\\system32\\cmd.exe'"};
+
+            Process process = Runtime.getRuntime().exec("cmd /c start .",env);
+//            Runtime.getRuntime().exec("cmd /c start excel "+ dest_file);
+            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String line;
+            while ((line = stdOut.readLine()) != null) {
+                System.out.println("OUTPUT: " + line);
+            }
+            while ((line = stdErr.readLine()) != null) {
+                System.err.println("ERROR: " + line);
+            }
+            process.waitFor();
+        }catch (IOException | InterruptedException io){
+            DialogMessage.message("Message", io.getMessage(), "fail!", Alert.AlertType.INFORMATION);
             throw new RuntimeException(io);
         }
         DialogMessage.message("Message", "Cap nhat thanh cong.", "Successfully!", Alert.AlertType.INFORMATION);

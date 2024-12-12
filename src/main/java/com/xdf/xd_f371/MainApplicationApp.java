@@ -12,12 +12,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 
 public class MainApplicationApp extends Application {
     public static ConfigurableApplicationContext context;
@@ -31,17 +33,23 @@ public class MainApplicationApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        StackPane splashRoot = new StackPane();
+
         ProgressIndicator progressIndicator = new ProgressIndicator();
-        splashRoot.getChildren().add(progressIndicator);
+        progressIndicator.setProgress(-1); // Indeterminate spinner
 
-        Scene splashScene = new Scene(splashRoot, 200, 200);
-        Stage splashStage = new Stage();
-        splashStage.setTitle("Loading...");
-        splashStage.setScene(splashScene);
-        splashStage.show();
+        // Set up the layout
+        StackPane root = new StackPane(progressIndicator);
+        // Create scene with no decoration (transparent window)
+        Scene scene = new Scene(root, 100, 100); // Set the desired size
+        Stage primaryStage = new Stage();
+        primaryStage.setScene(scene);
+        // Set the window to be borderless and transparent
+        primaryStage.initStyle(StageStyle.UTILITY); // Removes window borders
+        primaryStage.setOpacity(1); // Set the opacity to make the background transparent
 
-        // Run a background task to simulate loading
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
         Task<Void> loadingTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -53,7 +61,7 @@ public class MainApplicationApp extends Application {
             protected void succeeded() {
                 // Once the task is finished, close the splash screen and show the main UI
                 Platform.runLater(() -> {
-                    splashStage.close();  // Close splash screen
+                    primaryStage.close();  // Close splash screen
                     try {
                         showMainUI(stage);  // Show main UI
                     } catch (IOException e) {
@@ -65,6 +73,30 @@ public class MainApplicationApp extends Application {
         // Start loading task in the background
         new Thread(loadingTask).start();
     }
+
+    private void showLoadingSpinner(Stage owner) {
+        // Create a new stage for the loading spinner
+        Stage spinnerStage = new Stage();
+        spinnerStage.initOwner(owner); // Set the owner window
+        spinnerStage.initModality(Modality.APPLICATION_MODAL); // Block input to owner window
+        spinnerStage.initStyle(StageStyle.TRANSPARENT); // Transparent background
+
+        // Create a ProgressIndicator
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setProgress(-1); // Indeterminate mode
+
+        // Add the ProgressIndicator to a StackPane
+        StackPane root = new StackPane(progressIndicator);
+        root.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);"); // Semi-transparent background
+
+        // Set up the scene
+        Scene scene = new Scene(root);
+        scene.setFill(null); // Make the scene transparent
+
+        spinnerStage.setScene(scene);
+        spinnerStage.show();
+    }
+
     @Override
     public void stop() {
         context.close();
