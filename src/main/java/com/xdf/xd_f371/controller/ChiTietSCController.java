@@ -3,6 +3,7 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.repo.*;
+import com.xdf.xd_f371.service.LedgerService;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -38,6 +39,8 @@ public class ChiTietSCController implements Initializable {
     private PhuongtienRepo phuongtienRepo;
     @Autowired
     private TcnRepo tcnRepo;
+    @Autowired
+    private LedgerService ledgerService;
 
     @FXML
     private VBox vb_root;
@@ -52,7 +55,7 @@ public class ChiTietSCController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         addNewImport();
-        ls = ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.so_select,DashboardController.findByTime.getId());
+        ls = ledgerService.getLedgers();
         tbChiTiet.setItems(FXCollections.observableList(ls));
         fillDataToLabels();
     }

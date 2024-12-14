@@ -3,12 +3,6 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.NguonNxRepo;
 import com.xdf.xd_f371.repo.TructhuocRepo;
-import com.xdf.xd_f371.service.CategoryService;
-import com.xdf.xd_f371.service.NguonNXService;
-import com.xdf.xd_f371.service.TrucThuocService;
-import com.xdf.xd_f371.service.impl.CategoryImp;
-import com.xdf.xd_f371.service.impl.NguonNXImp;
-import com.xdf.xd_f371.service.impl.TrucThuocImp;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -28,7 +22,6 @@ import java.util.stream.Collectors;
 @Controller
 public class AddUnitForm implements Initializable {
     private static int tructhuoc_selected_from_cbb=0;
-    private static int group_selected_from_cbb=0;
     @FXML
     ComboBox<TrucThuoc> tructhuoc_cbb;
     @FXML
@@ -38,9 +31,6 @@ public class AddUnitForm implements Initializable {
     @FXML
     ComboBox<String> type_title_cbb, code_cbb;
 
-    private TrucThuocService trucThuocService = new TrucThuocImp();
-    private NguonNXService nguonNXService = new NguonNXImp();
-    private CategoryService categoryService = new CategoryImp();
 
     @Autowired
     private NguonNxRepo nguonNxRepo;
@@ -52,9 +42,6 @@ public class AddUnitForm implements Initializable {
         initTructhuocCmb();
         initTypeTitle();
         initCode();
-        setHintForTitle(report_title1, categoryService.getAll_Header1());
-        setHintForTitle(report_title2, categoryService.getAll_Header2());
-        setHintForTitle(report_title3, categoryService.getAll_Header3());
         setEventForCheckBox();
         setEnableCategory(true);
     }
@@ -90,13 +77,9 @@ public class AddUnitForm implements Initializable {
     }
 
     private void initCode() {
-        code_cbb.setItems(FXCollections.observableList(categoryService.getAllCode()));
-        code_cbb.getSelectionModel().selectFirst();
     }
 
     private void initTypeTitle() {
-        type_title_cbb.setItems(FXCollections.observableList(categoryService.getAllTypeTitle()));
-        type_title_cbb.getSelectionModel().selectFirst();
     }
 
     private void initTructhuocCmb() {

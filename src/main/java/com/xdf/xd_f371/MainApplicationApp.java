@@ -19,7 +19,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Map;
 
 public class MainApplicationApp extends Application {
     public static ConfigurableApplicationContext context;
