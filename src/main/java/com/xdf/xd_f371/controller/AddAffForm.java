@@ -2,7 +2,7 @@ package com.xdf.xd_f371.controller;
 
 
 import com.xdf.xd_f371.entity.TrucThuoc;
-import com.xdf.xd_f371.repo.TructhuocRepo;
+import com.xdf.xd_f371.service.TructhuocService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,7 +20,7 @@ public class AddAffForm implements Initializable {
     public static int aff_id_selected = 0;
 
     @Autowired
-    private TructhuocRepo tructhuocRepo;
+    private TructhuocService tructhuocService;
 
     @FXML
     Button addBtn,exitBtn;
@@ -33,7 +33,7 @@ public class AddAffForm implements Initializable {
     }
 
     private void fillDataToAfflatedUnitCombobox() {
-        affilatedUnitCb.setItems(FXCollections.observableList(tructhuocRepo.findAll()));
+        affilatedUnitCb.setItems(FXCollections.observableList(tructhuocService.findAll()));
         affilatedUnitCb.getSelectionModel().selectFirst();
         affilatedUnitCb.setConverter(new StringConverter<TrucThuoc>() {
             @Override
@@ -43,7 +43,7 @@ public class AddAffForm implements Initializable {
 
             @Override
             public TrucThuoc fromString(String s) {
-                return tructhuocRepo.findById(affilatedUnitCb.getSelectionModel().getSelectedItem().getId()).orElse(null);
+                return tructhuocService.findById(affilatedUnitCb.getSelectionModel().getSelectedItem().getId()).orElse(null);
             }
         });
     }

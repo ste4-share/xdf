@@ -5,10 +5,10 @@ import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.model.StatusEnum;
-import com.xdf.xd_f371.repo.NguonNxRepo;
-import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.repo.ReportDAO;
-import com.xdf.xd_f371.repo.TructhuocRepo;
+import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.QuarterService;
+import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -40,11 +40,11 @@ import java.util.*;
 public class BaoCaoController implements Initializable {
     private static List<String> arr_tt = new ArrayList<>();
     @Autowired
-    private TructhuocRepo tructhuocRepo;
+    private TructhuocService tructhuocService;
     @Autowired
-    private NguonNxRepo nguonNxRepo;
+    private NguonNxService nguonNxService;
     @Autowired
-    private QuarterRepository quarterRepository;
+    private QuarterService quarterService;
     @FXML
     ComboBox<NguonNx> dvi_cbb;
     @FXML
@@ -102,15 +102,15 @@ public class BaoCaoController implements Initializable {
 
             @Override
             public Quarter fromString(String string) {
-                return quarterRepository.findByName(string).orElse(null);
+                return quarterService.findByName(string).orElse(null);
             }
         });
-        quy_cbb.getSelectionModel().select(quarterRepository.findByCurrentTime(LocalDate.now()).orElse(null));
+        quy_cbb.getSelectionModel().select(quarterService.findByCurrentTime(LocalDate.now()).orElse(null));
         todate.setText(quy_cbb.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         fromdate.setText(quy_cbb.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
     }
     private void initdvcbb(){
-        dvi_cbb.setItems(FXCollections.observableList(nguonNxRepo.findByStatus(StatusEnum.ROOT_STATUS.getName())));
+        dvi_cbb.setItems(FXCollections.observableList(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName())));
         dvi_cbb.setConverter(new StringConverter<NguonNx>() {
             @Override
             public String toString(NguonNx object) {
@@ -119,7 +119,7 @@ public class BaoCaoController implements Initializable {
 
             @Override
             public NguonNx fromString(String string) {
-                return nguonNxRepo.findByTen(string).orElse(null);
+                return nguonNxService.findByTen(string).orElse(null);
             }
         });
         dvi_cbb.getSelectionModel().selectFirst();
@@ -323,8 +323,8 @@ public class BaoCaoController implements Initializable {
         String x_sum2="";
         String n_case_1="";
         String x_case_2="";
-        for (int i=0; i<tructhuocRepo.findAll().size(); i++) {
-            TrucThuoc tt = tructhuocRepo.findAll().get(i);
+        for (int i=0; i<tructhuocService.findAll().size(); i++) {
+            TrucThuoc tt = tructhuocService.findAll().get(i);
             arr_tt.add(tt.getType());
             n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
             x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");

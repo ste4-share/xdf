@@ -10,6 +10,5 @@ import java.util.Optional;
 @Repository
 public interface TcnRepo extends JpaRepository<Tcn, Integer> {
     Optional<Tcn> findByName(String name);
-
     List<Tcn> findByLoaiphieu(String loaiphieu);
 }

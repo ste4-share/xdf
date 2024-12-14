@@ -1,8 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
-import com.xdf.xd_f371.repo.ChungLoaiXdRepo;
-import com.xdf.xd_f371.repo.LoaiXangDauRepo;
+import com.xdf.xd_f371.service.LoaiXdService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,9 +26,7 @@ public class PetroleumController implements Initializable {
     TextField petro_search;
 
     @Autowired
-    private LoaiXangDauRepo loaiXangDauRepo;
-    @Autowired
-    private ChungLoaiXdRepo chungLoaiXdRepo;
+    private LoaiXdService loaiXdService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -37,7 +34,7 @@ public class PetroleumController implements Initializable {
     }
 
     private void fillDataToTable() {
-        petroleum_table.setItems(FXCollections.observableList(loaiXangDauRepo.findAllBy()));
+        petroleum_table.setItems(FXCollections.observableList(loaiXdService.findAllBy()));
         setFatoryForPetroTb();
     }
     private void setFatoryForPetroTb(){

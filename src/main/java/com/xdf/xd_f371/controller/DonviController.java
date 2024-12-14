@@ -2,17 +2,13 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.TructhuocDto;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.repo.NguonNxRepo;
-import com.xdf.xd_f371.repo.TcnRepo;
-import com.xdf.xd_f371.repo.TructhuocRepo;
-import com.xdf.xd_f371.service.*;
-import com.xdf.xd_f371.service.impl.*;
+import com.xdf.xd_f371.service.TcnService;
+import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -46,11 +42,9 @@ public class DonviController implements Initializable {
     private TableColumn<Tcn, String> col_property_name,col_property_status;
 
     @Autowired
-    private NguonNxRepo nguonNxRepo;
+    private TcnService tcnService;
     @Autowired
-    private TcnRepo tcnRepo;
-    @Autowired
-    private TructhuocRepo tructhuocRepo;
+    private TructhuocService tructhuocService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,12 +54,12 @@ public class DonviController implements Initializable {
     }
 
     private void fillDataForTable_nguonnx(){
-        tb_unit.setItems(FXCollections.observableList(tructhuocRepo.findAllBy().stream().toList()));
+        tb_unit.setItems(FXCollections.observableList(tructhuocService.findAllBy().stream().toList()));
         setFactoryCell_for_Nguonnx();
     }
 
     private void fillDataForTable_tcn(){
-        tb_property.setItems(FXCollections.observableList(tcnRepo.findAll()));
+        tb_property.setItems(FXCollections.observableList(tcnService.findAll()));
         setFactoryCell_for_Tcn();
     }
 

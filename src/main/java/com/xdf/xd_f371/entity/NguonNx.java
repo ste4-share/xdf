@@ -25,9 +25,6 @@ public class NguonNx {
     private int tructhuoc_id;
 
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)
-    List<HanmucNhiemvu> hanmucNhiemvuList;
-
-    @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)
     List<DonViTrucThuoc> donViTrucThuocs;
 
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)

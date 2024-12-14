@@ -2,8 +2,8 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.PhuongTien;
-import com.xdf.xd_f371.repo.DinhMucRepo;
-import com.xdf.xd_f371.repo.PhuongtienRepo;
+import com.xdf.xd_f371.service.DinhmucService;
+import com.xdf.xd_f371.service.PhuongtienService;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,9 +24,9 @@ public class AddBtnPt implements Initializable {
     TextField pt_name, quantity,h,km,md,tk,ct_tk,ct_md,ct_km,soluong;
 
     @Autowired
-    private PhuongtienRepo phuongtienRepo;
+    private PhuongtienService phuongtienService;
     @Autowired
-    private DinhMucRepo dinhMucRepo;
+    private DinhmucService dinhmucService;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initField();
@@ -54,7 +54,7 @@ public class AddBtnPt implements Initializable {
                 phuongTien.setNguonnx_id(DinhMucPhuongTienController.nguonnx_id);
                 phuongTien.setStatus("ACTIVE");
                 phuongTien.setLoaiphuongtien_id(DinhMucPhuongTienController.dinhMucPhuongTienDto.getLoaiphuongtien_id());
-                phuongtienRepo.save(phuongTien);
+                phuongtienService.save(phuongTien);
 
 //                dinhMucRepo.save(new DinhMuc(Integer.parseInt(md.getText()), Integer.parseInt(tk.getText()), Integer.parseInt(h.getText()), Integer.parseInt(km.getText()), ptId, DashboardController.findByTime.getId()));
                 DialogMessage.callAlertWithMessage("Thông báo", "Thông báo", "Thêm phương tiện thành công", Alert.AlertType.CONFIRMATION);
@@ -65,9 +65,9 @@ public class AddBtnPt implements Initializable {
                 phuongTien.setId(DinhMucPhuongTienController.dinhMucPhuongTienDto.getLoaiphuongtien_id());
                 phuongTien.setQuantity(Integer.parseInt(quantity.getText()));
                 phuongTien.setLoaiphuongtien_id(DinhMucPhuongTienController.dinhMucPhuongTienDto.getLoaiphuongtien_id());
-                phuongtienRepo.save(phuongTien);
+                phuongtienService.save(phuongTien);
                 // update dinhmuc
-                dinhMucRepo.save(new DinhMuc(Integer.parseInt(md.getText()),
+                dinhmucService.save(new DinhMuc(Integer.parseInt(md.getText()),
                         Integer.parseInt(tk.getText()), Integer.parseInt(h.getText()),
                         Integer.parseInt(km.getText()), DinhMucPhuongTienController.dinhMucPhuongTienDto.getPhuongtien_id(),
                         DashboardController.findByTime.getId()));

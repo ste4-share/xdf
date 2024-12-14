@@ -6,8 +6,11 @@ import com.xdf.xd_f371.entity.NhiemvuTaubay;
 import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.model.LoaiPTEnum;
 import com.xdf.xd_f371.repo.*;
+import com.xdf.xd_f371.service.ChitietNhiemvuService;
+import com.xdf.xd_f371.service.HanmucNhiemvuService;
+import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.PhuongtienService;
 import com.xdf.xd_f371.util.DialogMessage;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,13 +37,13 @@ public class ThemHmFormController implements Initializable {
     @FXML
     private ComboBox<PhuongTien> pt_cbb;
     @Autowired
-    private PhuongtienRepo phuongtienRepo;
+    private PhuongtienService phuongtienService;
     @Autowired
-    private NguonNxRepo nguonNxRepo;
+    private NguonNxService nguonNxService;
     @Autowired
-    private ChitietNhiemvuRepo ctnvRepo;
+    private ChitietNhiemvuService chitietNhiemvuService;
     @Autowired
-    private HanmucNhiemvuTauBayRepo hmRepo;
+    private HanmucNhiemvuService hmRepo;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -53,7 +56,7 @@ public class ThemHmFormController implements Initializable {
     }
 
     private void initPhuongtienCbb() {
-        pt_cbb.setItems(FXCollections.observableArrayList(phuongtienRepo.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle())));
+        pt_cbb.setItems(FXCollections.observableArrayList(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle())));
         pt_cbb.setConverter(new StringConverter<PhuongTien>() {
             @Override
             public String toString(PhuongTien object) {
@@ -62,13 +65,13 @@ public class ThemHmFormController implements Initializable {
 
             @Override
             public PhuongTien fromString(String string) {
-                return phuongtienRepo.findById(pt_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
+                return phuongtienService.findById(pt_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
             }
         });
     }
 
     private void initNhiemvuCbb() {
-        nv_cbb.setItems(FXCollections.observableList(ctnvRepo.findAllByLoaiNv(1,3)));
+        nv_cbb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllByLoaiNv(1,3)));
         nv_cbb.setConverter(new StringConverter<ChitietNhiemVuDto>() {
             @Override
             public String toString(ChitietNhiemVuDto object) {
@@ -77,14 +80,14 @@ public class ThemHmFormController implements Initializable {
 
             @Override
             public ChitietNhiemVuDto fromString(String string) {
-                return ctnvRepo.findByTenNhiemvu(string).orElse(null);
+                return chitietNhiemvuService.findByTenNhiemvu(string).orElse(null);
             }
         });
         nv_cbb.getSelectionModel().selectFirst();
     }
 
     private void initNguonnxCbb() {
-        dvi_cbb.setItems(FXCollections.observableList(nguonNxRepo.findByAllBy()));
+        dvi_cbb.setItems(FXCollections.observableList(nguonNxService.findByAllBy()));
         dvi_cbb.setConverter(new StringConverter<NguonNx>() {
             @Override
             public String toString(NguonNx object) {
@@ -93,7 +96,7 @@ public class ThemHmFormController implements Initializable {
 
             @Override
             public NguonNx fromString(String string) {
-                return nguonNxRepo.findById(dvi_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
+                return nguonNxService.findById(dvi_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
             }
         });
         dvi_cbb.getSelectionModel().selectFirst();

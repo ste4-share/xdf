@@ -26,9 +26,6 @@ public class ChitietNhiemVu {
     private NhiemVu nhiemVu;
 
     @OneToMany(mappedBy = "chitietNhiemVu", cascade = CascadeType.ALL)
-    private List<HanmucNhiemvu> hanmucNhiemvuList;
-
-    @OneToMany(mappedBy = "chitietNhiemVu", cascade = CascadeType.ALL)
     private List<NhiemvuTaubay> nhiemvuTaubays;
 
     public ChitietNhiemVu(int id, int nhiemvu_id, String nhiemvu) {

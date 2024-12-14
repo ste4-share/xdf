@@ -4,10 +4,9 @@ import com.xdf.xd_f371.entity.ChitietNhiemVu;
 import com.xdf.xd_f371.entity.HanmucNhiemvu2;
 import com.xdf.xd_f371.entity.NhiemVu;
 import com.xdf.xd_f371.model.StatusEnum;
-import com.xdf.xd_f371.repo.ChitietNhiemvuRepo;
-import com.xdf.xd_f371.repo.HanmucNhiemvu2Repository;
-import com.xdf.xd_f371.repo.NguonNxRepo;
-import com.xdf.xd_f371.repo.NhiemvuRepository;
+import com.xdf.xd_f371.service.ChitietNhiemvuService;
+import com.xdf.xd_f371.service.HanmucNhiemvuService;
+import com.xdf.xd_f371.service.NguonNxService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,13 +30,11 @@ public class AddNewHanMucNhiemvu implements Initializable {
     TextField xang_tf,diezel_tf,daubay_tf;
 
     @Autowired
-    NhiemvuRepository nhiemvuRepository;
+    ChitietNhiemvuService chitietNhiemvuService;
     @Autowired
-    ChitietNhiemvuRepo chitietNhiemvuRepo;
+    HanmucNhiemvuService hanmucNhiemvuService;
     @Autowired
-    HanmucNhiemvu2Repository hanmucNhiemvu2Repository;
-    @Autowired
-    NguonNxRepo nguonNxRepo;
+    NguonNxService nguonNxService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -48,7 +45,7 @@ public class AddNewHanMucNhiemvu implements Initializable {
     }
 
     private void initNhiemvuCbb(){
-        nv_cbb.setItems(FXCollections.observableList(nhiemvuRepository.findAll()));
+        nv_cbb.setItems(FXCollections.observableList(chitietNhiemvuService.findAll()));
         nv_cbb.setConverter(new StringConverter<NhiemVu>() {
             @Override
             public String toString(NhiemVu object) {
@@ -57,13 +54,13 @@ public class AddNewHanMucNhiemvu implements Initializable {
 
             @Override
             public NhiemVu fromString(String string) {
-                return nhiemvuRepository.findById(nv_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
+                return chitietNhiemvuService.findByIdNhiemvu(nv_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
             }
         });
         nv_cbb.getSelectionModel().selectFirst();
     }
     private void initChitietNhiemvuCbb(){
-        ct_cbb.setItems(FXCollections.observableList(chitietNhiemvuRepo.findByNhiemvuId(nv_cbb.getSelectionModel().getSelectedItem().getId())));
+        ct_cbb.setItems(FXCollections.observableList(chitietNhiemvuService.findByNhiemvuId(nv_cbb.getSelectionModel().getSelectedItem().getId())));
         ct_cbb.setConverter(new StringConverter<ChitietNhiemVu>() {
             @Override
             public String toString(ChitietNhiemVu object) {
@@ -72,15 +69,15 @@ public class AddNewHanMucNhiemvu implements Initializable {
 
             @Override
             public ChitietNhiemVu fromString(String string) {
-                return chitietNhiemvuRepo.findById(ct_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
+                return chitietNhiemvuService.findById(ct_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
             }
         });
         ct_cbb.getSelectionModel().selectFirst();
     }
     @FXML
     public void save(ActionEvent actionEvent) {
-        hanmucNhiemvu2Repository.save(new HanmucNhiemvu2(DashboardController.findByTime.getId(),
-                nguonNxRepo.findByStatus(StatusEnum.ROOT_STATUS.getName()).get(0).getId(),nv_cbb.getSelectionModel().getSelectedItem().getId(),
+        hanmucNhiemvuService.save(new HanmucNhiemvu2(DashboardController.findByTime.getId(),
+                nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()).get(0).getId(),nv_cbb.getSelectionModel().getSelectedItem().getId(),
                 Long.parseLong(diezel_tf.getText()),Long.parseLong(daubay_tf.getText()),Long.parseLong(xang_tf.getText())));
         NhiemvuController.nvStage.close();
     }

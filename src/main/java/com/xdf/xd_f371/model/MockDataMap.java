@@ -3,27 +3,24 @@ package com.xdf.xd_f371.model;
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.repo.InventoryRepo;
-import com.xdf.xd_f371.repo.LoaiXangDauRepo;
-import com.xdf.xd_f371.repo.MucGiaRepo;
+import com.xdf.xd_f371.service.InventoryService;
+import com.xdf.xd_f371.service.LoaiXdService;
+import com.xdf.xd_f371.service.MucgiaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MockDataMap {
-
-
     @Autowired
-    private static LoaiXangDauRepo loaiXangDauRepo;
-
+    private static LoaiXdService loaiXdService;
     @Autowired
-    private static MucGiaRepo mucGiaRepo;
+    private static MucgiaService mucgiaService;
     @Autowired
-    private static InventoryRepo inventoryRepo;
+    private static InventoryService inventoryService;
     public static void mockInventoryData(){
         int tondk_nvdx_mock = 20000;
         int tondk_sscd_mock = 20000;
-        for (LoaiXangDau loaiXangDau : loaiXangDauRepo.findAll()) {
+        for (LoaiXangDau loaiXangDau : loaiXdService.findAll()) {
 
             Inventory inventory = new Inventory();
             inventory.setPetro_id(loaiXangDau.getId());
@@ -35,9 +32,9 @@ public class MockDataMap {
 
             inventory.setTdk_sscd(tondk_sscd_mock);
             inventory.setStatus("RECORDING");
-            inventoryRepo.save(inventory);
+            inventoryService.save(inventory);
 
-            Inventory inventory1 = inventoryRepo.findByPetro_idAndQuarter_id(loaiXangDau.getId(), DashboardController.findByTime.getId()).orElse(null);
+            Inventory inventory1 = inventoryService.findByPetro_idAndQuarter_id(loaiXangDau.getId(), DashboardController.findByTime.getId()).orElse(null);
             //mock mucgia
             Mucgia mucgia = new Mucgia();
             mucgia.setQuarter_id(DashboardController.findByTime.getId());
@@ -47,7 +44,7 @@ public class MockDataMap {
             mucgia.setPurpose(Purpose.NVDX.getName());
             mucgia.setStatus("IN_STOCK");
             mucgia.setInventory_id(inventory1.getId());
-            mucGiaRepo.save(mucgia);
+            mucgiaService.save(mucgia);
             Mucgia mucgia2 = new Mucgia();
             mucgia2.setQuarter_id(DashboardController.findByTime.getId());
             mucgia2.setAmount(tondk_nvdx_mock);
@@ -56,7 +53,7 @@ public class MockDataMap {
             mucgia2.setPurpose(Purpose.SSCD.getName());
             mucgia2.setStatus("IN_STOCK");
             mucgia2.setInventory_id(inventory1.getId());
-            mucGiaRepo.save(mucgia2);
+            mucgiaService.save(mucgia2);
 
         }
     }

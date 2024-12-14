@@ -1,7 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Quarter;
-import com.xdf.xd_f371.repo.QuarterRepository;
+import com.xdf.xd_f371.service.QuarterService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 public class QuyController implements Initializable {
 
     @Autowired
-    QuarterRepository quarterRepository;
+    QuarterService quarterService;
 
     @FXML
     private TextArea tarea_note;
@@ -41,7 +41,7 @@ public class QuyController implements Initializable {
         quarter.setEnd_date(dp_enddate.getValue());
         int year = Year.now().getValue();
         quarter.setYear(String.valueOf(year));
-        quarterRepository.save(quarter);
+        quarterService.save(quarter);
     }
 
     @FXML

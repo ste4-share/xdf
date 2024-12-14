@@ -3,7 +3,10 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.repo.*;
+import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.LedgerService;
+import com.xdf.xd_f371.service.PhuongtienService;
+import com.xdf.xd_f371.service.TcnService;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -30,15 +33,12 @@ import java.util.ResourceBundle;
 public class ChiTietSCController implements Initializable {
 
     private List<LedgerDto> ls;
-
     @Autowired
-    private LedgersRepo ledgersRepo;
+    private ChitietNhiemvuService chitietNhiemvuService;
     @Autowired
-    private ChitietNhiemvuRepo chitietNhiemvuRepo;
+    private PhuongtienService phuongtienService;
     @Autowired
-    private PhuongtienRepo phuongtienRepo;
-    @Autowired
-    private TcnRepo tcnRepo;
+    private TcnService tcnService;
     @Autowired
     private LedgerService ledgerService;
 
@@ -157,10 +157,10 @@ public class ChiTietSCController implements Initializable {
     private void fillDataToPhieuNhap(XSSFSheet sheet){
         setCEll(sheet, ls.get(0).getDvi_nhan(), 3,3);
         setCEll(sheet, ls.get(0).getDvi_xuat(), 4,3);
-        if (tcnRepo.findById(ls.get(0).getTcn_id()).orElse(null)==null){
-            setCEll(sheet, chitietNhiemvuRepo.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu(), 5,3);
+        if (tcnService.findById(ls.get(0).getTcn_id()).orElse(null)==null){
+            setCEll(sheet, chitietNhiemvuService.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu(), 5,3);
         }else{
-            setCEll(sheet, tcnRepo.findById(ls.get(0).getTcn_id()).orElse(null).getName(), 5,3);
+            setCEll(sheet, tcnService.findById(ls.get(0).getTcn_id()).orElse(null).getName(), 5,3);
         }
 
         setCEll(sheet, ls.get(0).getLenh_so(), 6,3);
@@ -227,10 +227,10 @@ public class ChiTietSCController implements Initializable {
         lb_dvvc.setText(ls.get(0).getDvi_xuat());
         if (ls.get(0).getNhiemvu_id()==0) {
             lb_dvn.setText(ls.get(0).getDvi_nhan());
-            lb_tcn.setText(tcnRepo.findById(ls.get(0).getTcn_id()).orElse(null).getName());
+            lb_tcn.setText(tcnService.findById(ls.get(0).getTcn_id()).orElse(null).getName());
         } else {
-            lb_dvn.setText(phuongtienRepo.findById(ls.get(0).getPhuongtien_id()).orElse(null).getName());
-            lb_tcn.setText(chitietNhiemvuRepo.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu());
+            lb_dvn.setText(phuongtienService.findById(ls.get(0).getPhuongtien_id()).orElse(null).getName());
+            lb_tcn.setText(chitietNhiemvuService.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu());
         }
         lb_so.setText(String.valueOf(ls.get(0).getBill_id()));
         lb_nguoinhan.setText(ls.get(0).getNguoi_nhan());

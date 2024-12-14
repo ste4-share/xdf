@@ -1,29 +1,19 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
-import com.xdf.xd_f371.dto.LichsuXNK;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.repo.LedgersRepo;
-import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.service.*;
-import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.Common;
-import com.xdf.xd_f371.util.TextToNumber;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -36,7 +26,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -84,16 +73,16 @@ public class DashboardController implements Initializable {
     private AnchorPane main_menu;
 
     @Autowired
-    private QuarterRepository quarterRepository;
+    private QuarterService quarterService;
     @Autowired
-    private LedgersRepo ledgersRepo;
+    private LedgerService ledgerService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ctStage = new Stage();
         so_select=0L;
-        ttp_ls = ledgersRepo.findInterfaceLedger();
-        ledgerList = ledgersRepo.findAll();
+        ttp_ls = ledgerService.findInterfaceLedger();
+        ledgerList = ledgerService.getAll();
         getCurrentQuarter();
         getCurrentTiming();
         resetStyleField();
@@ -106,7 +95,7 @@ public class DashboardController implements Initializable {
     }
 
     private void initQuyCombobox(){
-        quy_cbb.setItems(FXCollections.observableArrayList(quarterRepository.findAll()));
+        quy_cbb.setItems(FXCollections.observableArrayList(quarterService.findAll()));
         quy_cbb.setConverter(new StringConverter<Quarter>() {
             @Override
             public String toString(Quarter object) {
@@ -114,7 +103,7 @@ public class DashboardController implements Initializable {
             }
             @Override
             public Quarter fromString(String string) {
-                return quarterRepository.findByName(string).orElse(null);
+                return quarterService.findByName(string).orElse(null);
             }
         });
         quy_cbb.getSelectionModel().selectFirst();
@@ -134,7 +123,7 @@ public class DashboardController implements Initializable {
     }
 
     private void getCurrentQuarter(){
-        findByTime = quarterRepository.findByCurrentTime(LocalDate.now()).get();
+        findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
         lb_to.setTextFill(Color.rgb(33, 12, 162));
         lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         lb_from.setTextFill(Color.rgb(33, 12, 162));
@@ -168,7 +157,7 @@ public class DashboardController implements Initializable {
     }
 
     public void setDataToViewTable(){
-        ttp_ls =ledgersRepo.findInterfaceLedger();
+        ttp_ls =ledgerService.findInterfaceLedger();
         so.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("so_str"));
         loaiphieu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("loai_phieu"));
         ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));

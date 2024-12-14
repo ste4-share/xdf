@@ -4,10 +4,8 @@ import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.dto.NormDto;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.model.StatusEnum;
-import com.xdf.xd_f371.repo.DinhMucRepo;
-import com.xdf.xd_f371.repo.LoaiPhuongTienRepo;
-import com.xdf.xd_f371.repo.NguonNxRepo;
-import com.xdf.xd_f371.repo.PhuongtienRepo;
+import com.xdf.xd_f371.service.DinhmucService;
+import com.xdf.xd_f371.service.NguonNxService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -48,13 +46,9 @@ public class DinhMucPhuongTienController implements Initializable {
     TableColumn<NormDto, String> xmt_name,type_name,quantity,km,h,md,tk,createtime,chungloaipt;
 
     @Autowired
-    private DinhMucRepo dinhMucRepo;
+    private DinhmucService dinhmucService;
     @Autowired
-    private NguonNxRepo nguonNxRepo;
-    @Autowired
-    private PhuongtienRepo phuongtienRepo;
-    @Autowired
-    private LoaiPhuongTienRepo loaiPhuongTienRepo;
+    private NguonNxService nguonNxService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -65,7 +59,7 @@ public class DinhMucPhuongTienController implements Initializable {
     }
 
     private void initNguonnxCbb() {
-        units_cbb.setItems(FXCollections.observableList(nguonNxRepo.findByStatus(StatusEnum.ROOT_STATUS.getName())));
+        units_cbb.setItems(FXCollections.observableList(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName())));
         units_cbb.setConverter(new StringConverter<NguonNx>() {
             @Override
             public String toString(NguonNx nguonNx) {
@@ -74,14 +68,14 @@ public class DinhMucPhuongTienController implements Initializable {
 
             @Override
             public NguonNx fromString(String s) {
-                return nguonNxRepo.findById(units_cbb.getValue().getId()).get();
+                return nguonNxService.findById(units_cbb.getValue().getId()).get();
             }
         });
         units_cbb.getSelectionModel().selectFirst();
     }
 
     private void fillDatatoptTable() {
-        pt_tb.setItems(FXCollections.observableList(dinhMucRepo.findAllBy(DashboardController.findByTime.getId())));
+        pt_tb.setItems(FXCollections.observableList(dinhmucService.findAllBy(DashboardController.findByTime.getId())));
         xmt_name.setCellValueFactory(new PropertyValueFactory<NormDto, String>("name_pt"));
         type_name.setCellValueFactory(new PropertyValueFactory<NormDto, String>("typeName"));
         quantity.setCellValueFactory(new PropertyValueFactory<NormDto, String>("quantity"));

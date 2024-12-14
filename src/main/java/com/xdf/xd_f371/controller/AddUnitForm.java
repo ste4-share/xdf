@@ -1,8 +1,8 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.repo.NguonNxRepo;
-import com.xdf.xd_f371.repo.TructhuocRepo;
+import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.TructhuocService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,9 +33,9 @@ public class AddUnitForm implements Initializable {
 
 
     @Autowired
-    private NguonNxRepo nguonNxRepo;
+    private NguonNxService nguonNxService;
     @Autowired
-    private TructhuocRepo tructhuocRepo;
+    private TructhuocService tructhuocService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -83,7 +83,7 @@ public class AddUnitForm implements Initializable {
     }
 
     private void initTructhuocCmb() {
-        tructhuoc_cbb.setItems(FXCollections.observableList(tructhuocRepo.findAll()));
+        tructhuoc_cbb.setItems(FXCollections.observableList(tructhuocService.findAll()));
         tructhuoc_cbb.setConverter(new StringConverter<TrucThuoc>() {
             @Override
             public String toString(TrucThuoc trucThuoc) {
@@ -95,7 +95,7 @@ public class AddUnitForm implements Initializable {
 
             @Override
             public TrucThuoc fromString(String s) {
-                return tructhuocRepo.findById(tructhuoc_cbb.getValue().getId()).get();
+                return tructhuocService.findById(tructhuoc_cbb.getValue().getId()).get();
             }
         });
         tructhuoc_cbb.getSelectionModel().selectFirst();
@@ -124,7 +124,7 @@ public class AddUnitForm implements Initializable {
 
     private void addNewNguonnx() {
         //add ngnx
-        nguonNxRepo.save(new NguonNx(unit_name.getText()));
+        nguonNxService.save(new NguonNx(unit_name.getText()));
     }
 
     @FXML

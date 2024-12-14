@@ -3,6 +3,10 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
+import com.xdf.xd_f371.service.ChitietNhiemvuService;
+import com.xdf.xd_f371.service.HanmucNhiemvuService;
+import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -27,17 +31,13 @@ public class NhiemvuController implements Initializable {
     public static Stage nvStage;
 
     @Autowired
-    private QuarterRepository quarterRepository;
+    private QuarterService quarterService;
     @Autowired
-    private ChitietNhiemvuRepo chitietNhiemvuRepo;
+    private ChitietNhiemvuService chitietNhiemvuService;
     @Autowired
-    private NguonNxRepo nguonNxRepo;
+    private NguonNxService nguonNxService;
     @Autowired
-    private HanmucNhiemvu2Repository hanmucNhiemvu2Repository;
-    @Autowired
-    private HanmucNhiemvuRepo hanmucNhiemvuRepo;
-    @Autowired
-    private HanmucNhiemvuTauBayRepo hanmucNhiemvuTauBayRepo;
+    private HanmucNhiemvuService hanmucNhiemvuService;
     @FXML
     TableView<HanmucNhiemvu2Dto> tieuthunhiemvu;
     @FXML
@@ -73,7 +73,7 @@ public class NhiemvuController implements Initializable {
     }
 
     private void initHanmucNhiemvuTaubay() {
-        ctnv_pt.setItems(FXCollections.observableList(hanmucNhiemvuTauBayRepo.getAllBy()));
+        ctnv_pt.setItems(FXCollections.observableList(hanmucNhiemvuService.getAllBy()));
         t2_tt1.setSortable(false);
         t2_tt1.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_tb.getItems().indexOf(column.getValue())+1).asString());
         dvi_x.setCellValueFactory(new PropertyValueFactory<>("donvi"));
@@ -122,7 +122,6 @@ public class NhiemvuController implements Initializable {
         nvStage = new Stage();
         Common.openNewStage("add_chitieunv.fxml", nvStage,"FORM");
         if (dvi_cbb.getSelectionModel().getSelectedItem()==null) {
-            setCtnv_tb(dvi_cbb.getSelectionModel().getSelectedItem().getId());
         }
     }
     @FXML
@@ -133,7 +132,7 @@ public class NhiemvuController implements Initializable {
     }
 
     private void initDviTb() {
-        dvi_cbb.setItems(FXCollections.observableList(nguonNxRepo.findByAllBy()));
+        dvi_cbb.setItems(FXCollections.observableList(nguonNxService.findByAllBy()));
         dvi_cbb.setConverter(new StringConverter<NguonNx>() {
             @Override
             public String toString(NguonNx object) {
@@ -142,14 +141,14 @@ public class NhiemvuController implements Initializable {
 
             @Override
             public NguonNx fromString(String string) {
-                return nguonNxRepo.findByTen(string).orElse(null);
+                return nguonNxService.findByTen(string).orElse(null);
             }
         });
         dvi_cbb.getSelectionModel().selectFirst();
     }
 
     private void setCtnv_tb(int dvi_id){
-        ctnv_tb.setItems(FXCollections.observableList(hanmucNhiemvuRepo.findAllByUnit(dvi_id, DashboardController.findByTime.getId())));
+//        ctnv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllByUnit(dvi_id, DashboardController.findByTime.getId())));
         t2_tt.setSortable(false);
         t2_tt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_tb.getItems().indexOf(column.getValue())+1).asString());
         t2_nv.setCellValueFactory(new PropertyValueFactory<>("ten_nv"));
@@ -161,7 +160,7 @@ public class NhiemvuController implements Initializable {
     }
 
     private void initNvTb() {
-        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuRepo.findAllDtoBy(3)));
+        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllDtoBy(3)));
         tennv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_nv"));
         ctnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("chitiet"));
         lnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_loai_nv"));
@@ -169,7 +168,7 @@ public class NhiemvuController implements Initializable {
     }
 
     private void inithanmucTb() {
-        tieuthunhiemvu.setItems(FXCollections.observableList(hanmucNhiemvu2Repository.findAllDto()));
+        tieuthunhiemvu.setItems(FXCollections.observableList(hanmucNhiemvuService.findAllDto()));
         nv.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("tenNv"));
         ct.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("chitiet_nhiemvu"));
         xang.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("xang"));
@@ -179,7 +178,7 @@ public class NhiemvuController implements Initializable {
     }
 
     private void initQuarterCbb(){
-        quy_cbb.setItems(FXCollections.observableList(quarterRepository.findAll()));
+        quy_cbb.setItems(FXCollections.observableList(quarterService.findAll()));
         quy_cbb.setConverter(new StringConverter<Quarter>() {
             @Override
             public String toString(Quarter object) {
@@ -188,7 +187,7 @@ public class NhiemvuController implements Initializable {
 
             @Override
             public Quarter fromString(String string) {
-                return quarterRepository.findByName(quy_cbb.getValue().getName()).isPresent()?quy_cbb.getValue():null;
+                return quarterService.findByName(quy_cbb.getValue().getName()).isPresent()?quy_cbb.getValue():null;
             }
         });
     }

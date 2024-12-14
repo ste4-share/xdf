@@ -15,20 +15,15 @@ import java.util.Optional;
 public interface ChitietNhiemvuRepo extends JpaRepository<ChitietNhiemVu, Integer> {
     @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where lnv.id <> :lnv_id")
     List<NhiemVuDto> findAllDtoBy(@Param("lnv_id") int lnv_id);
-
     @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv")
     List<NhiemVuDto> findAllBy();
-
     @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where lnv.id=:lnv_id")
     List<NhiemVuDto> findAllDtoById(@Param("lnv_id") int lnv_id);
-
     Optional<ChitietNhiemVu> findByNhiemvu(String nhiemvu);
     @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where n.tenNv like :nv and ct.nhiemvu like :chitiet")
     Optional<NhiemVuDto> findAllByChitietNhiemvu(@Param("nv") String nv, @Param("chitiet") String chitiet);
-
     @Query("select new ChitietNhiemVu(ct.id,ct.nhiemvu_id,ct.nhiemvu) from ChitietNhiemVu ct where ct.nhiemvu_id=:od")
     List<ChitietNhiemVu> findByNhiemvuId(@Param("od") int id);
-
     @Query("select new com.xdf.xd_f371.dto.ChitietNhiemVuDto(n.id,ct.id,n.tenNv,ct.nhiemvu) from ChitietNhiemVu ct join ct.nhiemVu n where n.assignmentTypeId=:loainv or n.assignmentTypeId=:loainv1")
     List<ChitietNhiemVuDto> findAllByLoaiNv(@Param("loainv") int loainv_id,@Param("loainv1") int loainv_id1);
     @Query("select new com.xdf.xd_f371.dto.ChitietNhiemVuDto(n.id,ct.id,n.tenNv,ct.nhiemvu) from ChitietNhiemVu ct join ct.nhiemVu n where ct.nhiemvu like :tennv")

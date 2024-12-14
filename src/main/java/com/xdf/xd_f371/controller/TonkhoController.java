@@ -2,13 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.model.MockDataMap;
-import com.xdf.xd_f371.repo.InventoryRepo;
-import com.xdf.xd_f371.repo.LoaiXangDauRepo;
-import com.xdf.xd_f371.repo.QuarterRepository;
-import com.xdf.xd_f371.repo.TructhuocRepo;
 import com.xdf.xd_f371.service.*;
-import com.xdf.xd_f371.service.impl.*;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,7 +22,6 @@ import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.*;
 import org.controlsfx.control.textfield.TextFields;
@@ -72,21 +65,18 @@ public class TonkhoController implements Initializable {
     private Label lb_end_date,lb_start_date;
 
     @Autowired
-    private QuarterRepository quarterRepository;
+    private QuarterService quarterService;
     @Autowired
-    private TructhuocRepo tructhuocRepo;
+    private InventoryService inventoryService;
     @Autowired
-    private LoaiXangDauRepo loaiXangDauRepo;
-    @Autowired
-    private InventoryRepo inventoryRepo;
-    private MucgiaService mucgiaService = new MucgiaImp();
+    private MucgiaService mucgiaService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         tkt = new ArrayList<>();
         pickTonKho = new SpotDto();
         findByTime = new Quarter();
-        findByTime = quarterRepository.findByCurrentTime(LocalDate.now()).get();
+        findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
         setQuarterListToCbb();
 
         setTonkhoTongToCol();
@@ -107,11 +97,11 @@ public class TonkhoController implements Initializable {
 
                 @Override
                 public Quarter fromString(String string) {
-                    return quarterRepository.findByName(string).get();
+                    return quarterService.findByName(string).get();
                 }
             });
 
-            cbb_quarter.setItems(FXCollections.observableArrayList(quarterRepository.findAll()));
+            cbb_quarter.setItems(FXCollections.observableArrayList(quarterService.findAll()));
             cbb_quarter.getSelectionModel().select(findByTime);
             lb_end_date.setText(cbb_quarter.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
             lb_start_date.setText(cbb_quarter.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
@@ -188,7 +178,7 @@ public class TonkhoController implements Initializable {
     }
 
     private void fillDataToTable(Quarter selected){
-        List<Inventory> inventories = inventoryRepo.findByQuarter_id(DashboardController.findByTime.getId());
+        List<Inventory> inventories = inventoryService.findByQuarter_id(DashboardController.findByTime.getId());
         for(int i =0; i< inventories.size(); i++){
             Inventory inventory = inventories.get(i);
 //            LoaiXangDau loaiXangDau = loaiXangDauRepo.findById(inventory.getPetro_id()).orElse(null);
