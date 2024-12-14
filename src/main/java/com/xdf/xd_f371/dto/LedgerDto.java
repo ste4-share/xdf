@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,8 +17,8 @@ public class LedgerDto {
     private int quarter_id;
     private int bill_id;
     private Long amount;
-    private Date from_date;
-    private Date end_date;
+    private LocalDate from_date;
+    private LocalDate end_date;
     private String status;
     private int so_km;
     private String giohd_md;
@@ -67,7 +68,7 @@ public class LedgerDto {
     private String thanhtien;
 
     public LedgerDto(int ledger_id, int ledger_detail_id, int quarter_id, int bill_id,
-                     Long amount, Date from_date, Date end_date, String status,
+                     Long amount, LocalDate from_date, LocalDate end_date, String status,
                      int so_km, String giohd_md, String giohd_tk,
                      int sl_tieuthu_md, int sl_tieuthu_tk, int inventoryId, int dvi_nhan_id, int dvi_xuat_id,
                      String loai_phieu, String dvi_nhan, String dvi_xuat, String loaigiobay, String nguoi_nhan, String so_xe, String lenh_so, String nhiemvu, int nhiemvu_id,

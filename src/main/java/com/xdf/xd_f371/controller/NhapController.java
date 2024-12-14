@@ -251,8 +251,8 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setBill_id(Integer.parseInt(soTf.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
         ledger.setAmount(ls_socai.stream().mapToLong(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
-        ledger.setFrom_date(java.sql.Date.valueOf(tungay.getValue()));
-        ledger.setEnd_date(java.sql.Date.valueOf(denngay.getValue()));
+        ledger.setFrom_date(tungay.getValue());
+        ledger.setEnd_date(denngay.getValue());
         ledger.setStatus("ACTIVE");
         ledger.setInventoryId(inventoryService.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow().getId());
         ledger.setDvi_nhan(cmb_dvn.getValue().getTen());

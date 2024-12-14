@@ -9,6 +9,7 @@ import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.TextToNumber;
+import jakarta.validation.*;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -26,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -192,8 +190,8 @@ public class XuatController extends CommonFactory implements Initializable {
         ledger.setBill_id(Integer.parseInt(so.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
         ledger.setAmount(ls_socai.stream().mapToLong(x-> ((long) x.getSoluong() *x.getDon_gia())).sum());
-        ledger.setFrom_date(java.sql.Date.valueOf(tungay.getValue()));
-        ledger.setEnd_date(java.sql.Date.valueOf(denngay.getValue()));
+        ledger.setFrom_date(tungay.getValue());
+        ledger.setEnd_date(denngay.getValue());
         ledger.setStatus("ACTIVE");
         if (tk_rd.isSelected()){
             ledger.setSl_tieuthu_md(0);
@@ -529,9 +527,20 @@ public class XuatController extends CommonFactory implements Initializable {
 
     @FXML
     public void add(ActionEvent actionEvent) {
-        ls_socai.add(getLedgerDetails());
-        setCellValueFactory(getLedgerDetails());
-        clearFields();
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<LedgerDetails>> violations = validator.validate(getLedgerDetails());
+        String errorStr = "";
+        for (ConstraintViolation<LedgerDetails> violation : violations) {
+            errorStr = errorStr.concat(violation.getPropertyPath() + ": " + violation.getMessage()+" \n");
+        }
+        if (errorStr.equals("")) {
+            ls_socai.add(getLedgerDetails());
+            setCellValueFactory(getLedgerDetails());
+            clearFields();
+        }else{
+            DialogMessage.message("Error", errorStr, "Cac truong khong duoc de trong.", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
