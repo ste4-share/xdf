@@ -5,11 +5,10 @@ import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
-import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.TextToNumber;
-import jakarta.validation.*;
+import jakarta.transaction.Transactional;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -18,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +53,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<NguonNx> dvn_cbb,dvx_cbb;
     @FXML
-    private ComboBox<String> loai_xuat;
+    private ComboBox<String> loai_xuat_cbb;
     @FXML
     private ComboBox<LoaiXangDauDto> cbb_tenxd;
     @FXML
@@ -82,10 +82,296 @@ public class XuatController extends CommonFactory implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ls_socai = new ArrayList<>();
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
-        initLoaiXuatCbb();
         initDefailtVar();
+        initLoaiXuatCbb();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
         mapXdForCombobox("ALL");
+    }
+    @FXML
+    public void dongiaSelected(ActionEvent actionEvent) {
+        setInv_lb();
+    }
+
+    @FXML
+    public void dvnSelectedAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void nvSelected(ActionEvent actionEvent) {
+        if (xmt_cbb.getSelectionModel().getSelectedItem()!=null){
+            dinhMuc = new DinhMuc();
+            dinhMuc = dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElse(null);
+            if (mb_rd.isSelected()){
+                lb_dm_gio.setText("Đ.mức TK:");
+                dm_gio.setText(TextToNumber.textToNum(String.valueOf(dinhMuc.getDm_tk_gio())));
+                lb_dm_km.setText("Đ.mức MĐ:");
+                dm_km.setText(TextToNumber.textToNum(String.valueOf(dinhMuc.getDm_md_gio())));
+            }else{
+                lb_dm_gio.setText("Đ.mức Giờ:");
+                dm_gio.setText(TextToNumber.textToNum(String.valueOf(dinhMuc.getDm_xm_gio())));
+                lb_dm_km.setText("Đ.mức Km:");
+                dm_km.setText(TextToNumber.textToNum(String.valueOf(dinhMuc.getDm_xm_km())));
+            }
+        }
+    }
+    @FXML
+    public void loaixuatAction(ActionEvent actionEvent) {
+        if (loai_xuat_cbb.getSelectionModel().getSelectedItem().equals(LoaiXuat.X_K.getName())){
+            disableFeature(true);
+            mapItemsForDonViXuat(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()));
+            mapItemsForDonViNhap(nguonNxService.findAll());
+            List<PhuongTien> pt= new ArrayList<>();
+            mapItemsForXeMayTau(pt);
+            tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
+            acbLogin.dispose();
+            searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
+            cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findAllOrderby()));
+            cbb_tenxd.getSelectionModel().selectFirst();
+            px_hbox.setDisable(false);
+        } else if (loai_xuat_cbb.getSelectionModel().getSelectedItem().equals(LoaiXuat.NV.getName())) {
+            disableFeature(false);
+            List<NguonNx> nxListw = new ArrayList<>();
+            mapItemsForDonViNhap(nxListw);
+            mapItemsForDonViXuat(nguonNxService.findByAllBy());
+            mapItemsForXeMayTau(phuongtienService.findAll());
+            chiTietNhiemVuDTO_list = chitietNhiemvuService.findAllDtoBy(3);
+            acbLogin.dispose();
+            searchCompleteTion(chiTietNhiemVuDTO_list.stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()));
+            cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName())));
+            cbb_tenxd.getSelectionModel().selectFirst();
+            px_hbox.setDisable(true);
+        } else if (loai_xuat_cbb.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())) {
+            disableFeature(true);
+            mapItemsForDonViXuat(nguonNxService.findByAllBy());
+            mapItemsForDonViNhap(new ArrayList<>());
+            dvi_nhan.setDisable(true);
+            List<PhuongTien> pt= new ArrayList<>();
+            mapItemsForXeMayTau(pt);
+            chiTietNhiemVuDTO_list = chitietNhiemvuService.findAllDtoById(3);
+            acbLogin.dispose();
+            searchCompleteTion(chiTietNhiemVuDTO_list.stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()));
+            cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findAllOrderby()));
+            cbb_tenxd.getSelectionModel().selectFirst();
+            px_hbox.setDisable(false);
+        }
+    }
+
+    @FXML
+    public void mbRadioSel(ActionEvent actionEvent) {
+        mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()));
+        lgb_hb.setDisable(false);
+        System.out.println(loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName()).size());
+        cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName())));
+        cbb_tenxd.getSelectionModel().selectFirst();
+        px_hbox.setDisable(true);
+    }
+    @FXML
+    public void xeRadioSelec(ActionEvent actionEvent) {
+        mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle()));
+        md_rd.setSelected(true);
+        lgb_hb.setDisable(true);
+        cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName())));
+        cbb_tenxd.getSelectionModel().selectFirst();
+        px_hbox.setDisable(false);
+    }
+    @FXML
+    public void mayRadioSelec(ActionEvent actionEvent) {
+        mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAY.getNameVehicle()));
+        md_rd.setSelected(true);
+        lgb_hb.setDisable(true);
+        cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName())));
+        cbb_tenxd.getSelectionModel().selectFirst();
+        px_hbox.setDisable(false);
+    }
+
+    @FXML
+    public void add(ActionEvent actionEvent) {
+        if (validateField(getLedgerDetails()).isEmpty()) {
+            ls_socai.add(getLedgerDetails());
+            setCellValueFactory(getLedgerDetails());
+            clearFields();
+        }else{
+            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(getLedgerDetails()),
+                    "Nhập sai định dạng.", Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    public void xuat(ActionEvent actionEvent) {
+        if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+            Ledger l = createNewLedger();
+            if (validateField(l).isEmpty()) {
+                ls_socai.forEach(ld -> {
+                    ld.setLedger_id(l.getId());
+//                saveLichsunxk(soCaiDto);
+                    saveMucgia(ld, l);
+                    updateInventory(l, ld);
+                    ledgerService.save(ld);
+                });
+                if (DialogMessage.callAlertWithMessage("THÔNG BÁO", "Thành công", "Thêm phiếu Xuất thành công",Alert.AlertType.INFORMATION) == ButtonType.OK){
+                    DashboardController.xuatStage.close();
+                }
+            }else{
+                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
+                        "Nhập sai định dạng.", Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    @FXML
+    public void cancel(ActionEvent actionEvent) {
+        DashboardController.xuatStage.close();
+    }
+    @FXML
+    public void edit(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void del(ActionEvent actionEvent) {
+    }
+    
+    private int cal_phaixuat_km(int sokm, int dinhmuc){
+        return (sokm*dinhmuc)/100;
+    }
+    private float cal_phaixuat_gio(float sogio, int dinhmuc){
+        return (float) sogio*dinhmuc;
+    }
+    @FXML
+    public void cal_nl_gio(ActionEvent actionEvent) {
+        float phut = (float) Integer.parseInt(sophut.getText())/60;
+        int du = (Integer.parseInt(sophut.getText()))/60;
+        float gio = Integer.parseInt(sogio.getText()) + phut + du;
+        if (mb_rd.isSelected()){
+            if (tk_rd.isSelected()){
+                nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_tk_gio())));
+            } else{
+                nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_md_gio())));
+            }
+        }else{
+            nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_xm_gio())));
+        }
+    }
+    @FXML
+    public void selectxd(ActionEvent actionEvent) {
+        if (cbb_tenxd.getSelectionModel().getSelectedItem()!=null){
+            chungloai_lb.setText("Chủng loại: "+cbb_tenxd.getSelectionModel().getSelectedItem().getChungloai());
+        }
+    }
+
+
+    @FXML
+    public void km_keyrealese(KeyEvent keyEvent) {
+        if (!nl_km.getText().isEmpty() && isNumber(nl_km.getText())){
+            try{
+                nl_km.setText(String.valueOf(cal_phaixuat_km(Integer.parseInt(sokm.getText()), Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_xm_km())));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    @FXML
+    public void soKeyRealed(KeyEvent keyEvent) {
+        try {
+            if (isNumber(so.getText())){
+                if (!so.getText().isEmpty()){
+                    if (DashboardController.ledgerList.stream().filter(x->x.getBill_id()==Integer.parseInt(so.getText())).findFirst().isPresent()){
+                        so.setStyle(styleErrorField);
+                    } else {
+                        so.setStyle(null);
+                    }
+                }
+            }else{
+                so.setStyle(styleErrorField);
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+    @FXML
+    public void giohd_key(KeyEvent keyEvent) {
+        validateToSettingStyle(sogio);
+    }
+    @FXML
+    public void phut_key(KeyEvent keyEvent) {
+        if (Integer.parseInt(sogio.getText()) <60 && Integer.parseInt(sogio.getText()) >=0){
+            validateToSettingStyle(sophut);
+        }
+    }
+    @FXML
+    public void px_kr(KeyEvent keyEvent) {
+        validateToSettingStyle(phaixuat);
+    }
+    @FXML
+    public void tx_kr(KeyEvent keyEvent) {
+        validateToSettingStyle(thucxuat);
+    }
+    @FXML
+    public void nl_km_kr(KeyEvent keyEvent) {
+        validateToSettingStyle(nl_km);
+    }
+    @FXML
+    public void nl_gio_kr(KeyEvent keyEvent) {
+        validateToSettingStyle(nl_gio);
+    }
+    @FXML
+    public void nhietdo_kr(KeyEvent keyEvent) {
+        validateToSettingStyle(nhietdo);
+    }
+    @FXML
+    public void vcf_kr(KeyEvent keyEvent) {
+        validateToSettingStyle(vcf);
+    }
+    @FXML
+    public void tytrong_kr(KeyEvent keyEvent) {
+        validateToSettingStyle(tytrong);
+    }
+    @FXML
+    public void so_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(so);
+    }
+    @FXML
+    public void so_km_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(sokm);
+    }
+
+    @FXML
+    public void giohd_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(sogio);
+    }
+    @FXML
+    public void phuthd_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(sophut);
+    }
+    @FXML
+    public void tcx_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(tcx);
+    }
+    @FXML
+    public void px_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(phaixuat);
+    }
+    @FXML
+    public void tx_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(thucxuat);
+    }
+    @FXML
+    public void nl_km_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(nl_km);
+    }
+    @FXML
+    public void nlgio__clicked(MouseEvent mouseEvent) {
+        cleanErrorField(nl_gio);
+    }
+    @FXML
+    public void nhietdo_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(nhietdo);
+    }
+    @FXML
+    public void cvf_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(vcf);
+    }
+    @FXML
+    public void tytrong_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(tytrong);
     }
 
     private void initDefailtVar() {
@@ -102,8 +388,8 @@ public class XuatController extends CommonFactory implements Initializable {
     }
 
     private void initLoaiXuatCbb() {
-        loai_xuat.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.HH.getName())));
-        loai_xuat.getSelectionModel().selectFirst();
+        loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.HH.getName())));
+        loai_xuat_cbb.getSelectionModel().selectFirst();
         mapItemsForDonViXuat(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()));
         mapItemsForDonViNhap(nguonNxService.findAll());
         List<PhuongTien> pt= new ArrayList<>();
@@ -154,14 +440,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_dongia.getSelectionModel().selectFirst();
         setInv_lb();
     }
-    private void fillDataToTextField_tab_k(LedgerDetails ledgerDetails){
-        cbb_tenxd.getSelectionModel().select(loaiXdService.findById(cbb_tenxd.getSelectionModel().getSelectedItem().getXd_id()).orElse(null));
-        phaixuat.setText(String.valueOf(ledgerDetails.getPhai_xuat()));
-        thucxuat.setText(String.valueOf(ledgerDetails.getThuc_xuat()));
-        nhietdo.setText(String.valueOf(ledgerDetails.getNhiet_do_tt()));
-        vcf.setText(String.valueOf(ledgerDetails.getHe_so_vcf()));
-        tytrong.setText(String.valueOf(ledgerDetails.getTy_trong()));
-    }
     private void setCellValueFactory(LedgerDetails l){
         tbXuat.setItems(FXCollections.observableList(ls_socai));
         stt.setSortable(false);
@@ -187,7 +465,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     private Ledger createNewLedger() {
         Ledger ledger = new Ledger();
-        ledger.setBill_id(Integer.parseInt(so.getText()));
+        ledger.setBill_id(Integer.parseInt(so.getText().isEmpty() ? "0" : so.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
         ledger.setAmount(ls_socai.stream().mapToLong(x-> ((long) x.getSoluong() *x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
@@ -195,9 +473,9 @@ public class XuatController extends CommonFactory implements Initializable {
         ledger.setStatus("ACTIVE");
         if (tk_rd.isSelected()){
             ledger.setSl_tieuthu_md(0);
-            ledger.setSl_tieuthu_tk(Integer.parseInt(thucxuat.getText()));
+            ledger.setSl_tieuthu_tk(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
         }else if (md_rd.isSelected()){
-            ledger.setSl_tieuthu_md(Integer.parseInt(thucxuat.getText()));
+            ledger.setSl_tieuthu_md(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
             ledger.setSl_tieuthu_tk(0);
         }else{
             ledger.setSl_tieuthu_md(0);
@@ -212,7 +490,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledger.setNguoi_nhan(nguoinhan.getText());
         ledger.setSo_xe(soxe.getText());
         ledger.setLenh_so(lenhso.getText());
-        if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.NV.getName())){
+        if (loai_xuat_cbb.getSelectionModel().getSelectedItem().equals(LoaiXuat.NV.getName())){
             ledger.setTructhuoc(TructhuocEnum.NV.getName());
             ledger.setLoaigiobay(tk_rd.isSelected() ? TypeCons.TREN_KHONG.getName() : TypeCons.MAT_DAT.getName());
             ledger.setNhiemvu(identifyNhiemvu().getNhiemvu());
@@ -224,12 +502,12 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setGiohd_tk(getStrInterval());
                 ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
             } else if (md_rd.isSelected()) {
-                ledger.setSo_km(Integer.parseInt(sokm.getText()));
+                ledger.setSo_km(Integer.parseInt(sokm.getText().isEmpty() ? "0" : sokm.getText()));
                 ledger.setGiohd_tk(DefaultVarCons.GIO_HD.getName());
                 ledger.setGiohd_md(getStrInterval());
             }
             ledger.setTcn_id(0);
-        } else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())){
+        } else if (loai_xuat_cbb.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())){
             ledger.setTructhuoc(TructhuocEnum.HH.getName());
             ledger.setLoaigiobay("");
             ledger.setNhiemvu("");
@@ -244,12 +522,12 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setLoaigiobay("");
             ledger.setNhiemvu("");
             ledger.setNhiemvu_id(0);
-            ledger.setTcn_id(tcnService.findByName(tcx.getText()).orElseThrow().getId());
+            ledger.setTcn_id(tcnService.findByName(tcx.getText()).orElse(null)==null ? 0 : tcnService.findByName(tcx.getText()).orElse(null).getId());
             ledger.setSo_km(0);
             ledger.setGiohd_tk(DefaultVarCons.GIO_HD.getName());
             ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
         }
-        return ledgerService.save(ledger);
+        return ledger;
     }
     private LedgerDetails getLedgerDetails(){
         LedgerDetails ledgerDetails = new LedgerDetails();
@@ -257,24 +535,24 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setMa_xd(cbb_tenxd.getSelectionModel().getSelectedItem().getMaxd());
         ledgerDetails.setChung_loai(cbb_tenxd.getSelectionModel().getSelectedItem().getChungloai());
         ledgerDetails.setDon_gia(cbb_dongia.getValue().getPrice());
-        ledgerDetails.setPhai_xuat(Integer.parseInt(phaixuat.getText()));
-        ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText()));
-        ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText()));
-        ledgerDetails.setHe_so_vcf(Integer.parseInt(vcf.getText()));
-        ledgerDetails.setTy_trong(Double.parseDouble(tytrong.getText()));
+        ledgerDetails.setPhai_xuat(Integer.parseInt(phaixuat.getText().isEmpty() ? "0" : phaixuat.getText()));
+        ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
+        ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText().isEmpty() ? "0" : nhietdo.getText()));
+        ledgerDetails.setHe_so_vcf(Integer.parseInt(vcf.getText().isEmpty() ? "0" : vcf.getText()));
+        ledgerDetails.setTy_trong(Double.parseDouble(tytrong.getText().isEmpty() ? "0" : tytrong.getText()));
         ledgerDetails.setLoaixd_id(cbb_tenxd.getSelectionModel().getSelectedItem().getXd_id());
-        ledgerDetails.setSoluong(Integer.parseInt(thucxuat.getText()));
-        ledgerDetails.setSoluong_px(Long.parseLong(phaixuat.getText()));
+        ledgerDetails.setSoluong(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
+        ledgerDetails.setSoluong_px(Long.parseLong(phaixuat.getText().isEmpty() ? "0" : phaixuat.getText()));
         ledgerDetails.setThuc_nhap(0);
         ledgerDetails.setPhai_nhap(0);
-        ledgerDetails.setNl_gio(Long.parseLong(nl_gio.getText()));
-        ledgerDetails.setNl_km(Long.parseLong(nl_km.getText()));
-        if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.X_K.getName())){
+        ledgerDetails.setNl_gio(Long.parseLong(nl_gio.getText().isEmpty() ? "0" : nl_gio.getText()));
+        ledgerDetails.setNl_km(Long.parseLong(nl_km.getText().isEmpty() ? "0" : nl_km.getText()));
+        if (loai_xuat_cbb.getSelectionModel().getSelectedItem().equals(LoaiXuat.X_K.getName())){
             ledgerDetails.setPhuongtien_id(0);
             ledgerDetails.setThuc_xuat_tk(0);
             ledgerDetails.setHaohut_sl(0);
-            ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText()));
-        }else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())){
+            ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
+        }else if (loai_xuat_cbb.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())){
             ledgerDetails.setPhuongtien_id(0);
             ledgerDetails.setThuc_xuat_tk(0);
             ledgerDetails.setThuc_xuat(0);
@@ -284,11 +562,11 @@ public class XuatController extends CommonFactory implements Initializable {
             ledgerDetails.setPhuongtien_id(xmt_cbb.getValue().getId());
 
             if (tk_rd.isSelected()){
-                ledgerDetails.setThuc_xuat_tk(Integer.parseInt(thucxuat.getText()));
+                ledgerDetails.setThuc_xuat_tk(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
                 ledgerDetails.setThuc_xuat(0);
             } else if (md_rd.isSelected()) {
                 ledgerDetails.setThuc_xuat_tk(0);
-                ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText()));
+                ledgerDetails.setThuc_xuat(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
             }
         }
         ledgerDetails.setThanhtien((long) (ledgerDetails.getSoluong() * ledgerDetails.getDon_gia()));
@@ -321,13 +599,10 @@ public class XuatController extends CommonFactory implements Initializable {
         i.setPre_nvdx(i.getPre_nvdx() - ld.getSoluong());
         inventoryService.save(i);
     }
-
-
     private ChitietNhiemVu identifyNhiemvu(){
         String text = tcx.getText();
         return chitietNhiemvuService.findByNhiemvu(text).orElse(null);
     }
-
     private String getStrInterval(){
         String hour_str = sogio.getText().trim();
         String m_str = sophut.getText().trim();
@@ -414,197 +689,47 @@ public class XuatController extends CommonFactory implements Initializable {
         tk_rd.setSelected(!ex);
         mb_rd.setSelected(!ex);
     }
-    @FXML
-    public void dongiaSelected(ActionEvent actionEvent) {
-        setInv_lb();
+    private void cleanErrorField(TextField field){
+        field.selectAll();
+        field.setStyle(null);
     }
-
-    @FXML
-    public void dvnSelectedAction(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void soKeyRealed(KeyEvent keyEvent) {
-        try {
-            if (!so.getText().isEmpty()){
-                if (DashboardController.ledgerList.stream().filter(x->x.getBill_id()==Integer.parseInt(so.getText())).findFirst().isPresent()){
-                    so.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-                } else {
-                    so.setStyle(null);
-                }
-            }
-        }catch (Exception e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    public void nvSelected(ActionEvent actionEvent) {
-        if (xmt_cbb.getSelectionModel().getSelectedItem()!=null){
-            dinhMuc = new DinhMuc();
-            dinhMuc = dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getSelectionModel().getSelectedItem().getId(), DashboardController.findByTime.getId()).orElse(null);
-            if (mb_rd.isSelected()){
-                lb_dm_gio.setText("Đ.mức TK:");
-                dm_gio.setText(TextToNumber.textToNum(String.valueOf(dinhMuc.getDm_tk_gio())));
-                lb_dm_km.setText("Đ.mức MĐ:");
-                dm_km.setText(TextToNumber.textToNum(String.valueOf(dinhMuc.getDm_md_gio())));
-            }else{
-                lb_dm_gio.setText("Đ.mức Giờ:");
-                dm_gio.setText(TextToNumber.textToNum(String.valueOf(dinhMuc.getDm_xm_gio())));
-                lb_dm_km.setText("Đ.mức Km:");
-                dm_km.setText(TextToNumber.textToNum(String.valueOf(dinhMuc.getDm_xm_km())));
+    private String changeStyleTextFieldByValidation(Object o){
+        List<String> ls = validateField(o);
+        if (!ls.isEmpty()){
+            if (ls.get(0).equals("soluong_px")){
+                phaixuat.setStyle(styleErrorField);
+                return "phai xuat phai lon hon 0";
+            }else if (ls.get(0).equals("nhiet_do_tt")){
+                nhietdo.setStyle(styleErrorField);
+                return "Nhiet do phai lon hon 0";
+            }else if (ls.get(0).equals("ty_trong")){
+                tytrong.setStyle(styleErrorField);
+                return "Ty trong phai lon hon 0";
+            }else if (ls.get(0).equals("don_gia")){
+                dongia.setStyle(styleErrorField);
+                return "don gia phai lon hon 0";
+            } else if (ls.get(0).equals("soluong")){
+                thucxuat.setStyle(styleErrorField);
+                return "thuc xuat phai lon hon 0";
+            }else if (ls.get(0).equals("bill_id")){
+                so.setStyle(styleErrorField);
+                return "so phai lon hon 0";
+            }else if (ls.get(0).equals("tcn_id")){
+                tcx.setStyle(styleErrorField);
+                return "Tinh chat xuat khong xac dinh.";
             }
         }
+        return null;
     }
-    @FXML
-    public void loaixuatAction(ActionEvent actionEvent) {
-        if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.X_K.getName())){
-            disableFeature(true);
-            mapItemsForDonViXuat(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()));
-            mapItemsForDonViNhap(nguonNxService.findAll());
-            List<PhuongTien> pt= new ArrayList<>();
-            mapItemsForXeMayTau(pt);
-            tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
-            acbLogin.dispose();
-            searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
-            cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findAllOrderby()));
-            cbb_tenxd.getSelectionModel().selectFirst();
-            px_hbox.setDisable(false);
-        } else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.NV.getName())) {
-            disableFeature(false);
-            List<NguonNx> nxListw = new ArrayList<>();
-            mapItemsForDonViNhap(nxListw);
-            mapItemsForDonViXuat(nguonNxService.findByAllBy());
-            mapItemsForXeMayTau(phuongtienService.findAll());
-            chiTietNhiemVuDTO_list = chitietNhiemvuService.findAllDtoBy(3);
-            acbLogin.dispose();
-            searchCompleteTion(chiTietNhiemVuDTO_list.stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()));
-            cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName())));
-            cbb_tenxd.getSelectionModel().selectFirst();
-            px_hbox.setDisable(true);
-        } else if (loai_xuat.getSelectionModel().getSelectedItem().equals(LoaiXuat.HH.getName())) {
-            disableFeature(true);
-            mapItemsForDonViXuat(nguonNxService.findByAllBy());
-            mapItemsForDonViNhap(new ArrayList<>());
-            dvi_nhan.setDisable(true);
-            List<PhuongTien> pt= new ArrayList<>();
-            mapItemsForXeMayTau(pt);
-            chiTietNhiemVuDTO_list = chitietNhiemvuService.findAllDtoById(3);
-            acbLogin.dispose();
-            searchCompleteTion(chiTietNhiemVuDTO_list.stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()));
-            cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findAllOrderby()));
-            cbb_tenxd.getSelectionModel().selectFirst();
-            px_hbox.setDisable(false);
-        }
+    public boolean isNumber(String in) {
+        return in.matches("[^0A-Za-z][0-9]{0,18}");
     }
-
-    @FXML
-    public void mbRadioSel(ActionEvent actionEvent) {
-        mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()));
-        lgb_hb.setDisable(false);
-        System.out.println(loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName()).size());
-        cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName())));
-        cbb_tenxd.getSelectionModel().selectFirst();
-        px_hbox.setDisable(true);
-    }
-    @FXML
-    public void xeRadioSelec(ActionEvent actionEvent) {
-        mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle()));
-        md_rd.setSelected(true);
-        lgb_hb.setDisable(true);
-        cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName())));
-        cbb_tenxd.getSelectionModel().selectFirst();
-        px_hbox.setDisable(false);
-    }
-    @FXML
-    public void mayRadioSelec(ActionEvent actionEvent) {
-        mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAY.getNameVehicle()));
-        md_rd.setSelected(true);
-        lgb_hb.setDisable(true);
-        cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName())));
-        cbb_tenxd.getSelectionModel().selectFirst();
-        px_hbox.setDisable(false);
-    }
-
-    @FXML
-    public void add(ActionEvent actionEvent) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<LedgerDetails>> violations = validator.validate(getLedgerDetails());
-        String errorStr = "";
-        for (ConstraintViolation<LedgerDetails> violation : violations) {
-            errorStr = errorStr.concat(violation.getPropertyPath() + ": " + violation.getMessage()+" \n");
-        }
-        if (errorStr.equals("")) {
-            ls_socai.add(getLedgerDetails());
-            setCellValueFactory(getLedgerDetails());
-            clearFields();
+    private void validateToSettingStyle(TextField tf) {
+        if (!isNumber(tf.getText())){
+            tf.setStyle(styleErrorField);
         }else{
-            DialogMessage.message("Error", errorStr, "Cac truong khong duoc de trong.", Alert.AlertType.ERROR);
+            tf.setStyle(null);
         }
     }
 
-    @FXML
-    public void xuat(ActionEvent actionEvent) {
-        if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
-            Ledger l = createNewLedger();
-            ls_socai.forEach(ld -> {
-                ld.setLedger_id(l.getId());
-//                saveLichsunxk(soCaiDto);
-                saveMucgia(ld, l);
-                updateInventory(l, ld);
-                ledgerService.save(ld);
-            });
-            if (DialogMessage.callAlertWithMessage("THÔNG BÁO", "Thành công", "Thêm phiếu Xuất thành công",Alert.AlertType.INFORMATION) == ButtonType.OK){
-                DashboardController.xuatStage.close();
-            }
-        }
-    }
-
-    @FXML
-    public void cancel(ActionEvent actionEvent) {
-        DashboardController.xuatStage.close();
-    }
-    @FXML
-    public void edit(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void del(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void km_keyrealese(KeyEvent keyEvent) {
-        if (!nl_km.getText().isEmpty()){
-            try{
-                nl_km.setText(String.valueOf(cal_phaixuat_km(Integer.parseInt(sokm.getText()), Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_xm_km())));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-    private int cal_phaixuat_km(int sokm, int dinhmuc){
-        return (sokm*dinhmuc)/100;
-    }
-    private float cal_phaixuat_gio(float sogio, int dinhmuc){
-        return (float) sogio*dinhmuc;
-    }
-    @FXML
-    public void cal_nl_gio(ActionEvent actionEvent) {
-        float phut = (float) Integer.parseInt(sophut.getText())/60;
-        int du = (Integer.parseInt(sophut.getText()))/60;
-        float gio = Integer.parseInt(sogio.getText()) + phut + du;
-        if (mb_rd.isSelected()){
-            if (tk_rd.isSelected()){
-                nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_tk_gio())));
-            } else{
-                nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_md_gio())));
-            }
-        }else{
-            nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_xm_gio())));
-        }
-    }
-    @FXML
-    public void selectxd(ActionEvent actionEvent) {
-        if (cbb_tenxd.getSelectionModel().getSelectedItem()!=null){
-            chungloai_lb.setText("Chủng loại: "+cbb_tenxd.getSelectionModel().getSelectedItem().getChungloai());
-        }
-    }
 }
