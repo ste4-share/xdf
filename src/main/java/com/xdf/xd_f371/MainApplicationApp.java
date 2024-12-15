@@ -1,6 +1,7 @@
 package com.xdf.xd_f371;
 
 import com.xdf.xd_f371.controller.ErrorController;
+import com.xdf.xd_f371.controller.MockDataMap;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;

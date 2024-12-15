@@ -24,10 +24,14 @@ public class Inventory {
     private int tdk_nvdx;
     @Column(name = "tdk_sscd")
     private int tdk_sscd;
-    @Column(name = "pre_nvdx")
-    private int pre_nvdx;
-    @Column(name = "pre_sscd")
-    private int pre_sscd;
+    @Column(name = "nhap_nvdx")
+    private int nhap_nvdx;
+    @Column(name = "nhap_sscd")
+    private int nhap_sscd;
+    @Column(name = "xuat_nvdx")
+    private int xuat_nvdx;
+    @Column(name = "xuat_sscd")
+    private int xuat_sscd;
     @Column(name = "status")
     private String status;
 }

@@ -74,8 +74,6 @@ public class XuatController extends CommonFactory implements Initializable {
     @Autowired
     private PhuongtienService phuongtienService;
     @Autowired
-    private InventoryService inventoryService;
-    @Autowired
     private TcnService tcnService;
 
     @Override
@@ -188,7 +186,7 @@ public class XuatController extends CommonFactory implements Initializable {
     public void add(ActionEvent actionEvent) {
         if (validateField(getLedgerDetails()).isEmpty()) {
             ls_socai.add(getLedgerDetails());
-            setCellValueFactory(getLedgerDetails());
+            setCellValueFactory();
             clearFields();
         }else{
             DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(getLedgerDetails()),
@@ -199,18 +197,9 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void xuat(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
-            Ledger l = createNewLedger();
+            Ledger l = getLedger();
             if (validateField(l).isEmpty()) {
-                ls_socai.forEach(ld -> {
-                    ld.setLedger_id(l.getId());
-//                saveLichsunxk(soCaiDto);
-                    saveMucgia(ld, l);
-                    updateInventory(l, ld);
-                    ledgerService.save(ld);
-                });
-                if (DialogMessage.callAlertWithMessage("THÔNG BÁO", "Thành công", "Thêm phiếu Xuất thành công",Alert.AlertType.INFORMATION) == ButtonType.OK){
-                    DashboardController.xuatStage.close();
-                }
+                ledgerService.saveLedgerWithDetails(l, ls_socai);
             }else{
                 DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
                         "Nhập sai định dạng.", Alert.AlertType.ERROR);
@@ -256,8 +245,6 @@ public class XuatController extends CommonFactory implements Initializable {
             chungloai_lb.setText("Chủng loại: "+cbb_tenxd.getSelectionModel().getSelectedItem().getChungloai());
         }
     }
-
-
     @FXML
     public void km_keyrealese(KeyEvent keyEvent) {
         if (!nl_km.getText().isEmpty() && isNumber(nl_km.getText())){
@@ -435,12 +422,12 @@ public class XuatController extends CommonFactory implements Initializable {
                 return mucgiaService.findMucGiaByIdAndStatus(mucgia_id_selected_mucgia_cbb.getId(), MucGiaEnum.IN_STOCK.getStatus()).orElse(null);
             }
         });
-        List<Mucgia> mucgials = mucgiaService.findAllMucgiaByItemID(Purpose.NVDX.getName(),xd_id,DashboardController.findByTime.getId());
+        List<Mucgia> mucgials = mucgiaService.findAllMucgiaByItemID(xd_id,DashboardController.findByTime.getId());
         cbb_dongia.setItems(FXCollections.observableArrayList(mucgials));
         cbb_dongia.getSelectionModel().selectFirst();
         setInv_lb();
     }
-    private void setCellValueFactory(LedgerDetails l){
+    private void setCellValueFactory(){
         tbXuat.setItems(FXCollections.observableList(ls_socai));
         stt.setSortable(false);
         stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tbXuat.getItems().indexOf(column.getValue())+1).asString());
@@ -463,7 +450,7 @@ public class XuatController extends CommonFactory implements Initializable {
         nl_gio.setText("0");
         nl_km.setText("0");
     }
-    private Ledger createNewLedger() {
+    private Ledger getLedger() {
         Ledger ledger = new Ledger();
         ledger.setBill_id(Integer.parseInt(so.getText().isEmpty() ? "0" : so.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
@@ -481,7 +468,6 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setSl_tieuthu_md(0);
             ledger.setSl_tieuthu_tk(0);
         }
-        ledger.setInventoryId(inventoryService.findByPetro_idAndQuarter_id(cbb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow().getId());
         ledger.setDvi_nhan(dvn_cbb.getValue()==null ? "" : dvn_cbb.getValue().getTen());
         ledger.setDvi_xuat(dvx_cbb.getValue().getTen());
         ledger.setLoai_phieu(LoaiPhieuCons.PHIEU_XUAT.getName());
@@ -581,23 +567,10 @@ public class XuatController extends CommonFactory implements Initializable {
         inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(mucgia.getAmount())) + " (Lit)");
     }
     private void saveLichsuxnk(LedgerDetails soCaiDto) {
-        Inventory inventory = inventoryService.findByPetro_idAndQuarter_id(soCaiDto.getLoaixd_id(), DashboardController.findByTime.getId()).orElse(null);
-        int tonsau = inventory.getPre_nvdx() - soCaiDto.getSoluong();
-        int tontruoc = inventory.getPre_nvdx();
-        createNewTransaction(soCaiDto, tontruoc, tonsau);
-    }
-    private Mucgia saveMucgia(LedgerDetails ld, Ledger l){
-        Mucgia m = mucgiaService.findAllMucgiaUnique(Purpose.NVDX.getName(), ld.getLoaixd_id(), DashboardController.findByTime.getId(), ld.getDon_gia()).orElse(null);
-        if (m == null){
-            return mucgiaService.save(new Mucgia(ld.getDon_gia(), ld.getSoluong(),l.getQuarter_id(),ld.getLoaixd_id(),l.getInventoryId(),Purpose.NVDX.getName(),MucGiaEnum.IN_STOCK.getStatus()));
-        }
-        m.setAmount(m.getAmount() - ld.getSoluong());
-        return mucgiaService.save(m);
-    }
-    private void updateInventory(Ledger l, LedgerDetails ld) {
-        Inventory i = inventoryService.findById(l.getInventoryId());
-        i.setPre_nvdx(i.getPre_nvdx() - ld.getSoluong());
-        inventoryService.save(i);
+//        Inventory inventory = inventoryService.findByPetro_idAndQuarter_id(soCaiDto.getLoaixd_id(), DashboardController.findByTime.getId()).orElse(null);
+//        int tonsau = inventory.getPre_nvdx() - soCaiDto.getSoluong();
+//        int tontruoc = inventory.getPre_nvdx();
+//        createNewTransaction(soCaiDto, tontruoc, tonsau);
     }
     private ChitietNhiemVu identifyNhiemvu(){
         String text = tcx.getText();

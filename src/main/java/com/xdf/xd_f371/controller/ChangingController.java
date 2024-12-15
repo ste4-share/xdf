@@ -151,10 +151,9 @@ public class ChangingController implements Initializable {
 
     private void updateMucgia(List<Mucgia> MucgiaList,String purpose){
         for(int i = 0;i < MucgiaList.size(); i++){
-            Mucgia mucgia = mucgiaService.findAllMucgiaUnique(purpose,tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucgiaList.get(i).getPrice()).orElse(null);
+            Mucgia mucgia = mucgiaService.findAllMucgiaUnique(tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucgiaList.get(i).getPrice()).orElse(null);
             if (mucgia==null){
                 Mucgia after_convert = new Mucgia();
-                after_convert.setPurpose(purpose);
                 after_convert.setPrice(MucgiaList.get(i).getPrice());
                 after_convert.setAmount(MucgiaList.get(i).getAmount());
                 after_convert.setStatus(MucGiaEnum.IN_STOCK.getStatus());
@@ -194,7 +193,7 @@ public class ChangingController implements Initializable {
     }
     private List<Mucgia> setDataToTable(TableView<Mucgia> tb, String purpose){
         int petroId = tonkho_selected.getLxd_id();
-        List<Mucgia> list = mucgiaService.findAllMucgiaByItemID(purpose, petroId,DashboardController.findByTime.getId());
+        List<Mucgia> list = mucgiaService.findAllMucgiaByItemID(petroId,DashboardController.findByTime.getId());
         tb.setItems(FXCollections.observableList(list));
         return list;
     }

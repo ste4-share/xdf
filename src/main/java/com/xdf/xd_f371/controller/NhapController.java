@@ -159,7 +159,7 @@ public class NhapController extends CommonFactory implements Initializable {
         cmb_dvn.getSelectionModel().selectFirst();
     }
 
-    private LedgerDetails getDataFromField(){
+    private LedgerDetails getLedgerDetails(){
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setMa_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getMaxd());
         ledgerDetails.setTen_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getTenxd());
@@ -186,7 +186,7 @@ public class NhapController extends CommonFactory implements Initializable {
         tyTrong.setText(String.valueOf(ledgerDetails.getTy_trong()));
     }
 
-    private void addNewPreparedledgerDetail(LedgerDetails ledgerDetails){
+    private void setcellFactory(){
         tbTT.setSortable(false);
         tbTT.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tableView.getItems().indexOf(column.getValue())+1).asString());
         tbTenXD.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
@@ -197,56 +197,63 @@ public class NhapController extends CommonFactory implements Initializable {
         tbVCf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
         tbTyTrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
         tbThanhTien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien"));
-        ls_socai.add(ledgerDetails);
         tableView.setItems(FXCollections.observableList(ls_socai));
     }
 
     @FXML
     private void btnInsert(ActionEvent event){
-        addNewPreparedledgerDetail(getDataFromField());
-        clearHH();
+        if (validateField(getLedgerDetails()).isEmpty()) {
+            ls_socai.add(getLedgerDetails());
+            setcellFactory();
+            clearHH();
+        }else{
+            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(getLedgerDetails()),
+                    "Nhập sai định dạng.", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     private void btnImport(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
-            Ledger l = createNewLedger();
-            ls_socai.forEach(ld -> {
-                ld.setLedger_id(l.getId());
-//                saveLichsunxk(soCaiDto);
-                saveMucGia(ld, l);
-                updateInventory(l, ld);
-                ledgerService.save(ld);
-            });
-            if (DialogMessage.callAlertWithMessage("THÔNG BÁO", "Thành công", "Thêm phiếu nhập thành công",Alert.AlertType.INFORMATION) == ButtonType.OK){
-                DashboardController.primaryStage.close();
+            Ledger l = getLedger();
+            if (validateField(l).isEmpty()) {
+                ledgerService.saveLedgerWithDetails(l, ls_socai);
+            }else{
+                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
+                        "Nhập sai định dạng.", Alert.AlertType.ERROR);
             }
         }
     }
-
-    private void updateInventory(Ledger l, LedgerDetails ld) {
-        Inventory i = inventoryService.findById(l.getInventoryId());
-        i.setPre_nvdx(i.getPre_nvdx() + ld.getThuc_nhap());
-        inventoryService.save(i);
-    }
-
-    private void saveLichsunxk(LedgerDetails soCaiDto) {
-        Inventory inventory = inventoryService.findByPetro_idAndQuarter_id(soCaiDto.getLoaixd_id(), DashboardController.findByTime.getId()).orElse(null);
-        int tonsau = inventory.getPre_nvdx()+ soCaiDto.getThuc_nhap();
-        int tontruoc = inventory.getPre_nvdx();
-        createNewTransaction(soCaiDto, tontruoc, tonsau);
-    }
-
-    private Mucgia saveMucGia(LedgerDetails ld, Ledger l){
-        Mucgia m = mucgiaService.findAllMucgiaUnique(Purpose.NVDX.getName(), ld.getLoaixd_id(), DashboardController.findByTime.getId(), ld.getDon_gia()).orElse(null);
-        if (m == null){
-            return mucgiaService.save(new Mucgia(ld.getDon_gia(), ld.getThuc_nhap(),l.getQuarter_id(),ld.getLoaixd_id(),l.getInventoryId(),Purpose.NVDX.getName(),MucGiaEnum.IN_STOCK.getStatus()));
+    private String changeStyleTextFieldByValidation(Object o){
+        List<String> ls = validateField(o);
+        if (!ls.isEmpty()){
+            if (ls.get(0).equals("soluong_px")){
+                phaiNhap.setStyle(styleErrorField);
+                return "phai nhap phai lon hon 0";
+            }else if (ls.get(0).equals("nhiet_do_tt")){
+                tThucTe.setStyle(styleErrorField);
+                return "Nhiet do phai lon hon 0";
+            }else if (ls.get(0).equals("ty_trong")){
+                tyTrong.setStyle(styleErrorField);
+                return "Ty trong phai lon hon 0";
+            }else if (ls.get(0).equals("don_gia")){
+                donGiaTf.setStyle(styleErrorField);
+                return "don gia phai lon hon 0";
+            } else if (ls.get(0).equals("soluong")){
+                thucNhap.setStyle(styleErrorField);
+                return "thuc nhap phai lon hon 0";
+            }else if (ls.get(0).equals("bill_id")){
+                soTf.setStyle(styleErrorField);
+                return "so phai lon hon 0";
+            }else if (ls.get(0).equals("tcn_id")){
+                tcNhap.setStyle(styleErrorField);
+                return "Tinh chat nhap khong xac dinh.";
+            }
         }
-        m.setAmount(m.getAmount() + ld.getThuc_nhap());
-        return mucgiaService.save(m);
+        return null;
     }
 
-    private Ledger createNewLedger() {
+    private Ledger getLedger() {
         Ledger ledger = new Ledger();
         ledger.setBill_id(Integer.parseInt(soTf.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
@@ -254,7 +261,6 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
         ledger.setStatus("ACTIVE");
-        ledger.setInventoryId(inventoryService.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow().getId());
         ledger.setDvi_nhan(cmb_dvn.getValue().getTen());
         ledger.setDvi_xuat(cmb_dvvc.getValue().getTen());
         ledger.setLoai_phieu("NHAP");
@@ -265,7 +271,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setLenh_so(lenhKHso.getText());
         ledger.setTcn_id(tcnService.findByName(tcNhap.getText()).orElseThrow().getId());
         ledger.setTructhuoc(tructhuocService.findById(cmb_dvvc.getSelectionModel().getSelectedItem().getTructhuoc_id()).orElseThrow().getType());
-        return ledgerService.save(ledger);
+        return ledger;
     }
 
     @FXML
@@ -309,7 +315,7 @@ public class NhapController extends CommonFactory implements Initializable {
                 "sửa");
         a.showAndWait().ifPresent(response -> {
             if (response==edit){
-                LedgerDetails ledgerDetails = getDataFromField();
+                LedgerDetails ledgerDetails = getLedgerDetails();
                 delbtn.setDisable(true);
                 editbtn.setDisable(true);
                 addbtn.setDisable(false);
@@ -322,14 +328,13 @@ public class NhapController extends CommonFactory implements Initializable {
         });
     }
     private void clearHH(){
-        donGiaTf.clear();
-        phaiNhap.clear();
-        thucNhap.clear();
-        tThucTe.clear();
-        vcf.clear();
-        tyTrong.clear();
+        donGiaTf.setText("0");
+        phaiNhap.setText("0");
+        thucNhap.setText("0");
+        tThucTe.setText("0");
+        vcf.setText("0");
+        tyTrong.setText("0");
     }
-
 
     private void insertToDataExcel() {
         openDataExcelFile();
@@ -516,7 +521,7 @@ public class NhapController extends CommonFactory implements Initializable {
 
     private void setTonKhoLabel(){
         Inventory i = inventoryService.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
-        lb_tontheoxd.setText("Số lượng tồn: "+ i.getPre_nvdx() +" (Lit)");
+        lb_tontheoxd.setText("Số lượng tồn: "+ i.getNhap_nvdx() +" (Lit)");
     }
 
     @FXML

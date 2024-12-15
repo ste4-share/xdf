@@ -44,8 +44,6 @@ public class Ledger {
     private int sl_tieuthu_md;
     @Column(name = "sl_tieuthu_tk")
     private int sl_tieuthu_tk;
-    @Column(name = "inventory_id")
-    private int inventoryId;
     @Column(name = "dvi_nhan_id")
     private int dvi_nhan_id;
     @Column(name = "dvi_xuat_id")

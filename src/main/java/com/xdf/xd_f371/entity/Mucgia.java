@@ -24,22 +24,22 @@ public class Mucgia {
     private int quarter_id;
     @Column(name = "item_id")
     private int item_id;
-    @Column(name = "inventory_id")
-    private int inventory_id;
-    @Column(name = "purpose")
-    private String purpose;
     @Column(name = "status")
     private String status;
     @Column(name = "timestamp", insertable = false)
     private LocalDate timestamp;
+    @Column(name = "nvdx")
+    private Long nvdx;
+    @Column(name = "sscd")
+    private Long sscd;
 
-    public Mucgia(int price, int amount, int quarter_id, int item_id, int inventory_id, String purpose, String status) {
+    public Mucgia(int price, int amount, int quarter_id, int item_id, String status, Long nvdx, Long sscd) {
         this.price = price;
         this.amount = amount;
         this.quarter_id = quarter_id;
         this.item_id = item_id;
-        this.inventory_id = inventory_id;
-        this.purpose = purpose;
         this.status = status;
+        this.nvdx = nvdx;
+        this.sscd = sscd;
     }
 }

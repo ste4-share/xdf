@@ -83,6 +83,6 @@ public class LedgerDetails {
 
 
     @ManyToOne
-    @JoinColumn(name = "ledger_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "ledger_id", nullable = false,insertable = false,updatable = false)
     private Ledger ledger;
 }
