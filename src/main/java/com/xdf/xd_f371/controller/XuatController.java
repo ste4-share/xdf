@@ -8,7 +8,6 @@ import com.xdf.xd_f371.model.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.TextToNumber;
-import jakarta.transaction.Transactional;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class XuatController extends CommonFactory implements Initializable {
-
+    private static List<Ledger> current_ledger_list = new ArrayList<>();
     private static Mucgia mucgia_id_selected_mucgia_cbb = new Mucgia();
     private static List<LedgerDetails> ls_socai;
     private static List<NhiemVuDto> chiTietNhiemVuDTO_list = new ArrayList<>();
@@ -64,6 +63,8 @@ public class XuatController extends CommonFactory implements Initializable {
     private TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phaixuat,col_nhietdo,col_tytrong,col_vcf,col_thucxuat,col_thanhtien;
     @FXML
     private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox;
+    @FXML
+    private Button addBtn,xuatButton,cancelBtn;
 
     @Autowired
     private ChitietNhiemvuService chitietNhiemvuService;
@@ -78,12 +79,17 @@ public class XuatController extends CommonFactory implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(),LoaiPhieuCons.PHIEU_XUAT.getName());
         ls_socai = new ArrayList<>();
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         initDefailtVar();
         initLoaiXuatCbb();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
         mapXdForCombobox("ALL");
+
+        hoverButton(addBtn, "#027a20");
+        hoverButton(xuatButton, "#002db3");
+        hoverButton(cancelBtn, "#595959");
     }
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {
@@ -257,20 +263,11 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void soKeyRealed(KeyEvent keyEvent) {
-        try {
-            if (isNumber(so.getText())){
-                if (!so.getText().isEmpty()){
-                    if (DashboardController.ledgerList.stream().filter(x->x.getBill_id()==Integer.parseInt(so.getText())).findFirst().isPresent()){
-                        so.setStyle(styleErrorField);
-                    } else {
-                        so.setStyle(null);
-                    }
-                }
-            }else{
+        if(!so.getText().isEmpty()){
+            validateToSettingStyle(so);
+            if (current_ledger_list.stream().filter(i->i.getBill_id()==Integer.parseInt(so.getText())).findFirst().isPresent()){
                 so.setStyle(styleErrorField);
             }
-        }catch (Exception e){
-            throw new RuntimeException(e);
         }
     }
     @FXML
@@ -314,6 +311,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void so_clicked(MouseEvent mouseEvent) {
         cleanErrorField(so);
+        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(),LoaiPhieuCons.PHIEU_XUAT.getName());
     }
     @FXML
     public void so_km_clicked(MouseEvent mouseEvent) {
@@ -662,10 +660,7 @@ public class XuatController extends CommonFactory implements Initializable {
         tk_rd.setSelected(!ex);
         mb_rd.setSelected(!ex);
     }
-    private void cleanErrorField(TextField field){
-        field.selectAll();
-        field.setStyle(null);
-    }
+
     private String changeStyleTextFieldByValidation(Object o){
         List<String> ls = validateField(o);
         if (!ls.isEmpty()){
@@ -694,15 +689,4 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return null;
     }
-    public boolean isNumber(String in) {
-        return in.matches("[^0A-Za-z][0-9]{0,18}");
-    }
-    private void validateToSettingStyle(TextField tf) {
-        if (!isNumber(tf.getText())){
-            tf.setStyle(styleErrorField);
-        }else{
-            tf.setStyle(null);
-        }
-    }
-
 }

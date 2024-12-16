@@ -7,6 +7,8 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +18,7 @@ import java.util.Set;
 
 @Component
 public class CommonFactory {
-
+    protected static int inventory_quantity = 0;
     protected static List<Tcn> tcnx_ls = new ArrayList<>();
     protected String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
     @Autowired
@@ -45,8 +47,27 @@ public class CommonFactory {
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<Object>> violations = validator.validate(object);
         for (ConstraintViolation<Object> violation : violations) {
+            System.out.println(violation.getPropertyPath() + ":" + violation.getMessage());
             return List.of(violation.getPropertyPath().toString());
         }
         return new ArrayList<>();
+    }
+    protected void cleanErrorField(TextField field){
+        field.selectAll();
+        field.setStyle(null);
+    }
+    protected void validateToSettingStyle(TextField tf) {
+        if (!isNumber(tf.getText())){
+            tf.setStyle(styleErrorField);
+        }else{
+            tf.setStyle(null);
+        }
+    }
+    protected boolean isNumber(String in) {
+        return in.matches("[^0A-Za-z][0-9]{0,18}");
+    }
+    protected void hoverButton(Button button, String color) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: "+color+"; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: "+color+";-fx-background-radius:10"));
     }
 }

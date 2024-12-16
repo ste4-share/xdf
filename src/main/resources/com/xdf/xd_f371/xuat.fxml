@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="936.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.XuatController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="964.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.XuatController">
    <top>
       <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0" style="-fx-background-color: #262626;" BorderPane.alignment="CENTER">
          <children>
@@ -31,7 +31,7 @@
          </children></HBox>
    </top>
    <center>
-      <VBox prefHeight="760.0" prefWidth="1172.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="913.0" prefWidth="1172.0" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="828.0" prefWidth="1172.0">
                <children>
@@ -617,37 +617,18 @@
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="522.0">
+                              <HBox alignment="BOTTOM_RIGHT" prefHeight="74.0" prefWidth="486.0">
                                  <children>
-                                    <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" prefHeight="35.0" prefWidth="65.0" style="-fx-background-color: #008000;" text="Thêm" textFill="WHITE">
+                                    <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" prefHeight="41.0" prefWidth="101.0" style="-fx-background-color: #008000; -fx-background-radius: 10;" text="Thêm" textFill="WHITE">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
-                                    </Button>
-                                    <Button fx:id="editBtn" mnemonicParsing="false" onAction="#edit" prefHeight="35.0" prefWidth="65.0" style="-fx-background-color: #0066cc;" text="Sửa" textFill="WHITE">
                                        <HBox.margin>
-                                          <Insets left="10.0" right="10.0" />
+                                          <Insets right="30.0" />
                                        </HBox.margin>
-                                       <font>
-                                          <Font name="Cambria Bold" size="16.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Button fx:id="delBtn" mnemonicParsing="false" onAction="#del" prefHeight="35.0" prefWidth="65.0" style="-fx-background-color: #ff0000;" text="Xóa" textFill="WHITE">
-                                       <HBox.margin>
-                                          <Insets right="25.0" />
-                                       </HBox.margin>
-                                       <font>
-                                          <Font name="Cambria Bold" size="16.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
                                     </Button>
                                  </children>
                                  <VBox.margin>
@@ -699,7 +680,7 @@
                   </TableView>
                   <HBox alignment="CENTER" prefHeight="133.0" prefWidth="1166.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#xuat" prefHeight="43.0" prefWidth="128.0" style="-fx-background-color: #002db3;" text="Xuất" textFill="WHITE" fx:id="xuatButton">
+                        <Button mnemonicParsing="false" onAction="#xuat" prefHeight="43.0" prefWidth="128.0" style="-fx-background-color: #002db3; -fx-background-radius: 10;" text="Xuất" textFill="WHITE" fx:id="xuatButton">
                            <HBox.margin>
                               <Insets right="25.0" />
                            </HBox.margin>
@@ -710,7 +691,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancel" prefHeight="43.0" prefWidth="126.0" style="-fx-background-color: #996633;" text="Hủy" textFill="WHITE">
+                        <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancel" prefHeight="43.0" prefWidth="126.0" style="-fx-background-color: #996633; -fx-background-radius: 10;" text="Hủy" textFill="WHITE">
                            <font>
                               <Font name="Cambria Bold" size="18.0" />
                            </font>

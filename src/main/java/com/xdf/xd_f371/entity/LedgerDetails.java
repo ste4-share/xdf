@@ -62,16 +62,15 @@ public class LedgerDetails {
     @Column(name = "haohut_sl")
     private int haohut_sl;
     @Column(name = "nl_gio")
-    @NotNull
     private Long nl_gio;
     @Column(name = "nl_km")
-    @NotNull
     private Long nl_km;
     @Column(name = "so_luong_px")
     @NotNull(message = "Phai xuat can not be null")
     @Min(value = 0)
     @Positive
     private Long soluong_px;
+
     @Column(insertable = false, updatable = false)
     private String thanhtien_str;
     @Column(insertable = false, updatable = false)
@@ -80,6 +79,10 @@ public class LedgerDetails {
     private String phaixuat_str;
     @Column(insertable = false, updatable = false)
     private String dongia_str;
+    @Column(insertable = false, updatable = false)
+    private String thucnhap_str;
+    @Column(insertable = false, updatable = false)
+    private String phainhap_str;
 
 
     @ManyToOne

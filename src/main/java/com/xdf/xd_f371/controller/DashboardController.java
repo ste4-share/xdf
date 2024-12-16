@@ -92,8 +92,6 @@ public class DashboardController implements Initializable {
         initQuyCombobox();
         tbTTNX.setPrefWidth(screenWidth);
         tbTTNX.setPrefHeight(screenHeigh);
-        MockDataMap mockDataMap = new MockDataMap();
-        mockDataMap.mockInventoryData();
     }
 
     private void initQuyCombobox(){

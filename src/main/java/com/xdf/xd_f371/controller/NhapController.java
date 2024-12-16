@@ -1,22 +1,19 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
-import com.xdf.xd_f371.cons.Purpose;
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.xdf.xd_f371.model.*;
-import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.LoaiXdService;
 import com.xdf.xd_f371.service.TcnService;
 import com.xdf.xd_f371.util.DialogMessage;
+import com.xdf.xd_f371.util.TextToNumber;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -24,14 +21,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,19 +33,17 @@ import java.util.stream.Collectors;
 @Component
 public class NhapController extends CommonFactory implements Initializable {
     private static List<LedgerDetails> ls_socai;
+    private static List<Ledger> current_ledger_list = new ArrayList<>();
     private static int dvvc_id =0;
-    private static int lxd_id_combobox_selected =0;
-    private static ValidateFiledBol validateFiledBol = new ValidateFiledBol(true, true,true, true,true, true,true, true,true, true,true, true,true, true,true,true,true);
-
     @FXML
     private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
             donGiaTf, thucNhap,phaiNhap,tThucTe, vcf,tyTrong;
     @FXML
-    private Label lb_tontheoxd;
+    private Label lb_tontheoxd, notification,chungloai_lb;
     @FXML
     private DatePicker tungay, denngay;
     @FXML
-    private Button addbtn, delbtn, refresh_btn,editbtn;
+    private Button addbtn,importbtn,cancelbtn;
     @FXML
     private TableColumn<LedgerDetails, String> tbTT,tbTenXD,tbDonGia, tbPx,tbNhietDo, tbTyTrong, tbVCf, tbTx, tbThanhTien;
     @FXML
@@ -69,27 +60,26 @@ public class NhapController extends CommonFactory implements Initializable {
     @Autowired
     private TcnService tcnService;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(),LoaiPhieuCons.PHIEU_NHAP.getName());
         ls_socai = new ArrayList<>();
-
         tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
+        notification.setText("");
+
+        hoverButton(addbtn ,"#027a20");
+        hoverButton(importbtn,"#0000b3");
+        hoverButton(cancelbtn,"#595959");
 
         setTenXDToCombobox();
         setDvvcCombobox();
         setDvnCombobox();
 
-        refresh_btn.setOnAction(event -> {
-            clearHH();
-            addbtn.setDisable(false);
-        });
         setUpForSearchCompleteTion();
-        setTonKhoLabel();
+        Inventory i = inventoryService.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
+        setTonKhoLabel(i.getTdk_nvdx() + i.getNhap_nvdx()-i.getXuat_nvdx());
     }
-
     private void setUpForSearchCompleteTion(){
         List<String> search_arr = new ArrayList<>();
 
@@ -103,7 +93,6 @@ public class NhapController extends CommonFactory implements Initializable {
             }).collect(Collectors.toList());
         });
     }
-
     private void setTenXDToCombobox(){
         cmb_tenxd.setConverter(new StringConverter<LoaiXangDauDto>() {
             @Override
@@ -118,13 +107,7 @@ public class NhapController extends CommonFactory implements Initializable {
         });
         cmb_tenxd.setItems(FXCollections.observableList(loaiXdService.findAllBy()));
         cmb_tenxd.getSelectionModel().selectFirst();
-        cmb_tenxd.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                lxd_id_combobox_selected = cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id();
-                setTonKhoLabel();
-            }
-        });
+        chungloai_lb.setText("Chủng loại: "+cmb_tenxd.getSelectionModel().getSelectedItem().getLoai());
     }
 
     private void setDvvcCombobox(){
@@ -173,6 +156,11 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setSoluong(Integer.parseInt(thucNhap.getText()));
         ledgerDetails.setThanhtien((long) Integer.parseInt(thucNhap.getText()) * Integer.parseInt(donGiaTf.getText()));
         ledgerDetails.setSoluong_px(phaiNhap.getText().isEmpty() ? 0 : Long.parseLong(phaiNhap.getText()));
+
+        ledgerDetails.setThanhtien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanhtien())));
+        ledgerDetails.setThucnhap_str(TextToNumber.textToNum(thucNhap.getText()));
+        ledgerDetails.setPhainhap_str(TextToNumber.textToNum(phaiNhap.getText()));
+        ledgerDetails.setDongia_str(TextToNumber.textToNum(donGiaTf.getText()));
         return ledgerDetails;
     }
 
@@ -185,39 +173,42 @@ public class NhapController extends CommonFactory implements Initializable {
         vcf.setText(String.valueOf(ledgerDetails.getHe_so_vcf()));
         tyTrong.setText(String.valueOf(ledgerDetails.getTy_trong()));
     }
-
     private void setcellFactory(){
         tbTT.setSortable(false);
         tbTT.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tableView.getItems().indexOf(column.getValue())+1).asString());
         tbTenXD.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
-        tbDonGia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("don_gia"));
-        tbPx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phai_xuat"));
-        tbTx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thuc_xuat"));
+        tbDonGia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("dongia_str"));
+        tbPx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phainhap_str"));
+        tbTx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thucnhap_str"));
         tbNhietDo.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
         tbVCf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
         tbTyTrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
-        tbThanhTien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien"));
+        tbThanhTien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
         tableView.setItems(FXCollections.observableList(ls_socai));
     }
 
     @FXML
     private void btnInsert(ActionEvent event){
-        if (validateField(getLedgerDetails()).isEmpty()) {
-            ls_socai.add(getLedgerDetails());
+        LedgerDetails ld = getLedgerDetails();
+        if (validateField(ld).isEmpty()) {
+            ls_socai.add(ld);
             setcellFactory();
+            setTonKhoLabel(inventory_quantity+ld.getSoluong());
             clearHH();
         }else{
-            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(getLedgerDetails()),
+            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
                     "Nhập sai định dạng.", Alert.AlertType.ERROR);
         }
     }
-
     @FXML
     private void btnImport(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
             Ledger l = getLedger();
             if (validateField(l).isEmpty()) {
                 ledgerService.saveLedgerWithDetails(l, ls_socai);
+                DialogMessage.message("Thong bao", "Them phieu nhap thanh cong..",
+                        "Thanh cong", Alert.AlertType.INFORMATION);
+                DashboardController.primaryStage.close();
             }else{
                 DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
                         "Nhập sai định dạng.", Alert.AlertType.ERROR);
@@ -252,7 +243,6 @@ public class NhapController extends CommonFactory implements Initializable {
         }
         return null;
     }
-
     private Ledger getLedger() {
         Ledger ledger = new Ledger();
         ledger.setBill_id(Integer.parseInt(soTf.getText()));
@@ -260,10 +250,10 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setAmount(ls_socai.stream().mapToLong(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
-        ledger.setStatus("ACTIVE");
+        ledger.setStatus(StatusCons.ACTIVED.getName());
         ledger.setDvi_nhan(cmb_dvn.getValue().getTen());
         ledger.setDvi_xuat(cmb_dvvc.getValue().getTen());
-        ledger.setLoai_phieu("NHAP");
+        ledger.setLoai_phieu(LoaiPhieuCons.PHIEU_NHAP.getName());
         ledger.setDvi_nhan_id(cmb_dvn.getValue().getId());
         ledger.setDvi_xuat_id(cmb_dvvc.getValue().getId());
         ledger.setNguoi_nhan(recvTf.getText());
@@ -273,60 +263,6 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setTructhuoc(tructhuocService.findById(cmb_dvvc.getSelectionModel().getSelectedItem().getTructhuoc_id()).orElseThrow().getType());
         return ledger;
     }
-
-    @FXML
-    public void delAction(ActionEvent actionEvent) {
-        ButtonType delete = new ButtonType("Delete");
-        ButtonType cancel = new ButtonType("Cancel");
-        Alert a = new Alert(Alert.AlertType.NONE, "", delete, cancel);
-        a.setTitle("Delete");
-        a.setContentText("Do you really want delete number ");
-        a.showAndWait().ifPresent(response -> {
-            if (response==delete){
-                int index = 1;
-                for (LedgerDetails i : ls_socai){
-                    index= index +1;
-                }
-                ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-                tableView.setItems(observableList);
-                delbtn.setDisable(true);
-                editbtn.setDisable(true);
-                clearHH();
-                if (ls_socai.isEmpty()){
-                    addbtn.setDisable(false);
-                    tableView.refresh();
-                }
-
-            } else if (response==cancel) {
-                System.out.println("CAncel");
-            }
-        });
-    }
-
-    @FXML
-    public void editAction(ActionEvent actionEvent) {
-        ButtonType edit = new ButtonType("Sửa");
-        ButtonType cancel = new ButtonType("Hủy " +
-                "bỏ");
-        Alert a = new Alert(Alert.AlertType.WARNING, "", edit, cancel);
-        a.setTitle("" +
-                "Sửa");
-        a.setContentText("Xác nhận chỉnh " +
-                "sửa");
-        a.showAndWait().ifPresent(response -> {
-            if (response==edit){
-                LedgerDetails ledgerDetails = getLedgerDetails();
-                delbtn.setDisable(true);
-                editbtn.setDisable(true);
-                addbtn.setDisable(false);
-                clearHH();
-                ObservableList<LedgerDetails> observableList = FXCollections.observableList(ls_socai);
-                tableView.setItems(observableList);
-            } else if (response==cancel) {
-                System.out.println("CAncel");
-            }
-        });
-    }
     private void clearHH(){
         donGiaTf.setText("0");
         phaiNhap.setText("0");
@@ -335,208 +271,122 @@ public class NhapController extends CommonFactory implements Initializable {
         vcf.setText("0");
         tyTrong.setText("0");
     }
-
-    private void insertToDataExcel() {
-        openDataExcelFile();
+    private void setTonKhoLabel(int i){
+        inventory_quantity = i;
+        lb_tontheoxd.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(inventory_quantity)) +" (Lit)");
     }
-
-    private void openDataExcelFile(){
-        String file_name = "data.xlsm";
-        String sheetName = "socai";
-        try{
-            File file = new File(file_name);
-            XSSFWorkbook wb = null;
-            if (file.exists()) {
-
-                FileInputStream fileInputStream = new FileInputStream(file);
-                wb = new XSSFWorkbook(fileInputStream);
-                new XSSFWorkbook(new FileInputStream(file));
-                // Now creating Sheets using sheet object
-                XSSFSheet sheet1 = wb.getSheet(sheetName);
-
-                fillDataToSocaiSheet(sheet1, wb);
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                try {
-                    Runtime.getRuntime().exec("cmd /c start excel "+ file_name);
-                }catch (IOException io){
-                    throw new RuntimeException(io);
+    @FXML
+    public void changedItemLoaiXd(ActionEvent actionEvent) {
+        Inventory i = inventoryService.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
+        int tk = i.getTdk_nvdx() + i.getNhap_nvdx()-i.getXuat_nvdx();
+        LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
+        if (lxd!=null){
+            LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
+            if (ld!=null){
+                setTonKhoLabel(tk+ld.getSoluong());
+            }else{
+                setTonKhoLabel(tk);
+            }
+            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
+        }
+    }
+    @FXML
+    public void select_item(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount()==2){
+            if (DialogMessage.callAlertWithMessage("Delete", "Xoa", "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+                LedgerDetails ld = tableView.getSelectionModel().getSelectedItem();
+                if (ld!=null){
+                    ls_socai.remove(ld);
+                    setTonKhoLabel(inventory_quantity-ld.getSoluong());
+                    tableView.setItems(FXCollections.observableList(ls_socai));
+                    tableView.refresh();
                 }
             }
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
-
-    private void fillDataToSocaiSheet(XSSFSheet sheet, XSSFWorkbook wb) {
-        int begin_data_current = 2;
-        List<Tcn> soCaiDtoList = tcnService.findAll();
-        for(int i =0; i< soCaiDtoList.size(); i++){
-            Tcn soCaiDto = soCaiDtoList.get(i);
-            XSSFRow row = sheet.createRow(begin_data_current+i);
-            row.createCell(1).setCellValue(soCaiDto.getId());
-            row.createCell(2).setCellValue(soCaiDto.getName());
-            row.createCell(3).setCellValue(soCaiDto.getStatus());
-            row.createCell(4).setCellValue(soCaiDto.getConcert());
-        }
-    }
-
-
     @FXML
     public void btnCancel(ActionEvent actionEvent) {
         DashboardController.primaryStage.close();
     }
-
     @FXML
     public void soValid(KeyEvent keyEvent) {
-        String text = soTf.getText();
-        if (!text.matches("[0-9]{0,5}")){
-            soTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setSo(false);
-        }else {
-            soTf.setStyle(null);
-            validateFiledBol.setSo(true);
+        if(!soTf.getText().isEmpty()){
+            validateToSettingStyle(soTf);
+            if (current_ledger_list.stream().filter(i->i.getBill_id()==Integer.parseInt(soTf.getText())).findFirst().isPresent()){
+                soTf.setStyle(styleErrorField);
+                notification.setText("Số đã được thêm vào sổ cái, vui lòng nhập số phiếu khác.");
+            }
         }
     }
-
     @FXML
-    public void validate_nnh(KeyEvent keyEvent) {
-        String text = recvTf.getText();
-        if (!text.matches(".{0,50}")){
-            recvTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setNguoinhanhang(false);
-        }else{
-            recvTf.setStyle(null);
-            validateFiledBol.setNguoinhanhang(true);
-        }
-    }
-
     public void validate_dongia(KeyEvent keyEvent) {
-        String text = donGiaTf.getText();
-        if (!text.matches("[^0A-Za-z][0-9]{0,18}")){
-            donGiaTf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setDongia(false);
-        }else{
-            donGiaTf.setStyle(null);
-            validateFiledBol.setDongia(true);
-        }
+        validateToSettingStyle(donGiaTf);
     }
-
+    @FXML
     public void validate_phaixuat(KeyEvent keyEvent) {
-        String text = phaiNhap.getText();
-        if (!text.matches("[^0A-Za-z][0-9]{0,9}")){
-            phaiNhap.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setPhaixuat(false);
-        }else{
-            phaiNhap.setStyle(null);
-            validateFiledBol.setPhaixuat(true);
-        }
+        validateToSettingStyle(phaiNhap);
     }
-
-    public void validate_tcn(KeyEvent keyEvent) {
-        String text = tcNhap.getText();
-        if (!text.matches(".{0,50}")){
-            tcNhap.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setTinhchatnhap(false);
-        }else{
-            tcNhap.setStyle(null);
-            validateFiledBol.setTinhchatnhap(true);
-        }
-    }
-
-    public void validate_lenhso(KeyEvent keyEvent) {
-        String text = lenhKHso.getText();
-        if (!text.matches(".{0,50}")){
-            lenhKHso.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setLenhso(false);
-        }else{
-            lenhKHso.setStyle(null);
-            validateFiledBol.setLenhso(true);
-        }
-    }
-
+    @FXML
     public void validate_thucxuat(KeyEvent keyEvent) {
-        String text = thucNhap.getText();
-        if (!text.matches("[^0A-Za-z][0-9]{0,9}")){
-            thucNhap.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setThucxuat(false);
-        }else{
-            thucNhap.setStyle(null);
-            validateFiledBol.setThucxuat(true);
-        }
+        validateToSettingStyle(thucNhap);
     }
-
+    @FXML
     public void validate_nhietdo(KeyEvent keyEvent) {
-        String text = tThucTe.getText();
-        if (!text.matches("[^0A-Za-z][0-9]{0,5}")) {
-            tThucTe.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setNhietdo(false);
-        } else {
-            tThucTe.setStyle(null);
-            validateFiledBol.setNhietdo(true);
-        }
+        validateToSettingStyle(tThucTe);
     }
-
+    @FXML
     public void validate_tytrong(KeyEvent keyEvent) {
-        String text = tyTrong.getText();
-        if (!text.matches("[^0A-Za-z][0-9]{0,5}")){
-            tyTrong.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setTytrong(false);
-        }else{
-            tyTrong.setStyle(null);
-            validateFiledBol.setTytrong(true);
-        }
+        validateToSettingStyle(tyTrong);
     }
-
+    @FXML
     public void validate_vcf(KeyEvent keyEvent) {
-        String text = vcf.getText();
-        if (!text.matches("[^0A-Za-z][0-9]{0,5}")){
-            vcf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setVcf(false);
-        }else{
-            vcf.setStyle(null);
-            validateFiledBol.setVcf(true);
-        }
-    }
-
-    public void validate_soxe(KeyEvent keyEvent) {
-        String text = soXe.getText();
-        if (!text.matches(".{0,8}")){
-            soXe.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-            validateFiledBol.setSoxe(false);
-        }else{
-            soXe.setStyle(null);
-            validateFiledBol.setSoxe(true);
-        }
+        validateToSettingStyle(vcf);
     }
 
     @FXML
-    public void changedItemLoaiXd(ActionEvent actionEvent) {
-        setTonKhoLabel();
+    public void so_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(soTf);
+        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(), LoaiPhieuCons.PHIEU_NHAP.getName());
+        notification.setText("");
     }
-
-    private void setTonKhoLabel(){
-        Inventory i = inventoryService.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
-        lb_tontheoxd.setText("Số lượng tồn: "+ i.getNhap_nvdx() +" (Lit)");
-    }
-
     @FXML
-    public void printTestData(ActionEvent actionEvent) {
-        insertToDataExcel();
+    public void nguoinhan_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(recvTf);
     }
-
     @FXML
-    public void select_item(MouseEvent mouseEvent) {
-        try {
-            LedgerDetails ledgerDetails =  tableView.getSelectionModel().getSelectedItem();
-            fillDataToTextField(ledgerDetails);
-
-        }catch (NullPointerException nullPointerException){
-            nullPointerException.printStackTrace();
-        }
+    public void tcn_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(tcNhap);
+    }
+    @FXML
+    public void lenhso_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(lenhKHso);
+    }
+    @FXML
+    public void soxe_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(soXe);
+    }
+    @FXML
+    public void dongia_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(donGiaTf);
+    }
+    @FXML
+    public void phainhap_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(phaiNhap);
+    }
+    @FXML
+    public void thucnhap_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(thucNhap);
+    }
+    @FXML
+    public void nhietdo_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(tThucTe);
+    }
+    @FXML
+    public void vcf_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(vcf);
+    }
+    @FXML
+    public void tytrong_clicked(MouseEvent mouseEvent) {
+        cleanErrorField(tyTrong);
     }
 }

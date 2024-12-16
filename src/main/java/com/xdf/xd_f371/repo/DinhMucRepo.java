@@ -15,9 +15,7 @@ import java.util.Optional;
 @Repository
 public interface DinhMucRepo extends JpaRepository<DinhMuc, Integer> {
     @Query("select new com.xdf.xd_f371.dto.DinhMucPhuongTienDto(d.id, q.id, p.id, lpt.id, d.dm_md_gio,d.dm_tk_gio, d.dm_xm_gio,d.dm_xm_km,q.name,q.start_date,q.end_date,p.name,p.quantity,lpt.typeName,lpt.type) from DinhMuc d join d.phuongTien p join p.loaiPhuongTien lpt join d.quarter q where q.id=:qid")
-    @Lock(LockModeType.PESSIMISTIC_READ)
     List<DinhMucPhuongTienDto> findAllBy(@Param("qid") int quarter_id);
     @Query("select d from PhuongTien p join p.dinhmuc d where d.quarter_id=:quarter_id and d.phuongtien_id=:pt_id")
-    @Lock(LockModeType.PESSIMISTIC_READ)
     Optional<DinhMuc> findDinhmucByPhuongtien(@Param("pt_id") int pt_id, @Param("quarter_id") int quarter_id);
 }
