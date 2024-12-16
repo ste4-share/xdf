@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Component
 public class XuatController extends CommonFactory implements Initializable {
     private static List<Ledger> current_ledger_list = new ArrayList<>();
-    private static Mucgia mucgia_id_selected_mucgia_cbb = new Mucgia();
+    private static long inv_price;
     private static List<LedgerDetails> ls_socai;
     private static List<NhiemVuDto> chiTietNhiemVuDTO_list = new ArrayList<>();
     private static AutoCompletionBinding<String> acbLogin;
@@ -85,7 +85,7 @@ public class XuatController extends CommonFactory implements Initializable {
         initDefailtVar();
         initLoaiXuatCbb();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
-        mapXdForCombobox("ALL");
+        mapXdForCombobox();
 
         hoverButton(addBtn, "#027a20");
         hoverButton(xuatButton, "#002db3");
@@ -93,7 +93,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {
-        setInv_lb();
+        setInvenPrice();
     }
 
     @FXML
@@ -190,13 +190,18 @@ public class XuatController extends CommonFactory implements Initializable {
 
     @FXML
     public void add(ActionEvent actionEvent) {
-        if (validateField(getLedgerDetails()).isEmpty()) {
-            ls_socai.add(getLedgerDetails());
-            setCellValueFactory();
-            clearFields();
+        LedgerDetails ld = getLedgerDetails();
+        if (inv_price < ld.getSoluong()){
+            DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.ERROR);
         }else{
-            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(getLedgerDetails()),
-                    "Nhập sai định dạng.", Alert.AlertType.ERROR);
+            if (validateField(ld).isEmpty()) {
+                ls_socai.add(ld);
+                setCellValueFactory();
+                clearFields();
+            }else{
+                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                        "Nhập sai định dạng.", Alert.AlertType.ERROR);
+            }
         }
     }
 
@@ -206,6 +211,9 @@ public class XuatController extends CommonFactory implements Initializable {
             Ledger l = getLedger();
             if (validateField(l).isEmpty()) {
                 ledgerService.saveLedgerWithDetails(l, ls_socai);
+                DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong..",
+                        "Thanh cong", Alert.AlertType.INFORMATION);
+                DashboardController.xuatStage.close();
             }else{
                 DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
                         "Nhập sai định dạng.", Alert.AlertType.ERROR);
@@ -217,13 +225,7 @@ public class XuatController extends CommonFactory implements Initializable {
     public void cancel(ActionEvent actionEvent) {
         DashboardController.xuatStage.close();
     }
-    @FXML
-    public void edit(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void del(ActionEvent actionEvent) {
-    }
-    
+
     private int cal_phaixuat_km(int sokm, int dinhmuc){
         return (sokm*dinhmuc)/100;
     }
@@ -247,8 +249,10 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void selectxd(ActionEvent actionEvent) {
-        if (cbb_tenxd.getSelectionModel().getSelectedItem()!=null){
-            chungloai_lb.setText("Chủng loại: "+cbb_tenxd.getSelectionModel().getSelectedItem().getChungloai());
+        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        if (lxd!=null){
+            mapPrice(lxd.getXd_id());
+            chungloai_lb.setText("Chủng loại: "+lxd.getChungloai());
         }
     }
     @FXML
@@ -265,7 +269,11 @@ public class XuatController extends CommonFactory implements Initializable {
     public void soKeyRealed(KeyEvent keyEvent) {
         if(!so.getText().isEmpty()){
             validateToSettingStyle(so);
-            if (current_ledger_list.stream().filter(i->i.getBill_id()==Integer.parseInt(so.getText())).findFirst().isPresent()){
+            if (isNumber(so.getText())){
+                if (current_ledger_list.stream().filter(i->i.getBill_id()==Integer.parseInt(so.getText())).findFirst().isPresent()){
+                    so.setStyle(styleErrorField);
+                }
+            }else{
                 so.setStyle(styleErrorField);
             }
         }
@@ -390,7 +398,7 @@ public class XuatController extends CommonFactory implements Initializable {
         });
     }
 
-    private void mapXdForCombobox(String type){
+    private void mapXdForCombobox(){
         cbb_tenxd.setConverter(new StringConverter<LoaiXangDauDto>() {
             @Override
             public String toString(LoaiXangDauDto object) {
@@ -406,25 +414,35 @@ public class XuatController extends CommonFactory implements Initializable {
         mapPrice(cbb_tenxd.getSelectionModel().getSelectedItem().getXd_id());
     }
     private void mapPrice(int xd_id){
+        int quarter_id = DashboardController.findByTime.getId();
         cbb_dongia.setConverter(new StringConverter<Mucgia>() {
             @Override
             public String toString(Mucgia object) {
-                if (object!=null){
-                    mucgia_id_selected_mucgia_cbb = object;
-                }
                 return object==null ? "": TextToNumber.textToNum(String.valueOf(object.getPrice()));
             }
 
             @Override
             public Mucgia fromString(String string) {
-                return mucgiaService.findMucGiaByIdAndStatus(mucgia_id_selected_mucgia_cbb.getId(), MucGiaEnum.IN_STOCK.getStatus()).orElse(null);
+                return mucgiaService.findAllMucgiaUnique(xd_id,quarter_id,Integer.parseInt(string)).orElse(null);
             }
         });
-        List<Mucgia> mucgials = mucgiaService.findAllMucgiaByItemID(xd_id,DashboardController.findByTime.getId());
+        List<Mucgia> mucgials = mucgiaService.findAllMucgiaByItemID(xd_id,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
         cbb_dongia.setItems(FXCollections.observableArrayList(mucgials));
         cbb_dongia.getSelectionModel().selectFirst();
-        setInv_lb();
+        setInvenPrice();
     }
+
+    private void setInvenPrice(){
+        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        Mucgia m = cbb_dongia.getSelectionModel().getSelectedItem();
+        if (lxd != null && m!=null) {
+            Optional<Mucgia> mucgia = mucgiaService.findAllMucgiaUnique(lxd.getXd_id(),DashboardController.findByTime.getId(),m.getPrice());
+            if (mucgia.isPresent()){
+                setInv_lb(mucgia.get().getNvdx());
+            }
+        }
+    }
+
     private void setCellValueFactory(){
         tbXuat.setItems(FXCollections.observableList(ls_socai));
         stt.setSortable(false);
@@ -560,9 +578,9 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setDongia_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getDon_gia())));
         return ledgerDetails;
     }
-    private void setInv_lb() {
-        Mucgia mucgia = mucgiaService.findMucGiaByIdAndStatus(cbb_dongia.getSelectionModel().getSelectedItem().getId(), MucGiaEnum.IN_STOCK.getStatus()).orElseThrow();
-        inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(mucgia.getAmount())) + " (Lit)");
+    private void setInv_lb(long inv) {
+        inv_price = inv;
+        inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(inv)) + " (Lit)");
     }
     private void saveLichsuxnk(LedgerDetails soCaiDto) {
 //        Inventory inventory = inventoryService.findByPetro_idAndQuarter_id(soCaiDto.getLoaixd_id(), DashboardController.findByTime.getId()).orElse(null);
@@ -688,5 +706,19 @@ public class XuatController extends CommonFactory implements Initializable {
             }
         }
         return null;
+    }
+    @FXML
+    public void selected_item(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount()==2){
+            if (DialogMessage.callAlertWithMessage("Delete", "Xoa", "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+                LedgerDetails ld = tbXuat.getSelectionModel().getSelectedItem();
+                if (ld!=null){
+                    ls_socai.remove(ld);
+                    setInv_lb(inv_price-ld.getSoluong());
+                    tbXuat.setItems(FXCollections.observableList(ls_socai));
+                    tbXuat.refresh();
+                }
+            }
+        }
     }
 }

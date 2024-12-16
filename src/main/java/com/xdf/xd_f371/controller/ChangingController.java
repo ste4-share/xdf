@@ -61,11 +61,11 @@ public class ChangingController implements Initializable {
         sscd_nvdx.setDisable(sscd);
     }
     private void setNvdxTable() {
-        nvdx_ls_buf = setDataToTable(nvdx_tb, Purpose.NVDX.getName());
+        nvdx_ls_buf = setDataToTable(nvdx_tb);
         setFieldFactoryTb(nvdx_price, nvdx_quantity);
     }
     private void setSScdTable() {
-        sscd_ls_buf = setDataToTable(sscd_tb, Purpose.SSCD.getName());
+        sscd_ls_buf = setDataToTable(sscd_tb);
         setFieldFactoryTb(sscd_price, sscd_quantity);
     }
 
@@ -191,9 +191,9 @@ public class ChangingController implements Initializable {
         col1.setCellValueFactory(new PropertyValueFactory<Mucgia, String>("price"));
         col2.setCellValueFactory(new PropertyValueFactory<Mucgia, String>("amount"));
     }
-    private List<Mucgia> setDataToTable(TableView<Mucgia> tb, String purpose){
+    private List<Mucgia> setDataToTable(TableView<Mucgia> tb){
         int petroId = tonkho_selected.getLxd_id();
-        List<Mucgia> list = mucgiaService.findAllMucgiaByItemID(petroId,DashboardController.findByTime.getId());
+        List<Mucgia> list = mucgiaService.findAllMucgiaByItemID(petroId,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
         tb.setItems(FXCollections.observableList(list));
         return list;
     }

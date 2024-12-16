@@ -652,7 +652,7 @@
             </HBox>
             <VBox prefHeight="319.0" prefWidth="1172.0">
                <children>
-                  <TableView fx:id="tbXuat" prefHeight="201.0" prefWidth="1152.0">
+                  <TableView fx:id="tbXuat" onMouseClicked="#selected_item" prefHeight="201.0" prefWidth="1152.0">
                     <columns>
                       <TableColumn fx:id="stt" prefWidth="49.0" text="STT" />
                       <TableColumn fx:id="tenxd" prefWidth="156.0" text="TÊN XĂNG DẦU" />

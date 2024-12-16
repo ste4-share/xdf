@@ -69,10 +69,6 @@ public class LedgerService {
                     m.setAmount(m.getAmount()+detail.getSoluong());
                     mucGiaRepo.save(m);
                 }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())){
-                    if (m.getNvdx()<detail.getSoluong()){
-                        DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.ERROR);
-                        throw new RuntimeException();
-                    }
                     inventory.setXuat_nvdx(inventory.getXuat_nvdx()+detail.getSoluong());
                     m.setNvdx(m.getNvdx()-detail.getSoluong());
                     m.setAmount(m.getAmount()-detail.getSoluong());

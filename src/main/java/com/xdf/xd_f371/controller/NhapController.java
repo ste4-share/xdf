@@ -164,15 +164,6 @@ public class NhapController extends CommonFactory implements Initializable {
         return ledgerDetails;
     }
 
-    private void fillDataToTextField(LedgerDetails ledgerDetails){
-        cmb_tenxd.setValue(loaiXdService.findById(ledgerDetails.getLoaixd_id()).orElse(null));
-        donGiaTf.setText(String.valueOf(ledgerDetails.getDon_gia()));
-        phaiNhap.setText(String.valueOf(ledgerDetails.getPhai_nhap()));
-        thucNhap.setText(String.valueOf(ledgerDetails.getThuc_nhap()));
-        tThucTe.setText(String.valueOf(ledgerDetails.getNhiet_do_tt()));
-        vcf.setText(String.valueOf(ledgerDetails.getHe_so_vcf()));
-        tyTrong.setText(String.valueOf(ledgerDetails.getTy_trong()));
-    }
     private void setcellFactory(){
         tbTT.setSortable(false);
         tbTT.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tableView.getItems().indexOf(column.getValue())+1).asString());
@@ -206,7 +197,7 @@ public class NhapController extends CommonFactory implements Initializable {
             Ledger l = getLedger();
             if (validateField(l).isEmpty()) {
                 ledgerService.saveLedgerWithDetails(l, ls_socai);
-                DialogMessage.message("Thong bao", "Them phieu nhap thanh cong..",
+                DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong..",
                         "Thanh cong", Alert.AlertType.INFORMATION);
                 DashboardController.primaryStage.close();
             }else{

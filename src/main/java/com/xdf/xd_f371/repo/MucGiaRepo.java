@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface MucGiaRepo extends JpaRepository<Mucgia, Integer> {
     Optional<Mucgia> findMucGiaByIdAndStatus(int id, String status);
 
-    @Query(value = "Select * from mucgia where quarter_id=:qId and item_id=:petroId", nativeQuery = true)
-    List<Mucgia> findAllMucgiaByItemID(@Param("petroId") int itemID,@Param("qId") int quarter_id);
+    @Query(value = "Select * from mucgia where quarter_id=:qId and item_id=:petroId and status like :s", nativeQuery = true)
+    List<Mucgia> findAllMucgiaByItemID(@Param("petroId") int itemID,@Param("qId") int quarter_id,@Param("s") String s);
 
     @Query(value = "Select * from mucgia where quarter_id=:qId and item_id=:petroId and price=:price", nativeQuery = true)
     Optional<Mucgia> findAllMucgiaUnique(@Param("petroId") int itemID,@Param("qId") int quarter_id, @Param("price") int price);

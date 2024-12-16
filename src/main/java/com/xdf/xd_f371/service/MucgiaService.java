@@ -17,8 +17,8 @@ public class MucgiaService {
     public Optional<Mucgia> findMucGiaByIdAndStatus(int id, String status){
         return mucGiaRepo.findMucGiaByIdAndStatus(id,status);
     }
-    public List<Mucgia> findAllMucgiaByItemID(int itemID,int quarter_id){
-        return mucGiaRepo.findAllMucgiaByItemID(itemID,quarter_id);
+    public List<Mucgia> findAllMucgiaByItemID(int itemID,int quarter_id,String s){
+        return mucGiaRepo.findAllMucgiaByItemID(itemID,quarter_id,s);
     }
     public Optional<Mucgia> findAllMucgiaUnique(int itemID,int quarter_id,int price){
         return mucGiaRepo.findAllMucgiaUnique(itemID,quarter_id,price);
