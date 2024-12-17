@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.math3.stat.descriptive.summary.Product;
 
 @Entity
 @Table(name = "inventory")
@@ -34,4 +35,8 @@ public class Inventory {
     private int xuat_sscd;
     @Column(name = "status")
     private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "petro_id",referencedColumnName = "id", insertable = false, updatable = false)
+    private LoaiXangDau loaiXangDau;
 }

@@ -27,6 +27,7 @@ public class MainApplicationApp extends Application {
     @Override
     public void init() {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(XdF371Application.class);
+        builder.headless(false);
         context = builder.run(getParameters().getRaw().toArray(new String[0]));
     }
 
@@ -124,7 +125,6 @@ public class MainApplicationApp extends Application {
             showErrorDialog(e);
         } else {
             System.err.println("An unexpected error occurred in "+t);
-
         }
     }
 

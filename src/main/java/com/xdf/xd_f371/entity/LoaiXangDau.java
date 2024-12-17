@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Table(name = "loaixd2")
 @Entity
 @Getter
@@ -25,4 +27,7 @@ public class LoaiXangDau {
     @ManyToOne
     @JoinColumn(name = "petroleum_type_id", referencedColumnName = "id", insertable = false, updatable = false)
     private ChungLoaiXd chungLoaiXd;
+
+    @OneToMany(mappedBy = "loaiXangDau")
+    private List<Inventory> inventory;
 }

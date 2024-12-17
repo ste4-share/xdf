@@ -4,6 +4,7 @@ import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.TextToNumber;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -132,20 +133,16 @@ public class TonkhoController implements Initializable {
     private void fillDataToTableTonkho(){
         tkt = mucgiaService.getAllSpots(findByTime.getId());
         searching(tkt.stream().map(x->x.getTenxd()).toList());
-        for (SpotDto spotDto : tkt) {
-            spotDto.setNvdx_total(TextToNumber.textToNum(spotDto.getNvdx_total()));
-            spotDto.setSscd_total(TextToNumber.textToNum(spotDto.getSscd_total()));
-            spotDto.setTotal(TextToNumber.textToNum(spotDto.getTotal()));
-        }
         ObservableList<SpotDto> observableList = FXCollections.observableArrayList(tkt);
         tb_tonkho.setItems(observableList);
     }
     private void setTonkhoTongToCol(){
-        col_stt_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("stt"));
+        col_stt_tk.setSortable(false);
+        col_stt_tk.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_tonkho.getItems().indexOf(column.getValue())+1).asString());
         col_maxd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("maxd"));
         col_tenxd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tenxd"));
-        col_nvdx_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nvdx_total"));
-        col_sscd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("sscd_total"));
+        col_nvdx_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nvdx_str"));
+        col_sscd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("sscd_str"));
         col_sum_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("total"));
     }
     private boolean addedBySelection = false;

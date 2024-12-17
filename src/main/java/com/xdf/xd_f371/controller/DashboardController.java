@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -29,6 +30,7 @@ import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -113,8 +115,7 @@ public class DashboardController implements Initializable {
         String cssLayout1 =
                 "-fx-border-color: #aaaaaa;\n" +
                         "-fx-background-color: #aaaaaa;\n" ;
-        nxt_menu.setStyle(cssLayout1
-        );
+        nxt_menu.setStyle(cssLayout1);
         dvi_menu.setStyle(resetStyle());
         loai_xd_menu.setStyle(resetStyle());
         haohut_menu.setStyle(resetStyle());
@@ -422,6 +423,5 @@ public class DashboardController implements Initializable {
                 throw new RuntimeException(e);
             }
         }
-
     }
 }

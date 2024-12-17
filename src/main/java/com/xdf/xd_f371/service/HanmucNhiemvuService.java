@@ -3,6 +3,7 @@ package com.xdf.xd_f371.service;
 import com.xdf.xd_f371.dto.HanmucNhiemvu2Dto;
 import com.xdf.xd_f371.dto.HanmucNhiemvuTaubayDto;
 import com.xdf.xd_f371.entity.HanmucNhiemvu2;
+import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.NhiemvuTaubay;
 import com.xdf.xd_f371.repo.HanmucNhiemvu2Repository;
 import com.xdf.xd_f371.repo.HanmucNhiemvuTauBayRepo;
@@ -29,5 +30,9 @@ public class HanmucNhiemvuService {
     }
     public NhiemvuTaubay save(NhiemvuTaubay nhiemvuTaubay){
         return hanmucNhiemvuTauBayRepo.save(nhiemvuTaubay);
+    }
+
+    public List<NguonNx> getAllDviTructhuocByTaubay(int taubayId, int quyID){
+        return hanmucNhiemvuTauBayRepo.getAllDviTructhuocByTaubay(taubayId,quyID);
     }
 }
