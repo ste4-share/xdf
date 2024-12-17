@@ -19,16 +19,16 @@ public class ChitietNhiemvuService {
     private final ChitietNhiemvuRepo chitietNhiemvuRepo;
     private final NhiemvuRepository nhiemvuRepository;
 
-    public List<NhiemVuDto> findAllDtoBy(int lnv_id){
-        return chitietNhiemvuRepo.findAllDtoBy(lnv_id);
+    public List<NhiemVuDto> findAllDtoBy(String lnv){
+        return chitietNhiemvuRepo.findAllDtoBy(lnv);
     }
 
     public List<NhiemVuDto> findAllBy(){
         return chitietNhiemvuRepo.findAllBy();
     }
 
-    public List<NhiemVuDto> findAllDtoById(int lnv_id){
-        return chitietNhiemvuRepo.findAllDtoById(lnv_id);
+    public List<NhiemVuDto> findAllDtoById(String lnv){
+        return chitietNhiemvuRepo.findAllDtoById(lnv);
     }
     public Optional<NhiemVuDto> findAllByChitietNhiemvu(String nv, String chitiet){
         return chitietNhiemvuRepo.findAllByChitietNhiemvu(nv,chitiet);

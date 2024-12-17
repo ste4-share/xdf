@@ -143,24 +143,29 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private LedgerDetails getLedgerDetails(){
+
+        int tn = thucNhap.getText().isEmpty() ? 0 : Integer.parseInt(thucNhap.getText());
+        int pn = phaiNhap.getText().isEmpty() ? 0 : Integer.parseInt(phaiNhap.getText());
+        int p = donGiaTf.getText().trim().isEmpty() ? 0 : Integer.parseInt(donGiaTf.getText());
+
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setMa_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getMaxd());
         ledgerDetails.setTen_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getTenxd());
         ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id());
-        ledgerDetails.setDon_gia(Integer.parseInt(donGiaTf.getText()));
-        ledgerDetails.setPhai_nhap(phaiNhap.getText().isEmpty() ? 0 : Integer.parseInt(phaiNhap.getText()));
-        ledgerDetails.setThuc_nhap(Integer.parseInt(thucNhap.getText()));
+        ledgerDetails.setDon_gia(p);
+        ledgerDetails.setPhai_nhap(pn);
+        ledgerDetails.setThuc_nhap(tn);
         ledgerDetails.setNhiet_do_tt(tThucTe.getText().isEmpty() ? 0 : Double.parseDouble(tThucTe.getText()));
         ledgerDetails.setHe_so_vcf(vcf.getText().isEmpty() ? 0 : Integer.parseInt(vcf.getText()));
         ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
-        ledgerDetails.setSoluong(Integer.parseInt(thucNhap.getText()));
-        ledgerDetails.setThanhtien((long) Integer.parseInt(thucNhap.getText()) * Integer.parseInt(donGiaTf.getText()));
-        ledgerDetails.setSoluong_px(phaiNhap.getText().isEmpty() ? 0 : Long.parseLong(phaiNhap.getText()));
+        ledgerDetails.setSoluong(tn);
+        ledgerDetails.setThanhtien((long) tn * p);
+        ledgerDetails.setSoluong_px((long)pn);
 
         ledgerDetails.setThanhtien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanhtien())));
-        ledgerDetails.setThucnhap_str(TextToNumber.textToNum(thucNhap.getText()));
-        ledgerDetails.setPhainhap_str(TextToNumber.textToNum(phaiNhap.getText()));
-        ledgerDetails.setDongia_str(TextToNumber.textToNum(donGiaTf.getText()));
+        ledgerDetails.setThucnhap_str(TextToNumber.textToNum(String.valueOf(tn)));
+        ledgerDetails.setPhainhap_str(TextToNumber.textToNum(String.valueOf(pn)));
+        ledgerDetails.setDongia_str(TextToNumber.textToNum(String.valueOf(p)));
         return ledgerDetails;
     }
 
@@ -181,16 +186,19 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     private void btnInsert(ActionEvent event){
         LedgerDetails ld = getLedgerDetails();
-        if (validateField(ld).isEmpty()) {
-            ls_socai.add(ld);
-            setcellFactory();
-            setTonKhoLabel(inventory_quantity+ld.getSoluong());
-            clearHH();
-        }else{
-            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                    "Nhập sai định dạng.", Alert.AlertType.ERROR);
+        if (!outfieldValid(tcNhap, "tinh chat nhap khoong duoc de trong.")){
+            if (validateField(ld).isEmpty()) {
+                ls_socai.add(ld);
+                setcellFactory();
+                setTonKhoLabel(inventory_quantity+ld.getSoluong());
+                clearHH();
+            }else{
+                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                        "Nhập sai định dạng.", Alert.AlertType.ERROR);
+            }
         }
     }
+
     @FXML
     private void btnImport(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
@@ -250,7 +258,13 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setNguoi_nhan(recvTf.getText());
         ledger.setSo_xe(soXe.getText());
         ledger.setLenh_so(lenhKHso.getText());
-        ledger.setTcn_id(tcnService.findByName(tcNhap.getText()).orElseThrow().getId());
+        Tcn t = tcnService.findByName(tcNhap.getText().trim()).orElse(null);
+
+        if (t != null) {
+            ledger.setTcn_id(t.getId());
+        }else{
+            ledger.setTcn_id(tcnService.save(new Tcn(LoaiPhieuCons.PHIEU_XUAT.getName(), tcNhap.getText())).getId());
+        }
         ledger.setTructhuoc(tructhuocService.findById(cmb_dvvc.getSelectionModel().getSelectedItem().getTructhuoc_id()).orElseThrow().getType());
         return ledger;
     }

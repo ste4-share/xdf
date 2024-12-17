@@ -1,8 +1,8 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.LoaiNVCons;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.HanmucNhiemvuService;
 import com.xdf.xd_f371.service.NguonNxService;
@@ -29,7 +29,6 @@ import java.util.ResourceBundle;
 @Component
 public class NhiemvuController implements Initializable {
     public static Stage nvStage;
-
     @Autowired
     private QuarterService quarterService;
     @Autowired
@@ -160,7 +159,7 @@ public class NhiemvuController implements Initializable {
     }
 
     private void initNvTb() {
-        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllDtoBy(3)));
+        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllDtoBy(LoaiNVCons.HAOHUT.getName())));
         tennv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_nv"));
         ctnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("chitiet"));
         lnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_loai_nv"));

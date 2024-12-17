@@ -3,10 +3,12 @@ package com.xdf.xd_f371.fatory;
 import com.xdf.xd_f371.entity.LichsuXNK;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
+import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,6 @@ public class CommonFactory {
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<Object>> violations = validator.validate(object);
         for (ConstraintViolation<Object> violation : violations) {
-            System.out.println(violation.getPropertyPath() + ":" + violation.getMessage());
             return List.of(violation.getPropertyPath().toString());
         }
         return new ArrayList<>();
@@ -69,5 +70,14 @@ public class CommonFactory {
     protected void hoverButton(Button button, String color) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: "+color+"; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: "+color+";-fx-background-radius:10"));
+    }
+    protected boolean outfieldValid(TextField tf, String mes){
+        if (tf.getText().trim().equals("")) {
+            DialogMessage.message("Lỗi", mes,
+                    "Nhập sai định dạng.", Alert.AlertType.ERROR);
+            tf.setStyle(styleErrorField);
+            return true;
+        }
+        return false;
     }
 }
