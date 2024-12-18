@@ -106,7 +106,7 @@
                                              </cursor></DatePicker>
                                        </children>
                                     </HBox>
-                                    <TableView fx:id="tb_tonkho" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
+                                    <TableView fx:id="tb_tonkho" onMouseClicked="#setClickToTonTb" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
                                       <columns>
                                         <TableColumn fx:id="col_stt_tk" prefWidth="75.0" text="STT" />
                                         <TableColumn fx:id="col_maxd_tk" prefWidth="75.0" text="Mã XD" />
@@ -161,7 +161,7 @@
                                              </cursor></DatePicker>
                                        </children>
                                     </HBox>
-                                    <TableView fx:id="tb_quater_inv" prefHeight="720.0" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
+                                    <TableView fx:id="tb_inv_chitiet" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
                                        <columns>
                                           <TableColumn fx:id="col_stt_qt" prefWidth="75.0" text="STT" />
                                           <TableColumn fx:id="col_tenxd_qt" prefWidth="174.0" text="Tên Xăng Dầu" />
@@ -173,11 +173,12 @@
                                                 <TableColumn fx:id="col_sum_tdk" prefWidth="119.0" text="Cộng" />
                                              </columns>
                                           </TableColumn>
-                                          <TableColumn prefWidth="435.0" text="Tồn hiện tại">
+                                          <TableColumn prefWidth="435.0" text="Nhập xuất">
                                              <columns>
-                                                <TableColumn fx:id="col_nvdx_pre" prefWidth="119.0" text="NV đột xuất" />
-                                                <TableColumn fx:id="col_sscd_pre" prefWidth="119.0" text="SSCD" />
-                                                <TableColumn fx:id="col_sum_pre" prefWidth="119.0" text="Cộng" />
+                                                <TableColumn fx:id="col_nhap_nvdx" prefWidth="119.0" text="Nhập NVDX" />
+                                                <TableColumn fx:id="col_xuat_nvdx" prefWidth="119.0" text="Xuất NVDX" />
+                                                <TableColumn fx:id="col_nhap_sscd" prefWidth="119.0" text="Nhập SSCD" />
+                                                <TableColumn fx:id="col_xuat_sscd" prefWidth="119.0" text="Xuất SSCD" />
                                              </columns>
                                           </TableColumn>
                                           <TableColumn prefWidth="279.0" text="Tồn cuối kỳ">
@@ -191,6 +192,9 @@
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" right="10.0" />
+                                       </VBox.margin>
                                     </TableView>
                                     <HBox alignment="CENTER" />
                                  </children>

@@ -3,13 +3,19 @@ package com.xdf.xd_f371.util;
 
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.controller.DashboardController;
+import com.xdf.xd_f371.dto.LoaiXangDauDto;
+import com.xdf.xd_f371.entity.Quarter;
+import com.xdf.xd_f371.service.LoaiXdService;
+import com.xdf.xd_f371.service.QuarterService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 
@@ -39,6 +45,4 @@ public class Common {
         stage.setScene(scene);
         stage.show();
     }
-
-
 }

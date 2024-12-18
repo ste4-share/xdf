@@ -43,9 +43,8 @@ public class QuyController implements Initializable {
         quarter.setYear(String.valueOf(year));
         quarterService.save(quarter);
     }
-
     @FXML
     public void cancel_createNewQuarter(ActionEvent actionEvent) {
-        TonkhoController.quarter_stage.close();
+        TonkhoController.tk_stage.close();
     }
 }

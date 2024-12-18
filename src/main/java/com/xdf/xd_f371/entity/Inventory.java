@@ -36,6 +36,7 @@ public class Inventory {
     @Column(name = "status")
     private String status;
 
+
     @ManyToOne
     @JoinColumn(name = "petro_id",referencedColumnName = "id", insertable = false, updatable = false)
     private LoaiXangDau loaiXangDau;

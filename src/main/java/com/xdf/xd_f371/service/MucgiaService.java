@@ -26,6 +26,9 @@ public class MucgiaService {
     public List<SpotDto> getAllSpots(int quarter_id){
         return mucGiaRepo.getAllSpots(quarter_id);
     }
+    public List<SpotDto> getAllSpots2(int quarter_id){
+        return mucGiaRepo.getAllSpots2(quarter_id);
+    }
 
     public Mucgia save(Mucgia mucgia){
         return mucGiaRepo.save(mucgia);

@@ -73,7 +73,7 @@ public class ChangingController implements Initializable {
     }
 
     public void cancelForm(ActionEvent actionEvent) {
-        TonkhoController.ChangeSScd_stage.close();
+        TonkhoController.tk_stage.close();
     }
 
     @FXML
@@ -171,7 +171,7 @@ public class ChangingController implements Initializable {
         try {
 //            updateMucgia(nvdx_ls_buf,mucgiaService.findByName(AssignTypeEnum.NVDX.getName()).getId());
 //            updateMucgia(sscd_ls_buf,mucgiaService.findByName(AssignTypeEnum.SSCD.getName()).getId());
-            TonkhoController.ChangeSScd_stage.close();
+            TonkhoController.tk_stage.close();
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();

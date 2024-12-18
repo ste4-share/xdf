@@ -3,7 +3,7 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
-import com.xdf.xd_f371.util.TextToNumber;
+import com.xdf.xd_f371.util.Common;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -31,7 +32,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -39,21 +39,16 @@ import java.util.stream.Collectors;
 @Component
 public class TonkhoController implements Initializable {
 
-    public static Stage quarter_stage;
-    public static Stage ChangeSScd_stage;
+    public static Stage tk_stage;
     private static List<SpotDto> tkt;
     private static Quarter findByTime;
     public static SpotDto pickTonKho = new SpotDto();
     @FXML
-    public TableView<SpotDto> tb_tonkho;
+    public TableView<SpotDto> tb_tonkho,tb_inv_chitiet;
     @FXML
-    public TableView<Inventory> tb_quater_inv;
-    @FXML
-    public TableColumn<SpotDto, String> col_stt_tk,col_maxd_tk,col_tenxd_tk,col_nvdx_tk,col_sscd_tk,col_sum_tk;
-    @FXML
-    public TableColumn<Inventory, String> col_stt_qt,col_ma_qt, col_tenxd_qt, col_chungloai_qt,col_nvdx_tdk, col_sscd_tdk, col_sum_tdk,col_nvdx_tck,col_sscd_tck,col_sum_tck;
-    @FXML
-    private TableColumn<Inventory, String> col_nvdx_pre,col_sscd_pre,col_sum_pre;
+    public TableColumn<SpotDto, String> col_stt_tk,col_maxd_tk,col_tenxd_tk,col_nvdx_tk,col_sscd_tk,col_sum_tk,
+            col_stt_qt, col_tenxd_qt, col_chungloai_qt,col_nvdx_tdk, col_sscd_tdk, col_sum_tdk,col_tong_nhap,
+            col_nhap_nvdx,col_xuat_nvdx,col_nhap_sscd,col_xuat_sscd,col_nvdx_tck,col_sscd_tck,col_sum_tck;
     @FXML
     private TextField tf_search_inv_qt, search_inventory;
     @FXML
@@ -68,8 +63,6 @@ public class TonkhoController implements Initializable {
     @Autowired
     private QuarterService quarterService;
     @Autowired
-    private InventoryService inventoryService;
-    @Autowired
     private MucgiaService mucgiaService;
 
     @Override
@@ -83,9 +76,10 @@ public class TonkhoController implements Initializable {
         setTonkhoTongToCol();
         setTonkhoTongToCol2();
         fillDataToTableTonkho();
-        setClickToTonTb();
         tb_tonkho.setPrefWidth(DashboardController.screenWidth);
         tb_tonkho.setPrefHeight(DashboardController.screenHeigh);
+        tb_inv_chitiet.setPrefWidth(DashboardController.screenWidth);
+        tb_inv_chitiet.setPrefHeight(DashboardController.screenHeigh);
     }
 
     private void setQuarterListToCbb(){
@@ -115,19 +109,13 @@ public class TonkhoController implements Initializable {
 
     @FXML
     public void addNewQuarter(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../quater_form.fxml"));
-        Scene scene = new Scene(root);
-        quarter_stage = new Stage();
-        quarter_stage.setScene(scene);
-        quarter_stage.initStyle(StageStyle.DECORATED);
-        quarter_stage.initModality(Modality.APPLICATION_MODAL);
-        quarter_stage.setTitle("Tạo Quý");
-        quarter_stage.show();
+        tk_stage = new Stage();
+        Common.openNewStage("quater_form.fxml", tk_stage,"Tạo Quý");
     }
 
     @FXML
     public void selectQuarter(ActionEvent actionEvent) {
-        Quarter selected = cbb_quarter.getValue();
+        Quarter selected = cbb_quarter.getSelectionModel().getSelectedItem();
         lb_end_date.setText(selected.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         lb_start_date.setText(selected.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         fillDataToTable(selected);
@@ -177,48 +165,26 @@ public class TonkhoController implements Initializable {
     }
 
     private void fillDataToTable(Quarter selected){
-        List<Inventory> inventories = inventoryService.findByQuarter_id(DashboardController.findByTime.getId());
-        for(int i =0; i< inventories.size(); i++){
-            Inventory inventory = inventories.get(i);
-//            LoaiXangDau loaiXangDau = loaiXangDauRepo.findById(inventory.getPetro_id()).orElse(null);
-
-
-//            inventory.setPetroleumName(loaiXangDau.getTenxd());
-////            inventory.setChungloai(loaiXangDau.getChungloai());
-//            inventory.setStt(i+1);
-//
-//            inventory.setTcK_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getTck_nvdx()).equals("") ? "0" : String.valueOf(inventory.getTck_nvdx())));
-//            inventory.setTck_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getTck_sscd()).equals("") ? "0" : String.valueOf(inventory.getTck_sscd())));
-//            int sum_tck = inventory.getTck_nvdx() + inventory.getTck_sscd();
-//            inventory.setTck_sum_str(TextToNumber.textToNum(String.valueOf(sum_tck).equals("") ? "0" : String.valueOf(sum_tck)));
-//
-//            inventory.setTdk_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getTdk_sscd()).equals("") ? "0" : String.valueOf(inventory.getTdk_sscd())));
-//            inventory.setTdk_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getTdk_nvdx()).equals("") ? "0" : String.valueOf(inventory.getTdk_nvdx())));
-//            int sum_tdk = inventory.getTdk_sscd() + inventory.getTdk_nvdx();
-//            inventory.setTdk_sum_str(TextToNumber.textToNum(String.valueOf(sum_tdk).equals("") ? "0" : String.valueOf(sum_tdk)));
-//
-//            inventory.setPre_nvdx_str(TextToNumber.textToNum(String.valueOf(inventory.getPre_nvdx()).equals("") ? "0" : String.valueOf(inventory.getPre_nvdx())));
-//            inventory.setPre_sscd_str(TextToNumber.textToNum(String.valueOf(inventory.getPre_sscd()).equals("") ? "0" : String.valueOf(inventory.getPre_sscd())));
-//            int sum_pre = inventory.getPre_sscd() + inventory.getPre_nvdx();
-//            inventory.setPre_sum_str(TextToNumber.textToNum(String.valueOf(sum_pre).equals("") ? "0" : String.valueOf(sum_pre)));
-        };
-        ObservableList<Inventory> observableList = FXCollections.observableArrayList(inventories);
-        tb_quater_inv.setItems(observableList);
+        tb_inv_chitiet.setItems(FXCollections.observableList(mucgiaService.getAllSpots2(selected.getId())));
     }
 
     private void setTonkhoTongToCol2(){
-        col_stt_qt.setCellValueFactory(new PropertyValueFactory<Inventory, String>("stt"));
-        col_tenxd_qt.setCellValueFactory(new PropertyValueFactory<Inventory, String>("petroleumName"));
-        col_chungloai_qt.setCellValueFactory(new PropertyValueFactory<Inventory, String>("chungloai"));
-        col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<Inventory, String>("tdk_nvdx_str"));
-        col_sscd_tdk.setCellValueFactory(new PropertyValueFactory<Inventory, String>("tdk_sscd_str"));
-        col_sum_tdk.setCellValueFactory(new PropertyValueFactory<Inventory, String>("tdk_sum_str"));
-        col_nvdx_tck.setCellValueFactory(new PropertyValueFactory<Inventory, String>("tcK_nvdx_str"));
-        col_sscd_tck.setCellValueFactory(new PropertyValueFactory<Inventory, String>("tck_sscd_str"));
-        col_sum_tck.setCellValueFactory(new PropertyValueFactory<Inventory, String>("tck_sum_str"));
-        col_nvdx_pre.setCellValueFactory(new PropertyValueFactory<Inventory, String>("pre_nvdx_str"));
-        col_sscd_pre.setCellValueFactory(new PropertyValueFactory<Inventory, String>("pre_sscd_str"));
-        col_sum_pre.setCellValueFactory(new PropertyValueFactory<Inventory, String>("pre_sum_str"));
+        col_stt_qt.setSortable(false);
+        col_stt_qt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_inv_chitiet.getItems().indexOf(column.getValue())+1).asString());
+        col_tenxd_qt.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tenxd"));
+        col_chungloai_qt.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("chungloai"));
+        col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_nvdx_str"));
+        col_sscd_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_sscd_str"));
+        col_sum_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_total"));
+
+        col_nhap_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nhap_nvdx_str"));
+        col_xuat_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("xuat_nvdx_str"));
+        col_nhap_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nhap_sscd_str"));
+        col_xuat_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("xuat_sscd_str"));
+
+        col_nvdx_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_nvdx_str"));
+        col_sscd_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_sscd_str"));
+        col_sum_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_total"));
     }
 
     @FXML
@@ -229,67 +195,11 @@ public class TonkhoController implements Initializable {
         fillDataToTable(selected);
     }
 
-    public void setClickToTonTb() {
-        tb_tonkho.setOnMouseClicked(event1 -> {
-            pickTonKho = tb_tonkho.getSelectionModel().getSelectedItem();
-            Parent root = null;
-            try {
-                root = FXMLLoader.load(getClass().getResource("../changesscd-form.fxml"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Scene scene = new Scene(root);
-            ChangeSScd_stage = new Stage();
-            ChangeSScd_stage.setScene(scene);
-            ChangeSScd_stage.initStyle(StageStyle.DECORATED);
-            ChangeSScd_stage.initModality(Modality.APPLICATION_MODAL);
-            ChangeSScd_stage.showAndWait();
-            fillDataToTableTonkho();
-        });
-    }
-
-    protected void setBordersToMergedCells(XSSFSheet sheet, CellRangeAddress rangeAddress) {
-        RegionUtil.setBorderTop(BorderStyle.THIN, rangeAddress, sheet);
-        RegionUtil.setBorderLeft(BorderStyle.THIN, rangeAddress, sheet);
-        RegionUtil.setBorderRight(BorderStyle.THIN, rangeAddress, sheet);
-        RegionUtil.setBorderBottom(BorderStyle.THIN, rangeAddress, sheet);
-    }
-    public static void copyFileExcel(String sourceName, String destName){
-        deleteExcel(destName);
-        File source = new File(sourceName);
-        File dest = new File(destName);
-        if (source.exists()){
-            long start = System.nanoTime();
-            try {
-                copyFileUsingJava7Files(source, dest);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }else {
-            throw new RuntimeException("source file doesn't exists");
+    @FXML
+    public void setClickToTonTb(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2){
+            tk_stage = new Stage();
+            Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi");
         }
-    }
-
-    private static void deleteExcel(String f){
-        File file = new File(f);
-        try{
-            if(file.delete())                      //returns Boolean value
-            {
-                System.out.println(file.getName() + " deleted");   //getting and printing the file name
-            }
-            else
-            {
-                System.out.println("failed");
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void copyFileUsingJava7Files(File source, File dest) throws IOException {
-        Files.copy(source.toPath(), dest.toPath());
     }
 }
