@@ -84,6 +84,8 @@ public class TonkhoController implements Initializable {
         setTonkhoTongToCol2();
         fillDataToTableTonkho();
         setClickToTonTb();
+        tb_tonkho.setPrefWidth(DashboardController.screenWidth);
+        tb_tonkho.setPrefHeight(DashboardController.screenHeigh);
     }
 
     private void setQuarterListToCbb(){

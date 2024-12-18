@@ -10,6 +10,7 @@ import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.LoaiXdService;
 import com.xdf.xd_f371.service.TcnService;
 import com.xdf.xd_f371.util.DialogMessage;
+import com.xdf.xd_f371.util.FxUtilTest;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -94,20 +95,7 @@ public class NhapController extends CommonFactory implements Initializable {
         });
     }
     private void setTenXDToCombobox(){
-        cmb_tenxd.setConverter(new StringConverter<LoaiXangDauDto>() {
-            @Override
-            public String toString(LoaiXangDauDto loaiXangDau) {
-                return loaiXangDau==null ? "" : loaiXangDau.getTenxd();
-            }
-
-            @Override
-            public LoaiXangDauDto fromString(String s) {
-                return loaiXdService.findById(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id()).orElse(null);
-            }
-        });
-        cmb_tenxd.setItems(FXCollections.observableList(loaiXdService.findAllBy()));
-        cmb_tenxd.getSelectionModel().selectFirst();
-        chungloai_lb.setText("Chủng loại: "+cmb_tenxd.getSelectionModel().getSelectedItem().getLoai());
+        setXangDauCombobox(cmb_tenxd, loaiXdService);
     }
 
     private void setDvvcCombobox(){
@@ -148,10 +136,17 @@ public class NhapController extends CommonFactory implements Initializable {
         int pn = phaiNhap.getText().isEmpty() ? 0 : Integer.parseInt(phaiNhap.getText());
         int p = donGiaTf.getText().trim().isEmpty() ? 0 : Integer.parseInt(donGiaTf.getText());
 
+        LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
+        if (lxd==null){
+            cmb_tenxd.setStyle(styleErrorField);
+            DialogMessage.message("Lỗi", "...",
+                    "Ten xang dau khong xac dinh.", Alert.AlertType.ERROR);
+            throw new RuntimeException("Ten xang dau khong xac dinh.");
+        }
         LedgerDetails ledgerDetails = new LedgerDetails();
-        ledgerDetails.setMa_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getMaxd());
-        ledgerDetails.setTen_xd(cmb_tenxd.getSelectionModel().getSelectedItem().getTenxd());
-        ledgerDetails.setLoaixd_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id());
+        ledgerDetails.setMa_xd(lxd.getMaxd());
+        ledgerDetails.setTen_xd(lxd.getTenxd());
+        ledgerDetails.setLoaixd_id(lxd.getXd_id());
         ledgerDetails.setDon_gia(p);
         ledgerDetails.setPhai_nhap(pn);
         ledgerDetails.setThuc_nhap(tn);
@@ -187,6 +182,7 @@ public class NhapController extends CommonFactory implements Initializable {
     private void btnInsert(ActionEvent event){
         LedgerDetails ld = getLedgerDetails();
         if (!outfieldValid(tcNhap, "tinh chat nhap khoong duoc de trong.")){
+            cmb_tenxd.setStyle(null);
             if (validateField(ld).isEmpty()) {
                 ls_socai.add(ld);
                 setcellFactory();
@@ -282,10 +278,10 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     @FXML
     public void changedItemLoaiXd(ActionEvent actionEvent) {
-        Inventory i = inventoryService.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
-        int tk = i.getTdk_nvdx() + i.getNhap_nvdx()-i.getXuat_nvdx();
-        LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
+        LoaiXangDauDto lxd = FxUtilTest.getComboBoxValue(cmb_tenxd);
         if (lxd!=null){
+            Inventory i = inventoryService.findByPetro_idAndQuarter_id(lxd.getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
+            int tk = i.getTdk_nvdx() + i.getNhap_nvdx()-i.getXuat_nvdx();
             LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
             if (ld!=null){
                 setTonKhoLabel(tk+ld.getSoluong());

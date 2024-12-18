@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.Mucgia;
 import com.xdf.xd_f371.model.MucGiaEnum;

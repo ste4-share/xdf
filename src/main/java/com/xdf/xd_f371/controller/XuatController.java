@@ -7,9 +7,11 @@ import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.DialogMessage;
+import com.xdf.xd_f371.util.FxUtilTest;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.sl.usermodel.TextBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +147,7 @@ public class XuatController extends CommonFactory implements Initializable {
             initValueForLoaiXuatCbb(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName()).stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()),
                     phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()),nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName())
                     ,false);
+            px_hbox.setDisable(false);
         } else if (lx.equals(LoaiXuat.HH.getName())) {
             initValueForLoaiXuatCbb(chitietNhiemvuService.findAllDtoById(LoaiNVCons.HAOHUT.getName()).stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()),
                     new ArrayList<>(),nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findAllOrderby(),true);
@@ -155,6 +159,7 @@ public class XuatController extends CommonFactory implements Initializable {
     public void mbRadioSel(ActionEvent actionEvent) {
         setLoaiXangDauByRadio(LoaiPTEnum.MAYBAY.getNameVehicle(), true,LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName());
         setNhiemvuForField(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName()));
+        px_hbox.setDisable(false);
     }
     @FXML
     public void xeRadioSelec(ActionEvent actionEvent) {
@@ -250,10 +255,10 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void selectxd(ActionEvent actionEvent) {
-        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        LoaiXangDauDto lxd = FxUtilTest.getComboBoxValue(cbb_tenxd);
         if (lxd!=null){
+            cbb_tenxd.setStyle(null);
             mapPrice(lxd.getXd_id());
-            chungloai_lb.setText("Chủng loại: "+lxd.getChungloai());
         }
     }
     @FXML
@@ -409,7 +414,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_tenxd.getSelectionModel().selectFirst();
         px_hbox.setDisable(!pxhbox);
     }
-
     private void initLoaiXuatCbb() {
         loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.HH.getName())));
         loai_xuat_cbb.getSelectionModel().selectFirst();
@@ -429,20 +433,10 @@ public class XuatController extends CommonFactory implements Initializable {
     }
 
     private void mapXdForCombobox(){
-        cbb_tenxd.setConverter(new StringConverter<LoaiXangDauDto>() {
-            @Override
-            public String toString(LoaiXangDauDto object) {
-                return object == null ? "": object.getTenxd();
-            }
-            @Override
-            public LoaiXangDauDto fromString(String string) {
-                return loaiXdService.findAllTenxdDto(string).orElse(null);
-            }
-        });
-        cbb_tenxd.getItems().addAll(loaiXdService.findAllOrderby());
-        cbb_tenxd.getSelectionModel().selectFirst();
-        mapPrice(cbb_tenxd.getSelectionModel().getSelectedItem().getXd_id());
+        setXangDauCombobox(cbb_tenxd, loaiXdService);
+        mapPrice(FxUtilTest.getComboBoxValue(cbb_tenxd).getXd_id());
     }
+
     private void mapPrice(int xd_id){
         int quarter_id = DashboardController.findByTime.getId();
         cbb_dongia.setConverter(new StringConverter<Mucgia>() {
@@ -461,7 +455,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_dongia.getSelectionModel().selectFirst();
         setInvenPrice();
     }
-
     private void setInvenPrice(){
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Mucgia m = cbb_dongia.getSelectionModel().getSelectedItem();
@@ -472,7 +465,6 @@ public class XuatController extends CommonFactory implements Initializable {
             }
         }
     }
-
     private void setCellValueFactory(){
         tbXuat.setItems(FXCollections.observableList(ls_socai));
         stt.setSortable(false);
@@ -497,7 +489,6 @@ public class XuatController extends CommonFactory implements Initializable {
         nl_km.setText("0");
     }
     private Ledger getLedger() {
-
         NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
         NguonNx dvn = dvn_cbb.getSelectionModel().getSelectedItem();
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
@@ -581,6 +572,11 @@ public class XuatController extends CommonFactory implements Initializable {
         int pxuat = phaixuat.getText().isEmpty() ? 0 : Integer.parseInt(phaixuat.getText());
         Mucgia m = cbb_dongia.getSelectionModel().getSelectedItem();
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        if (lxd ==null){
+            cbb_tenxd.setStyle(styleErrorField);
+            DialogMessage.message("Error", "ten xang dau khong xac dinh","Co loi xay ra", Alert.AlertType.ERROR);
+            throw new RuntimeException("error");
+        }
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
 

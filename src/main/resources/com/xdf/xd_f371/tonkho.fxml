@@ -106,7 +106,7 @@
                                              </cursor></DatePicker>
                                        </children>
                                     </HBox>
-                                    <TableView fx:id="tb_tonkho" prefHeight="720.0" prefWidth="1800.0" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
+                                    <TableView fx:id="tb_tonkho" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
                                       <columns>
                                         <TableColumn fx:id="col_stt_tk" prefWidth="75.0" text="STT" />
                                         <TableColumn fx:id="col_maxd_tk" prefWidth="75.0" text="Mã XD" />
@@ -119,7 +119,7 @@
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
                                        <VBox.margin>
-                                          <Insets right="10.0" />
+                                          <Insets bottom="10.0" right="10.0" />
                                        </VBox.margin>
                                     </TableView>
                                  </children>

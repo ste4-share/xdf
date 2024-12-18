@@ -1,16 +1,20 @@
 package com.xdf.xd_f371.fatory;
 
+import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.LichsuXNK;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.DialogMessage;
+import com.xdf.xd_f371.util.FxUtilTest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -79,5 +83,22 @@ public class CommonFactory {
             return true;
         }
         return false;
+    }
+
+    protected void setXangDauCombobox(ComboBox<LoaiXangDauDto> cbb, LoaiXdService loaiXdService){
+        FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTenxd().toLowerCase().contains(typedText.toLowerCase()));
+        cbb.setConverter(new StringConverter<LoaiXangDauDto>() {
+            @Override
+            public String toString(LoaiXangDauDto object) {
+                return object == null ? "": object.getTenxd();
+            }
+            @Override
+            public LoaiXangDauDto fromString(String string) {
+                return loaiXdService.findAllTenxdDto(string).orElse(null);
+            }
+        });
+
+        cbb.getItems().addAll(loaiXdService.findAllOrderby());
+        cbb.getSelectionModel().selectFirst();
     }
 }

@@ -48,8 +48,8 @@ public class DashboardController implements Initializable {
     public static Quarter findByTime;
     public static List<Ledger> ledgerList = new ArrayList<>();
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
-    int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
-    int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
+    public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
+    public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
 
     private static int rowsPerPage = 9;
 

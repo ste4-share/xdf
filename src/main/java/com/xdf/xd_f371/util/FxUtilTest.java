@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import jdk.swing.interop.SwingInterOpUtils;
 
 public class FxUtilTest {
     public interface AutoCompleteComparator<T> {
@@ -14,19 +15,11 @@ public class FxUtilTest {
 
     public static<T> void autoCompleteComboBoxPlus(ComboBox<T> comboBox, AutoCompleteComparator<T> comparatorMethod) {
         ObservableList<T> data = comboBox.getItems();
-
         comboBox.setEditable(true);
-        comboBox.getEditor().focusedProperty().addListener(observable -> {
-            if (comboBox.getSelectionModel().getSelectedIndex() < 0) {
-                comboBox.getEditor().setText(null);
-            }
-        });
         comboBox.addEventHandler(KeyEvent.KEY_PRESSED, t -> comboBox.hide());
         comboBox.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
-
             private boolean moveCaretToPos = false;
             private int caretPos;
-
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.UP) {
@@ -74,7 +67,6 @@ public class FxUtilTest {
                 if (comboBox.getEditor().getText() != null) {
                     t = comboBox.getEditor().getText();
                 }
-
                 comboBox.setItems(list);
                 comboBox.getEditor().setText(t);
                 if (!moveCaretToPos) {
