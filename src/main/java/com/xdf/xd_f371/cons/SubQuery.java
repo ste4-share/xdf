@@ -9,19 +9,19 @@ public class SubQuery {
         return "select max(stt_index) as stt,tinhchat,loai,CASE WHEN tenxd is null and grouping(tinhchat)=0 then loai else tenxd end,sum(tdk_sscd) as tdk_sscd,sum(tdk_nvdx) as tdk_nvdx,sum(cong) as cong,";
     }
     public String nl_end_q1(){
-        return "max(priority_3), grouping(tinhchat) as tc_gr,grouping(loai) as loai_gr,grouping(tenxd) as xd_gr, max(priority_3) as pr from (select stt_index,tinhchat,loai,tenxd,tdk_sscd,tdk_nvdx,tdk_sscd+tdk_nvdx as cong,priority_3,";
+        return "max(priority_3), grouping(tinhchat) as tc_gr,grouping(loai) as loai_gr,grouping(tenxd) as xd_gr, max(priority_3) as pr from (select stt_index,tinhchat,loai,tenxd,max(tdk_sscd) as tdk_sscd,max(tdk_nvdx) as tdk_nvdx,max(tdk_sscd+tdk_nvdx) as cong,max(priority_3) as priority_3,";
     }
     public String nl_end(int quarter_id){
-        return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat like 'Nhiên liệu' and i.quarter_id="+quarter_id+") s group by rollup(tinhchat,loai,tenxd) order by tc_gr desc,loai_gr desc,pr asc,xd_gr desc";
+        return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat like 'Nhiên liệu' and i.quarter_id="+quarter_id+" group by 1,2,3,4) s group by rollup(tinhchat,loai,tenxd) order by tc_gr desc,loai_gr desc,pr asc,xd_gr desc";
     }
     public String dmn_begin_q1(){
         return "select max(stt_index) as stt,chungloai,loai,CASE WHEN tenxd is null and grouping(chungloai)=0 then loai else tenxd end,sum(tdk_sscd) as tdk_sscd,sum(tdk_nvdx) as tdk_nvdx,sum(cong) as cong,";
     }
     public String dmn_end_q1(){
-        return "max(priority_3),grouping(chungloai) as cl_gr,grouping(loai) as loai_gr,grouping(tenxd) as xd_gr, max(priority_3) as pr from (select stt_index,chungloai,loai,tenxd,tdk_sscd,tdk_nvdx,tdk_sscd+tdk_nvdx as cong,priority_3,";
+        return "max(priority_3),grouping(chungloai) as cl_gr,grouping(loai) as loai_gr,grouping(tenxd) as xd_gr, max(priority_3) as pr from (select stt_index,chungloai,loai,tenxd,max(tdk_sscd) as tdk_sscd,max(tdk_nvdx) as tdk_nvdx,max(tdk_sscd+tdk_nvdx) as cong,max(priority_3) as priority_3,";
     }
     public String dmn_end(int quarter_id){
-        return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat <> 'Nhiên liệu' and i.quarter_id="+quarter_id+") s group by rollup(chungloai,loai,tenxd) order by chungloai desc,grouping(chungloai) desc,loai_gr desc,pr asc,xd_gr desc";
+        return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat <> 'Nhiên liệu' and i.quarter_id="+quarter_id+" group by 1,2,3,4) s group by rollup(chungloai,loai,tenxd) order by chungloai desc,grouping(chungloai) desc,loai_gr desc,pr asc,xd_gr desc";
     }
     public String ttxd_nv(int quy_id,int dv_id){
         return "select n, ten_nv,nhiemvu,xang,diezel,daubay,hm_cong,xm_xang_km,xm_xang_gio::text,xm_do_km,xm_do_gio::text,nlpl::text,x_choxe,x_chomay,x_cong,do_choxe,do_chomay,do_cong,nltt_nlpl,sd_tichluy,name_gr,tennv_gr,nv_gr\n" +

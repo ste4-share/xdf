@@ -61,6 +61,8 @@ public class BaoCaoController implements Initializable {
         String file_name = "src/main/resources/com/xdf/xd_f371/xlsx_template/data.xlsx";
         String dest_file = "baocao/baocao.xlsx";
         mapdataToNxtSheet(file_name);
+        SubQuery subQuery = new SubQuery();
+        System.out.println("query: " +getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
         saveBcTieuthuXdTheoNhiemvu(file_name);
         saveBcThanhtoanNhienlieuBayTheoKeHoach(file_name);
         copyFileExcel(file_name,dest_file);
@@ -83,7 +85,6 @@ public class BaoCaoController implements Initializable {
             DialogMessage.message("Message", io.getMessage(), "fail!", Alert.AlertType.INFORMATION);
             throw new RuntimeException(io);
         }
-        DialogMessage.message("Message", "Cap nhat thanh cong.", "Successfully!", Alert.AlertType.INFORMATION);
     }
     @FXML
     public void dvi_selected(ActionEvent actionEvent) {
@@ -328,8 +329,8 @@ public class BaoCaoController implements Initializable {
             arr_tt.add(tt.getType());
             n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
             x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            n_case_1 = n_case_1.concat("case when tonkhonhap_xd("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+") is null then 0 else tonkhonhap_xd("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+") end as n"+tt.getType()+",");
-            x_case_2 = x_case_2.concat("case when tonkhoxuat_xd("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+") is null then 0 else tonkhoxuat_xd("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+") end as x"+tt.getType()+",");
+            n_case_1 = n_case_1.concat("max(case when tonkhonhap_xd("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+") is null then 0 else tonkhonhap_xd("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+") end) as n"+tt.getType()+",");
+            x_case_2 = x_case_2.concat("max(case when tonkhoxuat_xd("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+") is null then 0 else tonkhoxuat_xd("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+") end) as x"+tt.getType()+",");
         }
         return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
     }

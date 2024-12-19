@@ -1,18 +1,17 @@
 package com.xdf.xd_f371.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.math3.stat.descriptive.summary.Product;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "inventory")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +34,26 @@ public class Inventory {
     private int xuat_sscd;
     @Column(name = "status")
     private String status;
-
+    @Column(name = "price")
+    private Long price;
+    @Column(name = "create_at")
+    private LocalDate create_at;
 
     @ManyToOne
     @JoinColumn(name = "petro_id",referencedColumnName = "id", insertable = false, updatable = false)
     private LoaiXangDau loaiXangDau;
+
+    public Inventory(int petro_id, int quarter_id, int tdk_nvdx, int tdk_sscd, int nhap_nvdx, int nhap_sscd, int xuat_nvdx, int xuat_sscd, String status, Long price, LocalDate create_at) {
+        this.petro_id = petro_id;
+        this.quarter_id = quarter_id;
+        this.tdk_nvdx = tdk_nvdx;
+        this.tdk_sscd = tdk_sscd;
+        this.nhap_nvdx = nhap_nvdx;
+        this.nhap_sscd = nhap_sscd;
+        this.xuat_nvdx = xuat_nvdx;
+        this.xuat_sscd = xuat_sscd;
+        this.status = status;
+        this.price = price;
+        this.create_at = create_at;
+    }
 }
