@@ -10,27 +10,18 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.RegionUtil;
-import org.apache.poi.xssf.usermodel.*;
+
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -106,13 +97,6 @@ public class TonkhoController implements Initializable {
             nullPointerException.printStackTrace();
         }
     }
-
-    @FXML
-    public void addNewQuarter(ActionEvent actionEvent) throws IOException {
-        tk_stage = new Stage();
-        Common.openNewStage("quater_form.fxml", tk_stage,"Tạo Quý");
-    }
-
     @FXML
     public void selectQuarter(ActionEvent actionEvent) {
         Quarter selected = cbb_quarter.getSelectionModel().getSelectedItem();

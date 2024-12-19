@@ -18,6 +18,9 @@ import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class Common {
 
@@ -44,5 +47,8 @@ public class Common {
         stage.setTitle("Xăng dầu F371");
         stage.setScene(scene);
         stage.show();
+    }
+    public static LocalDate localdateToDate(Date input){
+        return LocalDate.ofInstant(input.toInstant(), ZoneId.systemDefault());
     }
 }

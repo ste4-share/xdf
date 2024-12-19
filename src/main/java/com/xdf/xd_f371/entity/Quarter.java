@@ -13,7 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Quarter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +25,16 @@ public class Quarter {
     private LocalDate end_date;
     @Column(name = "year")
     private String year;
-    @Column(name = "status")
-    private String status;
-    @Column(name = "convey")
-    private String convey;
+    @Column(name = "index")
+    private int index;
+
+    public Quarter(String name, LocalDate start_date, LocalDate end_date, String year, int index) {
+        this.name = name;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.year = year;
+        this.index = index;
+    }
 
     @OneToMany(mappedBy = "quarter",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DinhMuc> dinhMucList;

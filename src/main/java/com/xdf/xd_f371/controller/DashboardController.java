@@ -5,7 +5,7 @@ import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
-import com.xdf.xd_f371.util.ComboboxUtil;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.animation.Animation;
@@ -33,7 +33,6 @@ import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -101,6 +100,7 @@ public class DashboardController implements Initializable {
         initQuyCombobox();
         tbTTNX.setPrefWidth(screenWidth);
         tbTTNX.setPrefHeight(screenHeigh);
+        setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
     }
 
     @FXML
@@ -122,6 +122,7 @@ public class DashboardController implements Initializable {
     public void nxt_menu_action(MouseEvent event) {
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
         borderpane_base.setCenter(nx_vbox);
+        getCurrentQuarter();
     }
 
     @FXML
@@ -182,7 +183,7 @@ public class DashboardController implements Initializable {
     }
 
     private void initQuyCombobox(){
-        ComboboxUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), new StringConverter<Quarter>() {
+        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), new StringConverter<Quarter>() {
             @Override
             public String toString(Quarter object) {
                 return object==null?"":object.getName();
@@ -203,12 +204,11 @@ public class DashboardController implements Initializable {
             lb_from.setTextFill(Color.rgb(33, 12, 162));
             lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         }else {
-            DialogMessage.message("Thông báo", "Vui lòng tạo quý mới",
+            DialogMessage.message("Thông báo", "Vui lòng tạo quý cho nam: " + Year.now().getValue(),
                     "HẾt quý", Alert.AlertType.CONFIRMATION);
-            primaryStage = new Stage();
-            Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP");
+            setStyleForClickedMEnu(setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report);
+            openFxml("setting_menu.fxml");
         }
-
     }
 
     private void setDataToPhieuCombobox(){
