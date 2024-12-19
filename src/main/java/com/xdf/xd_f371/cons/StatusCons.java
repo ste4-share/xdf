@@ -1,7 +1,8 @@
 package com.xdf.xd_f371.cons;
 
 public enum StatusCons {
-    ACTIVED("ACTIVE");
+    ACTIVED("ACTIVE"),
+    IN_ACTIVED("IN_ACTIVE");
 
     public final String name;
 

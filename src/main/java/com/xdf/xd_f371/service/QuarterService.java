@@ -20,6 +20,9 @@ public class QuarterService {
     public Optional<Quarter> findByName(String name){
         return quarterRepository.findByName(name);
     }
+    public List<Quarter> findAllByYear(String year){
+        return quarterRepository.findByYear(year);
+    }
     public List<Quarter> findAll(){
         return quarterRepository.findAll();
     }

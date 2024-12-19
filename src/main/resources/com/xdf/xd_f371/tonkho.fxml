@@ -71,7 +71,7 @@
                <children>
                   <TabPane tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                      <Tab fx:id="inventory_tab" text="Tồn kho">
+                      <Tab fx:id="inventory_tab" text="Tồn kho hiện tại">
                            <content>
                               <VBox>
                                  <children>
@@ -86,24 +86,6 @@
                                              <cursor>
                                                 <Cursor fx:constant="TEXT" />
                                              </cursor></TextField>
-                                          <Label alignment="CENTER" prefHeight="43.0" prefWidth="123.0" text="Từ ngày:">
-                                             <font>
-                                                <Font name="DejaVu Sans Bold" size="12.0" />
-                                             </font>
-                                          </Label>
-                                          <DatePicker fx:id="start_date_tk_search" prefHeight="40.0" prefWidth="183.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor></DatePicker>
-                                          <Label alignment="CENTER" prefHeight="43.0" prefWidth="90.0" text="----&gt;">
-                                             <font>
-                                                <Font name="DejaVu Sans Bold" size="12.0" />
-                                             </font>
-                                          </Label>
-                                          <DatePicker fx:id="end_date_tk_search" prefHeight="40.0" prefWidth="184.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor></DatePicker>
                                        </children>
                                     </HBox>
                                     <TableView fx:id="tb_tonkho" onMouseClicked="#setClickToTonTb" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
@@ -126,7 +108,7 @@
                               </VBox>
                            </content>
                       </Tab>
-                        <Tab fx:id="quarter_tab" onSelectionChanged="#changeTabTheoQuy" text="Theo Quý">
+                        <Tab fx:id="quarter_tab" onSelectionChanged="#changeTabTheoQuy" text="Tồn kho theo quý">
                            <content>
                               <VBox>
                                  <children>
@@ -141,24 +123,6 @@
                                              <cursor>
                                                 <Cursor fx:constant="TEXT" />
                                              </cursor></TextField>
-                                          <Label alignment="CENTER" prefHeight="43.0" prefWidth="123.0" text="Từ ngày:">
-                                             <font>
-                                                <Font name="DejaVu Sans Bold" size="12.0" />
-                                             </font>
-                                          </Label>
-                                          <DatePicker fx:id="start_date_qt" prefHeight="40.0" prefWidth="183.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor></DatePicker>
-                                          <Label alignment="CENTER" prefHeight="43.0" prefWidth="90.0" text="----&gt;">
-                                             <font>
-                                                <Font name="DejaVu Sans Bold" size="12.0" />
-                                             </font>
-                                          </Label>
-                                          <DatePicker fx:id="end_date_qt" prefHeight="40.0" prefWidth="184.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor></DatePicker>
                                        </children>
                                     </HBox>
                                     <TableView fx:id="tb_inv_chitiet" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
@@ -188,6 +152,66 @@
                                                 <TableColumn fx:id="col_sum_tck" prefWidth="119.0" text="Cộng" />
                                              </columns>
                                           </TableColumn>
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" right="10.0" />
+                                       </VBox.margin>
+                                    </TableView>
+                                    <HBox alignment="CENTER" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </Tab>
+                        <Tab fx:id="quarter_tab1" onSelectionChanged="#changeTabTheoQuy" text="Lịch sử Nhập xuất">
+                           <content>
+                              <VBox>
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="55.0" prefWidth="102.0" text="Tìm kiếm:">
+                                             <font>
+                                                <Font name="DejaVu Sans Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="tf_search_inv_qt1" prefHeight="44.0" prefWidth="293.0">
+                                             <cursor>
+                                                <Cursor fx:constant="TEXT" />
+                                             </cursor>
+                                          </TextField>
+                                          <Label alignment="CENTER" prefHeight="43.0" prefWidth="123.0" text="Từ ngày:">
+                                             <font>
+                                                <Font name="DejaVu Sans Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <DatePicker fx:id="start_date_qt1" prefHeight="40.0" prefWidth="183.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </DatePicker>
+                                          <Label alignment="CENTER" prefHeight="43.0" prefWidth="90.0" text="----&gt;">
+                                             <font>
+                                                <Font name="DejaVu Sans Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <DatePicker fx:id="end_date_qt1" prefHeight="40.0" prefWidth="184.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </DatePicker>
+                                       </children>
+                                    </HBox>
+                                    <TableView fx:id="tb_inv_chitiet1" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
+                                       <columns>
+                                          <TableColumn fx:id="col_stt_qt1" prefWidth="75.0" text="STT" />
+                                          <TableColumn fx:id="col_tenxd_qt1" prefWidth="174.0" text="Tên Xăng Dầu" />
+                                          <TableColumn fx:id="col_chungloai_qt1" prefWidth="119.0" text="Chủng loại" />
+                                          <TableColumn fx:id="col_chungloai_qt11" prefWidth="119.0" text="Chủng loại" />
+                                          <TableColumn fx:id="col_tenxd_qt11" prefWidth="174.0" text="Tên Xăng Dầu" />
+                                          <TableColumn fx:id="col_chungloai_qt12" prefWidth="119.0" text="Chủng loại" />
+                                          <TableColumn fx:id="col_chungloai_qt111" prefWidth="119.0" text="Chủng loại" />
                                        </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

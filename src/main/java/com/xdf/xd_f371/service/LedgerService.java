@@ -32,8 +32,8 @@ public class LedgerService {
     public List<LedgerDto> getLedgers() {
         return ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.so_select,DashboardController.findByTime.getId());
     }
-    public List<MiniLedgerDto> findInterfaceLedger(){
-        return ledgersRepo.findInterfaceLedger();
+    public List<MiniLedgerDto> findInterfaceLedger(String status, int quarter_id){
+        return ledgersRepo.findInterfaceLedger(status, quarter_id);
     }
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();

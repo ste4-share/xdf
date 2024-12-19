@@ -14,12 +14,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="dvi_menu_bar" prefHeight="912.0" prefWidth="1274.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.DonviController">
+
+<HBox fx:id="dvi_menu_bar" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.DonviController">
    <children>
       <TabPane prefHeight="894.0" prefWidth="1238.0">
-         <VBox.margin>
-            <Insets left="10.0" />
-         </VBox.margin>
          <tabs>
             <Tab closable="false" text="Nguồn nhập xuất">
                <content>
@@ -193,7 +191,4 @@
          </tabs>
       </TabPane>
    </children>
-   <padding>
-      <Insets right="10.0" top="10.0" />
-   </padding>
-</VBox>
+</HBox>

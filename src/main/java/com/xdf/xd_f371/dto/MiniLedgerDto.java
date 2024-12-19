@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.dto;
 
+import com.xdf.xd_f371.util.TextToNumber;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -34,7 +35,7 @@ public class MiniLedgerDto {
         this.count = count;
         this.count_str = String.valueOf(count);
         this.tong = tong;
-        this.tong_str = String.valueOf(tong);
+        this.tong_str = TextToNumber.textToNum(String.valueOf(tong));
     }
 
     @Override

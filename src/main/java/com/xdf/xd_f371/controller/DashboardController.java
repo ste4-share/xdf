@@ -1,10 +1,13 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
+import com.xdf.xd_f371.util.ComboboxUtil;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -35,6 +38,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +54,10 @@ public class DashboardController implements Initializable {
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
     public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
+    private String resetLayout = "-fx-cursor: hand;\n" +
+            "-fx-background-color: #262626;\n";
+    private String setupLayout = "-fx-border-color: #aaaaaa;\n" +
+            "-fx-background-color: #aaaaaa;\n";
 
     private static int rowsPerPage = 9;
 
@@ -70,7 +78,7 @@ public class DashboardController implements Initializable {
     @FXML
     private TableColumn<MiniLedgerDto, String> so,ngaytao, loaiphieu, soluong,tong;
     @FXML
-    private HBox dvi_menu,nxt_menu, loai_xd_menu, haohut_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu;
+    private HBox dvi_menu,nxt_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu,setting,report;
     @FXML
     private AnchorPane main_menu;
 
@@ -83,11 +91,10 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ctStage = new Stage();
         so_select=0L;
-        ttp_ls = ledgerService.findInterfaceLedger();
-        ledgerList = ledgerService.getAll();
         getCurrentQuarter();
+        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
+        ledgerList = ledgerService.getAll();
         getCurrentTiming();
-        resetStyleField();
         customStyleMenu();
         setDataToPhieuCombobox();
         setDataToViewTable();
@@ -96,39 +103,112 @@ public class DashboardController implements Initializable {
         tbTTNX.setPrefHeight(screenHeigh);
     }
 
+    @FXML
+    public void importActionClick(ActionEvent actionEvent) throws IOException{
+        primaryStage = new Stage();
+        Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP");
+        setDataToViewTable();
+//        fillDataToLichsuTb();
+    }
+
+    @FXML
+    public void exportBtnClick(ActionEvent actionEvent) throws IOException {
+        xuatStage = new Stage();
+        Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT");
+        setDataToViewTable();
+//        getDataToChart(prepare_addnew_inventory);
+    }
+    @FXML
+    public void nxt_menu_action(MouseEvent event) {
+        setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
+        borderpane_base.setCenter(nx_vbox);
+    }
+
+    @FXML
+    public void tonkho_menu_action(MouseEvent event) {
+        setStyleForClickedMEnu(tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,nhiemvu_menu,setting,report);
+        openFxml("tonkho.fxml");
+    }
+
+    @FXML
+    public void nhiemvu_menu_action(MouseEvent mouseEvent) {
+        setStyleForClickedMEnu(nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,setting,report);
+        openFxml("nhiemvu.fxml");
+    }
+
+    public static Node getNodeBySource(String source) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
+        fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
+        return fxmlLoader.load();
+    }
+    @FXML
+    public void dinhmuc_menu_action(MouseEvent event) {
+        setStyleForClickedMEnu(dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,setting,report);
+        openFxml("norm_menu.fxml");
+    }
+    @FXML
+    public void dvi_menu_action(MouseEvent event) {
+        setStyleForClickedMEnu(dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,setting,report);
+        openFxml("donvi_menu.fxml");
+    }
+    @FXML
+    public void setting_menu_action(MouseEvent mouseEvent) {
+        setStyleForClickedMEnu(setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report);
+        openFxml("setting_menu.fxml");
+    }
+    @FXML
+    public void report_menu_action(MouseEvent mouseEvent) {
+        setStyleForClickedMEnu(report,setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu);
+        openFxml("reporters.fxml");
+    }
+    @FXML
+    public void quy_selected(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void loc_phieu(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void tb_selected(MouseEvent mouseEvent) {
+        ctStage = new Stage();
+        if (mouseEvent.getClickCount()==2){
+            try {
+                so_select = (long) tbTTNX.getSelectionModel().getSelectedItem().getSo();
+                Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT");
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private void initQuyCombobox(){
-        quy_cbb.setItems(FXCollections.observableArrayList(quarterService.findAll()));
-        quy_cbb.setConverter(new StringConverter<Quarter>() {
+        ComboboxUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), new StringConverter<Quarter>() {
             @Override
             public String toString(Quarter object) {
                 return object==null?"":object.getName();
             }
+
             @Override
             public Quarter fromString(String string) {
                 return quarterService.findByName(string).orElse(null);
             }
         });
-        quy_cbb.getSelectionModel().selectFirst();
-    }
-
-    private void resetStyleField() {
-        String cssLayout1 =
-                "-fx-border-color: #aaaaaa;\n" +
-                        "-fx-background-color: #aaaaaa;\n" ;
-        nxt_menu.setStyle(cssLayout1);
-        dvi_menu.setStyle(resetStyle());
-        loai_xd_menu.setStyle(resetStyle());
-        haohut_menu.setStyle(resetStyle());
-        dinhmuc_menu.setStyle(resetStyle());
-        nhiemvu_menu.setStyle(resetStyle());
     }
 
     private void getCurrentQuarter(){
-        findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
-        lb_to.setTextFill(Color.rgb(33, 12, 162));
-        lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        lb_from.setTextFill(Color.rgb(33, 12, 162));
-        lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+        if (quarterService.findByCurrentTime(LocalDate.now()).isPresent()){
+            findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
+            lb_to.setTextFill(Color.rgb(33, 12, 162));
+            lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+            lb_from.setTextFill(Color.rgb(33, 12, 162));
+            lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+        }else {
+            DialogMessage.message("Thông báo", "Vui lòng tạo quý mới",
+                    "HẾt quý", Alert.AlertType.CONFIRMATION);
+            primaryStage = new Stage();
+            Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP");
+        }
+
     }
 
     private void setDataToPhieuCombobox(){
@@ -156,9 +236,8 @@ public class DashboardController implements Initializable {
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
     }
-
     public void setDataToViewTable(){
-        ttp_ls =ledgerService.findInterfaceLedger();
+        ttp_ls =ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
         so.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("so_str"));
         loaiphieu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("loai_phieu"));
         ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));
@@ -181,162 +260,24 @@ public class DashboardController implements Initializable {
         tbTTNX.setItems(FXCollections.observableArrayList(ttp_ls.subList(fromIndex, toIndex)));
         return tbTTNX;
     }
-
-    @FXML
-    public void importActionClick(ActionEvent actionEvent) throws IOException{
-        primaryStage = new Stage();
-        Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP");
-        setDataToViewTable();
-//        fillDataToLichsuTb();
+    private void setStyleForClickedMEnu(HBox selected, HBox remainder1,HBox remainder2,HBox remainder3,HBox remainder4,HBox remainder5,HBox re6){
+        selected.setStyle(setupLayout);
+        remainder1.setStyle(resetLayout);
+        remainder2.setStyle(resetLayout);
+        remainder3.setStyle(resetLayout);
+        remainder4.setStyle(resetLayout);
+        remainder5.setStyle(resetLayout);
+        re6.setStyle(resetLayout);
     }
-
-    @FXML
-    public void exportBtnClick(ActionEvent actionEvent) throws IOException {
-        xuatStage = new Stage();
-        Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT");
-        setDataToViewTable();
-//        getDataToChart(prepare_addnew_inventory);
-    }
-    @FXML
-    public void nxt_menu_action(MouseEvent event) {
-        String cssLayout =
-                "-fx-border-color: #aaaaaa;\n" +
-                "-fx-background-color: #aaaaaa;\n" ;
-        nxt_menu.setStyle(cssLayout);
-        dvi_menu.setStyle(resetStyle());
-        loai_xd_menu.setStyle(resetStyle());
-        haohut_menu.setStyle(resetStyle());
-        dinhmuc_menu.setStyle(resetStyle());
-        tonkho_menu.setStyle(resetStyle());
-        nhiemvu_menu.setStyle(resetStyle());
-
-        borderpane_base.setCenter(nx_vbox);
-    }
-    @FXML
-    public void tonkho_menu_action(MouseEvent event) {
-        String cssLayout =
-                "-fx-border-color: #aaaaaa;\n" +
-                "-fx-background-color: #aaaaaa;\n" ;
-        tonkho_menu.setStyle(cssLayout);
-        loai_xd_menu.setStyle(resetStyle());
-        haohut_menu.setStyle(resetStyle());
-        dinhmuc_menu.setStyle(resetStyle());
-        nxt_menu.setStyle(resetStyle());
-        dvi_menu.setStyle(resetStyle());
-        nhiemvu_menu.setStyle(resetStyle());
-
+    private void openFxml(String fxml){
         try {
-            HBox hBox = (HBox) getNodeBySource("tonkho.fxml");
+            HBox hBox = (HBox) getNodeBySource(fxml);
             borderpane_base.setCenter(hBox);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    @FXML
-    public void lxd_menu_action(MouseEvent event) {
-        String cssLayout =
-                "-fx-border-color: #aaaaaa;\n" +
-                        "-fx-background-color: #aaaaaa;\n" ;
-        loai_xd_menu.setStyle(cssLayout);
-        dvi_menu.setStyle(resetStyle());
-        haohut_menu.setStyle(resetStyle());
-        dinhmuc_menu.setStyle(resetStyle());
-        nxt_menu.setStyle(resetStyle());
-        tonkho_menu.setStyle(resetStyle());
-        nhiemvu_menu.setStyle(resetStyle());
-        try {
-            VBox vBox = (VBox) getNodeBySource("petroleum_menu.fxml");
-            borderpane_base.setCenter(vBox);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    @FXML
-    public void nhiemvu_menu_action(MouseEvent mouseEvent) {
-        String cssLayout =
-                "-fx-border-color: #aaaaaa;\n" +
-                        "-fx-background-color: #aaaaaa;\n" ;
-        nhiemvu_menu.setStyle(cssLayout);
-        dvi_menu.setStyle(resetStyle());
-        loai_xd_menu.setStyle(resetStyle());
-        haohut_menu.setStyle(resetStyle());
-        tonkho_menu.setStyle(resetStyle());
-        dinhmuc_menu.setStyle(resetStyle());
-        nxt_menu.setStyle(resetStyle());
-
-        try {
-            HBox hBox = (HBox) getNodeBySource("nhiemvu.fxml");
-            borderpane_base.setCenter(hBox);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Node getNodeBySource(String source) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
-        fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
-        return fxmlLoader.load();
-    }
-    @FXML
-    public void haohut_menu_action(MouseEvent event) {
-        String cssLayout =
-                "-fx-border-color: #aaaaaa;\n" +
-                        "-fx-background-color: #aaaaaa;\n" ;
-        haohut_menu.setStyle(cssLayout);
-        dvi_menu.setStyle(resetStyle());
-        loai_xd_menu.setStyle(resetStyle());
-        dinhmuc_menu.setStyle(resetStyle());
-        nxt_menu.setStyle(resetStyle());
-        tonkho_menu.setStyle(resetStyle());
-        nhiemvu_menu.setStyle(resetStyle());
-    }
-    @FXML
-    public void dinhmuc_menu_action(MouseEvent event) {
-        String cssLayout =
-                "-fx-border-color: #aaaaaa;\n" +
-                        "-fx-background-color: #aaaaaa;\n" ;
-        dinhmuc_menu.setStyle(cssLayout);
-        dvi_menu.setStyle(resetStyle());
-        haohut_menu.setStyle(resetStyle());
-        loai_xd_menu.setStyle(resetStyle());
-        nxt_menu.setStyle(resetStyle());
-        tonkho_menu.setStyle(resetStyle());
-        nhiemvu_menu.setStyle(resetStyle());
-        try {
-            HBox hBox = (HBox) getNodeBySource("norm_menu.fxml");
-            borderpane_base.setCenter(hBox);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    @FXML
-    public void dvi_menu_action(MouseEvent event) {
-        String cssLayout =
-                "-fx-border-color: #aaaaaa;\n" +
-                        "-fx-background-color: #aaaaaa;\n" ;
-        dvi_menu.setStyle(cssLayout);
-        loai_xd_menu.setStyle(resetStyle());
-        haohut_menu.setStyle(resetStyle());
-        dinhmuc_menu.setStyle(resetStyle());
-        nxt_menu.setStyle(resetStyle());
-        nhiemvu_menu.setStyle(resetStyle());
-        try {
-            VBox vBox = (VBox) getNodeBySource("donvi_menu.fxml");
-            borderpane_base.setCenter(vBox);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String resetStyle(){
-        String cssLayout =
-                "-fx-cursor: hand;\n" +
-                        "-fx-background-color: #262626;\n" ;
-        return cssLayout;
-    }
-
     public void search_phieu_tnxt(ActionEvent actionEvent) {
     }
     private void searching(){
@@ -394,34 +335,4 @@ public class DashboardController implements Initializable {
 //            }
 //        });
 //    }
-
-    @FXML
-    public void report_menu_action(MouseEvent mouseEvent) {
-        try {
-            HBox hBox = (HBox) getNodeBySource("reporters.fxml");
-            borderpane_base.setCenter(hBox);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    public void quy_selected(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void loc_phieu(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void tb_selected(MouseEvent mouseEvent) {
-        ctStage = new Stage();
-        if (mouseEvent.getClickCount()==2){
-            try {
-                so_select = (long) tbTTNX.getSelectionModel().getSelectedItem().getSo();
-                Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT");
-            }catch (NullPointerException e){
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        }
-    }
 }

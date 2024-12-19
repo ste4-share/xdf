@@ -74,52 +74,6 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox fx:id="loai_xd_menu" onMouseClicked="#lxd_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="lxd-men" stylesheets="@css/menu.css">
-                     <children>
-                        <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/oil-bottle.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets bottom="5.0" left="20.0" top="8.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label prefHeight="50.0" prefWidth="120.0" text="Loại xăng dầu" textFill="WHITE">
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="13.0" />
-                           </font>
-                        </Label>
-                     </children>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </HBox>
-                  <HBox fx:id="haohut_menu" onMouseClicked="#haohut_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="haohut-men" stylesheets="@css/menu.css">
-                     <children>
-                        <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/save-money.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets bottom="5.0" left="20.0" top="8.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label prefHeight="50.0" prefWidth="120.0" text="Hao hụt" textFill="WHITE">
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="13.0" />
-                           </font>
-                        </Label>
-                     </children>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </HBox>
                   <HBox fx:id="dinhmuc_menu" onMouseClicked="#dinhmuc_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dinhmuc-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
@@ -212,7 +166,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox fx:id="report1" layoutX="10.0" layoutY="652.0" onMouseClicked="#report_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                  <HBox fx:id="setting" layoutX="10.0" layoutY="652.0" onMouseClicked="#setting_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
