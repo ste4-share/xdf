@@ -175,4 +175,9 @@ public class TonkhoController implements Initializable {
             Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi");
         }
     }
+    @FXML
+    public void addnew_petro(ActionEvent actionEvent) {
+        tk_stage = new Stage();
+        Common.openNewStage("add_inv_form.fxml", tk_stage,"THEM MOI");
+    }
 }
