@@ -24,6 +24,8 @@ public class ChungLoaiXd {
     private String tinhchat;
     @Column(name = "code")
     private String code;
+    @Column(name = "code2")
+    private String code2;
     @Column(name = "priority_1")
     private int priority_1;
     @Column(name = "priority_2")

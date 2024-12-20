@@ -25,7 +25,6 @@ public class ComponentUtil {
             }
         });
     }
-
     public static DatePicker createDatePicker(DatePicker datePicker, LocalDate initialDate, String dateFormat) {
 
         // Set the initial date, if provided

@@ -9,6 +9,7 @@ import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.service.TructhuocService;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -33,6 +34,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -95,34 +97,13 @@ public class BaoCaoController implements Initializable {
 
     }
     private void initquycbb() {
-        quy_cbb.setConverter(new StringConverter<Quarter>() {
-            @Override
-            public String toString(Quarter object) {
-                return object==null ? "" : object.getName();
-            }
-
-            @Override
-            public Quarter fromString(String string) {
-                return quarterService.findByName(string).orElse(null);
-            }
-        });
+        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())),Quarter::getName, input-> quarterService.findByName(input).orElse(null));
         quy_cbb.getSelectionModel().select(quarterService.findByCurrentTime(LocalDate.now()).orElse(null));
         todate.setText(quy_cbb.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         fromdate.setText(quy_cbb.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
     }
     private void initdvcbb(){
-        dvi_cbb.setItems(FXCollections.observableList(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName())));
-        dvi_cbb.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                return object==null ? "" : object.getTen();
-            }
-
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxService.findByTen(string).orElse(null);
-            }
-        });
+        ComponentUtil.setItemsToComboBox(dvi_cbb, nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()),NguonNx::getTen,input-> nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
     }
     private void saveBcThanhtoanNhienlieuBayTheoKeHoach(String file_name) {

@@ -10,6 +10,7 @@ import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.LoaiXdService;
 import com.xdf.xd_f371.service.TcnService;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.FxUtilTest;
 import com.xdf.xd_f371.util.TextToNumber;
@@ -82,8 +83,13 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvnCombobox();
 
         setUpForSearchCompleteTion();
-        Inventory i = inventoryService.findByPetro_idAndQuarter_id(cmb_tenxd.getSelectionModel().getSelectedItem().getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
-        setTonKhoLabel(i.getTdk_nvdx() + i.getNhap_nvdx()-i.getXuat_nvdx());
+        LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
+        if (lxd!=null){
+            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getId()).orElse(null);
+            if (i!=null){
+                setTonKhoLabel(i.getNhap_nvdx()-i.getXuat_nvdx());
+            }
+        }
     }
     private void setUpForSearchCompleteTion(){
         List<String> search_arr = new ArrayList<>();
@@ -103,34 +109,13 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setDvvcCombobox(){
-        cmb_dvvc.setItems(FXCollections.observableList(nguonNxService.findByStatus("NORMAL")));
-        cmb_dvvc.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                return object==null ? "" : object.getTen();
-            }
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxService.findById(dvvc_id).orElse(null);
-            }
-        });
-
+        setNguonnxCombobox(cmb_dvvc, nguonNxService.findByStatus("NORMAL"));
         cmb_dvvc.getSelectionModel().selectFirst();
+
     }
 
     private void setDvnCombobox() {
-        cmb_dvn.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                return object==null ? "" : object.getTen();
-            }
-
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxService.findById(cmb_dvn.getValue().getId()).orElse(null);
-            }
-        });
-        cmb_dvn.setItems(FXCollections.observableList(nguonNxService.findByStatus("ROOT")));
+        setNguonnxCombobox(cmb_dvn, nguonNxService.findByStatus("ROOT"));
         cmb_dvn.getSelectionModel().selectFirst();
     }
 
@@ -205,8 +190,8 @@ public class NhapController extends CommonFactory implements Initializable {
         if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
             Ledger l = getLedger();
             if (validateField(l).isEmpty()) {
-                ledgerService.saveLedgerWithDetails(l, ls_socai);
-                DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong..",
+                Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong.. so: "+ res.getBill_id(),
                         "Thanh cong", Alert.AlertType.INFORMATION);
                 DashboardController.primaryStage.close();
             }else{
@@ -283,10 +268,10 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     @FXML
     public void changedItemLoaiXd(ActionEvent actionEvent) {
-        LoaiXangDauDto lxd = FxUtilTest.getComboBoxValue(cmb_tenxd);
+        LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
-            Inventory i = inventoryService.findByPetro_idAndQuarter_id(lxd.getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
-            int tk = i.getTdk_nvdx() + i.getNhap_nvdx()-i.getXuat_nvdx();
+            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
+            int tk = i.getNhap_nvdx()-i.getXuat_nvdx();
             LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
             if (ld!=null){
                 setTonKhoLabel(tk+ld.getSoluong());

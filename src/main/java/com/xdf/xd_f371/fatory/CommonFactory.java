@@ -4,6 +4,7 @@ import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.LichsuXNK;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.FxUtilTest;
 import jakarta.validation.ConstraintViolation;
@@ -26,7 +27,7 @@ import java.util.Set;
 public class CommonFactory {
     protected static int inventory_quantity = 0;
     protected static List<Tcn> tcnx_ls = new ArrayList<>();
-    protected String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
+    public static String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
     @Autowired
     protected LichsuService lichsuService;
     @Autowired
@@ -37,16 +38,8 @@ public class CommonFactory {
     protected NguonNxService nguonNxService;
     @Autowired
     protected TructhuocService tructhuocService;
-
-    protected void createNewTransaction(LedgerDetails ledgerDetails, int tontruoc, int tonsau){
-        LichsuXNK lichsuXNK = new LichsuXNK();
-        lichsuXNK.setTen_xd(ledgerDetails.getTen_xd());
-        lichsuXNK.setSoluong(ledgerDetails.getThuc_xuat());
-        lichsuXNK.setTontruoc(tontruoc);
-        lichsuXNK.setTonsau(tonsau);
-        lichsuXNK.setMucgia(String.valueOf(ledgerDetails.getDon_gia()));
-        lichsuService.save(lichsuXNK);
-    }
+    @Autowired
+    protected InventoryService inventoryService;
 
     protected List<String> validateField(Object object){
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -87,18 +80,11 @@ public class CommonFactory {
 
     protected void setXangDauCombobox(ComboBox<LoaiXangDauDto> cbb, LoaiXdService loaiXdService){
         FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTenxd().toLowerCase().contains(typedText.toLowerCase()));
-        cbb.setConverter(new StringConverter<LoaiXangDauDto>() {
-            @Override
-            public String toString(LoaiXangDauDto object) {
-                return object == null ? "": object.getTenxd();
-            }
-            @Override
-            public LoaiXangDauDto fromString(String string) {
-                return loaiXdService.findAllTenxdDto(string).orElse(null);
-            }
-        });
-
-        cbb.getItems().addAll(loaiXdService.findAllOrderby());
+        ComponentUtil.setItemsToComboBox(cbb,loaiXdService.findAllOrderby(),LoaiXangDauDto::getTenxd, input -> loaiXdService.findAllTenxdDto(input).orElse(null));
         cbb.getSelectionModel().selectFirst();
+    }
+    protected void setNguonnxCombobox(ComboBox<NguonNx> cbb, List<NguonNx> nguonNxList){
+        FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
+        ComponentUtil.setItemsToComboBox(cbb,nguonNxList,NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
     }
 }

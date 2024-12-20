@@ -10,6 +10,7 @@ import com.xdf.xd_f371.service.QuarterService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -50,5 +51,12 @@ public class Common {
     }
     public static LocalDate localdateToDate(Date input){
         return LocalDate.ofInstant(input.toInstant(), ZoneId.systemDefault());
+    }
+    public static void hoverButton(Button button, String color) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: "+color+"; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: "+color+";-fx-background-radius:10"));
+    }
+    public static boolean isNumber(String in) {
+        return in.matches("[^0A-Za-z][0-9]{0,18}");
     }
 }

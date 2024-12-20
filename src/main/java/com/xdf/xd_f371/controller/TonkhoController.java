@@ -5,10 +5,8 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
-import com.xdf.xd_f371.util.TextToNumber;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -18,7 +16,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,17 +77,14 @@ public class TonkhoController implements Initializable {
         fillDataToTableLichsu(findByTime.getId());
         searching(tkt.stream().map(SpotDto::getTenxd).toList());
     }
-
     private void fillDataToTableLichsu(int id) {
         tb_history.setItems(FXCollections.observableArrayList(lichsuService.findAllByQuyid(id)));
     }
-
     private void setQuarterListToCbb(){
         ComponentUtil.setItemsToComboBox(cbb_quarter, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
         cbb_quarter.getSelectionModel().select(findByTime);
         setLabel();
     }
-
     private void setLabel(){
         lb_start_date.setTextFill(Color.rgb(33, 12, 162));
         lb_end_date.setTextFill(Color.rgb(33, 12, 162));
@@ -150,10 +144,6 @@ public class TonkhoController implements Initializable {
                 return elem.toLowerCase().startsWith(t.getUserText().toLowerCase());
             }).collect(Collectors.toList());
         });
-    }
-
-    private void fillDataToLichsu(Quarter selected){
-
     }
 
     @FXML

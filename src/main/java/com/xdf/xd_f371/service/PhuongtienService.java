@@ -31,4 +31,7 @@ public class PhuongtienService {
     public List<PhuongTien> findAll(){
         return phuongtienRepo.findAll();
     }
+    public Optional<PhuongTien> findPhuongTienByName(String name) {
+        return phuongtienRepo.findPhuongTienByName(name);
+    }
 }

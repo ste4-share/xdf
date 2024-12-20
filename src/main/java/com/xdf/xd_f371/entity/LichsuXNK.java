@@ -27,8 +27,8 @@ public class LichsuXNK {
     private int soluong;
     @Column(name = "tonsau")
     private int tonsau;
-    @Column(name = "mucgia")
-    private String mucgia;
+    @Column(name = "gia")
+    private int gia;
     @Column(name = "createtime")
     private LocalDate createTime;
     @Column(name = "type")
@@ -39,8 +39,6 @@ public class LichsuXNK {
     private String dvn;
     @Column(name = "dvx")
     private String dvx;
-    @Column(name = "tinhchat")
-    private String tinhchat;
     @Column(name = "chungloaixd")
     private String chungloaixd;
     @Column(name = "quy_id")
@@ -53,19 +51,18 @@ public class LichsuXNK {
     @Column(insertable = false, updatable = false)
     private String tonsau_str;
 
-    public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, String mucgia, LocalDate createTime, String type, int so, String dvn, String dvx, String tinhchat, String chungloaixd,int quyId) {
+    public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
+                     String dvn, String dvx, String chungloaixd,int quyId) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;
         this.tontruoc = tontruoc;
         this.soluong = soluong;
         this.tonsau = tonsau;
-        this.mucgia = mucgia;
-        this.createTime = createTime;
+        this.gia = mucgia;
         this.type = type;
         this.so = so;
         this.dvn = dvn;
         this.dvx = dvx;
-        this.tinhchat = tinhchat;
         this.chungloaixd = chungloaixd;
         this.quyId = quyId;
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));

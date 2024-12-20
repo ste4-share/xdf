@@ -30,4 +30,11 @@ public class LoaiXangDau {
 
     @OneToMany(mappedBy = "loaiXangDau")
     private List<Inventory> inventory;
+
+    public LoaiXangDau(String maxd, String tenxd, int petroleum_type_id, String status) {
+        this.maxd = maxd;
+        this.tenxd = tenxd;
+        this.petroleum_type_id = petroleum_type_id;
+        this.status = status;
+    }
 }

@@ -6,6 +6,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
 import com.xdf.xd_f371.service.*;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.FxUtilTest;
 import com.xdf.xd_f371.util.TextToNumber;
@@ -58,7 +59,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<LoaiXangDauDto> cbb_tenxd;
     @FXML
-    private ComboBox<Mucgia> cbb_dongia;
+    private ComboBox<Long> cbb_dongia;
     @FXML
     private TableView<LedgerDetails> tbXuat;
     @FXML
@@ -98,7 +99,12 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {
-        setInvenPrice();
+        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        Long gia = cbb_dongia.getSelectionModel().getSelectedItem();
+        if (lxd != null && gia != null) {
+            Optional<Inventory> in = inventoryService.findByUnique(lxd.getXd_id(),DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus(),gia);
+            in.ifPresent(inventory -> setInv_lb(inventory.getNhap_nvdx() - inventory.getXuat_nvdx()));
+        }
     }
 
     @FXML
@@ -112,9 +118,9 @@ public class XuatController extends CommonFactory implements Initializable {
         if (pt!=null){
             List<NguonNx> nguonNx = hanmucNhiemvuService.getAllDviTructhuocByTaubay(pt.getId(),DashboardController.findByTime.getId());
             if (!nguonNx.isEmpty()){
-                mapItemsForDonViXuat(nguonNx);
+                mapItemsForDonvi(nguonNx,dvx_cbb);
             }else{
-                mapItemsForDonViXuat(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()));
+                mapItemsForDonvi(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()), dvx_cbb);
             }
         }
 
@@ -215,8 +221,8 @@ public class XuatController extends CommonFactory implements Initializable {
         if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
             Ledger l = getLedger();
             if (validateField(l).isEmpty()) {
-                ledgerService.saveLedgerWithDetails(l, ls_socai);
-                DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong..",
+                Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: "+ res.getBill_id(),
                         "Thanh cong", Alert.AlertType.INFORMATION);
                 DashboardController.xuatStage.close();
             }else{
@@ -406,8 +412,8 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     private void initValueForLoaiXuatCbb(List<String> nhiemVuDtos, List<PhuongTien> pt,List<NguonNx> dvx,List<NguonNx> dvn,List<LoaiXangDauDto> lxd,boolean pxhbox) {
         disableFeature(pxhbox);
-        mapItemsForDonViXuat(dvx);
-        mapItemsForDonViNhap(dvn);
+        mapItemsForDonvi(dvx, dvx_cbb);
+        mapItemsForDonvi(dvn,dvn_cbb);
         mapItemsForXeMayTau(pt);
         acbLogin.dispose();
         searchCompleteTion(nhiemVuDtos);
@@ -418,8 +424,8 @@ public class XuatController extends CommonFactory implements Initializable {
     private void initLoaiXuatCbb() {
         loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.HH.getName())));
         loai_xuat_cbb.getSelectionModel().selectFirst();
-        mapItemsForDonViXuat(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()));
-        mapItemsForDonViNhap(nguonNxService.findAll());
+        mapItemsForDonvi(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()), dvx_cbb);
+        mapItemsForDonvi(nguonNxService.findAll(),dvn_cbb);
         List<PhuongTien> pt= new ArrayList<>();
         mapItemsForXeMayTau(pt);
         disableFeature(true);
@@ -435,35 +441,25 @@ public class XuatController extends CommonFactory implements Initializable {
 
     private void mapXdForCombobox(){
         setXangDauCombobox(cbb_tenxd, loaiXdService);
-        mapPrice(FxUtilTest.getComboBoxValue(cbb_tenxd).getXd_id());
+        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        if (lxd!=null){
+            mapPrice(lxd.getXd_id());
+        }
     }
 
     private void mapPrice(int xd_id){
-        int quarter_id = DashboardController.findByTime.getId();
-        cbb_dongia.setConverter(new StringConverter<Mucgia>() {
-            @Override
-            public String toString(Mucgia object) {
-                return object==null ? "": TextToNumber.textToNum(String.valueOf(object.getPrice()));
+        List<Inventory> inventoryList = inventoryService.findByPetro_idAndQuarter_id(xd_id,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
+        if (!inventoryList.isEmpty()){
+            cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().map(Inventory::getPrice).toList()));
+            cbb_dongia.getSelectionModel().selectFirst();
+            Inventory i = inventoryList.stream().filter(x->x.getPrice().equals(cbb_dongia.getSelectionModel().getSelectedItem())).findFirst().orElse(null);
+            if (i != null){
+                setInv_lb(i.getNhap_nvdx()-i.getXuat_nvdx());
             }
-
-            @Override
-            public Mucgia fromString(String string) {
-                return mucgiaService.findAllMucgiaUnique(xd_id,quarter_id,Integer.parseInt(string)).orElse(null);
-            }
-        });
-        List<Mucgia> mucgials = mucgiaService.findAllMucgiaByItemID(xd_id,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
-        cbb_dongia.setItems(FXCollections.observableArrayList(mucgials));
-        cbb_dongia.getSelectionModel().selectFirst();
-        setInvenPrice();
-    }
-    private void setInvenPrice(){
-        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
-        Mucgia m = cbb_dongia.getSelectionModel().getSelectedItem();
-        if (lxd != null && m!=null) {
-            Optional<Mucgia> mucgia = mucgiaService.findAllMucgiaUnique(lxd.getXd_id(),DashboardController.findByTime.getId(),m.getPrice());
-            if (mucgia.isPresent()){
-                setInv_lb(mucgia.get().getNvdx());
-            }
+        }else{
+            DialogMessage.message("Thong bao", loaiXdService.findById(xd_id).get().getTenxd()+" da het, vui long nhap them.","Het hang", Alert.AlertType.WARNING);
+            setXangDauCombobox(cbb_tenxd, loaiXdService);
+            cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
         }
     }
     private void setCellValueFactory(){
@@ -571,7 +567,7 @@ public class XuatController extends CommonFactory implements Initializable {
 
         int txuat = thucxuat.getText().isEmpty() ? 0 : Integer.parseInt(thucxuat.getText());
         int pxuat = phaixuat.getText().isEmpty() ? 0 : Integer.parseInt(phaixuat.getText());
-        Mucgia m = cbb_dongia.getSelectionModel().getSelectedItem();
+
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd ==null){
             cbb_tenxd.setStyle(styleErrorField);
@@ -585,7 +581,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setMa_xd(lxd.getMaxd());
         ledgerDetails.setSscd_nvdx(nvdx_rd.isSelected() ? Purpose.NVDX.getName():Purpose.SSCD.getName());
         ledgerDetails.setChung_loai(lxd.getChungloai());
-        ledgerDetails.setDon_gia(m.getPrice());
+        ledgerDetails.setDon_gia(Integer.parseInt(String.valueOf(cbb_dongia.getSelectionModel().getSelectedItem())));
         ledgerDetails.setPhai_xuat(pxuat);
         ledgerDetails.setThuc_xuat(txuat);
         ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText().isEmpty() ? "0" : nhietdo.getText()));
@@ -631,12 +627,6 @@ public class XuatController extends CommonFactory implements Initializable {
         inv_price = inv;
         inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(inv)) + " (Lit)");
     }
-    private void saveLichsuxnk(LedgerDetails soCaiDto) {
-//        Inventory inventory = inventoryService.findByPetro_idAndQuarter_id(soCaiDto.getLoaixd_id(), DashboardController.findByTime.getId()).orElse(null);
-//        int tonsau = inventory.getPre_nvdx() - soCaiDto.getSoluong();
-//        int tontruoc = inventory.getPre_nvdx();
-//        createNewTransaction(soCaiDto, tontruoc, tonsau);
-    }
     private ChitietNhiemVu identifyNhiemvu(){
         String text = tcx.getText();
         return chitietNhiemvuService.findByNhiemvu(text).orElse(null);
@@ -671,51 +661,12 @@ public class XuatController extends CommonFactory implements Initializable {
     }
 
     private void mapItemsForXeMayTau(List<PhuongTien> phuongTiens) {
-        xmt_cbb.setItems(FXCollections.observableList(phuongTiens));
-        xmt_cbb.setConverter(new StringConverter<PhuongTien>() {
-            @Override
-            public String toString(PhuongTien object) {
-                return object==null ? "" : object.getName();
-            }
-
-            @Override
-            public PhuongTien fromString(String string) {
-                return phuongtienService.findById(xmt_cbb.getSelectionModel().getSelectedItem().getId()).orElse(null);
-            }
-        });
+        ComponentUtil.setItemsToComboBox(xmt_cbb,phuongTiens,PhuongTien::getName, input -> phuongtienService.findPhuongTienByName(input).orElse(null));
         xmt_cbb.getSelectionModel().selectFirst();
     }
-
-    private void mapItemsForDonViXuat(List<NguonNx> nxList) {
-        dvx_cbb.setItems(FXCollections.observableArrayList(nxList));
-        dvx_cbb.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                return object==null ? "" : object.getTen();
-            }
-
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxService.findByTen(string).orElse(null);
-            }
-        });
-        dvx_cbb.getSelectionModel().selectLast();
-    }
-
-    private void mapItemsForDonViNhap(List<NguonNx> by) {
-        dvn_cbb.setItems(FXCollections.observableArrayList(by));
-        dvn_cbb.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                return object==null ? "" : object.getTen();
-            }
-
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxService.findByTen(string).orElse(null);
-            }
-        });
-        dvn_cbb.getSelectionModel().selectLast();
+    private void mapItemsForDonvi(List<NguonNx> by,ComboBox<NguonNx> cbb) {
+        setNguonnxCombobox(cbb, by);
+        cbb.getSelectionModel().selectLast();
     }
     private void disableFeature(boolean ex) {
         lgb_hb.setDisable(ex);
