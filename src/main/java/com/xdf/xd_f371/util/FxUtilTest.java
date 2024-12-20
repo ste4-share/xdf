@@ -6,7 +6,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import jdk.swing.interop.SwingInterOpUtils;
 
 public class FxUtilTest {
     public interface AutoCompleteComparator<T> {

@@ -300,7 +300,7 @@
                         </HBox>
                         <VBox fx:id="vb_nxt_tb">
                            <children>
-                              <TableView fx:id="tbTTNX" onMouseClicked="#tb_selected" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" stylesheets="@css/dashboardtable.css">
+                              <TableView fx:id="tbTTNX" onMouseClicked="#tb_selected" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" stylesheets="@css/table_style.css">
                                 <columns>
                                   <TableColumn fx:id="so" prefWidth="61.0" text="Số" />
                                   <TableColumn fx:id="loaiphieu" prefWidth="74.0" text="Loại phiếu" />

@@ -10,20 +10,15 @@ import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.FxUtilTest;
 import com.xdf.xd_f371.util.TextToNumber;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.util.StringConverter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.sl.usermodel.TextBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,10 +56,6 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<Long> cbb_dongia;
     @FXML
-    private TableView<LedgerDetails> tbXuat;
-    @FXML
-    private TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phaixuat,col_nhietdo,col_tytrong,col_vcf,col_thucxuat,col_thanhtien;
-    @FXML
     private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox,nl_km_hb,nl_gio_hb;
     @FXML
     private Button addBtn,xuatButton,cancelBtn;
@@ -92,7 +83,6 @@ public class XuatController extends CommonFactory implements Initializable {
         initLoaiXuatCbb();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
         mapXdForCombobox();
-
         hoverButton(addBtn, "#027a20");
         hoverButton(xuatButton, "#002db3");
         hoverButton(cancelBtn, "#595959");
@@ -106,11 +96,9 @@ public class XuatController extends CommonFactory implements Initializable {
             in.ifPresent(inventory -> setInv_lb(inventory.getNhap_nvdx() - inventory.getXuat_nvdx()));
         }
     }
-
     @FXML
     public void dvnSelectedAction(ActionEvent actionEvent) {
     }
-
     @FXML
     public void nvSelected(ActionEvent actionEvent) {
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
@@ -123,9 +111,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 mapItemsForDonvi(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()), dvx_cbb);
             }
         }
-
     }
-
     private void setlabelDinhmuc(PhuongTien pt){
         if (pt!=null){
             dinhMuc = dinhmucService.findDinhmucByPhuongtien(pt.getId(), DashboardController.findByTime.getId()).orElse(null);
@@ -140,7 +126,6 @@ public class XuatController extends CommonFactory implements Initializable {
             }
         }
     }
-
     @FXML
     public void loaixuatAction(ActionEvent actionEvent) {
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
@@ -161,7 +146,6 @@ public class XuatController extends CommonFactory implements Initializable {
             dvi_nhan.setDisable(true);
         }
     }
-
     @FXML
     public void mbRadioSel(ActionEvent actionEvent) {
         setLoaiXangDauByRadio(LoaiPTEnum.MAYBAY.getNameVehicle(), true,LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName());
@@ -189,7 +173,7 @@ public class XuatController extends CommonFactory implements Initializable {
                     if (!isDuplicate(ld.getLoaixd_id(),ld.getThuc_xuat(),ld.getPhai_xuat())){
                         ls_socai.add(ld);
                     }
-                    setCellValueFactory();
+                    setCellValueFactoryXuat();
                     clearFields();
                 } else {
                     DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
@@ -197,7 +181,6 @@ public class XuatController extends CommonFactory implements Initializable {
                 }
             }
         }
-
     }
     private boolean isDuplicate(int xd_id,int tx, int px){
         for (int i =0; i< ls_socai.size(); i++){
@@ -231,20 +214,16 @@ public class XuatController extends CommonFactory implements Initializable {
             }
         }
     }
-
     @FXML
     public void cancel(ActionEvent actionEvent) {
         DashboardController.xuatStage.close();
     }
-
     private int cal_phaixuat_km(int sokm, int dinhmuc){
         return (sokm*dinhmuc)/100;
     }
-
     private float cal_phaixuat_gio(float sogio, int dinhmuc){
         return sogio *dinhmuc;
     }
-
     @FXML
     public void cal_nl_gio(ActionEvent actionEvent) {
         float phut = (float) Integer.parseInt(sophut.getText())/60;
@@ -265,6 +244,7 @@ public class XuatController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = FxUtilTest.getComboBoxValue(cbb_tenxd);
         if (lxd!=null){
             cbb_tenxd.setStyle(null);
+            chungloai_lb.setText(lxd.getLoai());
             mapPrice(lxd.getXd_id());
         }
     }
@@ -338,7 +318,6 @@ public class XuatController extends CommonFactory implements Initializable {
     public void so_km_clicked(MouseEvent mouseEvent) {
         cleanErrorField(sokm);
     }
-
     @FXML
     public void giohd_clicked(MouseEvent mouseEvent) {
         cleanErrorField(sogio);
@@ -379,7 +358,6 @@ public class XuatController extends CommonFactory implements Initializable {
     public void tytrong_clicked(MouseEvent mouseEvent) {
         cleanErrorField(tytrong);
     }
-
     private void initDefailtVar() {
         sokm.setText("0");
         sogio.setText("0");
@@ -443,10 +421,10 @@ public class XuatController extends CommonFactory implements Initializable {
         setXangDauCombobox(cbb_tenxd, loaiXdService);
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
+            chungloai_lb.setText(lxd.getLoai());
             mapPrice(lxd.getXd_id());
         }
     }
-
     private void mapPrice(int xd_id){
         List<Inventory> inventoryList = inventoryService.findByPetro_idAndQuarter_id(xd_id,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
         if (!inventoryList.isEmpty()){
@@ -462,19 +440,10 @@ public class XuatController extends CommonFactory implements Initializable {
             cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
         }
     }
-    private void setCellValueFactory(){
-        tbXuat.setItems(FXCollections.observableList(ls_socai));
-        stt.setSortable(false);
-        stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tbXuat.getItems().indexOf(column.getValue())+1).asString());
-        tenxd.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
-        dongia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("dongia_str"));
-        col_phaixuat.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phaixuat_str"));
-        col_thucxuat.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thucxuat_str"));
-        col_nhietdo.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
-        col_vcf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
-        col_tytrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
-        col_thanhtien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
-        tbXuat.refresh();
+    private void setCellValueFactoryXuat(){
+        setcellFactory("phaixuat_str","thucxuat_str");
+        tbView.setItems(FXCollections.observableList(ls_socai));
+        tbView.refresh();
     }
     private void clearFields(){
         phaixuat.setText("0");
@@ -711,12 +680,12 @@ public class XuatController extends CommonFactory implements Initializable {
     public void selected_item(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount()==2){
             if (DialogMessage.callAlertWithMessage("Delete", "Xoa", "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
-                LedgerDetails ld = tbXuat.getSelectionModel().getSelectedItem();
+                LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
                     ls_socai.remove(ld);
                     setInv_lb(inv_price-ld.getSoluong());
-                    tbXuat.setItems(FXCollections.observableList(ls_socai));
-                    tbXuat.refresh();
+                    tbView.setItems(FXCollections.observableList(ls_socai));
+                    tbView.refresh();
                 }
             }
         }

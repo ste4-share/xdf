@@ -14,16 +14,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.DinhMucPhuongTienController">
+<HBox fx:id="roothb" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.DinhMucPhuongTienController">
    <children>
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="914.0" prefWidth="1107.0">
+      <VBox>
          <children>
             <HBox>
                <children>
-                  <Label prefHeight="41.0" prefWidth="74.0" text="type:" />
-                  <RadioButton mnemonicParsing="false" onAction="#xe_selected" prefHeight="41.0" prefWidth="121.0" text="Xe" fx:id="xe_radio">
+                  <Label prefHeight="41.0" prefWidth="163.0" text="Loại xe máy tàu:">
                      <font>
                         <Font name="Cambria Bold" size="16.0" />
+                     </font></Label>
+                  <RadioButton mnemonicParsing="false" onAction="#xe_selected" prefHeight="41.0" prefWidth="121.0" text="Xe" fx:id="xe_radio">
+                     <font>
+                        <Font name="Cambria Italic" size="16.0" />
                      </font>
                      <toggleGroup>
                         <ToggleGroup fx:id="machine" />
@@ -31,26 +34,38 @@
                   </RadioButton>
                   <RadioButton fx:id="may_radio" layoutX="84.0" layoutY="10.0" mnemonicParsing="false" onAction="#may_selected" prefHeight="41.0" prefWidth="121.0" text="Máy" toggleGroup="$machine">
                      <font>
-                        <Font name="Cambria Bold" size="16.0" />
+                        <Font name="Cambria Italic" size="16.0" />
                      </font>
                   </RadioButton>
                   <RadioButton fx:id="mb_radio" layoutX="205.0" layoutY="10.0" mnemonicParsing="false" onAction="#maybay_selected" prefHeight="41.0" prefWidth="121.0" text="Máy bay" toggleGroup="$machine">
                      <font>
-                        <Font name="Cambria Bold" size="16.0" />
+                        <Font name="Cambria Italic" size="16.0" />
                      </font>
                   </RadioButton>
                </children>
             </HBox>
-            <HBox layoutX="10.0" layoutY="10.0" prefHeight="41.0" prefWidth="1231.0">
+            <HBox layoutX="10.0" layoutY="10.0">
                <children>
-                  <Label prefHeight="41.0" prefWidth="74.0" text="Tìm kiếm:" />
-                  <TextField prefHeight="39.0" prefWidth="247.0" style="-fx-background-radius: 25;" />
+                  <Label prefHeight="41.0" prefWidth="106.0" text="Tìm kiếm:">
+                     <font>
+                        <Font name="Cambria Bold" size="16.0" />
+                     </font></Label>
+                  <TextField prefHeight="39.0" prefWidth="247.0" style="-fx-background-radius: 25;">
+                     <font>
+                        <Font name="Cambria" size="18.0" />
+                     </font></TextField>
                   <Label layoutX="10.0" layoutY="10.0" prefHeight="41.0" prefWidth="74.0" text="Đơn vị:">
                      <HBox.margin>
                         <Insets left="47.0" />
                      </HBox.margin>
+                     <font>
+                        <Font name="Cambria Bold" size="16.0" />
+                     </font>
                   </Label>
-                  <ComboBox fx:id="units_cbb" onAction="#selectUnit" prefHeight="39.0" prefWidth="313.0" />
+                  <ComboBox fx:id="units_cbb" onAction="#selectUnit" prefHeight="39.0" prefWidth="313.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></ComboBox>
                   <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="101.0" style="-fx-background-radius: 25;" text="Chuyển đổi">
                      <HBox.margin>
                         <Insets left="35.0" />
@@ -61,7 +76,7 @@
                   </Button>
                </children>
             </HBox>
-            <TableView fx:id="pt_tb" onMousePressed="#pt_selected" prefHeight="654.0" prefWidth="1203.0">
+            <TableView fx:id="pt_tb" onMousePressed="#pt_selected" stylesheets="@css/table_style.css">
               <columns>
                 <TableColumn prefWidth="75.0" text="Tên Xe máy tàu" fx:id="xmt_name" />
                 <TableColumn fx:id="type_name" prefWidth="75.0" text="Loại" />
@@ -86,13 +101,16 @@
             </TableView>
             <HBox alignment="CENTER_RIGHT">
                <children>
-                  <Button mnemonicParsing="false" onAction="#addNewPt" prefHeight="35.0" prefWidth="76.0" text="Thêm">
+                  <Button mnemonicParsing="false" onAction="#addNewPt" prefHeight="36.0" prefWidth="123.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" text="Thêm">
                      <HBox.margin>
                         <Insets right="10.0" top="10.0" />
                      </HBox.margin>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Cambria Bold" size="16.0" />
+                     </font>
                   </Button>
                </children>
             </HBox>

@@ -2,7 +2,9 @@ package com.xdf.xd_f371.cons;
 
 public enum StatusCons {
     ACTIVED("ACTIVE"),
-    IN_ACTIVED("IN_ACTIVE");
+    IN_ACTIVED("IN_ACTIVE"),
+    NORMAL_STATUS("NORMAL"),
+    ROOT_STATUS("ROOT");
 
     public final String name;
 

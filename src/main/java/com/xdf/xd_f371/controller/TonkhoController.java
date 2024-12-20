@@ -135,7 +135,7 @@ public class TonkhoController implements Initializable {
         ls_tonsau.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tonsau_str"));
         ls_create_at.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("createTime"));
         ls_lnv.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("type"));
-        ls_gia.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("mucgia"));
+        ls_gia.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("gia"));
     }
     private void searching(List<String> search_arr){
         TextFields.bindAutoCompletion(search_inventory,t -> {

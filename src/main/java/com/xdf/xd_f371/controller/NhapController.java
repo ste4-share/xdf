@@ -10,20 +10,15 @@ import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.LoaiXdService;
 import com.xdf.xd_f371.service.TcnService;
-import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
-import com.xdf.xd_f371.util.FxUtilTest;
 import com.xdf.xd_f371.util.TextToNumber;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,7 +32,6 @@ import java.util.stream.Collectors;
 public class NhapController extends CommonFactory implements Initializable {
     private static List<LedgerDetails> ls_socai;
     private static List<Ledger> current_ledger_list = new ArrayList<>();
-    private static int dvvc_id =0;
     @FXML
     private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
             donGiaTf, thucNhap,phaiNhap,tThucTe, vcf,tyTrong;
@@ -49,10 +43,7 @@ public class NhapController extends CommonFactory implements Initializable {
     private RadioButton nvdx_rd,sscd_rd;
     @FXML
     private Button addbtn,importbtn,cancelbtn;
-    @FXML
-    private TableColumn<LedgerDetails, String> tbTT,tbTenXD,tbDonGia, tbPx,tbNhietDo, tbTyTrong, tbVCf, tbTx, tbThanhTien;
-    @FXML
-    private TableView<LedgerDetails> tableView;
+
     @FXML
     private ComboBox<NguonNx> cmb_dvvc, cmb_dvn;
     @FXML
@@ -69,7 +60,7 @@ public class NhapController extends CommonFactory implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(),LoaiPhieuCons.PHIEU_NHAP.getName());
         ls_socai = new ArrayList<>();
-        tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
+        tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
         notification.setText("");
         nvdx_rd.setSelected(true);
@@ -109,22 +100,19 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setDvvcCombobox(){
-        setNguonnxCombobox(cmb_dvvc, nguonNxService.findByStatus("NORMAL"));
+        setNguonnxCombobox(cmb_dvvc, nguonNxService.findByStatus(StatusCons.NORMAL_STATUS.getName()));
         cmb_dvvc.getSelectionModel().selectFirst();
-
     }
 
     private void setDvnCombobox() {
-        setNguonnxCombobox(cmb_dvn, nguonNxService.findByStatus("ROOT"));
+        setNguonnxCombobox(cmb_dvn, nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()));
         cmb_dvn.getSelectionModel().selectFirst();
     }
 
     private LedgerDetails getLedgerDetails(){
-
         int tn = thucNhap.getText().isEmpty() ? 0 : Integer.parseInt(thucNhap.getText());
         int pn = phaiNhap.getText().isEmpty() ? 0 : Integer.parseInt(phaiNhap.getText());
         int p = donGiaTf.getText().trim().isEmpty() ? 0 : Integer.parseInt(donGiaTf.getText());
-
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd==null){
             cmb_tenxd.setStyle(styleErrorField);
@@ -146,28 +134,16 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setSoluong(tn);
         ledgerDetails.setThanhtien((long) tn * p);
         ledgerDetails.setSoluong_px((long)pn);
-
         ledgerDetails.setThanhtien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanhtien())));
         ledgerDetails.setThucnhap_str(TextToNumber.textToNum(String.valueOf(tn)));
         ledgerDetails.setPhainhap_str(TextToNumber.textToNum(String.valueOf(pn)));
         ledgerDetails.setDongia_str(TextToNumber.textToNum(String.valueOf(p)));
         return ledgerDetails;
     }
-
-    private void setcellFactory(){
-        tbTT.setSortable(false);
-        tbTT.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tableView.getItems().indexOf(column.getValue())+1).asString());
-        tbTenXD.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
-        tbDonGia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("dongia_str"));
-        tbPx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phainhap_str"));
-        tbTx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thucnhap_str"));
-        tbNhietDo.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
-        tbVCf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
-        tbTyTrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
-        tbThanhTien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
-        tableView.setItems(FXCollections.observableList(ls_socai));
+    private void setcellFactoryNhap(){
+        setcellFactory("phainhap_str","thucnhap_str");
+        tbView.setItems(FXCollections.observableList(ls_socai));
     }
-
     @FXML
     private void btnInsert(ActionEvent event){
         LedgerDetails ld = getLedgerDetails();
@@ -175,7 +151,7 @@ public class NhapController extends CommonFactory implements Initializable {
             cmb_tenxd.setStyle(null);
             if (validateField(ld).isEmpty()) {
                 ls_socai.add(ld);
-                setcellFactory();
+                setcellFactoryNhap();
                 setTonKhoLabel(inventory_quantity+ld.getSoluong());
                 clearHH();
             }else{
@@ -245,7 +221,6 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setSo_xe(soXe.getText());
         ledger.setLenh_so(lenhKHso.getText());
         Tcn t = tcnService.findByName(tcNhap.getText().trim()).orElse(null);
-
         if (t != null) {
             ledger.setTcn_id(t.getId());
         }else{
@@ -285,12 +260,12 @@ public class NhapController extends CommonFactory implements Initializable {
     public void select_item(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount()==2){
             if (DialogMessage.callAlertWithMessage("Delete", "Xoa", "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
-                LedgerDetails ld = tableView.getSelectionModel().getSelectedItem();
+                LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
                     ls_socai.remove(ld);
                     setTonKhoLabel(inventory_quantity-ld.getSoluong());
-                    tableView.setItems(FXCollections.observableList(ls_socai));
-                    tableView.refresh();
+                    tbView.setItems(FXCollections.observableList(ls_socai));
+                    tbView.refresh();
                 }
             }
         }

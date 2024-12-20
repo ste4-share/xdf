@@ -52,6 +52,8 @@ public class DinhMucPhuongTienController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        pt_tb.setPrefWidth(DashboardController.screenWidth);
+        pt_tb.setPrefHeight(DashboardController.screenHeigh-300);
         dinhMucPhuongTienDto = new DinhMucPhuongTienDto();
         xe_radio.setSelected(true);
         fillDatatoptTable();

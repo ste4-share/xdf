@@ -1,7 +1,6 @@
 package com.xdf.xd_f371.fatory;
 
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
-import com.xdf.xd_f371.entity.LichsuXNK;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.ComponentUtil;
@@ -11,11 +10,10 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.util.StringConverter;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,17 +27,17 @@ public class CommonFactory {
     protected static List<Tcn> tcnx_ls = new ArrayList<>();
     public static String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
     @Autowired
-    protected LichsuService lichsuService;
-    @Autowired
     protected LedgerService ledgerService;
-    @Autowired
-    protected MucgiaService mucgiaService;
     @Autowired
     protected NguonNxService nguonNxService;
     @Autowired
     protected TructhuocService tructhuocService;
     @Autowired
     protected InventoryService inventoryService;
+    @FXML
+    protected TableView<LedgerDetails> tbView;
+    @FXML
+    protected TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phainx,col_nhietdo,col_tytrong,col_vcf,col_thucnx,col_thanhtien;
 
     protected List<String> validateField(Object object){
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -77,14 +75,25 @@ public class CommonFactory {
         }
         return false;
     }
-
     protected void setXangDauCombobox(ComboBox<LoaiXangDauDto> cbb, LoaiXdService loaiXdService){
-        FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTenxd().toLowerCase().contains(typedText.toLowerCase()));
         ComponentUtil.setItemsToComboBox(cbb,loaiXdService.findAllOrderby(),LoaiXangDauDto::getTenxd, input -> loaiXdService.findAllTenxdDto(input).orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTenxd().toLowerCase().contains(typedText.toLowerCase()));
         cbb.getSelectionModel().selectFirst();
     }
     protected void setNguonnxCombobox(ComboBox<NguonNx> cbb, List<NguonNx> nguonNxList){
-        FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
         ComponentUtil.setItemsToComboBox(cbb,nguonNxList,NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
+    }
+    protected void setcellFactory(String pnx, String tnx){
+        stt.setSortable(false);
+        stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tbView.getItems().indexOf(column.getValue())+1).asString());
+        tenxd.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
+        dongia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("dongia_str"));
+        col_phainx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>(pnx));
+        col_thucnx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>(tnx));
+        col_nhietdo.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
+        col_vcf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
+        col_tytrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
+        col_thanhtien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
     }
 }

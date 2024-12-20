@@ -538,7 +538,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="nl_km" onKeyReleased="#nl_km_kr" onMouseClicked="#nl_km_clicked" prefHeight="40.0" prefWidth="186.0">
+                                    <TextField fx:id="nl_km" disable="true" editable="false" onKeyReleased="#nl_km_kr" onMouseClicked="#nl_km_clicked" prefHeight="40.0" prefWidth="186.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -561,7 +561,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="nl_gio" onKeyReleased="#nl_gio_kr" onMouseClicked="#nlgio__clicked" prefHeight="40.0" prefWidth="185.0">
+                                    <TextField fx:id="nl_gio" disable="true" editable="false" onKeyReleased="#nl_gio_kr" onMouseClicked="#nlgio__clicked" prefHeight="40.0" prefWidth="185.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -683,18 +683,18 @@
             </HBox>
             <VBox prefHeight="319.0" prefWidth="1172.0">
                <children>
-                  <TableView fx:id="tbXuat" onMouseClicked="#selected_item" prefHeight="201.0" prefWidth="1152.0">
+                  <TableView fx:id="tbView" onMouseClicked="#selected_item" prefHeight="201.0" prefWidth="1152.0">
                     <columns>
                       <TableColumn fx:id="stt" prefWidth="49.0" text="STT" />
                       <TableColumn fx:id="tenxd" prefWidth="156.0" text="TÊN XĂNG DẦU" />
                         <TableColumn fx:id="dongia" prefWidth="134.0" text="ĐƠN GIÁ" />
                         <TableColumn prefWidth="598.0" text="SỐ LƯỢNG">
                            <columns>
-                              <TableColumn fx:id="col_phaixuat" prefWidth="130.0" text="Phái xuất" />
+                              <TableColumn fx:id="col_phainx" prefWidth="130.0" text="Phái xuất" />
                               <TableColumn fx:id="col_nhietdo" prefWidth="130.0" text="Nhiệt độ" />
                               <TableColumn fx:id="col_tytrong" prefWidth="130.0" text="Tỷ trọng" />
                               <TableColumn fx:id="col_vcf" prefWidth="130.0" text="Hệ số VCF" />
-                              <TableColumn fx:id="col_thucxuat" prefWidth="130.0" text="Thực xuất" />
+                              <TableColumn fx:id="col_thucnx" prefWidth="130.0" text="Thực xuất" />
                            </columns>
                         </TableColumn>
                         <TableColumn fx:id="col_thanhtien" prefWidth="193.0" text="TỔNG" />

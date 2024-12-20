@@ -48,6 +48,10 @@ public class DonviController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        tb_unit.setPrefWidth(DashboardController.screenWidth);
+        tb_unit.setPrefHeight(DashboardController.screenHeigh-300);
+        tb_property.setPrefWidth(DashboardController.screenWidth);
+        tb_property.setPrefHeight(DashboardController.screenHeigh-300);
         selectedUnit = new TructhuocDto();
         fillDataForTable_tcn();
         fillDataForTable_nguonnx();

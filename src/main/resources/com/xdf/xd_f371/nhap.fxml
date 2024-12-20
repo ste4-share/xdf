@@ -32,7 +32,7 @@
                                     <Font name="Cambria Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="cmb_dvvc" prefHeight="38.0" prefWidth="344.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                              <ComboBox fx:id="cmb_dvvc" editable="true" prefHeight="38.0" prefWidth="344.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor></ComboBox>
@@ -48,7 +48,7 @@
                                     <Font name="Cambria Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="cmb_dvn" prefHeight="38.0" prefWidth="344.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                              <ComboBox fx:id="cmb_dvn" editable="true" prefHeight="38.0" prefWidth="344.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor></ComboBox>
@@ -419,20 +419,20 @@
             </Label>
          </children>
       </AnchorPane>
-      <TableView id="billViewTb" fx:id="tableView" layoutX="14.0" layoutY="652.0" onMouseClicked="#select_item" prefHeight="158.0" prefWidth="1172.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;">
+      <TableView id="billViewTb" fx:id="tbView" layoutX="14.0" layoutY="652.0" onMouseClicked="#select_item" prefHeight="158.0" prefWidth="1172.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;">
         <columns>
-          <TableColumn fx:id="tbTT" prefWidth="31.0" text="TT" />
-          <TableColumn fx:id="tbTenXD" prefWidth="127.0" text="Tên Xăng dầu" />
-            <TableColumn fx:id="tbDonGia" minWidth="0.0" prefWidth="110.0" text="Đơn giá" />
+          <TableColumn fx:id="stt" prefWidth="31.0" text="TT" />
+          <TableColumn fx:id="tenxd" prefWidth="127.0" text="Tên Xăng dầu" />
+            <TableColumn fx:id="dongia" minWidth="0.0" prefWidth="110.0" text="Đơn giá" />
             <TableColumn fx:id="tbTong" prefWidth="369.0" text="Số lượng">
                <columns>
-                  <TableColumn fx:id="tbPx" prefWidth="113.0" text="Phái xuất" />
-                  <TableColumn fx:id="tbNhietDo" prefWidth="113.0" text="Nhiệt độ" />
-                  <TableColumn fx:id="tbTyTrong" prefWidth="113.0" text="Tỷ trọng" />
-                  <TableColumn fx:id="tbVCf" prefWidth="113.0" text="VCF" />
-                  <TableColumn fx:id="tbTx" prefWidth="113.0" text="Thực xuất" />
+                  <TableColumn fx:id="col_phainx" prefWidth="113.0" text="Phái xuất" />
+                  <TableColumn fx:id="col_nhietdo" prefWidth="113.0" text="Nhiệt độ" />
+                  <TableColumn fx:id="col_tytrong" prefWidth="113.0" text="Tỷ trọng" />
+                  <TableColumn fx:id="col_vcf" prefWidth="113.0" text="VCF" />
+                  <TableColumn fx:id="col_thucnx" prefWidth="113.0" text="Thực xuất" />
                </columns></TableColumn>
-            <TableColumn fx:id="tbThanhTien" prefWidth="102.0" text="Tổng" />
+            <TableColumn fx:id="col_thanhtien" prefWidth="102.0" text="Tổng" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

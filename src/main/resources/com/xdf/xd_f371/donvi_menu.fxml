@@ -14,16 +14,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <HBox fx:id="dvi_menu_bar" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.DonviController">
    <children>
-      <TabPane prefHeight="894.0" prefWidth="1238.0">
+      <TabPane>
          <tabs>
             <Tab closable="false" text="Nguồn nhập xuất">
                <content>
-                  <HBox prefHeight="790.0" prefWidth="1234.0">
+                  <HBox>
                      <children>
-                        <VBox prefHeight="798.0" prefWidth="1238.0" style="-fx-border-width: 1px; -fx-border-color: #0f0f0f; -fx-border-radius: 10;">
+                        <VBox style="-fx-border-width: 1px; -fx-border-color: #0f0f0f; -fx-border-radius: 10;">
                            <children>
                               <VBox>
                                  <children>
@@ -47,7 +46,7 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <TableView fx:id="tb_unit" onMouseReleased="#unit_clicked" prefHeight="697.0" prefWidth="1226.0">
+                              <TableView fx:id="tb_unit" onMouseReleased="#unit_clicked" stylesheets="@css/table_style.css">
                                  <columns>
                                     <TableColumn fx:id="col_name_unit" prefWidth="75.0" text="Tên đơn vị" />
                                     <TableColumn fx:id="col_affilated" prefWidth="75.0" text="Trực thuộc" />
@@ -114,9 +113,9 @@
                <content>
                   <HBox>
                      <children>
-                        <VBox prefHeight="865.0" prefWidth="1247.0">
+                        <VBox>
                            <children>
-                              <VBox prefHeight="873.0" prefWidth="1237.0">
+                              <VBox>
                                  <children>
                                     <Label prefHeight="36.0" prefWidth="133.0" text="Tính chất nhập, xuất">
                                        <font>
@@ -131,7 +130,7 @@
                                           <Separator prefHeight="20.0" prefWidth="441.0" />
                                        </children>
                                     </HBox>
-                                    <TableView fx:id="tb_property" onMouseClicked="#tb_tcn_clicked" prefHeight="689.0" prefWidth="1237.0">
+                                    <TableView fx:id="tb_property" onMouseClicked="#tb_tcn_clicked" stylesheets="@css/table_style.css">
                                       <columns>
                                         <TableColumn fx:id="col_property_name" prefWidth="75.0" text="Tính chất" />
                                           <TableColumn fx:id="col_property_status" prefWidth="75.0" text="trạng thái" />
@@ -139,6 +138,9 @@
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </TableView>
                                     <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="463.0">
                                        <children>
@@ -191,4 +193,7 @@
          </tabs>
       </TabPane>
    </children>
+   <padding>
+      <Insets left="10.0" right="10.0" top="20.0" />
+   </padding>
 </HBox>

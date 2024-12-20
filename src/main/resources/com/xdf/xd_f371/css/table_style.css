@@ -1,0 +1,63 @@
+.table-view {
+    -fx-border-color: #dddddd; /* Light gray border */
+    -fx-border-radius: 8px; /* Rounded corners for the table */
+    -fx-background-color: #ffffff; /* White background */
+    -fx-background-radius: 8px; /* Match border radius */
+    -fx-padding: 8px; /* Padding around the table */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 2, 2); /* Subtle shadow effect */
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #6a9bf1, #497de0); /* Gradient for header */
+    -fx-background-radius: 8px 8px 0 0; /* Rounded top corners for the header */
+}
+
+.table-view .column-header {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white; /* White text for headers */
+    -fx-padding: 10px; /* Extra padding for headers */
+}
+
+.table-row-cell {
+    -fx-background-color: #ffffff; /* White background for rows */
+    -fx-border-color: transparent; /* No visible border between rows */
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f9f9f9; /* Light gray for alternate rows */
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e7f0ff; /* Light blue hover effect */
+}
+
+.table-cell {
+    -fx-padding: 12px; /* Padding inside each cell */
+    -fx-font-size: 13px; /* Font size for cell text */
+    -fx-text-fill: #333333; /* Dark gray text color */
+}
+
+.table-cell:selected {
+    -fx-background-color: #497de0; /* Blue for selected cell */
+    -fx-text-fill: white; /* White text for selected cell */
+    -fx-font-weight: bold;
+}
+
+.table-view:focused .table-row-cell:selected {
+    -fx-background-color: #84a9f6; /* Lighter blue for selected row when focused */
+    -fx-text-fill: white;
+}
+
+.table-view .scroll-bar {
+    -fx-background-color: transparent; /* Transparent scroll bar background */
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #b0c4f9; /* Light blue thumb */
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #6a9bf1; /* Slightly darker blue on hover */
+}

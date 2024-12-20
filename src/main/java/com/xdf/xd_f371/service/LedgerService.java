@@ -10,7 +10,6 @@ import com.xdf.xd_f371.repo.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -19,7 +18,6 @@ import java.util.List;
 public class LedgerService {
     private final LedgersRepo ledgersRepo;
     private final LedgerDetailRepo ledgerDetailRepo;
-    private final MucGiaRepo mucGiaRepo;
     private final InventoryRepo inventoryRepo;
     private final LichsuRepo lichsuRepo;
     public List<LedgerDto> getLedgers() {
@@ -31,14 +29,12 @@ public class LedgerService {
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();
     }
-
     public LedgerDetails save(LedgerDetails ledgerDetails) {
         return ledgerDetailRepo.save(ledgerDetails);
     }
     public Ledger save(Ledger ledger) {
         return ledgersRepo.save(ledger);
     }
-
     @Transactional
     public Ledger saveLedgerWithDetails(Ledger ledger, List<LedgerDetails> details){
         Ledger savedLedger = ledgersRepo.save(ledger);
@@ -52,13 +48,11 @@ public class LedgerService {
         }
         return savedLedger;
     }
-
     private void saveHistory(Ledger l,LedgerDetails ld, int tontruoc){
         LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(), tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
         l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
         lichsuRepo.save(lichsuXNK);
     }
-
     private void saveInv(Ledger ledger, LedgerDetails detail, Inventory inventory) {
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
             inventory.setNhap_nvdx(inventory.getNhap_nvdx()+detail.getSoluong());

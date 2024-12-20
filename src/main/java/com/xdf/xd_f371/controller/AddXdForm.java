@@ -2,17 +2,12 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.ChungLoaiXd;
-import com.xdf.xd_f371.entity.Inventory;
 import com.xdf.xd_f371.entity.LoaiXangDau;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.LoaiXdService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
-import com.xdf.xd_f371.util.TextToNumber;
-import jakarta.persistence.Column;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,18 +17,14 @@ import javafx.scene.input.MouseEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
 public class AddXdForm implements Initializable {
-
     @Autowired
     private LoaiXdService loaiXdService;
-    @Autowired
-    private InventoryService inventoryService;
     @FXML
     private TextField mxd,txd,tdk_nvdx,tdk_sscd;
     @FXML
@@ -42,20 +33,18 @@ public class AddXdForm implements Initializable {
     private Button add_btn,cancel_btn;
     @FXML
     private ComboBox<ChungLoaiXd> cl_cbb;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         code.setText(null);
-
+        tdk_nvdx.setText("0");
+        tdk_sscd.setText("0");
         initChungloaiCbb();
     }
-
     private void initChungloaiCbb() {
         ComponentUtil.setItemsToComboBox(cl_cbb,loaiXdService.findAllChungLoaiXd(),ChungLoaiXd::getCode2,input->loaiXdService.findByCode(code.getText()).orElse(null));
         cl_cbb.getSelectionModel().selectFirst();
         isCbbNotNull();
     }
-
     private boolean isCbbNotNull(){
         ChungLoaiXd cl = cl_cbb.getSelectionModel().getSelectedItem();
         if (cl_cbb.getSelectionModel().getSelectedItem()!=null){
@@ -64,7 +53,6 @@ public class AddXdForm implements Initializable {
         }
         return false;
     }
-
     private void keyr(TextField tf){
         if (!tf.getText().trim().isEmpty()){
             if (isNum()){
@@ -72,9 +60,9 @@ public class AddXdForm implements Initializable {
             }
         }
     }
-    @FXML
-    public void cl_selected(ActionEvent actionEvent) {
-        isCbbNotNull();
+    private void selectTF(TextField tf){
+        tf.setStyle(null);
+        tf.selectAll();
     }
     private boolean isNum(){
         if (!Common.isNumber(tdk_nvdx.getText())){
@@ -85,6 +73,10 @@ public class AddXdForm implements Initializable {
             return false;
         }
         return true;
+    }
+    @FXML
+    public void cl_selected(ActionEvent actionEvent) {
+        isCbbNotNull();
     }
     @FXML
     public void addNew(ActionEvent actionEvent) {
@@ -136,8 +128,5 @@ public class AddXdForm implements Initializable {
     public void mxdclicked(MouseEvent mouseEvent) {
         selectTF(mxd);
     }
-    private void selectTF(TextField tf){
-        tf.setStyle(null);
-        tf.selectAll();
-    }
+
 }
