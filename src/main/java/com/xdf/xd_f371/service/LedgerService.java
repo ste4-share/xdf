@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
+import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
@@ -54,26 +55,14 @@ public class LedgerService {
             detail.setLedger_id(savedLedger.getId());
             ledgerDetailRepo.save(detail);
             Inventory inventory= inventoryRepo.findByPetro_idAndQuarter_id(detail.getLoaixd_id(), savedLedger.getQuarter_id()).orElseThrow();
-            Mucgia m = mucGiaRepo.findAllMucgiaUnique(detail.getLoaixd_id(), DashboardController.findByTime.getId(), detail.getDon_gia()).orElse(null);
-            if (m == null){
-                mucGiaRepo.save(new Mucgia(detail.getDon_gia(), detail.getSoluong(),savedLedger.getQuarter_id(),detail.getLoaixd_id(),MucGiaEnum.IN_STOCK.getStatus(),(long)detail.getSoluong(),0L));
-                if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())) {
-                    inventory.setNhap_nvdx(inventory.getNhap_nvdx()+detail.getSoluong());
-                }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())){
-                    inventory.setXuat_nvdx(inventory.getXuat_nvdx()+detail.getSoluong());
-                }
-            } else {
-                if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())) {
-                    inventory.setNhap_nvdx(inventory.getNhap_nvdx()+detail.getSoluong());
-                    m.setNvdx(m.getNvdx()+detail.getSoluong());
-                    m.setAmount(m.getAmount()+detail.getSoluong());
-                    mucGiaRepo.save(m);
-                }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())){
-                    inventory.setXuat_nvdx(inventory.getXuat_nvdx()+detail.getSoluong());
-                    m.setNvdx(m.getNvdx()-detail.getSoluong());
-                    m.setAmount(m.getAmount()-detail.getSoluong());
-                    mucGiaRepo.save(m);
-                }
+            if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
+                inventory.setNhap_nvdx(inventory.getNhap_nvdx()+detail.getSoluong());
+            }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())){
+                inventory.setXuat_nvdx(inventory.getXuat_nvdx()+detail.getSoluong());
+            }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
+                inventory.setNhap_sscd(inventory.getNhap_sscd()+detail.getSoluong());
+            }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
+                inventory.setXuat_sscd(inventory.getNhap_sscd()+detail.getSoluong());
             }
             inventoryRepo.save(inventory);
         }

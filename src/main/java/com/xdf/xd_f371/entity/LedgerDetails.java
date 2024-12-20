@@ -65,6 +65,8 @@ public class LedgerDetails {
     private Long nl_gio;
     @Column(name = "nl_km")
     private Long nl_km;
+    @Column(name = "sscd_nvdx")
+    private String sscd_nvdx;
     @Column(name = "so_luong_px")
     @NotNull(message = "Phai xuat can not be null")
     @Min(value = 0)

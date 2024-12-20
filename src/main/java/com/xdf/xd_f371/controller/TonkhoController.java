@@ -4,6 +4,8 @@ import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.ComponentUtil;
+import com.xdf.xd_f371.util.TextToNumber;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,17 +38,20 @@ public class TonkhoController implements Initializable {
     private static Quarter findByTime;
     public static SpotDto pickTonKho = new SpotDto();
     @FXML
-    public TableView<SpotDto> tb_tonkho,tb_inv_chitiet;
+    public TableView<SpotDto> tb_tonkho;
     @FXML
-    public TableColumn<SpotDto, String> col_stt_tk,col_maxd_tk,col_tenxd_tk,col_nvdx_tk,col_sscd_tk,col_sum_tk,
-            col_stt_qt, col_tenxd_qt, col_chungloai_qt,col_nvdx_tdk, col_sscd_tdk, col_sum_tdk,col_tong_nhap,
-            col_nhap_nvdx,col_xuat_nvdx,col_nhap_sscd,col_xuat_sscd,col_nvdx_tck,col_sscd_tck,col_sum_tck;
+    public TableView<LichsuXNK> tb_history;
     @FXML
-    private TextField tf_search_inv_qt, search_inventory;
+    public TableColumn<SpotDto, String> col_stt_tk,col_maxd_tk,col_tenxd_tk,col_cl,col_nvdx_tdk,col_sscd_tdk,
+            col_cong_tdk, col_nhap_nvdx, col_xuat_nvdx,col_nvdx, col_nhap_sscd, col_xuat_sscd,col_sscd,
+            col_nvdx_tck,col_sscd_tck,col_cong_tck;
     @FXML
-    private DatePicker start_date_qt, end_date_qt;
+    public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,ls_tc,
+            ls_tenxd, ls_cl, ls_tontruoc,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
     @FXML
-    private Button addNewQuarter_btn, createQuarterBtn, cancel_quaterbtn,printBcNxt;
+    private TextField ls_search, search_inventory;
+    @FXML
+    private DatePicker s_date, e_date;
     @FXML
     private ComboBox<Quarter> cbb_quarter;
     @FXML
@@ -54,72 +60,89 @@ public class TonkhoController implements Initializable {
     @Autowired
     private QuarterService quarterService;
     @Autowired
-    private MucgiaService mucgiaService;
+    private InventoryService inventoryService;
+    @Autowired
+    private LichsuService lichsuService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        tb_tonkho.setPrefWidth(DashboardController.screenWidth);
+        tb_tonkho.setPrefHeight(DashboardController.screenHeigh);
+
         tkt = new ArrayList<>();
         pickTonKho = new SpotDto();
-        findByTime = new Quarter();
         findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
         setQuarterListToCbb();
 
         setTonkhoTongToCol();
-        setTonkhoTongToCol2();
-        fillDataToTableTonkho();
-        tb_tonkho.setPrefWidth(DashboardController.screenWidth);
-        tb_tonkho.setPrefHeight(DashboardController.screenHeigh);
-        tb_inv_chitiet.setPrefWidth(DashboardController.screenWidth);
-        tb_inv_chitiet.setPrefHeight(DashboardController.screenHeigh);
+        fillDataToTableTonkho(findByTime.getId());
+        setLichsuTb();
+        fillDataToTableLichsu(findByTime.getId());
+        searching(tkt.stream().map(SpotDto::getTenxd).toList());
+    }
+
+    private void fillDataToTableLichsu(int id) {
+        tb_history.setItems(FXCollections.observableArrayList(lichsuService.findAllByQuyid(id)));
     }
 
     private void setQuarterListToCbb(){
+        ComponentUtil.setItemsToComboBox(cbb_quarter, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
+        cbb_quarter.getSelectionModel().select(findByTime);
+        setLabel();
+    }
+
+    private void setLabel(){
         lb_start_date.setTextFill(Color.rgb(33, 12, 162));
         lb_end_date.setTextFill(Color.rgb(33, 12, 162));
-        try {
-            cbb_quarter.setConverter(new StringConverter<Quarter>() {
-                @Override
-                public String toString(Quarter object) {
-                    return object==null ? "" : object.getName();
-                }
-
-                @Override
-                public Quarter fromString(String string) {
-                    return quarterService.findByName(string).get();
-                }
-            });
-
-            cbb_quarter.setItems(FXCollections.observableArrayList(quarterService.findAll()));
-            cbb_quarter.getSelectionModel().select(findByTime);
-            lb_end_date.setText(cbb_quarter.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-            lb_start_date.setText(cbb_quarter.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        }catch (NullPointerException nullPointerException){
-            nullPointerException.printStackTrace();
-        }
+        lb_end_date.setText(cbb_quarter.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+        lb_start_date.setText(cbb_quarter.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
     }
     @FXML
     public void selectQuarter(ActionEvent actionEvent) {
-        Quarter selected = cbb_quarter.getSelectionModel().getSelectedItem();
-        lb_end_date.setText(selected.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        lb_start_date.setText(selected.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        fillDataToTable(selected);
+
+        fillDataToTableTonkho(getCurrentQuarter().getId());
     }
-    private void fillDataToTableTonkho(){
-        tkt = mucgiaService.getAllSpots(findByTime.getId());
-        searching(tkt.stream().map(x->x.getTenxd()).toList());
-        ObservableList<SpotDto> observableList = FXCollections.observableArrayList(tkt);
-        tb_tonkho.setItems(observableList);
+    private void fillDataToTableTonkho(int quy_id){
+        tkt = inventoryService.getAllSpots(quy_id);
+        tb_tonkho.setItems( FXCollections.observableArrayList(tkt));
     }
     private void setTonkhoTongToCol(){
         col_stt_tk.setSortable(false);
         col_stt_tk.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_tonkho.getItems().indexOf(column.getValue())+1).asString());
         col_maxd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("maxd"));
         col_tenxd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tenxd"));
-        col_nvdx_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nvdx_str"));
-        col_sscd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("sscd_str"));
-        col_sum_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("total"));
+        col_cl.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("chungloai"));
+        col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_nvdx_str"));
+        col_sscd_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_sscd_str"));
+        col_cong_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_total"));
+        col_nhap_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nhap_nvdx_str"));
+        col_xuat_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("xuat_nvdx_str"));
+        col_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nvdx_str"));
+        col_nhap_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nhap_sscd_str"));
+        col_xuat_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("xuat_sscd_str"));
+        col_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("sscd_str"));
+        col_nvdx_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_nvdx_str"));
+        col_sscd_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_sscd_str"));
+        col_cong_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_total"));
     }
-    private boolean addedBySelection = false;
+
+    private void setLichsuTb(){
+        ls_stt.setSortable(false);
+        ls_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_history.getItems().indexOf(column.getValue())+1).asString());
+        ls_so.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("so"));
+        ls_lp.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("loai_phieu"));
+        ls_dvn.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("dvn"));
+        ls_dvx.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("dvx"));
+        ls_tc.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tinhchat"));
+        ls_tenxd.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("ten_xd"));
+        ls_cl.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("chungloaixd"));
+        ls_tontruoc.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tontruoc_str"));
+        ls_soluong.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("soluong_str"));
+        ls_tonsau.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tonsau_str"));
+        ls_create_at.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("createTime"));
+        ls_lnv.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("type"));
+        ls_gia.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("mucgia"));
+    }
     private void searching(List<String> search_arr){
         TextFields.bindAutoCompletion(search_inventory,t -> {
             return search_arr.stream().filter(elem
@@ -127,56 +150,22 @@ public class TonkhoController implements Initializable {
                 return elem.toLowerCase().startsWith(t.getUserText().toLowerCase());
             }).collect(Collectors.toList());
         });
-        search_inventory.setOnKeyPressed(e -> {
-            addedBySelection = false;
-        });
-
-        search_inventory.setOnKeyReleased(e -> {
-            if (search_inventory.getText().trim().isEmpty()){
-                fillDataToTableTonkho();
-            }
-            addedBySelection = true;
-        });
-
-        search_inventory.textProperty().addListener(e -> {
-            if (addedBySelection) {
-                List<SpotDto> tkt_buf = tkt.stream().filter(tonkhoTong -> tonkhoTong.getTenxd().equals(search_inventory.getText())).toList();
-                ObservableList<SpotDto> observableList = FXCollections.observableArrayList(tkt_buf);
-                tb_tonkho.setItems(observableList);
-                addedBySelection = false;
-            }
-        });
     }
 
-    private void fillDataToTable(Quarter selected){
-        tb_inv_chitiet.setItems(FXCollections.observableList(mucgiaService.getAllSpots2(selected.getId())));
-    }
+    private void fillDataToLichsu(Quarter selected){
 
-    private void setTonkhoTongToCol2(){
-        col_stt_qt.setSortable(false);
-        col_stt_qt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_inv_chitiet.getItems().indexOf(column.getValue())+1).asString());
-        col_tenxd_qt.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tenxd"));
-        col_chungloai_qt.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("chungloai"));
-        col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_nvdx_str"));
-        col_sscd_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_sscd_str"));
-        col_sum_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_total"));
-
-        col_nhap_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nhap_nvdx_str"));
-        col_xuat_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("xuat_nvdx_str"));
-        col_nhap_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nhap_sscd_str"));
-        col_xuat_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("xuat_sscd_str"));
-
-        col_nvdx_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_nvdx_str"));
-        col_sscd_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_sscd_str"));
-        col_sum_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_total"));
     }
 
     @FXML
     public void changeTabTheoQuy(Event event) {
-        Quarter selected = cbb_quarter.getValue();
+        fillDataToTableTonkho(getCurrentQuarter().getId());
+    }
+
+    private Quarter getCurrentQuarter(){
+        Quarter selected = cbb_quarter.getSelectionModel().getSelectedItem();
         lb_end_date.setText(selected.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         lb_start_date.setText(selected.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        fillDataToTable(selected);
+        return selected;
     }
 
     @FXML

@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.service;
 
+import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.Inventory;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,8 @@ public class InventoryService {
     }
     public Inventory findById(int id){
         return inventoryRepo.findById(id).orElse(null);
+    }
+    public List<SpotDto> getAllSpots(int quarter_id){
+        return inventoryRepo.getAllSpots(quarter_id);
     }
 }

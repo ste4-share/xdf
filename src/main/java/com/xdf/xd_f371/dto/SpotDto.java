@@ -15,17 +15,17 @@ public class SpotDto {
     private String chungloai;
     private int tdk_nvdx;
     private int tdk_sscd;
-    private int nvdx;
-    private int sscd;
+    private Long nvdx;
+    private Long sscd;
 
     private String tdk_nvdx_str;
     private String tdk_sscd_str;
     private String tdk_total;
 
-    private int nhap_nvdx;
-    private int xuat_nvdx;
-    private int nhap_sscd;
-    private int xuat_sscd;
+    private Long nhap_nvdx;
+    private Long xuat_nvdx;
+    private Long nhap_sscd;
+    private Long xuat_sscd;
 
     private String nhap_nvdx_str;
     private String xuat_nvdx_str;
@@ -40,38 +40,28 @@ public class SpotDto {
     private String sscd_str;
     private String total;
 
-    public SpotDto(int lxd_id, String maxd,String chungloai, String tenxd, int nvdx, int sscd) {
+    public SpotDto(int lxd_id, String maxd, String tenxd,String chungloai,Long tdk_nvdx, Long tdk_sscd, Long nhap_nvdx,Long xuat_nvdx,Long nvdx, Long nhap_sscd, Long xuat_sscd,Long sscd) {
         this.lxd_id = lxd_id;
         this.maxd = maxd;
         this.tenxd = tenxd;
-        this.nvdx = nvdx;
         this.chungloai = chungloai;
-        this.sscd = sscd;
-        this.nvdx_str = TextToNumber.textToNum(String.valueOf(nvdx));
-        this.sscd_str = TextToNumber.textToNum(String.valueOf(sscd));
-        this.total = TextToNumber.textToNum(String.valueOf(sscd+nvdx));
-    }
+        this.nhap_nvdx = (long) nhap_nvdx;
+        this.xuat_nvdx = (long) xuat_nvdx;
+        this.nhap_sscd = (long) nhap_sscd;
+        this.xuat_sscd = (long) xuat_sscd;
 
-    public SpotDto(int lxd_id, String maxd, String tenxd,String chungloai,int tdk_nvdx, int tdk_sscd, int nhap_nvdx,int xuat_nvdx, int nhap_sscd, int xuat_sscd) {
-        this.lxd_id = lxd_id;
-        this.maxd = maxd;
-        this.tenxd = tenxd;
-        this.chungloai = chungloai;
-        this.tdk_nvdx = tdk_nvdx;
-        this.tdk_sscd = tdk_sscd;
-        this.nhap_nvdx = nhap_nvdx;
-        this.xuat_nvdx = xuat_nvdx;
-        this.nhap_sscd = nhap_sscd;
-        this.xuat_sscd = xuat_sscd;
         this.tdk_nvdx_str = TextToNumber.textToNum(String.valueOf(tdk_nvdx));
         this.tdk_sscd_str = TextToNumber.textToNum(String.valueOf(tdk_sscd));
         this.tdk_total = TextToNumber.textToNum(String.valueOf(tdk_sscd+tdk_nvdx));
         this.nhap_nvdx_str = TextToNumber.textToNum(String.valueOf(nhap_nvdx));
         this.xuat_nvdx_str = TextToNumber.textToNum(String.valueOf(xuat_nvdx));
-        this.xuat_nvdx_str = TextToNumber.textToNum(String.valueOf(xuat_nvdx));
+        this.nvdx_str = TextToNumber.textToNum(String.valueOf(nvdx));
         this.nhap_sscd_str = TextToNumber.textToNum(String.valueOf(nhap_sscd));
-        this.tck_nvdx_str = TextToNumber.textToNum(String.valueOf(tdk_nvdx + nhap_nvdx - xuat_nvdx));
-        this.tck_sscd_str = TextToNumber.textToNum(String.valueOf(tdk_sscd + nhap_sscd - xuat_sscd));
-        this.tck_total = TextToNumber.textToNum(String.valueOf((tdk_sscd +tdk_nvdx + nhap_nvdx+nhap_sscd) - (xuat_sscd+xuat_nvdx)));
+        this.xuat_sscd_str = TextToNumber.textToNum(String.valueOf(xuat_sscd));
+        this.sscd_str = TextToNumber.textToNum(String.valueOf(sscd));
+
+        this.tck_nvdx_str = TextToNumber.textToNum(String.valueOf(nvdx));
+        this.tck_sscd_str = TextToNumber.textToNum(String.valueOf(sscd));
+        this.tck_total = TextToNumber.textToNum(String.valueOf(nvdx+sscd));
     }
 }

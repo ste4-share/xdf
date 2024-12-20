@@ -15,7 +15,11 @@ public class LichsuService {
     public List<LichsuXNK> findAll(){
         return lichsuRepo.findAll();
     }
+    public List<LichsuXNK> findAllByQuyid(int quyid){
+        return lichsuRepo.findAllByQuyid(quyid);
+    }
     public LichsuXNK save(LichsuXNK lichsuXNK){
         return lichsuRepo.save(lichsuXNK);
     }
+
 }

@@ -183,17 +183,8 @@ public class DashboardController implements Initializable {
     }
 
     private void initQuyCombobox(){
-        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), new StringConverter<Quarter>() {
-            @Override
-            public String toString(Quarter object) {
-                return object==null?"":object.getName();
-            }
-
-            @Override
-            public Quarter fromString(String string) {
-                return quarterService.findByName(string).orElse(null);
-            }
-        });
+        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
+        quy_cbb.getSelectionModel().selectFirst();
     }
 
     private void getCurrentQuarter(){

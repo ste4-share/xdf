@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
+import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
@@ -44,6 +45,8 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     private DatePicker tungay, denngay;
     @FXML
+    private RadioButton nvdx_rd,sscd_rd;
+    @FXML
     private Button addbtn,importbtn,cancelbtn;
     @FXML
     private TableColumn<LedgerDetails, String> tbTT,tbTenXD,tbDonGia, tbPx,tbNhietDo, tbTyTrong, tbVCf, tbTx, tbThanhTien;
@@ -68,6 +71,7 @@ public class NhapController extends CommonFactory implements Initializable {
         tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
         notification.setText("");
+        nvdx_rd.setSelected(true);
 
         hoverButton(addbtn ,"#027a20");
         hoverButton(importbtn,"#0000b3");
@@ -146,6 +150,7 @@ public class NhapController extends CommonFactory implements Initializable {
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setMa_xd(lxd.getMaxd());
         ledgerDetails.setTen_xd(lxd.getTenxd());
+        ledgerDetails.setSscd_nvdx(nvdx_rd.isSelected() ? Purpose.NVDX.getName():Purpose.SSCD.getName());
         ledgerDetails.setLoaixd_id(lxd.getXd_id());
         ledgerDetails.setDon_gia(p);
         ledgerDetails.setPhai_nhap(pn);

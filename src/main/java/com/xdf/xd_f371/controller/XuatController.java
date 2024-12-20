@@ -46,7 +46,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private DatePicker tungay,denngay;
     @FXML
-    private RadioButton md_rd,tk_rd,may_rd, xe_rd, mb_rd;
+    private RadioButton md_rd,tk_rd,may_rd, xe_rd, mb_rd,sscd_rd,nvdx_rd;
     @FXML
     private ComboBox<PhuongTien> xmt_cbb;
     @FXML
@@ -86,6 +86,7 @@ public class XuatController extends CommonFactory implements Initializable {
         current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(),LoaiPhieuCons.PHIEU_XUAT.getName());
         ls_socai = new ArrayList<>();
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
+        nvdx_rd.setSelected(true);
         initDefailtVar();
         initLoaiXuatCbb();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
@@ -582,6 +583,7 @@ public class XuatController extends CommonFactory implements Initializable {
 
         ledgerDetails.setTen_xd(lxd.getTenxd());
         ledgerDetails.setMa_xd(lxd.getMaxd());
+        ledgerDetails.setSscd_nvdx(nvdx_rd.isSelected() ? Purpose.NVDX.getName():Purpose.SSCD.getName());
         ledgerDetails.setChung_loai(lxd.getChungloai());
         ledgerDetails.setDon_gia(m.getPrice());
         ledgerDetails.setPhai_xuat(pxuat);
