@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.dto.PriceAndQuantityDto;
 import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.entity.Inventory;
 import com.xdf.xd_f371.entity.Mucgia;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
 
 @Component
 public class ChangingController implements Initializable {
@@ -28,13 +30,14 @@ public class ChangingController implements Initializable {
     public static String quantity ;
     public static String quantity_convert =null;
     private static SpotDto tonkho_selected;
-    private static Map<String, String> sscd_ls_buf = new HashMap<>();
-    private static Map<String, String> nvdx_ls_buf = new HashMap<>();
+    private static List<PriceAndQuantityDto> sscd_ls_buf = new ArrayList<>();
+    private static List<PriceAndQuantityDto> nvdx_ls_buf = new ArrayList<>();
+    public static List<Inventory> list = new ArrayList<>();
 
     @FXML
-    private TableView<String> nvdx_tb,sscd_tb;
+    private TableView<PriceAndQuantityDto> nvdx_tb,sscd_tb;
     @FXML
-    private TableColumn<String, String> nvdx_price,nvdx_quantity,sscd_price,sscd_quantity;
+    private TableColumn<PriceAndQuantityDto, String> nvdx_price,nvdx_quantity,sscd_price,sscd_quantity;
     @FXML
     private Label petro_name;
     @FXML
@@ -45,10 +48,11 @@ public class ChangingController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addAff_stage = new Stage();
-        petro_name.setText(TonkhoController.pickTonKho.getTenxd());
         tonkho_selected = TonkhoController.pickTonKho;
-        setNvdxTable();
-        setSScdTable();
+        petro_name.setText(tonkho_selected.getTenxd());
+        list = inventoryService.findByPetro_idAndQuarter_id(tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
+        setNvdxTable(nvdx_tb);
+        setSScdTable(sscd_tb);
         setVisibleForBtn(true, true);
         setHoverForBtn();
     }
@@ -62,66 +66,42 @@ public class ChangingController implements Initializable {
         nvdx_sscd.setDisable(nvdx);
         sscd_nvdx.setDisable(sscd);
     }
-    private void setNvdxTable() {
-        nvdx_ls_buf = setDataToTable(nvdx_tb);
+    private void setNvdxTable(TableView<PriceAndQuantityDto> tb) {
+        setDataToTable(tb, list, Inventory::getNhap_nvdx, Inventory::getXuat_nvdx);
         setFieldFactoryTb(nvdx_price, nvdx_quantity);
     }
-    private void setSScdTable() {
-        sscd_ls_buf = setDataToTable(sscd_tb);
+    private void setSScdTable(TableView<PriceAndQuantityDto> tb) {
+        setDataToTable(tb, list, Inventory::getNhap_sscd, Inventory::getXuat_sscd);
         setFieldFactoryTb(sscd_price, sscd_quantity);
     }
-
     private void openChangeQuantityForm(){
         Common.openNewStage("quantity_form.fxml", addAff_stage, "EDIT");
     }
-
     public void cancelForm(ActionEvent actionEvent) {
         TonkhoController.tk_stage.close();
     }
-
     @FXML
     public void nvdxToSscdAction(ActionEvent actionEvent) {
 
     }
-
     @FXML
     public void sscdToNvdxAction(ActionEvent actionEvent) {
 
     }
-
     private void resetTable(Mucgia pre_convert,List<Mucgia> pre,List<Mucgia> after){
     }
-
     private void refreshTable(){
         nvdx_tb.setItems(FXCollections.observableList(nvdx_ls_buf));
         sscd_tb.setItems(FXCollections.observableList(sscd_ls_buf));
         nvdx_tb.refresh();
         sscd_tb.refresh();
     }
-
     private void updateMucgia(List<Mucgia> MucgiaList,String purpose){
-        for(int i = 0;i < MucgiaList.size(); i++){
-            Mucgia mucgia = mucgiaService.findAllMucgiaUnique(tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucgiaList.get(i).getPrice()).orElse(null);
-            if (mucgia==null){
-                Mucgia after_convert = new Mucgia();
-                after_convert.setPrice(MucgiaList.get(i).getPrice());
-                after_convert.setAmount(MucgiaList.get(i).getAmount());
-                after_convert.setStatus(MucGiaEnum.IN_STOCK.getStatus());
-                after_convert.setItem_id(tonkho_selected.getLxd_id());
-                after_convert.setQuarter_id(DashboardController.findByTime.getId());
-                mucgiaService.save(after_convert);
-            }else{
-                mucgia.setAmount(MucgiaList.get(i).getAmount());
-                mucgiaService.save(mucgia);
-            }
-        }
-    }
 
+    }
     @FXML
     public void changeSScd(ActionEvent actionEvent) {
         try {
-//            updateMucgia(nvdx_ls_buf,mucgiaService.findByName(AssignTypeEnum.NVDX.getName()).getId());
-//            updateMucgia(sscd_ls_buf,mucgiaService.findByName(AssignTypeEnum.SSCD.getName()).getId());
             TonkhoController.tk_stage.close();
         } catch (Exception e){
             e.printStackTrace();
@@ -136,21 +116,22 @@ public class ChangingController implements Initializable {
     public void sscd_press(MouseEvent mouseEvent) {
         setVisibleForBtn(true,false);
     }
-
-    private void setFieldFactoryTb(TableColumn<Mucgia, String> col1,TableColumn<Mucgia, String> col2){
-        col1.setCellValueFactory(new PropertyValueFactory<Mucgia, String>("price"));
-        col2.setCellValueFactory(new PropertyValueFactory<Mucgia, String>("amount"));
+    private void setFieldFactoryTb(TableColumn<PriceAndQuantityDto, String> col1, TableColumn<PriceAndQuantityDto, String> col2){
+        col1.setCellValueFactory(new PropertyValueFactory<PriceAndQuantityDto, String>("price_str"));
+        col2.setCellValueFactory(new PropertyValueFactory<PriceAndQuantityDto, String>("quantity_str"));
     }
-    private Map<String, String> setDataToTable(TableView<String> tb){
-        int petroId = tonkho_selected.getLxd_id();
-        List<Inventory> list = inventoryService.findByPetro_idAndQuarter_id(petroId,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
-        Map<String, String> map = new HashMap<>();
+    private void setDataToTable(TableView<PriceAndQuantityDto> tb,List<Inventory> list,
+                                                     Function<Inventory,Integer> toStr1,Function<Inventory,Integer> toStr2){
+        List<PriceAndQuantityDto> result = new ArrayList<>();
         if (!list.isEmpty()){
             for (Inventory inventory : list){
-                map.put(inventory.getPrice(), inventory.getNhap_nvdx()-inventory.getXuat_nvdx())
+                int quantity = toStr1.apply(inventory)-toStr2.apply(inventory);
+                Long pri = inventory.getPrice();
+                if (quantity>0){
+                    result.add(new PriceAndQuantityDto(Integer.parseInt(String.valueOf(pri)),quantity));
+                }
             }
         }
-        tb.setItems(FXCollections.observableList(list.stream().map()));
-        return map;
+        tb.setItems(FXCollections.observableList(result));
     }
 }
