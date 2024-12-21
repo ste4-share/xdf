@@ -1,8 +1,10 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.SpotDto;
+import com.xdf.xd_f371.entity.Inventory;
 import com.xdf.xd_f371.entity.Mucgia;
 import com.xdf.xd_f371.model.MucGiaEnum;
+import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.MucgiaService;
 import com.xdf.xd_f371.util.Common;
 import javafx.collections.FXCollections;
@@ -17,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Component
 public class ChangingController implements Initializable {
@@ -28,32 +28,35 @@ public class ChangingController implements Initializable {
     public static String quantity ;
     public static String quantity_convert =null;
     private static SpotDto tonkho_selected;
-    private static List<Mucgia> sscd_ls_buf;
-    private static List<Mucgia> nvdx_ls_buf;
+    private static Map<String, String> sscd_ls_buf = new HashMap<>();
+    private static Map<String, String> nvdx_ls_buf = new HashMap<>();
 
     @FXML
-    private TableView<Mucgia> nvdx_tb,sscd_tb;
+    private TableView<String> nvdx_tb,sscd_tb;
     @FXML
-    private TableColumn<Mucgia, String> nvdx_price,nvdx_quantity,sscd_price,sscd_quantity;
+    private TableColumn<String, String> nvdx_price,nvdx_quantity,sscd_price,sscd_quantity;
     @FXML
     private Label petro_name;
     @FXML
-    private Button nvdx_sscd, sscd_nvdx;
-
+    private Button nvdx_sscd, sscd_nvdx,changeBtn,cancel_btn;
 
     @Autowired
-    private MucgiaService mucgiaService;
-
+    private InventoryService inventoryService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addAff_stage = new Stage();
         petro_name.setText(TonkhoController.pickTonKho.getTenxd());
         tonkho_selected = TonkhoController.pickTonKho;
-        sscd_ls_buf = new ArrayList<>();
-        nvdx_ls_buf = new ArrayList<>();
         setNvdxTable();
         setSScdTable();
         setVisibleForBtn(true, true);
+        setHoverForBtn();
+    }
+    private void setHoverForBtn(){
+        Common.hoverButton(sscd_nvdx, "#ffffff");
+        Common.hoverButton(nvdx_sscd, "#ffffff");
+        Common.hoverButton(changeBtn, "#ffffff");
+        Common.hoverButton(cancel_btn, "#ffffff");
     }
     private void setVisibleForBtn(Boolean nvdx, Boolean sscd){
         nvdx_sscd.setDisable(nvdx);
@@ -78,67 +81,15 @@ public class ChangingController implements Initializable {
 
     @FXML
     public void nvdxToSscdAction(ActionEvent actionEvent) {
-//        Mucgia Mucgia = nvdx_tb.getSelectionModel().getSelectedItem();
-//        if (Mucgia.getAmount()==0){
-//            alert("Số lượng mức giá " + Mucgia.getPrice() + " đã hết.");
-//        }else {
-//            if (Mucgia!=null){
-//                quantity = Mucgia.getAmount();
-//                openChangeQuantityForm();
-//                resetTable(Mucgia, nvdx_ls_buf, sscd_ls_buf);
-//                refreshTable();
-//            }else{
-//                alert("Vui lòng chọn mức giá.");
-//            }
-//        }
+
     }
 
     @FXML
     public void sscdToNvdxAction(ActionEvent actionEvent) {
-//        Mucgia mucgia = sscd_tb.getSelectionModel().getSelectedItem();
-//        if (mucgia.getAmount().==("0")){
-//            alert("Số lượng mức giá " + mucgia.getPrice() + " đã hết.");
-//        }else {
-//            if (mucgia!=null){
-//                quantity = mucgia.getAmount();
-//                openChangeQuantityForm();
-//                try {
-//                    resetTable(mucgia, sscd_ls_buf, nvdx_ls_buf);
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//                refreshTable();
-//            } else {
-//                alert("Vui lòng chọn mức giá.");
-//            }
-//        }
+
     }
 
     private void resetTable(Mucgia pre_convert,List<Mucgia> pre,List<Mucgia> after){
-//        if (quantity_convert!=null || quantity_convert!="0"){
-//            int sl_conlai = pre_convert.getAmount() -Integer.parseInt(quantity_convert);
-//            Mucgia after_convert = after.stream().filter(x -> x.getPrice()==pre_convert.getPrice()).findAny().orElse(null);
-//            if (after_convert==null){
-//                after.add(new Mucgia(tonkho_selected.getLxd_id(), pre_convert.getPrice(), quantity_convert));
-//                for (int i = 0; i< pre.size(); i++){
-//                    if (pre.get(i).getPrice()==pre_convert.getPrice()) {
-//                        pre.get(i).getAmount(String.valueOf(sl_conlai));
-//                    }
-//                }
-//            }else{
-//                int sl = Integer.parseInt(after_convert.getSoluong()) + Integer.parseInt(quantity_convert);
-//                for (int i =0; i< pre.size(); i++){
-//                    if (pre.get(i).getPrice().equals(pre_convert.getPrice())){
-//                        pre.get(i).getAmount(String.valueOf(sl_conlai));
-//                    }
-//                }
-//                for (int i =0; i< after.size(); i++){
-//                    if (after.get(i).getPrice().equals(after_convert.getPrice())){
-//                        after.get(i).setSoluong(String.valueOf(sl));
-//                    }
-//                }
-//            }
-//        }
     }
 
     private void refreshTable(){
@@ -190,10 +141,16 @@ public class ChangingController implements Initializable {
         col1.setCellValueFactory(new PropertyValueFactory<Mucgia, String>("price"));
         col2.setCellValueFactory(new PropertyValueFactory<Mucgia, String>("amount"));
     }
-    private List<Mucgia> setDataToTable(TableView<Mucgia> tb){
+    private Map<String, String> setDataToTable(TableView<String> tb){
         int petroId = tonkho_selected.getLxd_id();
-        List<Mucgia> list = mucgiaService.findAllMucgiaByItemID(petroId,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
-        tb.setItems(FXCollections.observableList(list));
-        return list;
+        List<Inventory> list = inventoryService.findByPetro_idAndQuarter_id(petroId,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
+        Map<String, String> map = new HashMap<>();
+        if (!list.isEmpty()){
+            for (Inventory inventory : list){
+                map.put(inventory.getPrice(), inventory.getNhap_nvdx()-inventory.getXuat_nvdx())
+            }
+        }
+        tb.setItems(FXCollections.observableList(list.stream().map()));
+        return map;
     }
 }

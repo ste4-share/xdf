@@ -62,10 +62,6 @@ public class CommonFactory {
     protected boolean isNumber(String in) {
         return in.matches("[^0A-Za-z][0-9]{0,18}");
     }
-    protected void hoverButton(Button button, String color) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: "+color+"; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: "+color+";-fx-background-radius:10"));
-    }
     protected boolean outfieldValid(TextField tf, String mes){
         if (tf.getText().trim().equals("")) {
             DialogMessage.message("Lỗi", mes,

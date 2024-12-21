@@ -10,6 +10,7 @@ import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.LoaiXdService;
 import com.xdf.xd_f371.service.TcnService;
+import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.collections.FXCollections;
@@ -65,9 +66,9 @@ public class NhapController extends CommonFactory implements Initializable {
         notification.setText("");
         nvdx_rd.setSelected(true);
 
-        hoverButton(addbtn ,"#027a20");
-        hoverButton(importbtn,"#0000b3");
-        hoverButton(cancelbtn,"#595959");
+        Common.hoverButton(addbtn ,"#027a20");
+        Common.hoverButton(importbtn,"#0000b3");
+        Common.hoverButton(cancelbtn,"#595959");
 
         setTenXDToCombobox();
         setDvvcCombobox();

@@ -53,8 +53,8 @@ public class Common {
         return LocalDate.ofInstant(input.toInstant(), ZoneId.systemDefault());
     }
     public static void hoverButton(Button button, String color) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: "+color+"; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: "+color+";-fx-background-radius:10"));
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: "+color+"; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10;-fx-border-radius:10"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: "+color+";-fx-border-color:#a8a8a8;-fx-background-radius:10;-fx-border-radius:10"));
     }
     public static boolean isNumber(String in) {
         return in.matches("[^0A-Za-z][0-9]{0,18}");

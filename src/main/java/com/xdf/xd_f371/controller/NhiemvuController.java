@@ -21,9 +21,7 @@ import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 @Component
@@ -40,13 +38,11 @@ public class NhiemvuController implements Initializable {
     @FXML
     TableView<HanmucNhiemvu2Dto> tieuthunhiemvu;
     @FXML
-    TableView<ChitieuNhiemvuDto> ctnv_tb;
-    @FXML
     TableView<HanmucNhiemvuTaubayDto> ctnv_pt;
     @FXML
-    TableColumn<HanmucNhiemvuTaubayDto, String> t2_tt1,dvi_x,t2_pt,t2_nv_2,ct_nv_2,t2_tk_2,t2_md_2,t2_nl_2;
+    TabPane tab;
     @FXML
-    TableColumn<ChitieuNhiemvuDto, String> t2_tt,t2_nv,t2_ct,t2_tk,t2_md,t2_nl;
+    TableColumn<HanmucNhiemvuTaubayDto, String> t2_tt1,dvi_x,t2_pt,t2_nv_2,ct_nv_2,t2_tk_2,t2_md_2,t2_nl_2;
     @FXML
     TableColumn<HanmucNhiemvu2Dto, String> nv,ct,xang,diezel,daubay;
     @FXML
@@ -62,6 +58,8 @@ public class NhiemvuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        tab.setPrefWidth(DashboardController.screenWidth);
+        tab.setPrefHeight(DashboardController.screenHeigh-300);
         initQuarterCbb();
         donvi.setItems(FXCollections.observableList(List.of("F bộ")));
         donvi.getSelectionModel().selectFirst();
@@ -69,12 +67,13 @@ public class NhiemvuController implements Initializable {
         initNvTb();
         initDviTb();
         initHanmucNhiemvuTaubay();
+
     }
 
     private void initHanmucNhiemvuTaubay() {
         ctnv_pt.setItems(FXCollections.observableList(hanmucNhiemvuService.getAllBy()));
         t2_tt1.setSortable(false);
-        t2_tt1.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_tb.getItems().indexOf(column.getValue())+1).asString());
+        t2_tt1.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_pt.getItems().indexOf(column.getValue())+1).asString());
         dvi_x.setCellValueFactory(new PropertyValueFactory<>("donvi"));
         t2_pt.setCellValueFactory(new PropertyValueFactory<>("tenpt"));
         t2_nv_2.setCellValueFactory(new PropertyValueFactory<>("nhiemvu"));
@@ -90,10 +89,6 @@ public class NhiemvuController implements Initializable {
         if (mouseEvent.getClickCount()==2){
 
         }
-    }
-    @FXML
-    public void bcNlbayTheoKh(ActionEvent actionEvent) throws IOException, SQLException {
-
     }
 
     @FXML
@@ -113,7 +108,6 @@ public class NhiemvuController implements Initializable {
     @FXML
     public void dviSelected(ActionEvent actionEvent) {
         if (dvi_cbb.getSelectionModel().getSelectedItem()!=null) {
-            setCtnv_tb(dvi_cbb.getSelectionModel().getSelectedItem().getId());
         }
     }
     @FXML
@@ -144,18 +138,6 @@ public class NhiemvuController implements Initializable {
             }
         });
         dvi_cbb.getSelectionModel().selectFirst();
-    }
-
-    private void setCtnv_tb(int dvi_id){
-//        ctnv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllByUnit(dvi_id, DashboardController.findByTime.getId())));
-        t2_tt.setSortable(false);
-        t2_tt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_tb.getItems().indexOf(column.getValue())+1).asString());
-        t2_nv.setCellValueFactory(new PropertyValueFactory<>("ten_nv"));
-        t2_ct.setCellValueFactory(new PropertyValueFactory<>("chitiet"));
-        t2_tk.setCellValueFactory(new PropertyValueFactory<>("ct_tk"));
-        t2_md.setCellValueFactory(new PropertyValueFactory<>("ct_md"));
-        t2_nl.setCellValueFactory(new PropertyValueFactory<>("consumpt_str"));
-        ctnv_tb.refresh();
     }
 
     private void initNvTb() {

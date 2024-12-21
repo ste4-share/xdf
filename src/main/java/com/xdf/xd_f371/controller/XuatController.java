@@ -6,10 +6,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.model.*;
 import com.xdf.xd_f371.service.*;
-import com.xdf.xd_f371.util.ComponentUtil;
-import com.xdf.xd_f371.util.DialogMessage;
-import com.xdf.xd_f371.util.FxUtilTest;
-import com.xdf.xd_f371.util.TextToNumber;
+import com.xdf.xd_f371.util.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -83,9 +80,9 @@ public class XuatController extends CommonFactory implements Initializable {
         initLoaiXuatCbb();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
         mapXdForCombobox();
-        hoverButton(addBtn, "#027a20");
-        hoverButton(xuatButton, "#002db3");
-        hoverButton(cancelBtn, "#595959");
+        Common.hoverButton(addBtn, "#027a20");
+        Common.hoverButton(xuatButton, "#002db3");
+        Common.hoverButton(cancelBtn, "#595959");
     }
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {

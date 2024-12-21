@@ -11,26 +11,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="456.0" prefWidth="653.0" style="-fx-background-color: #ffffff;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.ChangingController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="436.0" prefWidth="653.0" style="-fx-background-color: #ffffff;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23" fx:controller="com.xdf.xd_f371.controller.ChangingController">
    <children>
       <AnchorPane prefHeight="46.0" prefWidth="653.0" style="-fx-background-color: #e74c3c;">
          <children>
             <Label alignment="CENTER" layoutX="83.0" layoutY="5.0" prefHeight="37.0" prefWidth="488.0" text="SỬA ĐỔI" textAlignment="CENTER" textFill="WHITE">
                <font>
-                  <Font name="DejaVu Serif Bold" size="25.0" />
+                  <Font name="Cambria Bold" size="26.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="14.0" layoutY="53.0" prefHeight="250.0" prefWidth="589.0">
          <children>
-            <VBox prefHeight="311.0" prefWidth="608.0" style="-fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+            <VBox prefHeight="287.0" prefWidth="608.0" style="-fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                <children>
                   <HBox alignment="CENTER" layoutX="11.0" layoutY="49.0" prefHeight="41.0" prefWidth="606.0">
                      <children>
                         <Label fx:id="petro_name" alignment="CENTER" prefHeight="20.0" prefWidth="192.0" text="Petroleum">
                            <font>
-                              <Font name="Cambria Bold" size="14.0" />
+                              <Font name="Cambria Bold" size="18.0" />
                            </font>
                         </Label>
                      </children>
@@ -58,16 +58,31 @@
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
                               </TableView>
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" layoutX="225.0" layoutY="10.0">
                            <children>
-                              <Button fx:id="nvdx_sscd" mnemonicParsing="false" onAction="#nvdxToSscdAction" text="&gt;&gt;|" />
-                              <Button fx:id="sscd_nvdx" layoutX="10.0" layoutY="84.0" mnemonicParsing="false" onAction="#sscdToNvdxAction" text="|&lt;&lt;">
+                              <Button fx:id="nvdx_sscd" mnemonicParsing="false" onAction="#nvdxToSscdAction" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="&gt;&gt;|">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font></Button>
+                              <Button fx:id="sscd_nvdx" layoutX="10.0" layoutY="84.0" mnemonicParsing="false" onAction="#sscdToNvdxAction" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="|&lt;&lt;">
                                  <VBox.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="25.0" />
                                  </VBox.margin>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
                               </Button>
                            </children>
                            <cursor>
@@ -92,31 +107,34 @@
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
                               </TableView>
                            </children>
                         </VBox>
                      </children>
                      <VBox.margin>
-                        <Insets top="38.0" />
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </HBox>
                </children>
             </VBox>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="32.0" layoutY="360.0" prefHeight="74.0" prefWidth="589.0">
+      <AnchorPane layoutX="32.0" layoutY="343.0" prefHeight="91.0" prefWidth="589.0">
          <children>
-            <Button fx:id="changeBtn" contentDisplay="CENTER" layoutX="182.0" layoutY="28.0" mnemonicParsing="false" onAction="#changeSScd" prefHeight="46.0" prefWidth="105.0" text="THAY ĐỔI">
+            <Button fx:id="changeBtn" contentDisplay="CENTER" layoutX="182.0" layoutY="28.0" mnemonicParsing="false" onAction="#changeSScd" prefHeight="46.0" prefWidth="105.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="THAY ĐỔI">
                <font>
-                  <Font name="DejaVu Serif Bold" size="14.0" />
+                  <Font name="Cambria Bold" size="16.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="cancel_btn" contentDisplay="CENTER" layoutX="303.0" layoutY="28.0" mnemonicParsing="false" onAction="#cancelForm" prefHeight="46.0" prefWidth="105.0" text="HỦY">
+            <Button fx:id="cancel_btn" contentDisplay="CENTER" layoutX="303.0" layoutY="28.0" mnemonicParsing="false" onAction="#cancelForm" prefHeight="46.0" prefWidth="105.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="HỦY">
                <font>
-                  <Font name="DejaVu Serif Bold" size="14.0" />
+                  <Font name="Cambria Bold" size="16.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />

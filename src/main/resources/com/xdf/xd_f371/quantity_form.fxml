@@ -10,13 +10,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="169.0" prefWidth="518.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.QuantityFormController">
+<AnchorPane prefHeight="169.0" prefWidth="518.0" style="-fx-background-color: #ffffff;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23" fx:controller="com.xdf.xd_f371.controller.QuantityFormController">
    <children>
       <HBox alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="14.0" prefHeight="63.0" prefWidth="539.0">
          <children>
             <Label prefHeight="49.0" prefWidth="120.0" text="Số lượng:">
                <font>
-                  <Font name="Cambria" size="20.0" />
+                  <Font name="Cambria Bold" size="17.0" />
                </font>
             </Label>
             <TextField fx:id="quantity_tf" onKeyReleased="#setQuantityTextF" prefHeight="51.0" prefWidth="272.0" style="-fx-background-radius: 26;">
@@ -28,13 +28,16 @@
                <children>
                   <Label fx:id="slton_lb" prefHeight="24.0" prefWidth="92.0" text="Tồn: ">
                      <font>
-                        <Font name="Cambria" size="11.0" />
+                        <Font name="Cambria" size="13.0" />
                      </font>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#maxBtn" prefHeight="32.0" prefWidth="39.0" style="-fx-background-radius: 25;" text="Max">
+                  <Button mnemonicParsing="false" onAction="#maxBtn" prefHeight="37.0" prefWidth="59.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 25;" text="Max">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Cambria Bold Italic" size="12.0" />
+                     </font>
                   </Button>
                </children>
                <HBox.margin>
@@ -43,7 +46,7 @@
             </VBox>
          </children>
       </HBox>
-      <Button layoutX="179.0" layoutY="108.0" mnemonicParsing="false" onAction="#saveBtn" prefHeight="41.0" prefWidth="92.0" text="Lưu">
+      <Button layoutX="179.0" layoutY="108.0" mnemonicParsing="false" onAction="#saveBtn" prefHeight="41.0" prefWidth="92.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Lưu">
          <font>
             <Font name="Cambria Bold" size="14.0" />
          </font>
@@ -51,7 +54,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="296.0" layoutY="108.0" mnemonicParsing="false" onAction="#exitBtn" prefHeight="41.0" prefWidth="92.0" text="Thoát">
+      <Button layoutX="296.0" layoutY="108.0" mnemonicParsing="false" onAction="#exitBtn" prefHeight="41.0" prefWidth="92.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Thoát">
          <font>
             <Font name="Cambria Bold" size="14.0" />
          </font>

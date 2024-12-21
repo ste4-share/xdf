@@ -43,7 +43,7 @@ public class TonkhoController implements Initializable {
             col_cong_tdk, col_nhap_nvdx, col_xuat_nvdx,col_nvdx, col_nhap_sscd, col_xuat_sscd,col_sscd,
             col_nvdx_tck,col_sscd_tck,col_cong_tck;
     @FXML
-    public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,ls_tc,
+    public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,
             ls_tenxd, ls_cl, ls_tontruoc,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
     @FXML
     private TextField ls_search, search_inventory;
@@ -127,7 +127,6 @@ public class TonkhoController implements Initializable {
         ls_lp.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("loai_phieu"));
         ls_dvn.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("dvn"));
         ls_dvx.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("dvx"));
-        ls_tc.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tinhchat"));
         ls_tenxd.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("ten_xd"));
         ls_cl.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("chungloaixd"));
         ls_tontruoc.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tontruoc_str"));
@@ -145,22 +144,21 @@ public class TonkhoController implements Initializable {
             }).collect(Collectors.toList());
         });
     }
-
     @FXML
     public void changeTabTheoQuy(Event event) {
         fillDataToTableTonkho(getCurrentQuarter().getId());
     }
-
     private Quarter getCurrentQuarter(){
         Quarter selected = cbb_quarter.getSelectionModel().getSelectedItem();
         lb_end_date.setText(selected.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         lb_start_date.setText(selected.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         return selected;
     }
-
     @FXML
     public void setClickToTonTb(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount() == 2){
+        SpotDto spotDto = tb_tonkho.getSelectionModel().getSelectedItem();
+        if (mouseEvent.getClickCount() == 2 && spotDto != null) {
+            pickTonKho = spotDto;
             tk_stage = new Stage();
             Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi");
         }

@@ -90,7 +90,7 @@
                                           </Button>
                                        </children>
                                     </HBox>
-                                    <TableView fx:id="tb_tonkho" onMouseClicked="#setClickToTonTb" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
+                                    <TableView fx:id="tb_tonkho" onMouseClicked="#setClickToTonTb" stylesheets="@css/table_style.css">
                                       <columns>
                                         <TableColumn fx:id="col_stt_tk" prefWidth="75.0" text="STT" />
                                         <TableColumn fx:id="col_maxd_tk" prefWidth="75.0" text="Mã XD" />
@@ -123,6 +123,9 @@
                                        <VBox.margin>
                                           <Insets bottom="10.0" right="10.0" />
                                        </VBox.margin>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </TableView>
                                  </children>
                               </VBox>
@@ -169,7 +172,7 @@
                                           </DatePicker>
                                        </children>
                                     </HBox>
-                                    <TableView fx:id="tb_history" style="-fx-cursor: hand;" stylesheets="@css/tonkho.css">
+                                    <TableView fx:id="tb_history" style="-fx-cursor: hand;" stylesheets="@css/table_style.css">
                                        <columns>
                                           <TableColumn fx:id="ls_stt" prefWidth="38.0" text="STT" />
                                           <TableColumn fx:id="col_tenxd_qt1" prefWidth="627.0" text="Thông tin phiếu">
@@ -178,7 +181,6 @@
                                                 <TableColumn fx:id="ls_lp" prefWidth="119.0" text="Loại phiếu" />
                                                 <TableColumn fx:id="ls_dvn" prefWidth="119.0" text="D.vị Nhận" />
                                                 <TableColumn fx:id="ls_dvx" prefWidth="174.0" text="Đ.vị Xuất" />
-                                                <TableColumn fx:id="ls_tc" prefWidth="119.0" text="Tính chất" />
                                              </columns></TableColumn>
                                           <TableColumn fx:id="col_chungloai_qt111" prefWidth="119.0" text="Loại Xăng dầu">
                                              <columns>
@@ -198,6 +200,9 @@
                                        <VBox.margin>
                                           <Insets bottom="10.0" right="10.0" />
                                        </VBox.margin>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </TableView>
                                     <HBox alignment="CENTER" />
                                  </children>

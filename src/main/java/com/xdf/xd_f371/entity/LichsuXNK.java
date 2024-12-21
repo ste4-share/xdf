@@ -29,7 +29,7 @@ public class LichsuXNK {
     private int tonsau;
     @Column(name = "gia")
     private int gia;
-    @Column(name = "createtime")
+    @Column(name = "timestamp")
     private LocalDate createTime;
     @Column(name = "type")
     private String type;
@@ -65,6 +65,25 @@ public class LichsuXNK {
         this.dvx = dvx;
         this.chungloaixd = chungloaixd;
         this.quyId = quyId;
+        this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
+        this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
+        this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
+    }
+    public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
+                     String dvn, String dvx, String chungloaixd,int quyId,LocalDate createTime) {
+        this.ten_xd = ten_xd;
+        this.loai_phieu = loai_phieu;
+        this.tontruoc = tontruoc;
+        this.soluong = soluong;
+        this.tonsau = tonsau;
+        this.gia = mucgia;
+        this.type = type;
+        this.so = so;
+        this.dvn = dvn;
+        this.dvx = dvx;
+        this.chungloaixd = chungloaixd;
+        this.quyId = quyId;
+        this.createTime = createTime;
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));

@@ -12,6 +12,6 @@ import java.util.List;
 public interface LichsuRepo extends JpaRepository<LichsuXNK,Integer> {
     @Query(value = "Select * from lichsuxnk order by timestamp DESC", nativeQuery = true)
     List<LichsuXNK> findAll();
-    @Query(value = "Select new com.xdf.xd_f371.entity.LichsuXNK(ls.ten_xd, ls.loai_phieu,ls.tontruoc, ls.soluong, ls.tonsau, ls.gia, ls.type, ls.so, ls.dvn, ls.dvx, ls.chungloaixd,ls.quyId) from LichsuXNK ls where ls.quyId=:qid order by ls.createTime DESC")
+    @Query(value = "Select new com.xdf.xd_f371.entity.LichsuXNK(ls.ten_xd, ls.loai_phieu,ls.tontruoc, ls.soluong, ls.tonsau, ls.gia, ls.type, ls.so, ls.dvn, ls.dvx, ls.chungloaixd,ls.quyId,ls.createTime) from LichsuXNK ls where ls.quyId=:qid order by ls.createTime DESC")
     List<LichsuXNK> findAllByQuyid(@Param("qid") int qid);
 }
