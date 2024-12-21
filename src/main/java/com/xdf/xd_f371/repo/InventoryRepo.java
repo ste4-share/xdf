@@ -17,7 +17,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
     @Query(value = "select * from inventory where petro_id=:petro_id and quarter_id=:quarter_id and status like :st order by price",nativeQuery = true)
     List<Inventory> findByPetro_idAndQuarter_id(@Param("petro_id") int petro_id,@Param("quarter_id") int quarter_id,@Param("st") String st);
     @Query(value = "select * from inventory where petro_id=:petro_id and quarter_id=:quarter_id and price=:p and status like :st order by price",nativeQuery = true)
-    Optional<Inventory> findByUnique(@Param("petro_id") int petro_id,@Param("quarter_id") int quarter_id,@Param("st") String st,@Param("p") Long p);
+    Optional<Inventory> findByUnique(@Param("petro_id") int petro_id,@Param("quarter_id") int quarter_id,@Param("st") String st,@Param("p") int p);
     @Query(value = "select id,petro_id,quarter_id,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd," +
             "sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd, sum(xuat_nvdx) as xuat_nvdx," +
             "sum(xuat_sscd) as xuat_sscd, max(status) as status,max(price) as price, max(create_at) as create_at " +

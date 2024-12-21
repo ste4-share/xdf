@@ -58,7 +58,7 @@ public class LoaiXdService {
     public boolean saveLxdAndInventory(LoaiXangDau loaiXangDau,int tdknvdx,int tdk_sscd){
         Optional<LoaiXangDau> lxd = this.save(loaiXangDau);
         if (lxd.isPresent()){
-            inventoryService.save(new Inventory(lxd.get().getId(), DashboardController.findByTime.getId(),tdknvdx,tdk_sscd,0,0,0,0, MucGiaEnum.IN_STOCK.getStatus(), 0L));
+            inventoryService.save(new Inventory(lxd.get().getId(), DashboardController.findByTime.getId(),tdknvdx,tdk_sscd,0,0,0,0, MucGiaEnum.IN_STOCK.getStatus(), 0));
             return true;
         }
         return false;

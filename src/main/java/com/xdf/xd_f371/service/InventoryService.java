@@ -23,7 +23,7 @@ public class InventoryService {
     public Optional<Inventory> findByUniqueGroupby(int xdid, int qid){
         return inventoryRepo.findByUniqueGroupby(xdid, qid);
     }
-    public Optional<Inventory> findByUnique(int petro_id, int quarter_id,String st,Long p){
+    public Optional<Inventory> findByUnique(int petro_id, int quarter_id,String st,int p){
         return inventoryRepo.findByUnique(petro_id,quarter_id,st,p);
     }
     public Inventory save(Inventory inventory){

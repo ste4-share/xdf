@@ -35,7 +35,7 @@ public class Inventory {
     @Column(name = "status")
     private String status;
     @Column(name = "price")
-    private Long price;
+    private int price;
     @Column(name = "create_at")
     private LocalDate create_at;
 
@@ -43,7 +43,7 @@ public class Inventory {
     @JoinColumn(name = "petro_id",referencedColumnName = "id", insertable = false, updatable = false)
     private LoaiXangDau loaiXangDau;
 
-    public Inventory(int petro_id, int quarter_id, int tdk_nvdx, int tdk_sscd, int nhap_nvdx, int nhap_sscd, int xuat_nvdx, int xuat_sscd, String status, Long price) {
+    public Inventory(int petro_id, int quarter_id, int tdk_nvdx, int tdk_sscd, int nhap_nvdx, int nhap_sscd, int xuat_nvdx, int xuat_sscd, String status, int price) {
         this.petro_id = petro_id;
         this.quarter_id = quarter_id;
         this.tdk_nvdx = tdk_nvdx;

@@ -64,7 +64,7 @@ public class TonkhoController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         tb_tonkho.setPrefWidth(DashboardController.screenWidth);
-        tb_tonkho.setPrefHeight(DashboardController.screenHeigh);
+        tb_tonkho.setPrefHeight(DashboardController.screenHeigh-350);
 
         tkt = new ArrayList<>();
         pickTonKho = new SpotDto();

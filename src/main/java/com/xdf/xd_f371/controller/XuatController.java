@@ -51,7 +51,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<LoaiXangDauDto> cbb_tenxd;
     @FXML
-    private ComboBox<Long> cbb_dongia;
+    private ComboBox<Integer> cbb_dongia;
     @FXML
     private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox,nl_km_hb,nl_gio_hb;
     @FXML
@@ -87,7 +87,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
-        Long gia = cbb_dongia.getSelectionModel().getSelectedItem();
+        Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (lxd != null && gia != null) {
             Optional<Inventory> in = inventoryService.findByUnique(lxd.getXd_id(),DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus(),gia);
             in.ifPresent(inventory -> setInv_lb(inventory.getNhap_nvdx() - inventory.getXuat_nvdx()));
@@ -427,7 +427,7 @@ public class XuatController extends CommonFactory implements Initializable {
         if (!inventoryList.isEmpty()){
             cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().map(Inventory::getPrice).toList()));
             cbb_dongia.getSelectionModel().selectFirst();
-            Inventory i = inventoryList.stream().filter(x->x.getPrice().equals(cbb_dongia.getSelectionModel().getSelectedItem())).findFirst().orElse(null);
+            Inventory i = inventoryList.stream().filter(x->x.getPrice()==cbb_dongia.getSelectionModel().getSelectedItem()).findFirst().orElse(null);
             if (i != null){
                 setInv_lb(i.getNhap_nvdx()-i.getXuat_nvdx());
             }

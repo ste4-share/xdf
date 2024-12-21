@@ -126,7 +126,7 @@ public class ChangingController implements Initializable {
         if (!list.isEmpty()){
             for (Inventory inventory : list){
                 int quantity = toStr1.apply(inventory)-toStr2.apply(inventory);
-                Long pri = inventory.getPrice();
+                int pri = inventory.getPrice();
                 if (quantity>0){
                     result.add(new PriceAndQuantityDto(Integer.parseInt(String.valueOf(pri)),quantity));
                 }
