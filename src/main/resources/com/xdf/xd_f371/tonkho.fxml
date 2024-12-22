@@ -92,40 +92,47 @@
                                     </HBox>
                                     <TableView fx:id="tb_tonkho" onMouseClicked="#setClickToTonTb" stylesheets="@css/table_style.css">
                                       <columns>
-                                        <TableColumn fx:id="col_stt_tk" prefWidth="75.0" text="STT" />
-                                        <TableColumn fx:id="col_maxd_tk" prefWidth="75.0" text="Mã XD" />
-                                          <TableColumn fx:id="col_tenxd_tk" prefWidth="163.0" text="Tên Xăng Dầu" />
-                                          <TableColumn fx:id="col_cl" prefWidth="163.0" text="Chủng loại" />
-                                          <TableColumn fx:id="col_nvdx_tk11" prefWidth="163.0" text="Tồn đầu kỳ">
+                                        <TableColumn fx:id="col_stt_tk" prefWidth="51.0" text="STT" />
+                                          <TableColumn fx:id="col_tenxd_tk" prefWidth="115.0" text="Tên Xăng Dầu" />
+                                          <TableColumn fx:id="col_cl" prefWidth="91.0" text="Chủng loại" />
+                                          <TableColumn fx:id="col_nvdx_tk11" prefWidth="331.0" text="Tồn đầu kỳ">
                                              <columns>
-                                                <TableColumn fx:id="col_nvdx_tdk" prefWidth="163.0" text="NVDX" />
-                                                <TableColumn fx:id="col_sscd_tdk" prefWidth="163.0" text="SSCD" />
-                                                <TableColumn fx:id="col_cong_tdk" prefWidth="163.0" text="Tổng" />
+                                                <TableColumn fx:id="col_nvdx_tdk" prefWidth="70.0" text="NVDX" />
+                                                <TableColumn fx:id="col_sscd_tdk" prefWidth="89.0" text="SSCD" />
+                                                <TableColumn fx:id="col_cong_tdk" prefWidth="57.0" text="Tổng" />
                                              </columns>
                                           </TableColumn>
-                                          <TableColumn fx:id="col_nhap_nvdx" prefWidth="163.0" text="Nhập NVDX" />
-                                          <TableColumn fx:id="col_xuat_nvdx" prefWidth="163.0" text="Xuất NVDX" />
-                                          <TableColumn fx:id="col_nvdx" prefWidth="163.0" text="NVDX" />
-                                          <TableColumn fx:id="col_nhap_sscd" prefWidth="163.0" text="Nhập SSCD" />
-                                          <TableColumn fx:id="col_xuat_sscd" prefWidth="163.0" text="Xuất SSCD" />
-                                          <TableColumn fx:id="col_sscd" prefWidth="163.0" text="SSCD" />
-                                          <TableColumn fx:id="col_nvdx_tk121111211" prefWidth="163.0" text="Tồn cuối kỳ">
+                                          <TableColumn prefWidth="67.0" text="NVDX">
                                              <columns>
-                                                <TableColumn fx:id="col_nvdx_tck" prefWidth="163.0" text="NVDX" />
-                                                <TableColumn fx:id="col_sscd_tck" prefWidth="163.0" text="SSCD" />
-                                                <TableColumn fx:id="col_cong_tck" prefWidth="163.0" text="Cộng" />
+                                                <TableColumn fx:id="col_nhap_nvdx" prefWidth="75.0" text="Nhập" />
+                                                <TableColumn fx:id="col_xuat_nvdx" prefWidth="74.0" text="Xuất" />
+                                                <TableColumn fx:id="col_nvdx" prefWidth="64.0" text="Cộng" />
+                                             </columns>
+                                          </TableColumn>
+                                          <TableColumn fx:id="col_nhap_sscd1" prefWidth="223.0" text="SSCD">
+                                             <columns>
+                                                <TableColumn fx:id="col_nhap_sscd" prefWidth="100.0" text="Nhập" />
+                                                <TableColumn fx:id="col_xuat_sscd" prefWidth="100.0" text="Xuất" />
+                                                <TableColumn fx:id="col_sscd" prefWidth="100.0" text="Cộng" />
+                                             </columns>
+                                          </TableColumn>
+                                          <TableColumn fx:id="col_nvdx_tk121111211" prefWidth="269.0" text="Tồn cuối kỳ">
+                                             <columns>
+                                                <TableColumn fx:id="col_nvdx_tck" prefWidth="100.0" text="NVDX" />
+                                                <TableColumn fx:id="col_sscd_tck" prefWidth="100.0" text="SSCD" />
+                                                <TableColumn fx:id="col_cong_tck" prefWidth="100.0" text="Cộng" />
                                              </columns>
                                           </TableColumn>
                                       </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
                                        <VBox.margin>
                                           <Insets bottom="10.0" right="10.0" />
                                        </VBox.margin>
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
                                     </TableView>
                                  </children>
                               </VBox>

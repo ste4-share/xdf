@@ -40,7 +40,7 @@ public class TonkhoController implements Initializable {
     @FXML
     public TableView<LichsuXNK> tb_history;
     @FXML
-    public TableColumn<SpotDto, String> col_stt_tk,col_maxd_tk,col_tenxd_tk,col_cl,col_nvdx_tdk,col_sscd_tdk,
+    public TableColumn<SpotDto, String> col_stt_tk,col_tenxd_tk,col_cl,col_nvdx_tdk,col_sscd_tdk,
             col_cong_tdk, col_nhap_nvdx, col_xuat_nvdx,col_nvdx, col_nhap_sscd, col_xuat_sscd,col_sscd,
             col_nvdx_tck,col_sscd_tck,col_cong_tck;
     @FXML
@@ -106,7 +106,6 @@ public class TonkhoController implements Initializable {
     private void setTonkhoTongToCol(){
         col_stt_tk.setSortable(false);
         col_stt_tk.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_tonkho.getItems().indexOf(column.getValue())+1).asString());
-        col_maxd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("maxd"));
         col_tenxd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tenxd"));
         col_cl.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("chungloai"));
         col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_nvdx_str"));
