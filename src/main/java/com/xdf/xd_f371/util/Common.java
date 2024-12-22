@@ -17,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -40,12 +41,12 @@ public class Common {
         stage.showAndWait();
     }
 
-    public static void openDashBoard(String fxml_url, Stage stage, String title) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource("dashboard2.fxml"));
+    public static void openNewStage_show(String fxml_url, Stage stage, String title, ConfigurableApplicationContext context) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(fxml_url));
+        fxmlLoader.setControllerFactory(context::getBean);
         Scene scene = new Scene(fxmlLoader.load());
         scene.setFill(Color.TRANSPARENT);
-        stage.setMaximized(true);
-        stage.setTitle("Xăng dầu F371");
+        stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
     }

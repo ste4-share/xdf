@@ -46,10 +46,13 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="System Bold" size="13.0" />
+                              <Font name="Cambria Bold" size="16.0" />
                            </font>
                         </Label>
                      </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </HBox>
                   <HBox fx:id="tonkho_menu" onMouseClicked="#tonkho_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
                      <children>
@@ -66,7 +69,7 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="System Bold" size="13.0" />
+                              <Font name="Cambria Bold" size="16.0" />
                            </font>
                         </Label>
                      </children>
@@ -89,7 +92,7 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="System Bold" size="13.0" />
+                              <Font name="Cambria Bold" size="16.0" />
                            </font>
                         </Label>
                      </children>
@@ -112,7 +115,7 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="System Bold" size="13.0" />
+                              <Font name="Cambria Bold" size="16.0" />
                            </font>
                         </Label>
                      </children>
@@ -135,7 +138,7 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="System Bold" size="13.0" />
+                              <Font name="Cambria Bold" size="16.0" />
                            </font>
                         </Label>
                      </children>
@@ -158,7 +161,7 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="System Bold" size="13.0" />
+                              <Font name="Cambria Bold" size="16.0" />
                            </font>
                         </Label>
                      </children>
@@ -181,7 +184,22 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="System Bold" size="13.0" />
+                              <Font name="Cambria Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </HBox>
+                  <HBox alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="591.0" onMouseClicked="#setting_menu_action" prefHeight="86.0" prefWidth="244.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                     <children>
+                        <Label fx:id="preUser" prefHeight="50.0" prefWidth="120.0" text="USER:" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Cambria Bold" size="14.0" />
                            </font>
                         </Label>
                      </children>
@@ -190,6 +208,9 @@
                      </cursor>
                   </HBox>
                </children>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </VBox>
          </children>
       </AnchorPane>
@@ -200,24 +221,37 @@
             <Insets left="10.0" />
          </BorderPane.margin>
          <children>
-            <HBox prefWidth="1126.0">
+            <HBox alignment="BOTTOM_LEFT" prefWidth="1126.0">
                <children>
+                  <Label layoutX="280.0" layoutY="23.0" prefHeight="28.0" prefWidth="99.0" text="Quý:">
+                     <font>
+                        <Font name="Cambria Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="quy_cbb" onAction="#quy_selected" prefHeight="41.0" prefWidth="240.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <HBox.margin>
+                        <Insets right="30.0" />
+                     </HBox.margin>
+                  </ComboBox>
                   <Label prefHeight="28.0" prefWidth="99.0" text="Từ ngày:">
                      <font>
-                        <Font name="DejaVu Serif Bold" size="13.0" />
+                        <Font name="Cambria" size="16.0" />
                      </font></Label>
                   <Label fx:id="lb_from" prefHeight="28.0" prefWidth="99.0" text="Từ ngày:">
                      <font>
-                        <Font name="DejaVu Serif Bold" size="13.0" />
+                        <Font name="Cambria Bold Italic" size="16.0" />
                      </font>
                   </Label>
                   <Label prefHeight="28.0" prefWidth="99.0" text="Đến ngày:">
                      <font>
-                        <Font name="DejaVu Serif Bold" size="13.0" />
+                        <Font name="Cambria" size="16.0" />
                      </font></Label>
                   <Label fx:id="lb_to" prefHeight="28.0" prefWidth="99.0" text="Từ ngày:">
                      <font>
-                        <Font name="DejaVu Serif Bold" size="13.0" />
+                        <Font name="Cambria Bold Italic" size="16.0" />
                      </font>
                   </Label>
                </children>
@@ -225,23 +259,15 @@
                   <Insets left="10.0" />
                </VBox.margin>
             </HBox>
-            <ComboBox fx:id="quy_cbb" onAction="#quy_selected" prefHeight="41.0" prefWidth="240.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
-               <VBox.margin>
-                  <Insets left="10.0" />
-               </VBox.margin>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ComboBox>
             <HBox>
                <children>
                   <VBox>
                      <children>
-                        <HBox>
+                        <HBox alignment="BOTTOM_LEFT">
                            <children>
                               <Button fx:id="importBtn" mnemonicParsing="false" onAction="#importActionClick" prefHeight="35.0" prefWidth="88.0" style="-fx-background-color: #00cc44;" text="Nhập" textFill="WHITE">
                                  <font>
-                                    <Font name="System Bold" size="14.0" />
+                                    <Font name="Cambria Bold" size="16.0" />
                                  </font>
                                  <HBox.margin>
                                     <Insets bottom="10.0" top="10.0" />
@@ -252,7 +278,7 @@
                               </Button>
                               <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#exportBtnClick" prefHeight="34.0" prefWidth="88.0" style="-fx-background-color: #005ce6;" text="Xuất" textFill="WHITE">
                                  <font>
-                                    <Font name="System Bold" size="14.0" />
+                                    <Font name="Cambria Bold" size="16.0" />
                                  </font>
                                  <HBox.margin>
                                     <Insets bottom="10.0" left="15.0" top="10.0" />
@@ -261,15 +287,15 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Label prefHeight="25.0" prefWidth="110.0" text="Loại phiếu">
+                              <Label prefHeight="35.0" prefWidth="105.0" text="Loại phiếu">
                                  <HBox.margin>
                                     <Insets bottom="10.0" left="35.0" right="10.0" top="10.0" />
                                  </HBox.margin>
                                  <font>
-                                    <Font name="DejaVu Serif Bold" size="13.0" />
+                                    <Font name="Cambria Bold" size="16.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="cbb_loaiphieu_filter" onAction="#loc_phieu" prefHeight="35.0" prefWidth="203.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                              <ComboBox fx:id="cbb_loaiphieu_filter" onAction="#loc_phieu" prefHeight="40.0" prefWidth="203.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <HBox.margin>
                                     <Insets bottom="10.0" top="10.0" />
                                  </HBox.margin>
@@ -277,21 +303,24 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ComboBox>
-                              <Label prefHeight="24.0" prefWidth="101.0" text="Tìm kiếm">
+                              <Label prefHeight="33.0" prefWidth="101.0" text="Tìm kiếm">
                                  <HBox.margin>
                                     <Insets bottom="10.0" left="45.0" right="10.0" top="10.0" />
                                  </HBox.margin>
                                  <font>
-                                    <Font name="DejaVu Serif Bold" size="13.0" />
+                                    <Font name="Cambria Bold" size="16.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="tf_search_txnt" onAction="#search_phieu_tnxt" prefHeight="32.0" prefWidth="171.0">
+                              <TextField fx:id="tf_search_txnt" onAction="#search_phieu_tnxt" prefHeight="40.0" prefWidth="171.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <HBox.margin>
                                     <Insets bottom="10.0" top="10.0" />
                                  </HBox.margin>
                                  <cursor>
                                     <Cursor fx:constant="TEXT" />
                                  </cursor>
+                                 <font>
+                                    <Font name="Cambria" size="18.0" />
+                                 </font>
                               </TextField>
                            </children>
                            <VBox.margin>
@@ -354,7 +383,7 @@
             </ImageView>
             <Label prefHeight="51.0" prefWidth="252.0" text="NXT XĂNG DẦU">
                <font>
-                  <Font name="System Bold" size="27.0" />
+                  <Font name="Cambria Bold" size="27.0" />
                </font>
                <opaqueInsets>
                   <Insets />

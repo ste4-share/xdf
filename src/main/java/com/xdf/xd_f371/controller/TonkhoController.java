@@ -31,7 +31,8 @@ import java.util.stream.Collectors;
 public class TonkhoController implements Initializable {
 
     public static Stage tk_stage;
-    private static List<SpotDto> tkt;
+    private static List<SpotDto> tkt = new ArrayList<>();
+    private static List<LichsuXNK> histories = new ArrayList<>();
     private static Quarter findByTime;
     public static SpotDto pickTonKho = new SpotDto();
     @FXML
@@ -66,7 +67,7 @@ public class TonkhoController implements Initializable {
         tb_tonkho.setPrefWidth(DashboardController.screenWidth);
         tb_tonkho.setPrefHeight(DashboardController.screenHeigh-350);
 
-        tkt = new ArrayList<>();
+
         pickTonKho = new SpotDto();
         findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
         setQuarterListToCbb();
@@ -76,9 +77,11 @@ public class TonkhoController implements Initializable {
         setLichsuTb();
         fillDataToTableLichsu(findByTime.getId());
         searching(tkt.stream().map(SpotDto::getTenxd).toList());
+        searching_ls(histories.stream().map(LichsuXNK::getTen_xd).toList());
     }
     private void fillDataToTableLichsu(int id) {
-        tb_history.setItems(FXCollections.observableArrayList(lichsuService.findAllByQuyid(id)));
+        histories =lichsuService.findAllByQuyid(id);
+        tb_history.setItems(FXCollections.observableArrayList(histories));
     }
     private void setQuarterListToCbb(){
         ComponentUtil.setItemsToComboBox(cbb_quarter, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
@@ -140,7 +143,15 @@ public class TonkhoController implements Initializable {
         TextFields.bindAutoCompletion(search_inventory,t -> {
             return search_arr.stream().filter(elem
                     -> {
-                return elem.toLowerCase().startsWith(t.getUserText().toLowerCase());
+                return elem.toLowerCase().contains(t.getUserText().toLowerCase());
+            }).collect(Collectors.toList());
+        });
+    }
+    private void searching_ls(List<String> search_arr){
+        TextFields.bindAutoCompletion(ls_search,t -> {
+            return search_arr.stream().filter(elem
+                    -> {
+                return elem.toLowerCase().contains(t.getUserText().toLowerCase());
             }).collect(Collectors.toList());
         });
     }
@@ -167,5 +178,13 @@ public class TonkhoController implements Initializable {
     public void addnew_petro(ActionEvent actionEvent) {
         tk_stage = new Stage();
         Common.openNewStage("add_inv_form.fxml", tk_stage,"THEM MOI");
+    }
+    @FXML
+    public void timkiem_tk_clicked(MouseEvent mouseEvent) {
+        search_inventory.selectAll();
+    }
+    @FXML
+    public void ls_search_clicked(MouseEvent mouseEvent) {
+        ls_search.selectAll();
     }
 }

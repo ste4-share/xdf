@@ -1,12 +1,15 @@
 package com.xdf.xd_f371;
 
 import com.xdf.xd_f371.controller.ErrorController;
+import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -74,29 +77,6 @@ public class MainApplicationApp extends Application {
         new Thread(loadingTask).start();
     }
 
-    private void showLoadingSpinner(Stage owner) {
-        // Create a new stage for the loading spinner
-        Stage spinnerStage = new Stage();
-        spinnerStage.initOwner(owner); // Set the owner window
-        spinnerStage.initModality(Modality.APPLICATION_MODAL); // Block input to owner window
-        spinnerStage.initStyle(StageStyle.TRANSPARENT); // Transparent background
-
-        // Create a ProgressIndicator
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        progressIndicator.setProgress(-1); // Indeterminate mode
-
-        // Add the ProgressIndicator to a StackPane
-        StackPane root = new StackPane(progressIndicator);
-        root.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);"); // Semi-transparent background
-
-        // Set up the scene
-        Scene scene = new Scene(root);
-        scene.setFill(null); // Make the scene transparent
-
-        spinnerStage.setScene(scene);
-        spinnerStage.show();
-    }
-
     @Override
     public void stop() {
         context.close();
@@ -107,24 +87,16 @@ public class MainApplicationApp extends Application {
     }
 
     private void showMainUI(Stage stage) throws IOException {
-//        checkConnection();
-//        Thread.setDefaultUncaughtExceptionHandler(MainApplicationApp::showError);
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource("connect_lan.fxml"));
-        fxmlLoader.setControllerFactory(context::getBean);
-        Scene scene = new Scene(fxmlLoader.load());
-        scene.setFill(Color.TRANSPARENT);
-        stage.setTitle("Connection to Server in LAN Network");
-        stage.setScene(scene);
+        Thread.setDefaultUncaughtExceptionHandler(MainApplicationApp::showError);
         rootStage = stage;
-        stage.show();
+        Common.openNewStage_show("connect_lan.fxml", rootStage,"Connection to Server in LAN Network",context);
     }
 
     private static void showError(Thread t, Throwable e) {
-        System.err.println("***Default exception handler***");
         if (Platform.isFxApplicationThread()) {
             showErrorDialog(e);
         } else {
-            System.err.println("An unexpected error occurred in "+t);
+            DialogMessage.message("Error", "An unexpected error occurred in " + t,"An unexpected error has occurred", Alert.AlertType.ERROR);
         }
     }
 
@@ -137,7 +109,7 @@ public class MainApplicationApp extends Application {
         try {
             Parent root = loader.load();
             ((ErrorController)loader.getController()).setErrorText(errorMsg.toString());
-            dialog.setScene(new Scene(root, 450, 400));
+            dialog.setScene(new Scene(root, 350, 200));
             dialog.show();
         } catch (IOException exc) {
             exc.printStackTrace();

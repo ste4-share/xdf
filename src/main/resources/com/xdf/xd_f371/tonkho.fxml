@@ -70,7 +70,7 @@
                                                 <Font name="Cambria Bold" size="16.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="search_inventory" prefHeight="36.0" prefWidth="293.0" style="-fx-background-radius: 10;">
+                                          <TextField fx:id="search_inventory" onMouseClicked="#timkiem_tk_clicked" prefHeight="36.0" prefWidth="293.0" style="-fx-background-radius: 10;">
                                              <cursor>
                                                 <Cursor fx:constant="TEXT" />
                                              </cursor>
@@ -142,7 +142,7 @@
                                                 <Font name="Cambria Bold" size="16.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="ls_search" prefHeight="37.0" prefWidth="293.0" style="-fx-background-radius: 10;">
+                                          <TextField fx:id="ls_search" onMouseClicked="#ls_search_clicked" prefHeight="37.0" prefWidth="293.0" style="-fx-background-radius: 10;">
                                              <cursor>
                                                 <Cursor fx:constant="TEXT" />
                                              </cursor>

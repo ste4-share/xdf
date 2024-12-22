@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "accounts")
 @Getter
@@ -22,4 +24,10 @@ public class Accounts {
     private String roles;
     @Column(name = "passwd")
     private String passwd;
+    @Column(name = "color")
+    private String color;
+    @Column(name = "status")
+    private String status;
+    @Column(name = "create_at")
+    private LocalDate create_at;
 }

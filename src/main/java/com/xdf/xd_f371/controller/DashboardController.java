@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -69,7 +68,7 @@ public class DashboardController implements Initializable {
     @FXML
     private ComboBox<Quarter> quy_cbb;
     @FXML
-    private Label lb_from, lb_to,datetime_showing;
+    private Label lb_from, lb_to,datetime_showing,preUser;
     @FXML
     private Pagination pagination_tbnxt;
     @FXML
@@ -88,6 +87,9 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        tbTTNX.setPrefWidth(screenWidth);
+        tbTTNX.setPrefHeight(screenHeigh-300);
+        preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
         ctStage = new Stage();
         so_select=0L;
         getCurrentQuarter();
@@ -98,8 +100,6 @@ public class DashboardController implements Initializable {
         setDataToPhieuCombobox();
         setDataToViewTable();
         initQuyCombobox();
-        tbTTNX.setPrefWidth(screenWidth);
-        tbTTNX.setPrefHeight(screenHeigh);
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
     }
 
@@ -108,7 +108,6 @@ public class DashboardController implements Initializable {
         primaryStage = new Stage();
         Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP");
         setDataToViewTable();
-//        fillDataToLichsuTb();
     }
 
     @FXML
@@ -116,7 +115,6 @@ public class DashboardController implements Initializable {
         xuatStage = new Stage();
         Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT");
         setDataToViewTable();
-//        getDataToChart(prepare_addnew_inventory);
     }
     @FXML
     public void nxt_menu_action(MouseEvent event) {
@@ -181,12 +179,10 @@ public class DashboardController implements Initializable {
             }
         }
     }
-
     private void initQuyCombobox(){
         ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
         quy_cbb.getSelectionModel().selectFirst();
     }
-
     private void getCurrentQuarter(){
         if (quarterService.findByCurrentTime(LocalDate.now()).isPresent()){
             findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
