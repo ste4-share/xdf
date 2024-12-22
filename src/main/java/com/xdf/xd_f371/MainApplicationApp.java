@@ -87,7 +87,7 @@ public class MainApplicationApp extends Application {
     }
 
     private void showMainUI(Stage stage) throws IOException {
-        Thread.setDefaultUncaughtExceptionHandler(MainApplicationApp::showError);
+//        Thread.setDefaultUncaughtExceptionHandler(MainApplicationApp::showError);
         rootStage = stage;
         Common.openNewStage_show("connect_lan.fxml", rootStage,"Connection to Server in LAN Network",context);
     }

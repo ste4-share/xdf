@@ -1,5 +1,8 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.TextToNumber;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,60 +11,69 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
+@Component
 public class QuantityFormController implements Initializable {
-    private static String sl_ton;
+    private static int sl_ton;
     @FXML
-    Label slton_lb;
+    Label slton_lb,notion_lb;
     @FXML
     TextField quantity_tf;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        notion_lb.setText(null);
         sl_ton = ChangingController.quantity;
-        slton_lb.setText(TextToNumber.textToNum(sl_ton));
+        slton_lb.setText(TextToNumber.textToNum(String.valueOf(sl_ton)));
     }
-
     @FXML
     public void maxBtn(ActionEvent actionEvent) {
-        quantity_tf.setText(ChangingController.quantity);
+        quantity_tf.setText(TextToNumber.textToNum(String.valueOf(ChangingController.quantity)));
     }
-
     @FXML
     public void saveBtn(ActionEvent actionEvent) {
-        if (quantity_tf.getText().trim().isEmpty()){
-            ChangingController.quantity_convert = null;
+        if (notion_lb.getText().isEmpty()){
+            ChangingController.quantity_convert = Integer.parseInt(quantity_tf.getText());
+            ChangingController.addAff_stage.close();
         }else {
-            ChangingController.quantity_convert = quantity_tf.getText();
+            ChangingController.quantity_convert = Integer.parseInt(quantity_tf.getText());
+            DialogMessage.message("Error", "An unexpected error occurred in ","An unexpected error has occurred", Alert.AlertType.WARNING);
         }
-        ChangingController.addAff_stage.close();
     }
-
     @FXML
     public void exitBtn(ActionEvent actionEvent) {
         ChangingController.addAff_stage.close();
     }
-
     @FXML
     public void setQuantityTextF(KeyEvent keyEvent) {
-        try {
-            int qt =  Integer.parseInt(quantity_tf.getText());
-            int cal = Integer.parseInt(sl_ton) - qt;
-            if(cal >= 0){
-                quantity_tf.setStyle(null);
-                slton_lb.setText(TextToNumber.textToNum(String.valueOf(cal)));
+        String q= quantity_tf.getText();
+        if (!q.trim().isEmpty()){
+            if (Common.isNumber(q)) {
+                int qt = Integer.parseInt(q);
+                int cal = sl_ton - qt;
+                if (cal >= 0) {
+                    setErrorText(null,null);
+                    slton_lb.setText(TextToNumber.textToNum(String.valueOf(cal)));
+                } else {
+                    setErrorText("Số lượng vượt mức tồn đang có.",CommonFactory.styleErrorField);
+                }
             }else{
-                quantity_tf.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+                setErrorText("Vui lòng nhập số.", CommonFactory.styleErrorField);
             }
-        } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Lỗi định dạng nhập liệu, dữ liệu nhập phải là số.");
-            alert.showAndWait();
-            quantity_tf.setText("");
-            throw new RuntimeException(e);
+        }else{
+            setErrorText(null,null);
         }
+    }
+    @FXML
+    public void sl_selected(MouseEvent mouseEvent) {
+        quantity_tf.selectAll();
+    }
+    private void setErrorText(String no, String q){
+        notion_lb.setText(no);
+        quantity_tf.setStyle(q);
     }
 }

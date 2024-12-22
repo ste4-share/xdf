@@ -8,10 +8,7 @@ import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +31,8 @@ public class ConnectLan implements Initializable {
     private Button connect,exitbtn,ckbtn;
     @FXML
     private Label conn_status;
+    @FXML
+    private CheckBox ck_save;
     @Autowired
     private AccountService accountService;
 
