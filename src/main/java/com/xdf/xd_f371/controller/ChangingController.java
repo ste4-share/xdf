@@ -8,6 +8,7 @@ import com.xdf.xd_f371.model.MucGiaEnum;
 import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.MucgiaService;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class ChangingController implements Initializable {
@@ -45,6 +47,7 @@ public class ChangingController implements Initializable {
     private InventoryService inventoryService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        nvdx_ls_buf = new ArrayList<>();
         tonkho_selected = TonkhoController.pickTonKho;
         petro_name.setText(tonkho_selected.getTenxd());
         list = inventoryService.findByPetro_idAndQuarter_id(tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
@@ -84,7 +87,14 @@ public class ChangingController implements Initializable {
         if (p!=null){
             quantity=p.getQuantity();
             openChangeQuantityForm();
+            updateTableView(p);
         }
+    }
+    private void updateTableView(PriceAndQuantityDto p){
+        list.stream().filter(x->x.getPrice()==p.getPrice()).findFirst()
+                .ifPresent(i -> {i.setNhap_nvdx(i.getNhap_nvdx()-quantity_convert);i.setNhap_sscd(i.getNhap_sscd()+quantity_convert);});
+        setDataToTable(nvdx_tb, list, Inventory::getNhap_nvdx, Inventory::getXuat_nvdx);
+        setDataToTable(sscd_tb, list, Inventory::getNhap_sscd, Inventory::getXuat_sscd);
     }
     @FXML
     public void sscdToNvdxAction(ActionEvent actionEvent) {
@@ -92,15 +102,15 @@ public class ChangingController implements Initializable {
         if (p!=null){
             quantity=p.getQuantity();
             openChangeQuantityForm();
+            quantity_convert=quantity_convert*(-1);
+            updateTableView(p);
         }
     }
     @FXML
     public void changeSScd(ActionEvent actionEvent) {
-        try {
+        if (DialogMessage.callAlertWithMessage("", "Luu thay doi", "Xac nhan luu thay doi", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+            list.forEach(x->inventoryService.save(x));
             TonkhoController.tk_stage.close();
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException();
         }
     }
     @FXML

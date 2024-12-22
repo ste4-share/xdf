@@ -98,7 +98,6 @@ public class ConnectLan implements Initializable {
            conn_status.setText("FAIL");
        }
     }
-
     private boolean checkConnection() {
         DataSource ds = MainApplicationApp.context.getBean(DataSource.class);
         try (Connection connection = ds.getConnection()) {

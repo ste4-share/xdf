@@ -32,11 +32,11 @@ public class QuantityFormController implements Initializable {
     }
     @FXML
     public void maxBtn(ActionEvent actionEvent) {
-        quantity_tf.setText(TextToNumber.textToNum(String.valueOf(ChangingController.quantity)));
+        quantity_tf.setText(String.valueOf(ChangingController.quantity));
     }
     @FXML
     public void saveBtn(ActionEvent actionEvent) {
-        if (notion_lb.getText().isEmpty()){
+        if (notion_lb.getText()==null){
             ChangingController.quantity_convert = Integer.parseInt(quantity_tf.getText());
             ChangingController.addAff_stage.close();
         }else {

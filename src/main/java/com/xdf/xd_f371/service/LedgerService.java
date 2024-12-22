@@ -77,24 +77,12 @@ public class LedgerService {
     private void createNewInv(Ledger ledger, LedgerDetails detail, Inventory inventory){
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
             inventory.setNhap_nvdx(inventory.getNhap_nvdx()+detail.getSoluong());
-            inventory.setNhap_sscd(0);
-            inventory.setXuat_sscd(0);
-            inventory.setXuat_nvdx(0);
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())){
             inventory.setXuat_nvdx(inventory.getXuat_nvdx()+detail.getSoluong());
-            inventory.setNhap_nvdx(0);
-            inventory.setNhap_sscd(0);
-            inventory.setXuat_sscd(0);
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
             inventory.setNhap_sscd(inventory.getNhap_sscd()+detail.getSoluong());
-            inventory.setNhap_nvdx(0);
-            inventory.setXuat_nvdx(0);
-            inventory.setXuat_sscd(0);
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
             inventory.setXuat_sscd(inventory.getXuat_sscd()+detail.getSoluong());
-            inventory.setNhap_sscd(0);
-            inventory.setNhap_nvdx(0);
-            inventory.setXuat_nvdx(0);
         }
         inventoryRepo.save(new Inventory(detail.getLoaixd_id(),ledger.getQuarter_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
                 inventory.getNhap_nvdx(),inventory.getNhap_sscd(),inventory.getXuat_nvdx(),inventory.getXuat_sscd(), inventory.getStatus(),detail.getDon_gia()));

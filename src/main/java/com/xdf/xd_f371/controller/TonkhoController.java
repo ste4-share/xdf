@@ -172,6 +172,7 @@ public class TonkhoController implements Initializable {
             pickTonKho = spotDto;
             tk_stage = new Stage();
             Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi");
+            fillDataToTableTonkho(findByTime.getId());
         }
     }
     @FXML
