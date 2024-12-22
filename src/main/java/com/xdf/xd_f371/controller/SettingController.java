@@ -2,6 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.service.QuarterService;
+import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
@@ -10,9 +11,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.Year;
@@ -28,9 +32,9 @@ public class SettingController implements Initializable {
     @FXML
     private TextField q1_name,q2_name,q3_name,q4_name;
     @FXML
-    private Button savechangeBtn;
+    private Button savechangeBtn,browserBtn;
     @FXML
-    private Label year_lb;
+    private Label year_lb,path_lb;
     @FXML
     private DatePicker s_q1,e_q1,s_q2,e_q2,s_q3,e_q3,s_q4,e_q4;
     @FXML
@@ -38,11 +42,9 @@ public class SettingController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        rootbox.setPrefHeight(DashboardController.screenHeigh);
-        rootbox.setPrefWidth(DashboardController.screenWidth);
+        hoverBtn();
         String pre_year = String.valueOf(Year.now().getValue());
         year_lb.setText(pre_year);
-        hoverBtn();
         clearField();
         initCurrentQuarterToField(pre_year);
     }
@@ -104,6 +106,27 @@ public class SettingController implements Initializable {
             }
         }
     }
+    @FXML
+    public void pathChange(ActionEvent actionEvent) {
+        setSelectDirectory(DashboardController.primaryStage);
+    }
+
+    private void setSelectDirectory(Stage primaryStage){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select a Directory");
+
+        // Optional: Set initial directory
+//        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+
+        // Handle the result
+        if (selectedDirectory != null) {
+            path_lb.setText(selectedDirectory.getAbsolutePath());
+        } else {
+            System.out.println("No directory selected.");
+            DialogMessage.message("", "No directory selected.","No directory selected.", Alert.AlertType.INFORMATION);
+        }
+    }
 
     private boolean isEmptyField(TextField tf){
         if (tf.getText().trim().isEmpty()){
@@ -155,8 +178,10 @@ public class SettingController implements Initializable {
     }
 
     private void hoverBtn(){
-        String color = " #ffffff";
-        savechangeBtn.setOnMouseEntered(e -> savechangeBtn.setStyle("-fx-background-color: "+color+"; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10"));
-        savechangeBtn.setOnMouseExited(e -> savechangeBtn.setStyle("-fx-background-color: "+color+";-fx-background-radius:10"));
+        rootbox.setPrefHeight(DashboardController.screenHeigh-350);
+        rootbox.setPrefWidth(DashboardController.screenWidth);
+        Common.hoverButton(browserBtn,"#ffffff");
+        Common.hoverButton(savechangeBtn,"#ffffff");
     }
+
 }
