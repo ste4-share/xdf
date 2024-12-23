@@ -29,7 +29,6 @@ import java.util.ResourceBundle;
 
 @Component
 public class DonviController implements Initializable {
-
     public static Stage unit_stage;
     public static TructhuocDto selectedUnit;
     @FXML
@@ -37,36 +36,34 @@ public class DonviController implements Initializable {
     @FXML
     private TableView<Tcn> tb_property;
     @FXML
-        private TableColumn<TructhuocDto, String> col_name_unit,col_create_time,col_affilated,nhomtructhuoc;
+    private TableColumn<TructhuocDto, String> col_name_unit,col_create_time,col_affilated,nhomtructhuoc;
     @FXML
     private TableColumn<Tcn, String> col_property_name,col_property_status;
-
     @Autowired
     private TcnService tcnService;
     @Autowired
     private TructhuocService tructhuocService;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        tb_unit.setPrefWidth(DashboardController.screenWidth);
-        tb_unit.setPrefHeight(DashboardController.screenHeigh-300);
-        tb_property.setPrefWidth(DashboardController.screenWidth);
-        tb_property.setPrefHeight(DashboardController.screenHeigh-300);
+        setdimesion();
         selectedUnit = new TructhuocDto();
         fillDataForTable_tcn();
         fillDataForTable_nguonnx();
     }
-
+    private void setdimesion(){
+        tb_unit.setPrefWidth(DashboardController.screenWidth);
+        tb_unit.setPrefHeight(DashboardController.screenHeigh-300);
+        tb_property.setPrefWidth(DashboardController.screenWidth);
+        tb_property.setPrefHeight(DashboardController.screenHeigh-300);
+    }
     private void fillDataForTable_nguonnx(){
         tb_unit.setItems(FXCollections.observableList(tructhuocService.findAllBy().stream().toList()));
         setFactoryCell_for_Nguonnx();
     }
-
     private void fillDataForTable_tcn(){
         tb_property.setItems(FXCollections.observableList(tcnService.findAll()));
         setFactoryCell_for_Tcn();
     }
-
     private void setFactoryCell_for_Tcn() {
         col_property_name.setCellValueFactory(new PropertyValueFactory<Tcn, String>("name"));
         col_property_status.setCellValueFactory(new PropertyValueFactory<Tcn, String>("status"));
@@ -81,14 +78,8 @@ public class DonviController implements Initializable {
 
     private void showUnitsDetailScreen() throws IOException {
         selectedUnit = tb_unit.getSelectionModel().getSelectedItem();
-        Parent root = (Parent) DashboardController.getNodeBySource("unit_detail.fxml");
-        Scene scene = new Scene(root);
         unit_stage = new Stage();
-        unit_stage.setScene(scene);
-        unit_stage.initStyle(StageStyle.DECORATED);
-        unit_stage.initModality(Modality.APPLICATION_MODAL);
-        unit_stage.setTitle("Chi tiết");
-        unit_stage.showAndWait();
+        Common.openNewStage("unit_detail.fxml",unit_stage,null);
         fillDataForTable_nguonnx();
         tb_unit.refresh();
     }
@@ -97,45 +88,17 @@ public class DonviController implements Initializable {
     public void searchButtonUnit(ActionEvent actionEvent) {
     }
 
-
     @FXML
     public void addUnitAction(ActionEvent actionEvent){
         selectedUnit = tb_unit.getSelectionModel().getSelectedItem();
+        unit_stage = new Stage();
         Common.openNewStage("add_unit.fxml", unit_stage, "Thêm mới");
         fillDataForTable_nguonnx();
         tb_unit.refresh();
     }
 
     @FXML
-    public void editUnitAction(ActionEvent actionEvent) {
-
-    }
-
-    @FXML
-    public void deleteUnitAction(ActionEvent actionEvent) {
-        TructhuocDto nguonNx = tb_unit.getSelectionModel().getSelectedItem();
-        if (nguonNx!=null){
-            if (DialogMessage.callAlert()== ButtonType.OK){
-                fillDataForTable_nguonnx();
-                tb_unit.refresh();
-            }
-        }
-    }
-
-    @FXML
     public void tb_tcn_clicked(MouseEvent mouseEvent) {
-    }
-
-    @FXML
-    public void addPropertyAction(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    public void editPropertyAction(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    public void delPropertyAction(ActionEvent actionEvent) {
     }
 
     @FXML

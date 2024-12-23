@@ -4,6 +4,7 @@ import com.xdf.xd_f371.dto.TructhuocDto;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.repo.TructhuocRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,5 +23,8 @@ public class TructhuocService {
 
     public List<TructhuocDto> findAllBy(){
         return tructhuocRepo.findAllBy();
+    }
+    public TrucThuoc findTructhuocByName(String name){
+        return tructhuocRepo.findTructhuocByName(name);
     }
 }

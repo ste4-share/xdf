@@ -12,17 +12,21 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
+import org.controlsfx.control.textfield.TextFields;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Common {
 
@@ -49,6 +53,14 @@ public class Common {
         stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
+    }
+    public static void setHint(TextField textField, List<String> strls) {
+        TextFields.bindAutoCompletion(textField, t -> {
+            return strls.stream().filter(elem
+                    -> {
+                return elem.toLowerCase().contains(t.getUserText().toLowerCase().trim());
+            }).collect(Collectors.toList());
+        });
     }
     public static LocalDate localdateToDate(Date input){
         return LocalDate.ofInstant(input.toInstant(), ZoneId.systemDefault());
