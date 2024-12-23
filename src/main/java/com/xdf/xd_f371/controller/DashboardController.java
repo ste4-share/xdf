@@ -74,7 +74,7 @@ public class DashboardController implements Initializable {
     @FXML
     public TableView<MiniLedgerDto> tbTTNX;
     @FXML
-    private TableColumn<MiniLedgerDto, String> so,ngaytao, loaiphieu, soluong,tong;
+    private TableColumn<MiniLedgerDto, String> nguoitao,so,ngaytao, loaiphieu,dvi_nhan,dvi_xuat,nvu, soluong,tong;
     @FXML
     private HBox dvi_menu,nxt_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu,setting,report;
     @FXML
@@ -179,6 +179,9 @@ public class DashboardController implements Initializable {
             }
         }
     }
+    @FXML
+    public void search_phieu_tnxt(ActionEvent actionEvent) {
+    }
     private void initQuyCombobox(){
         ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
         quy_cbb.getSelectionModel().selectFirst();
@@ -197,7 +200,6 @@ public class DashboardController implements Initializable {
             openFxml("setting_menu.fxml");
         }
     }
-
     private void setDataToPhieuCombobox(){
         List<String> nx_ = new ArrayList<>();
         nx_.add("ALL");
@@ -206,7 +208,6 @@ public class DashboardController implements Initializable {
         cbb_loaiphieu_filter.setItems(FXCollections.observableArrayList(nx_));
         cbb_loaiphieu_filter.getSelectionModel().selectFirst();
     }
-
     private void customStyleMenu(){
         String cssLayout =
                 "-fx-border-insets: 5;\n" +
@@ -225,22 +226,24 @@ public class DashboardController implements Initializable {
     }
     public void setDataToViewTable(){
         ttp_ls =ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
+        nguoitao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("username"));
         so.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("so_str"));
         loaiphieu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("loai_phieu"));
-        ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));
+        dvi_nhan.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("dvi_nhap"));
+        dvi_xuat.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("dvi_xuat"));
+        nvu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("nhiemvu"));
         soluong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("count_str"));
         tong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("tong_str"));
+        ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));
         tbTTNX.setItems(FXCollections.observableList(ttp_ls));
         tbTTNX.refresh();
         setPagination_nxt();
     }
-
     private void setPagination_nxt(){
         pagination_tbnxt.setPageFactory(this::createPage);
         pagination_tbnxt.setPrefHeight(800);
         pagination_tbnxt.setPageCount((ttp_ls.size()/rowsPerPage) +1);
     }
-
     private Node createPage(int pageIndex) {
         int fromIndex = pageIndex * rowsPerPage;
         int toIndex = Math.min(fromIndex + rowsPerPage, ttp_ls.size());
@@ -265,61 +268,5 @@ public class DashboardController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-    public void search_phieu_tnxt(ActionEvent actionEvent) {
-    }
-    private void searching(){
-//        tf_search_txnt.textProperty().addListener(e -> {
-//            if (addedBySelection) {
-//                List<TTPhieuModel> tkt_buf = ttp_ls.stream().filter(ttp -> ttp.getSo().equals(tf_search_txnt.getText())).toList();
-//                ObservableList<TTPhieuModel> observableList = FXCollections.observableArrayList(tkt_buf);
-//                tbTTNX.setItems(observableList);
-//                addedBySelection = false;
-//            }
-//        });
-    }
-//
-//    private void setUpForSearchCompleteTion_lichsu(List<String> search_arr){
-//        TextFields.bindAutoCompletion(tf_search_history, t -> {
-//            return search_arr.stream().filter(elem
-//                    -> {
-//                return elem.toLowerCase().trim().startsWith(t.getUserText().toLowerCase().trim());
-//            }).collect(Collectors.toList());
-//        });
-//        tf_search_history.setOnKeyPressed(e -> {
-//            addedBySelection_lstb = false;
-//        });
-//
-//        tf_search_history.setOnKeyReleased(e -> {
-//            if (tf_search_history.getText().trim().isEmpty()){
-//                // reset
-//                tb_viewlichsu.setItems(FXCollections.observableArrayList(new ArrayList<>()));
-//                lichsuXNKS = lichsuNXKService.getAll();
-//                lichsuXNKS.forEach(ttp -> {
-//                    ttp.setTonsau_str(TextToNumber.textToNum(String.valueOf(ttp.getTonsau())));
-//                    ttp.setSoluong_str(TextToNumber.textToNum(String.valueOf(ttp.getSoluong())));
-//                    ttp.setMucgia(TextToNumber.textToNum(ttp.getMucgia()));
-//                    ttp.setTontruoc_str(TextToNumber.textToNum(String.valueOf(ttp.getTontruoc())));
-//                });
-//                tb_viewlichsu.setItems(FXCollections.observableArrayList(lichsuXNKS));
-//            }
-//            addedBySelection_lstb = true;
-//        });
-//    }
-//
-//    private void searchingFor_lichsuTb(){
-//        tf_search_history.textProperty().addListener(e -> {
-//            if (addedBySelection_lstb) {
-//                List<LichsuXNK> tkt_buf = lichsuXNKS.stream().filter(ttp ->
-//                    ttp.getTen_xd().equals(tf_search_history.getText())).toList();
-//                tkt_buf.forEach(ttp -> {
-//                    ttp.setTonsau_str(TextToNumber.textToNum(String.valueOf(ttp.getTonsau())));
-//                    ttp.setSoluong_str(TextToNumber.textToNum(String.valueOf(ttp.getSoluong())));
-//                    ttp.setTontruoc_str(TextToNumber.textToNum(String.valueOf(ttp.getTontruoc())));
-//                });
-//                ObservableList<LichsuXNK> observableList = FXCollections.observableArrayList(tkt_buf);
-//                tb_viewlichsu.setItems(observableList);
-//                addedBySelection_lstb = false;
-//            }
-//        });
-//    }
+
 }

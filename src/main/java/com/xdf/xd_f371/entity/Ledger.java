@@ -78,6 +78,8 @@ public class Ledger {
     private String lpt;
     @Column(name = "lpt_2")
     private String lpt_2;
+    @Column(name = "create_by")
+    private String create_by;
     @Version
     private int version;
 

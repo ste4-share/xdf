@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.dto;
 
+import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.util.TextToNumber;
 import lombok.*;
 
@@ -23,8 +24,10 @@ public class MiniLedgerDto {
     private String count_str;
     private Long tong;
     private String tong_str;
+    private String nhiemvu;
+    private String username;
 
-    public MiniLedgerDto(int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDate timestamp, Long count, Long tong) {
+    public MiniLedgerDto(int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDate timestamp,String nhiemvu,String username, Long count, Long tong) {
         this.so = so;
         this.so_str = String.valueOf(so);
         this.loai_phieu = loai_phieu;
@@ -33,9 +36,11 @@ public class MiniLedgerDto {
         this.timestamp = timestamp;
         this.timestamp_str = timestamp.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         this.count = count;
+        this.nhiemvu = nhiemvu;
         this.count_str = String.valueOf(count);
         this.tong = tong;
         this.tong_str = TextToNumber.textToNum(String.valueOf(tong));
+        this.username = username;
     }
 
     @Override

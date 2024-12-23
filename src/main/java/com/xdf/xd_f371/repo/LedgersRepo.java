@@ -29,7 +29,7 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
             "ld.phai_nhap,ld.haohut_sl,l.loainv,ld.nl_gio,ld.nl_km,ld.soluong_px) from Ledger l join l.ledgerDetails ld")
     List<LedgerDto> findAllDtoBy();
 
-    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join l.ledgerDetails ld where l.status like :s and l.quarter_id=:qid group by 1,2,3,4,5 order by l.timestamp desc")
+    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu,l.create_by, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join l.ledgerDetails ld where l.status like :s and l.quarter_id=:qid group by 1,2,3,4,5,6,7 order by l.timestamp desc")
     List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("qid") int qid);
     @Query(value = "select * from ledgers where quarter_id=:qid and loai_phieu like :lp", nativeQuery = true)
     List<Ledger> findAllByQuarter(@Param("qid") int quarterId,@Param("lp") String lp);

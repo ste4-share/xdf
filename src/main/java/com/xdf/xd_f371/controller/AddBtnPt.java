@@ -4,11 +4,13 @@ import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.PhuongtienService;
+import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,9 @@ import java.util.ResourceBundle;
 public class AddBtnPt implements Initializable {
 
     @FXML
-    TextField pt_name, quantity,h,km,md,tk,ct_tk,ct_md,ct_km,soluong;
-
+    TextField pt_name, quantity,h,km,md,tk;
+    @FXML
+    Button cancelBtn, saveBtn;
     @Autowired
     private PhuongtienService phuongtienService;
     @Autowired
@@ -30,6 +33,8 @@ public class AddBtnPt implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initField();
+        Common.hoverButton(saveBtn, "#ffffff");
+        Common.hoverButton(cancelBtn, "#ffffff");
     }
 
     private void initField() {
@@ -37,10 +42,6 @@ public class AddBtnPt implements Initializable {
         km.setText(String.valueOf(DinhMucPhuongTienController.dinhMucPhuongTienDto.getDm_xm_km()));
         md.setText(String.valueOf(DinhMucPhuongTienController.dinhMucPhuongTienDto.getDm_md_gio()));
         tk.setText(String.valueOf(DinhMucPhuongTienController.dinhMucPhuongTienDto.getDm_tk_gio()));
-        ct_tk.setText("");
-        ct_md.setText("2:31");
-        ct_km.setText("200");
-        soluong.setText("900");
         pt_name.setText(DinhMucPhuongTienController.dinhMucPhuongTienDto.getName_pt());
         quantity.setText(String.valueOf(DinhMucPhuongTienController.dinhMucPhuongTienDto.getQuantity()));
     }
@@ -55,7 +56,6 @@ public class AddBtnPt implements Initializable {
                 phuongTien.setStatus("ACTIVE");
                 phuongTien.setLoaiphuongtien_id(DinhMucPhuongTienController.dinhMucPhuongTienDto.getLoaiphuongtien_id());
                 phuongtienService.save(phuongTien);
-
                 DialogMessage.callAlertWithMessage("Thông báo", "Thông báo", "Thêm phương tiện thành công", Alert.AlertType.CONFIRMATION);
                 DinhMucPhuongTienController.norm_stage.close();
             }else{

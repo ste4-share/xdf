@@ -15,8 +15,8 @@ import java.util.Optional;
 public class DinhmucService {
     private final DinhMucRepo dinhMucRepo;
 
-    public List<DinhMucPhuongTienDto> findAllBy(@Param("qid") int quarter_id){
-        return dinhMucRepo.findAllBy(quarter_id);
+    public List<DinhMucPhuongTienDto> findAllBy(int quarter_id,String lpt){
+        return dinhMucRepo.findAllBy(quarter_id,lpt);
     }
     public DinhMuc save(DinhMuc dinhMuc){
         return dinhMucRepo.save(dinhMuc);

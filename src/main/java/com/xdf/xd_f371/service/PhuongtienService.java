@@ -34,4 +34,7 @@ public class PhuongtienService {
     public Optional<PhuongTien> findPhuongTienByName(String name) {
         return phuongtienRepo.findPhuongTienByName(name);
     }
+    public Optional<PhuongTien> createPt_DM(){
+
+    }
 }

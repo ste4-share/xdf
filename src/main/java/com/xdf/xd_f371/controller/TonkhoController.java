@@ -61,12 +61,10 @@ public class TonkhoController implements Initializable {
     private InventoryService inventoryService;
     @Autowired
     private LichsuService lichsuService;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         tb_tonkho.setPrefWidth(DashboardController.screenWidth);
         tb_tonkho.setPrefHeight(DashboardController.screenHeigh-350);
-
 
         pickTonKho = new SpotDto();
         findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();

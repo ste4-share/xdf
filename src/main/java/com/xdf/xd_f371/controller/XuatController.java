@@ -457,6 +457,7 @@ public class XuatController extends CommonFactory implements Initializable {
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
 
         Ledger ledger = new Ledger();
+        ledger.setCreate_by(ConnectLan.pre_acc.getUsername());
         ledger.setBill_id(Integer.parseInt(so.getText().isEmpty() ? "0" : so.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
         ledger.setAmount(ls_socai.stream().mapToLong(x-> ((long) x.getSoluong() *x.getDon_gia())).sum());

@@ -207,6 +207,7 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     private Ledger getLedger() {
         Ledger ledger = new Ledger();
+        ledger.setCreate_by(ConnectLan.pre_acc.getUsername());
         ledger.setBill_id(Integer.parseInt(soTf.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
         ledger.setAmount(ls_socai.stream().mapToLong(x->(x.getThuc_nhap()*x.getDon_gia())).sum());

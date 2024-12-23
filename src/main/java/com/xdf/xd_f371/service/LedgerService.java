@@ -50,7 +50,7 @@ public class LedgerService {
                     createNewInv(ledger, detail,inventory_1);
                     saveHistory(ledger,detail,inventory_1.getNhap_nvdx()-inventory_1.getXuat_nvdx());
                 }
-            }else {
+            } else {
                 saveInv(ledger, detail, inventory);
                 saveHistory(ledger,detail,inventory.getNhap_nvdx()-inventory.getXuat_nvdx());
             }

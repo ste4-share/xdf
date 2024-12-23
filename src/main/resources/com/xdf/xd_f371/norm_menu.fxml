@@ -62,7 +62,7 @@
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="units_cbb" onAction="#selectUnit" prefHeight="39.0" prefWidth="313.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                  <ComboBox fx:id="units_cbb" disable="true" onAction="#selectUnit" prefHeight="39.0" prefWidth="313.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></ComboBox>
@@ -101,7 +101,7 @@
             </TableView>
             <HBox alignment="CENTER_RIGHT">
                <children>
-                  <Button mnemonicParsing="false" onAction="#addNewPt" prefHeight="36.0" prefWidth="123.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" text="Thêm">
+                  <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addNewPt" prefHeight="36.0" prefWidth="123.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" text="Thêm">
                      <HBox.margin>
                         <Insets right="10.0" top="10.0" />
                      </HBox.margin>

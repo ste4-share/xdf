@@ -287,7 +287,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Label prefHeight="35.0" prefWidth="105.0" text="Loại phiếu">
+                              <Label prefHeight="35.0" prefWidth="105.0" text="Loại phiếu:">
                                  <HBox.margin>
                                     <Insets bottom="10.0" left="35.0" right="10.0" top="10.0" />
                                  </HBox.margin>
@@ -303,7 +303,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ComboBox>
-                              <Label prefHeight="33.0" prefWidth="101.0" text="Tìm kiếm">
+                              <Label prefHeight="33.0" prefWidth="101.0" text="Tìm kiếm:">
                                  <HBox.margin>
                                     <Insets bottom="10.0" left="45.0" right="10.0" top="10.0" />
                                  </HBox.margin>
@@ -331,21 +331,25 @@
                            <children>
                               <TableView fx:id="tbTTNX" onMouseClicked="#tb_selected" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" stylesheets="@css/table_style.css">
                                 <columns>
-                                  <TableColumn fx:id="so" prefWidth="61.0" text="Số" />
-                                  <TableColumn fx:id="loaiphieu" prefWidth="74.0" text="Loại phiếu" />
-                                    <TableColumn fx:id="ngaytao" prefWidth="126.0" text="Ngày tạo" />
-                                    <TableColumn fx:id="soluong" prefWidth="198.0" text="Số lượng" />
-                                    <TableColumn fx:id="tong" prefWidth="164.0" text="Tổng" />
+                                    <TableColumn fx:id="nguoitao" prefWidth="105.0" text="Người tạo" />
+                                  <TableColumn fx:id="so" prefWidth="60.0" text="Số" />
+                                  <TableColumn fx:id="loaiphieu" prefWidth="91.0" text="Loại phiếu" />
+                                    <TableColumn fx:id="dvi_nhan" prefWidth="122.0" text="Đ.vị Nhập" />
+                                    <TableColumn fx:id="dvi_xuat" prefWidth="94.0" text="Đ.vị Xuất" />
+                                    <TableColumn fx:id="nvu" prefWidth="91.0" text="Nhiệm vụ" />
+                                    <TableColumn fx:id="soluong" prefWidth="92.0" text="Số lượng" />
+                                    <TableColumn fx:id="tong" text="Tổng" />
+                                    <TableColumn fx:id="ngaytao" prefWidth="129.0" text="Ngày tạo" />
                                 </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
                               </TableView>
                               <Pagination fx:id="pagination_tbnxt">
                                  <cursor>
@@ -373,7 +377,7 @@
    <top>
       <HBox prefHeight="51.0" prefWidth="1380.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="18.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" rotate="-13.0">
+            <ImageView fitHeight="24.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" rotate="-13.0">
                <image>
                   <Image url="@img/oil-barrel.png" />
                </image>
@@ -381,7 +385,7 @@
                   <Insets bottom="10.0" left="20.0" top="20.0" />
                </HBox.margin>
             </ImageView>
-            <Label prefHeight="51.0" prefWidth="252.0" text="NXT XĂNG DẦU">
+            <Label alignment="BOTTOM_LEFT" prefHeight="58.0" prefWidth="252.0" text="NXT XĂNG DẦU">
                <font>
                   <Font name="Cambria Bold" size="27.0" />
                </font>
