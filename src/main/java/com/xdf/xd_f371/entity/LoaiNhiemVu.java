@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class LoaiNhiemVu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +23,8 @@ public class LoaiNhiemVu {
 
     @OneToMany(mappedBy = "loaiNhiemVu", cascade = CascadeType.ALL, orphanRemoval = true)
     List<NhiemVu> nhiemVuList = new ArrayList<>();
+
+    public LoaiNhiemVu(String task_name) {
+        this.task_name = task_name;
+    }
 }

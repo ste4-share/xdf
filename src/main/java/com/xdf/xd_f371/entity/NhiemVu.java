@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.entity;
 
-import com.xdf.xd_f371.dto.HanmucNhiemvu2Dto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,4 +43,13 @@ public class NhiemVu implements Serializable {
 
     @OneToMany(mappedBy = "nhiemVu", cascade = CascadeType.PERSIST)
     private List<HanmucNhiemvu2> hanmucNhiemvu2s = new ArrayList<>();
+
+    public NhiemVu(String tenNv, String status, int teamId, Integer assignmentTypeId, Integer priority, Integer priorityBc2) {
+        this.tenNv = tenNv;
+        this.status = status;
+        this.teamId = teamId;
+        this.assignmentTypeId = assignmentTypeId;
+        this.priority = priority;
+        this.priorityBc2 = priorityBc2;
+    }
 }

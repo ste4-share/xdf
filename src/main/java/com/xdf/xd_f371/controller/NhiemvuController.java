@@ -8,6 +8,7 @@ import com.xdf.xd_f371.service.HanmucNhiemvuService;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.ComponentUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -17,13 +18,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
 @Component
 public class NhiemvuController implements Initializable {
     public static Stage nvStage;
@@ -58,8 +59,7 @@ public class NhiemvuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        tab.setPrefWidth(DashboardController.screenWidth);
-        tab.setPrefHeight(DashboardController.screenHeigh-300);
+        setScreen();
         initQuarterCbb();
         donvi.setItems(FXCollections.observableList(List.of("F bộ")));
         donvi.getSelectionModel().selectFirst();
@@ -69,7 +69,14 @@ public class NhiemvuController implements Initializable {
         initHanmucNhiemvuTaubay();
 
     }
-
+    private void setScreen(){
+        ctnv_pt.setPrefWidth(DashboardController.screenWidth);
+        ctnv_pt.setPrefHeight(DashboardController.screenHeigh-300);
+        nv_tb.setPrefWidth(DashboardController.screenWidth);
+        nv_tb.setPrefHeight(DashboardController.screenHeigh-300);
+        tieuthunhiemvu.setPrefWidth(DashboardController.screenWidth);
+        tieuthunhiemvu.setPrefHeight(DashboardController.screenHeigh-300);
+    }
     private void initHanmucNhiemvuTaubay() {
         ctnv_pt.setItems(FXCollections.observableList(hanmucNhiemvuService.getAllBy()));
         t2_tt1.setSortable(false);
@@ -90,7 +97,6 @@ public class NhiemvuController implements Initializable {
 
         }
     }
-
     @FXML
     public void donviselected(ActionEvent actionEvent) {
     }
@@ -104,17 +110,9 @@ public class NhiemvuController implements Initializable {
     public void chitieunvSelected(MouseEvent mouseEvent) {
 
     }
-
     @FXML
     public void dviSelected(ActionEvent actionEvent) {
         if (dvi_cbb.getSelectionModel().getSelectedItem()!=null) {
-        }
-    }
-    @FXML
-    public void addnewchitieubay(ActionEvent actionEvent) {
-        nvStage = new Stage();
-        Common.openNewStage("add_chitieunv.fxml", nvStage,"FORM");
-        if (dvi_cbb.getSelectionModel().getSelectedItem()==null) {
         }
     }
     @FXML
@@ -125,21 +123,13 @@ public class NhiemvuController implements Initializable {
     }
 
     private void initDviTb() {
-        dvi_cbb.setItems(FXCollections.observableList(nguonNxService.findByAllBy()));
-        dvi_cbb.setConverter(new StringConverter<NguonNx>() {
-            @Override
-            public String toString(NguonNx object) {
-                return object==null ? "": object.getTen();
-            }
-
-            @Override
-            public NguonNx fromString(String string) {
-                return nguonNxService.findByTen(string).orElse(null);
-            }
-        });
+        ComponentUtil.setItemsToComboBox(dvi_cbb,nguonNxService.findByAllBy(),NguonNx::getTen,input->nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
     }
-
+    private void initQuarterCbb(){
+        ComponentUtil.setItemsToComboBox(quy_cbb,quarterService.findAll(),Quarter::getName,input->quarterService.findByName(input).orElse(null));
+        quy_cbb.getSelectionModel().selectFirst();
+    }
     private void initNvTb() {
         nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllDtoBy(LoaiNVCons.HAOHUT.getName())));
         tennv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_nv"));
@@ -158,18 +148,7 @@ public class NhiemvuController implements Initializable {
         tieuthunhiemvu.refresh();
     }
 
-    private void initQuarterCbb(){
-        quy_cbb.setItems(FXCollections.observableList(quarterService.findAll()));
-        quy_cbb.setConverter(new StringConverter<Quarter>() {
-            @Override
-            public String toString(Quarter object) {
-                return object==null ?"": object.getName();
-            }
-
-            @Override
-            public Quarter fromString(String string) {
-                return quarterService.findByName(quy_cbb.getValue().getName()).isPresent()?quy_cbb.getValue():null;
-            }
-        });
+    @FXML
+    public void addnv(ActionEvent actionEvent) {
     }
 }

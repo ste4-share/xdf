@@ -33,4 +33,8 @@ public class ChitietNhiemVu {
         this.nhiemvu_id = nhiemvu_id;
         this.nhiemvu = nhiemvu;
     }
+    public ChitietNhiemVu(int nhiemvu_id, String nhiemvu) {
+        this.nhiemvu_id = nhiemvu_id;
+        this.nhiemvu = nhiemvu;
+    }
 }
