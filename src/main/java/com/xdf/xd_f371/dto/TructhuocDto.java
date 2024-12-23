@@ -16,6 +16,7 @@ public class TructhuocDto implements Serializable {
     private String tentructhuoc;
     private String nhomtructhuoc;
     private String timestamp;
+    private String code;
     private String status;
 
     public TructhuocDto() {

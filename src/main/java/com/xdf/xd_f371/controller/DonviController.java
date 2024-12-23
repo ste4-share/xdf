@@ -6,20 +6,18 @@ import com.xdf.xd_f371.service.TcnService;
 import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,15 +28,15 @@ import java.util.ResourceBundle;
 @Component
 public class DonviController implements Initializable {
     public static Stage unit_stage;
-    public static TructhuocDto selectedUnit;
+    public static TructhuocDto selectedUnit =new TructhuocDto();
     @FXML
     private TableView<TructhuocDto> tb_unit;
     @FXML
     private TableView<Tcn> tb_property;
     @FXML
-    private TableColumn<TructhuocDto, String> col_name_unit,col_create_time,col_affilated,nhomtructhuoc;
+    private TableColumn<TructhuocDto, String> stt,col_name_unit,col_create_time,col_affilated,nhomtructhuoc;
     @FXML
-    private TableColumn<Tcn, String> col_property_name,col_property_status;
+    private TableColumn<Tcn, String> col_property_name,col_property_status,tc_stt;
     @Autowired
     private TcnService tcnService;
     @Autowired
@@ -46,7 +44,6 @@ public class DonviController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setdimesion();
-        selectedUnit = new TructhuocDto();
         fillDataForTable_tcn();
         fillDataForTable_nguonnx();
     }
@@ -65,11 +62,14 @@ public class DonviController implements Initializable {
         setFactoryCell_for_Tcn();
     }
     private void setFactoryCell_for_Tcn() {
+        tc_stt.setSortable(false);
+        tc_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_property.getItems().indexOf(column.getValue())+1).asString());
         col_property_name.setCellValueFactory(new PropertyValueFactory<Tcn, String>("name"));
-        col_property_status.setCellValueFactory(new PropertyValueFactory<Tcn, String>("status"));
+        col_property_status.setCellValueFactory(new PropertyValueFactory<Tcn, String>("loaiphieu"));
     }
-
     private void setFactoryCell_for_Nguonnx() {
+        stt.setSortable(false);
+        stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_unit.getItems().indexOf(column.getValue())+1).asString());
         col_name_unit.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("nguonnx_name"));
         col_affilated.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("tentructhuoc"));
         nhomtructhuoc.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("nhomtructhuoc"));
@@ -87,7 +87,6 @@ public class DonviController implements Initializable {
     @FXML
     public void searchButtonUnit(ActionEvent actionEvent) {
     }
-
     @FXML
     public void addUnitAction(ActionEvent actionEvent){
         selectedUnit = tb_unit.getSelectionModel().getSelectedItem();
@@ -96,11 +95,17 @@ public class DonviController implements Initializable {
         fillDataForTable_nguonnx();
         tb_unit.refresh();
     }
-
     @FXML
     public void tb_tcn_clicked(MouseEvent mouseEvent) {
+        Tcn t = tb_property.getSelectionModel().getSelectedItem();
+        if(t!=null){
+            if (DialogMessage.callAlertWithMessage(null, "DELETE", "confirm delete: " + t.getName(), Alert.AlertType.WARNING) == ButtonType.OK){
+                tcnService.delete(t);
+                DialogMessage.message(null, "Success", "delete successfully" + t.getName(), Alert.AlertType.INFORMATION);
+                fillDataForTable_tcn();
+            }
+        }
     }
-
     @FXML
     public void unit_clicked(MouseEvent mouseEvent) throws IOException {
         if (mouseEvent.getClickCount()==2){

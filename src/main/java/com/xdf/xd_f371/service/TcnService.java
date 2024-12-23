@@ -22,6 +22,9 @@ public class TcnService {
     public Tcn save(Tcn tcn){
         return tcnRepo.save(tcn);
     }
+    public void delete(Tcn tcn){
+        tcnRepo.delete(tcn);
+    }
     public Optional<Tcn> findById(int id){
         return tcnRepo.findById(id);
     }

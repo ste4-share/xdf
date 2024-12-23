@@ -4,6 +4,7 @@ import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.TructhuocService;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -33,35 +34,22 @@ public class UnitDetailController implements Initializable {
         unit_name_tf.setText(DonviController.selectedUnit.getNguonnx_name());
         setTructhuocCombobox();
     }
-
     private void setTructhuocCombobox(){
-        tructhuoc_cbb.setItems(FXCollections.observableList(tructhuocService.findAll()));
-        tructhuoc_cbb.setConverter(new StringConverter<TrucThuoc>() {
-            @Override
-            public String toString(TrucThuoc trucThuoc) {
-                return trucThuoc==null ? "" : trucThuoc.getName();
-            }
-            @Override
-            public TrucThuoc fromString(String s) {
-                return tructhuocService.findById(tructhuoc_cbb.getValue().getId()).get();
-            }
-        });
-        tructhuoc_cbb.getSelectionModel().select(tructhuocService.findById(DonviController.selectedUnit.getTructhuoc_id()).orElseThrow(RuntimeException::new));
+        ComponentUtil.setItemsToComboBox(tructhuoc_cbb,tructhuocService.findAll(),TrucThuoc::getName, input->tructhuocService.findTructhuocByName(input));
+        tructhuoc_cbb.getSelectionModel().select(tructhuocService.findById(DonviController.selectedUnit.getTructhuoc_id()).orElse(null));
     }
-
     @FXML
     public void exitScreen(ActionEvent actionEvent) {
         DonviController.unit_stage.close();
     }
-
     @FXML
     public void saveUnit(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage("Thông báo", "Lưu thay đổi", "Xác nhận Lưu thay đổi?",Alert.AlertType.CONFIRMATION)== ButtonType.OK){
-            nguonNxService.save(new NguonNx(DonviController.selectedUnit.getNguonnx_id(),unit_name_tf.getText(),DonviController.selectedUnit.getStatus(),tructhuoc_cbb.getValue().getId()));
+            nguonNxService.save(new NguonNx(DonviController.selectedUnit.getNguonnx_id(),unit_name_tf.getText(),DonviController.selectedUnit.getStatus(),
+                    DonviController.selectedUnit.getCode(),tructhuoc_cbb.getValue().getId()));
             if (DialogMessage.callAlertWithMessage("Thông báo", "Thành công", "Đã lưu thay đổi",Alert.AlertType.INFORMATION)== ButtonType.OK){
                 DonviController.unit_stage.close();
             }
         }
     }
-
 }
