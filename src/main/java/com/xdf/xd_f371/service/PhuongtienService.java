@@ -5,14 +5,13 @@ import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.PhuongTien;
-import com.xdf.xd_f371.model.StatusEnum;
 import com.xdf.xd_f371.repo.DinhMucRepo;
 import com.xdf.xd_f371.repo.LoaiPhuongTienRepo;
 import com.xdf.xd_f371.repo.PhuongtienRepo;
-import jakarta.persistence.Column;
+import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
+import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +33,13 @@ public class PhuongtienService {
     public LoaiPhuongTien save(LoaiPhuongTien phuongTien){
         return loaiPhuongTienRepo.save(phuongTien);
     }
+    public List<LoaiPhuongTien> findAllLpt(){
+        return loaiPhuongTienRepo.findAll();
+    }
+    public LoaiPhuongTien findLptByName(String tn){
+        return loaiPhuongTienRepo.findLptByName(tn);
+    }
+
     public Optional<PhuongTien> findById(int id){
         return phuongtienRepo.findById(id);
     }
@@ -43,9 +49,23 @@ public class PhuongtienService {
     public Optional<PhuongTien> findPhuongTienByName(String name) {
         return phuongtienRepo.findPhuongTienByName(name);
     }
-    @Transactional
-    public DinhMuc savePt_DM(DinhMucPhuongTienDto pt, int nnx_id){
-        PhuongTien p = phuongtienRepo.save(new PhuongTien(pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
-        return dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId(),pt.getQuarter_id()));
+    public void savePt_DM(DinhMucPhuongTienDto pt, int nnx_id){
+        try {
+            if (pt.getPhuongtien_id()==0){
+                PhuongTien p = phuongtienRepo.save(new PhuongTien(pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
+                dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId(),pt.getQuarter_id()));
+            }else{
+                PhuongTien p = phuongtienRepo.save(new PhuongTien(pt.getPhuongtien_id(),pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
+                DinhMuc dm = dinhMucRepo.findDinhmucByPhuongtien(p.getId(),pt.getQuarter_id()).orElse(null);
+                if (dm!=null){
+                    dinhMucRepo.save(new DinhMuc(dm.getId(),pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId(),pt.getQuarter_id()));
+                } else {
+                    dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId(),pt.getQuarter_id()));
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            DialogMessage.message(null,null,"An error has occurred", Alert.AlertType.ERROR);
+        }
     }
 }

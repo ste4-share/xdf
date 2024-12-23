@@ -1,7 +1,6 @@
 package com.xdf.xd_f371.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +28,15 @@ public class PhuongTien {
     private String status;
 
     public PhuongTien(String name, int quantity, int nguonnx_id, int loaiphuongtien_id, String status) {
+        this.name = name;
+        this.quantity = quantity;
+        this.nguonnx_id = nguonnx_id;
+        this.loaiphuongtien_id = loaiphuongtien_id;
+        this.status = status;
+    }
+
+    public PhuongTien(int id, String name, int quantity, int nguonnx_id, int loaiphuongtien_id, String status) {
+        this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.nguonnx_id = nguonnx_id;

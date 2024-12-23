@@ -45,5 +45,13 @@ public class DinhMuc {
         this.quarter_id = quarter_id;
     }
 
-
+    public DinhMuc(int id, int dm_md_gio, int dm_tk_gio, int dm_xm_gio, int dm_xm_km, int phuongtien_id, int quarter_id) {
+        this.id = id;
+        this.dm_md_gio = dm_md_gio;
+        this.dm_tk_gio = dm_tk_gio;
+        this.dm_xm_gio = dm_xm_gio;
+        this.dm_xm_km = dm_xm_km;
+        this.phuongtien_id = phuongtien_id;
+        this.quarter_id = quarter_id;
+    }
 }
