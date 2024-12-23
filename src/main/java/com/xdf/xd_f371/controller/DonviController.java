@@ -98,11 +98,13 @@ public class DonviController implements Initializable {
     @FXML
     public void tb_tcn_clicked(MouseEvent mouseEvent) {
         Tcn t = tb_property.getSelectionModel().getSelectedItem();
-        if(t!=null){
-            if (DialogMessage.callAlertWithMessage(null, "DELETE", "confirm delete: " + t.getName(), Alert.AlertType.WARNING) == ButtonType.OK){
-                tcnService.delete(t);
-                DialogMessage.message(null, "Success", "delete successfully" + t.getName(), Alert.AlertType.INFORMATION);
-                fillDataForTable_tcn();
+        if (mouseEvent.getClickCount()==2){
+            if(t!=null){
+                if (DialogMessage.callAlertWithMessage(null, "DELETE", "confirm delete: " + t.getName(), Alert.AlertType.WARNING) == ButtonType.OK){
+//                    tcnService.delete(t);
+                    DialogMessage.message(null, "!@#$!!@#", ":)))))))" + t.getName(), Alert.AlertType.INFORMATION);
+                    fillDataForTable_tcn();
+                }
             }
         }
     }
