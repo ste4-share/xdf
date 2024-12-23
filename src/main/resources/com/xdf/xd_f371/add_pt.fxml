@@ -162,7 +162,7 @@
                   <Font name="Cambria Bold" size="16.0" />
                </font>
             </Label>
-            <ComboBox prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+            <ComboBox fx:id="cbb_loai" prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -174,16 +174,16 @@
       </HBox>
       <HBox prefHeight="48.0" prefWidth="600.0">
          <children>
-            <Label prefHeight="42.0" prefWidth="215.0" text="Trạng thái:">
+            <Label prefHeight="42.0" prefWidth="215.0" text="Trực thuộc:">
                <font>
                   <Font name="Cambria Bold" size="16.0" />
                </font>
             </Label>
-            <ComboBox prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ComboBox>
+            <Label fx:id="nnx_lb" layoutX="10.0" layoutY="10.0" prefHeight="42.0" prefWidth="215.0">
+               <font>
+                  <Font name="Cambria Bold" size="16.0" />
+               </font>
+            </Label>
          </children>
          <VBox.margin>
             <Insets left="10.0" top="10.0" />

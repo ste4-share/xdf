@@ -13,7 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class PhuongTien {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +27,14 @@ public class PhuongTien {
     private int loaiphuongtien_id;
     @Column(name = "status")
     private String status;
+
+    public PhuongTien(String name, int quantity, int nguonnx_id, int loaiphuongtien_id, String status) {
+        this.name = name;
+        this.quantity = quantity;
+        this.nguonnx_id = nguonnx_id;
+        this.loaiphuongtien_id = loaiphuongtien_id;
+        this.status = status;
+    }
 
     @OneToMany(mappedBy = "phuongTien", cascade = CascadeType.ALL)
     private List<DinhMuc> dinhmuc;

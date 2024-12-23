@@ -63,11 +63,14 @@ public class DinhMucPhuongTienController implements Initializable {
         Common.hoverButton(addBtn, "#ffffff");
     }
     private void initNguonnxCbb() {
-        ComponentUtil.setItemsToComboBox(units_cbb,nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()),NguonNx::getTen,input-> nguonNxService.findByTen(input).orElse(null));
-        units_cbb.getSelectionModel().selectFirst();
+        ComponentUtil.setItemsToComboBox(units_cbb,nguonNxService.findByAllBy(),NguonNx::getTen,input-> nguonNxService.findByTen(input).orElse(null));
+        units_cbb.getSelectionModel().selectLast();
     }
     private void fillDatatoptTable(String lpt) {
-        pt_tb.setItems(FXCollections.observableList(dinhmucService.findAllBy(DashboardController.findByTime.getId(), lpt)));
+        NguonNx dvi = units_cbb.getSelectionModel().getSelectedItem();
+        if (dvi!=null){
+            pt_tb.setItems(FXCollections.observableList(dinhmucService.findAllBy(DashboardController.findByTime.getId(), lpt,dvi.getId())));
+        }
     }
     private void setfactoryForTable(){
         xmt_name.setCellValueFactory(new PropertyValueFactory<NormDto, String>("name_pt"));
@@ -80,6 +83,7 @@ public class DinhMucPhuongTienController implements Initializable {
         tk.setCellValueFactory(new PropertyValueFactory<NormDto, String>("dm_tk_gio"));
     }
     public void selectUnit(ActionEvent actionEvent) {
+        fillDatatoptTable(dinhMucPhuongTienDto.getType());
     }
     @FXML
     public void addNewPt(ActionEvent actionEvent) throws IOException {
@@ -89,6 +93,8 @@ public class DinhMucPhuongTienController implements Initializable {
         dinhMucPhuongTienDto.setDm_xm_gio(0);
         dinhMucPhuongTienDto.setDm_xm_km(0);
         dinhMucPhuongTienDto.setPhuongtien_id(0);
+        dinhMucPhuongTienDto.setQuantity(0);
+        dinhMucPhuongTienDto.setNnx_id(units_cbb.getSelectionModel().getSelectedItem().getId());
         openAddScreen();
         fillDatatoptTable(dinhMucPhuongTienDto.getType());
     }
@@ -108,7 +114,9 @@ public class DinhMucPhuongTienController implements Initializable {
     public void pt_selected(MouseEvent mouseEvent) throws IOException {
         if (mouseEvent.getClickCount()==2){
             dinhMucPhuongTienDto = pt_tb.getSelectionModel().getSelectedItem();
-            openAddScreen();
+            if (dinhMucPhuongTienDto!=null){
+                openAddScreen();
+            }
         }
     }
     private void openAddScreen(){

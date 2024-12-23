@@ -62,17 +62,20 @@
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="units_cbb" disable="true" onAction="#selectUnit" prefHeight="39.0" prefWidth="313.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                  <ComboBox fx:id="units_cbb" onAction="#selectUnit" prefHeight="39.0" prefWidth="313.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></ComboBox>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="101.0" style="-fx-background-radius: 25;" text="Chuyển đổi">
+                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="101.0" style="-fx-border-radius: 10; -fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="Chuyển đổi">
                      <HBox.margin>
                         <Insets left="35.0" />
                      </HBox.margin>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Cambria Bold" size="14.0" />
+                     </font>
                   </Button>
                </children>
             </HBox>

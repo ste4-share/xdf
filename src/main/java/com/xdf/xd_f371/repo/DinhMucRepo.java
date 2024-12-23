@@ -14,8 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface DinhMucRepo extends JpaRepository<DinhMuc, Integer> {
-    @Query("select new com.xdf.xd_f371.dto.DinhMucPhuongTienDto(d.id, q.id, p.id, lpt.id, d.dm_md_gio,d.dm_tk_gio, d.dm_xm_gio,d.dm_xm_km,q.name,q.start_date,q.end_date,p.name,p.quantity,lpt.typeName,lpt.type) from DinhMuc d join d.phuongTien p join p.loaiPhuongTien lpt join d.quarter q where q.id=:qid and lpt.type like :type_pt")
-    List<DinhMucPhuongTienDto> findAllBy(@Param("qid") int quarter_id,@Param("type_pt") String type);
+    @Query("select new com.xdf.xd_f371.dto.DinhMucPhuongTienDto(d.id, q.id, p.id, lpt.id, d.dm_md_gio,d.dm_tk_gio, d.dm_xm_gio,d.dm_xm_km,q.name,q.start_date,q.end_date," +
+            "p.name,p.quantity,lpt.typeName,lpt.type) from DinhMuc d join d.phuongTien p join p.loaiPhuongTien lpt " +
+            "join d.quarter q where q.id=:qid and lpt.type like :type_pt and p.nguonnx_id=:dvi_id")
+    List<DinhMucPhuongTienDto> findAllBy(@Param("qid") int quarter_id,@Param("type_pt") String type,@Param("dvi_id") int dvid);
     @Query("select d from PhuongTien p join p.dinhmuc d where d.quarter_id=:quarter_id and d.phuongtien_id=:pt_id")
     Optional<DinhMuc> findDinhmucByPhuongtien(@Param("pt_id") int pt_id, @Param("quarter_id") int quarter_id);
 }
