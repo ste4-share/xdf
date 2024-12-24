@@ -63,34 +63,15 @@ public class NhiemvuController implements Initializable {
         initQuarterCbb();
         donvi.setItems(FXCollections.observableList(List.of("F bộ")));
         donvi.getSelectionModel().selectFirst();
-        inithanmucTb();
-        initNvTb();
         initDviTb();
-        initHanmucNhiemvuTaubay();
+        initNvTable();
+        initNhiemvuTaubay();
+        initHanmuc();
 
+        inithanmucCellFactory();
+        initNvCellFactory();
+        initHanmucNhiemvuTaubayCellFactory();
     }
-    private void setScreen(){
-        ctnv_pt.setPrefWidth(DashboardController.screenWidth);
-        ctnv_pt.setPrefHeight(DashboardController.screenHeigh-300);
-        nv_tb.setPrefWidth(DashboardController.screenWidth);
-        nv_tb.setPrefHeight(DashboardController.screenHeigh-300);
-        tieuthunhiemvu.setPrefWidth(DashboardController.screenWidth);
-        tieuthunhiemvu.setPrefHeight(DashboardController.screenHeigh-300);
-    }
-    private void initHanmucNhiemvuTaubay() {
-        ctnv_pt.setItems(FXCollections.observableList(hanmucNhiemvuService.getAllBy()));
-        t2_tt1.setSortable(false);
-        t2_tt1.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_pt.getItems().indexOf(column.getValue())+1).asString());
-        dvi_x.setCellValueFactory(new PropertyValueFactory<>("donvi"));
-        t2_pt.setCellValueFactory(new PropertyValueFactory<>("tenpt"));
-        t2_nv_2.setCellValueFactory(new PropertyValueFactory<>("nhiemvu"));
-        ct_nv_2.setCellValueFactory(new PropertyValueFactory<>("ct_nhiemvu"));
-        t2_tk_2.setCellValueFactory(new PropertyValueFactory<>("tk"));
-        t2_md_2.setCellValueFactory(new PropertyValueFactory<>("md"));
-        t2_nl_2.setCellValueFactory(new PropertyValueFactory<>("nhienlieu"));
-        ctnv_pt.refresh();
-    }
-
     @FXML
     public void nhiemvu_selected(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount()==2){
@@ -104,7 +85,7 @@ public class NhiemvuController implements Initializable {
     public void addhanmucxangdau(ActionEvent actionEvent) {
         nvStage = new Stage();
         Common.openNewStage("addnew_nvhanmuc.fxml", nvStage,"HANMUC");
-        inithanmucTb();
+        initHanmuc();
     }
     @FXML
     public void chitieunvSelected(MouseEvent mouseEvent) {
@@ -119,9 +100,23 @@ public class NhiemvuController implements Initializable {
     public void addnewpt_nvbay(ActionEvent actionEvent) {
         nvStage = new Stage();
         Common.openNewStage("add_hanmuc_pt_taubay.fxml", nvStage,"FORM");
-        initHanmucNhiemvuTaubay();
+        initNhiemvuTaubay();
     }
-
+    @FXML
+    public void addNvAction(ActionEvent actionEvent) {
+        nvStage = new Stage();
+        Common.openNewStage("add_nv.fxml", nvStage,null);
+        initNvTable();
+    }
+    private void initNvTable(){
+        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllBy()));
+    }
+    private void initNhiemvuTaubay(){
+        ctnv_pt.setItems(FXCollections.observableList(hanmucNhiemvuService.getAllBy()));
+    }
+    private void initHanmuc(){
+        tieuthunhiemvu.setItems(FXCollections.observableList(hanmucNhiemvuService.findAllDto()));
+    }
     private void initDviTb() {
         ComponentUtil.setItemsToComboBox(dvi_cbb,nguonNxService.findByAllBy(),NguonNx::getTen,input->nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
@@ -130,25 +125,36 @@ public class NhiemvuController implements Initializable {
         ComponentUtil.setItemsToComboBox(quy_cbb,quarterService.findAll(),Quarter::getName,input->quarterService.findByName(input).orElse(null));
         quy_cbb.getSelectionModel().selectFirst();
     }
-    private void initNvTb() {
-        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllDtoBy(LoaiNVCons.HAOHUT.getName())));
+    private void initNvCellFactory() {
         tennv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_nv"));
         ctnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("chitiet"));
         lnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_loai_nv"));
         khoi.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("khoi"));
     }
-
-    private void inithanmucTb() {
-        tieuthunhiemvu.setItems(FXCollections.observableList(hanmucNhiemvuService.findAllDto()));
+    private void inithanmucCellFactory() {
         nv.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("tenNv"));
         ct.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("chitiet_nhiemvu"));
         xang.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("xang"));
         diezel.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("diezel"));
         daubay.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("daubay"));
-        tieuthunhiemvu.refresh();
     }
-
-    @FXML
-    public void addnv(ActionEvent actionEvent) {
+    private void initHanmucNhiemvuTaubayCellFactory() {
+        t2_tt1.setSortable(false);
+        t2_tt1.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ctnv_pt.getItems().indexOf(column.getValue())+1).asString());
+        dvi_x.setCellValueFactory(new PropertyValueFactory<>("donvi"));
+        t2_pt.setCellValueFactory(new PropertyValueFactory<>("tenpt"));
+        t2_nv_2.setCellValueFactory(new PropertyValueFactory<>("nhiemvu"));
+        ct_nv_2.setCellValueFactory(new PropertyValueFactory<>("ct_nhiemvu"));
+        t2_tk_2.setCellValueFactory(new PropertyValueFactory<>("tk"));
+        t2_md_2.setCellValueFactory(new PropertyValueFactory<>("md"));
+        t2_nl_2.setCellValueFactory(new PropertyValueFactory<>("nhienlieu"));
+    }
+    private void setScreen(){
+        ctnv_pt.setPrefWidth(DashboardController.screenWidth);
+        ctnv_pt.setPrefHeight(DashboardController.screenHeigh-300);
+        nv_tb.setPrefWidth(DashboardController.screenWidth);
+        nv_tb.setPrefHeight(DashboardController.screenHeigh-300);
+        tieuthunhiemvu.setPrefWidth(DashboardController.screenWidth);
+        tieuthunhiemvu.setPrefHeight(DashboardController.screenHeigh-300);
     }
 }

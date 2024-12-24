@@ -56,7 +56,10 @@ public class AddNvController implements Initializable {
     @FXML
     public void addAction(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
-            nhiemvuService.findAll();
+            nhiemvuService.saveNhiemvu(cbb_team.getSelectionModel().getSelectedItem().getId(),nv.getText(),lnv_tf.getText(),ct.getText());
+            DialogMessage.message(null, "Them thanh cong",
+                    "Thanh cong", Alert.AlertType.INFORMATION);
+            NhiemvuController.nvStage.close();
         }
     }
     @FXML

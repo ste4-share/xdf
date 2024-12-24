@@ -7,6 +7,8 @@ import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.service.LoaiXdService;
 import com.xdf.xd_f371.service.QuarterService;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,6 +28,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Common {
@@ -71,5 +74,24 @@ public class Common {
     }
     public static boolean isNumber(String in) {
         return in.matches("[^0A-Za-z][0-9]{0,18}");
+    }
+    public static void task(Runnable task_call,Runnable success,Runnable fail) {
+        Task<Void> loadingTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                task_call.run();
+                return null;
+            }
+            @Override
+            protected void succeeded() {
+                success.run();
+            }
+            @Override
+            protected void failed() {
+                fail.run();
+            }
+        };
+        // Start loading task in the background
+        new Thread(loadingTask).start();
     }
 }

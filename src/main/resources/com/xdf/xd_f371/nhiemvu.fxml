@@ -57,7 +57,7 @@
                         </TableView>
                         <HBox alignment="TOP_RIGHT">
                            <children>
-                              <Button fx:id="addnv_btn" mnemonicParsing="false" onAction="#addnv" prefHeight="43.0" prefWidth="81.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Thêm">
+                              <Button fx:id="addnv_btn" mnemonicParsing="false" onAction="#addNvAction" prefHeight="43.0" prefWidth="81.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Thêm">
                                  <HBox.margin>
                                     <Insets top="10.0" />
                                  </HBox.margin>

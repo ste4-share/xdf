@@ -60,6 +60,7 @@ public class ConnectLan implements Initializable {
         conn_status.setText("-----");
         // Load saved credentials if available
         loadCredentials(username,ip,port, passwd, ck_save);
+        connect.requestFocus();
     }
 
     @FXML

@@ -52,30 +52,25 @@ public class MainApplicationApp extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        Task<Void> loadingTask = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                // Simulate loading by sleeping for a few seconds
-                Thread.sleep(3000);  // Simulating loading time (e.g., 3 seconds)
-                return null;
-            }
-            @Override
-            protected void succeeded() {
-                // Once the task is finished, close the splash screen and show the main UI
-                Platform.runLater(() -> {
-                    primaryStage.close();  // Close splash screen
-                    try {
-                        showMainUI(stage);  // Show main UI
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-        };
-        // Start loading task in the background
-        new Thread(loadingTask).start();
+        Common.task(this::sleep3Second,
+                ()->showLogin(primaryStage),
+                ()->DialogMessage.message("Error", "An unexpected error occurred","An unexpected error has occurred", Alert.AlertType.ERROR));}
+    private void showLogin(Stage pro){
+        pro.close();  // Close splash screen
+        try {
+            showMainUI(pro);  // Show main UI
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+    private void sleep3Second(){
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public void stop() {
