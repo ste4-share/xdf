@@ -12,11 +12,8 @@ import com.xdf.xd_f371.repo.ChitietNhiemvuRepo;
 import com.xdf.xd_f371.repo.LoaiNhiemvuRepo;
 import com.xdf.xd_f371.repo.NhiemvuRepository;
 import com.xdf.xd_f371.repo.TeamRepo;
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -82,18 +79,17 @@ public class ChitietNhiemvuService {
     public List<NhiemvuTeamDto> findByTeam(){
         return nhiemvuRepository.findByTeam();
     }
-
     public void saveNhiemvu(int team_id, String nv, String lnv,String ct){
         Optional<LoaiNhiemVu> l = findLoaiNvByName(lnv);
         if (l.isPresent()){
             Optional<NhiemVu> n_v = nhiemvuRepository.findByName(nv);
             if (n_v.isPresent()){
                 chitietNhiemvuRepo.save(new ChitietNhiemVu(n_v.get().getId(),n_v.get().getTenNv()));
-            }else{
+            } else {
                 NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,l.get().getId(),99,99));
                 chitietNhiemvuRepo.save(new ChitietNhiemVu(n.getId(),n.getTenNv()));
             }
-        }else{
+        } else {
             LoaiNhiemVu new_lnv = loaiNhiemvuRepo.save(new LoaiNhiemVu(lnv));
             NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,new_lnv.getId(),99,99));
             chitietNhiemvuRepo.save(new ChitietNhiemVu(n.getId(),n.getTenNv()));

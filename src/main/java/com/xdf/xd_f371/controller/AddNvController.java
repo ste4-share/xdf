@@ -1,7 +1,6 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.LoaiNhiemVu;
-import com.xdf.xd_f371.entity.NhiemVu;
 import com.xdf.xd_f371.entity.Team;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.util.Common;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 @Component
 public class AddNvController implements Initializable {
@@ -33,7 +31,6 @@ public class AddNvController implements Initializable {
         initTeam();
         initLoaiNv();
     }
-
     private void initLoaiNv() {
         Common.setHint(lnv_tf,nhiemvuService.getAllLoaiNv().stream().map(LoaiNhiemVu::getTask_name).toList());
     }
@@ -41,7 +38,6 @@ public class AddNvController implements Initializable {
         ComponentUtil.setItemsToComboBox(cbb_team,nhiemvuService.findAllTeam(),Team::getTeam_code,input-> nhiemvuService.findByCode(input));
         cbb_team.getSelectionModel().selectFirst();
     }
-
     @FXML
     public void teamAction(ActionEvent actionEvent) {
     }
@@ -60,7 +56,7 @@ public class AddNvController implements Initializable {
     @FXML
     public void addAction(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
-            nhiemvuService.findAll()
+            nhiemvuService.findAll();
         }
     }
     @FXML

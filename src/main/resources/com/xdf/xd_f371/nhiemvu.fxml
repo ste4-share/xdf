@@ -107,8 +107,8 @@
                               </HBox>
                               <TableView fx:id="ctnv_pt" onMouseClicked="#chitieunvSelected" style="-fx-background-color: #ffffff;" stylesheets="@css/table_style.css">
                                  <columns>
-                                    <TableColumn fx:id="t2_tt1" prefWidth="33.0" text="TT" />
-                                    <TableColumn fx:id="dvi_x" prefWidth="150.0" text="Đơn vị" />
+                                    <TableColumn fx:id="t2_tt1" prefWidth="41.0" text="TT" />
+                                    <TableColumn fx:id="dvi_x" prefWidth="148.0" text="Đơn vị" />
                                     <TableColumn fx:id="t2_pt" prefWidth="150.0" text="Phương tiện" />
                                     <TableColumn fx:id="t2_nv_2" prefWidth="150.0" text="Nhiệm vụ" />
                                     <TableColumn fx:id="ct_nv_2" prefWidth="162.0" text="Chi tiết nhiệm vụ" />
