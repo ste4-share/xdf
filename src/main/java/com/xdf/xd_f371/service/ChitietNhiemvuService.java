@@ -32,7 +32,9 @@ public class ChitietNhiemvuService {
     public List<NhiemVuDto> findAllBy(){
         return chitietNhiemvuRepo.findAllBy();
     }
-
+    public Optional<NhiemVuDto> findByTenNhiemvuDto(String tennv){
+        return chitietNhiemvuRepo.findByTenNv(tennv);
+    }
     public List<NhiemVuDto> findAllDtoById(String lnv){
         return chitietNhiemvuRepo.findAllDtoById(lnv);
     }

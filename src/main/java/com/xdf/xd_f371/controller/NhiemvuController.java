@@ -27,6 +27,8 @@ import java.util.ResourceBundle;
 @Component
 public class NhiemvuController implements Initializable {
     public static Stage nvStage;
+    public static HanmucNhiemvuTaubayDto hm = new HanmucNhiemvuTaubayDto();
+    public static HanmucNhiemvu2Dto hm2 = new HanmucNhiemvu2Dto();
     @Autowired
     private QuarterService quarterService;
     @Autowired
@@ -72,7 +74,6 @@ public class NhiemvuController implements Initializable {
     @FXML
     public void nhiemvu_selected(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount()==2){
-
         }
     }
     @FXML
@@ -85,18 +86,19 @@ public class NhiemvuController implements Initializable {
     @FXML
     public void dviSelected(ActionEvent actionEvent) {
         if (dvi_cbb.getSelectionModel().getSelectedItem()!=null) {
-
         }
     }
     @FXML
     public void chitieunvSelected(MouseEvent mouseEvent) {
-        HanmucNhiemvuTaubayDto hm = ctnv_pt.getSelectionModel().getSelectedItem();
+        hm = ctnv_pt.getSelectionModel().getSelectedItem();
         if (hm!=null){
-
+            openAddChitieuForm();
         }
     }
     @FXML
     public void addchitieuBay(ActionEvent actionEvent) {
+        hm = null;
+        openAddChitieuForm();
     }
     @FXML
     public void addNvAction(ActionEvent actionEvent) {
@@ -104,6 +106,12 @@ public class NhiemvuController implements Initializable {
         nvStage.initStyle(StageStyle.UTILITY);
         Common.openNewStage("add_nv.fxml", nvStage,null);
         initNvTable();
+    }
+    private void openAddChitieuForm(){
+        nvStage = new Stage();
+        nvStage.initStyle(StageStyle.UTILITY);
+        Common.openNewStage("add_chitieunv.fxml", nvStage,null);
+        initNhiemvuTaubay();
     }
     private void initNvTable(){
         nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllBy()));
@@ -148,7 +156,7 @@ public class NhiemvuController implements Initializable {
         ct_nv_2.setCellValueFactory(new PropertyValueFactory<>("ct_nhiemvu"));
         t2_tk_2.setCellValueFactory(new PropertyValueFactory<>("tk"));
         t2_md_2.setCellValueFactory(new PropertyValueFactory<>("md"));
-        t2_nl_2.setCellValueFactory(new PropertyValueFactory<>("nhienlieu"));
+        t2_nl_2.setCellValueFactory(new PropertyValueFactory<>("nhienlieu_str"));
     }
     private void setScreen(){
         ctnv_pt.setPrefWidth(DashboardController.screenWidth);

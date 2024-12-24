@@ -28,4 +28,6 @@ public interface ChitietNhiemvuRepo extends JpaRepository<ChitietNhiemVu, Intege
     List<ChitietNhiemVuDto> findAllByLoaiNv(@Param("loainv") int loainv_id,@Param("loainv1") int loainv_id1);
     @Query("select new com.xdf.xd_f371.dto.ChitietNhiemVuDto(n.id,ct.id,n.tenNv,ct.nhiemvu) from ChitietNhiemVu ct join ct.nhiemVu n where ct.nhiemvu like :tennv")
     Optional<ChitietNhiemVuDto> findByTenNhiemvu(@Param("tennv") String tennv);
+    @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where ct.nhiemvu like :chitiet")
+    Optional<NhiemVuDto> findByTenNv(@Param("chitiet") String tennv);
 }

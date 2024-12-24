@@ -1,0 +1,30 @@
+/* Default Button Style */
+.button {
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058); /* Gradient background */
+    -fx-text-fill: white; /* Text color */
+    -fx-font-family: "Cambria"; /* Font family */
+    -fx-font-size: 16px; /* Font size */
+    -fx-font-weight: bold; /* Font weight */
+    -fx-padding: 10 20; /* Padding */
+    -fx-border-radius: 5; /* Rounded corners for border */
+    -fx-background-radius: 5; /* Rounded corners for background */
+    -fx-border-color: #2A5058; /* Border color */
+    -fx-border-width: 2; /* Border width */
+}
+
+/* Hover Effect */
+.button:hover {
+    -fx-background-color: linear-gradient(#3c8dad, #275a65); /* Darker gradient on hover */
+}
+
+/* Pressed Effect */
+.button:pressed {
+    -fx-background-color: linear-gradient(#275a65, #3c8dad); /* Reverse gradient on press */
+    -fx-padding: 11 21 9 19; /* Slightly adjust padding for pressed effect */
+}
+
+/* Disabled Button */
+.button:disabled {
+    -fx-background-color: #cccccc; /* Light gray background */
+    -fx-text-fill: #aaaaaa; /* Gray text color */
+}

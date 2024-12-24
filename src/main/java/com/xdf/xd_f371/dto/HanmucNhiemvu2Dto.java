@@ -1,11 +1,12 @@
 package com.xdf.xd_f371.dto;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class HanmucNhiemvu2Dto {
     private int id;
     private int quarter_id;

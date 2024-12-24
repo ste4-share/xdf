@@ -8,70 +8,162 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<HBox xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.AddNewChitieuNvForm">
+
+<VBox prefHeight="375.0" prefWidth="397.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.AddNewChitieuNvForm">
    <children>
-      <VBox prefHeight="170.0" prefWidth="469.0">
+      <HBox alignment="CENTER" layoutX="20.0" layoutY="20.0" style="-fx-background-color: #a8a8a8;">
          <children>
-            <HBox prefHeight="64.0" prefWidth="615.0" />
-            <HBox layoutX="10.0" layoutY="10.0">
-               <children>
-                  <Label prefHeight="24.0" prefWidth="150.0" text="Đơn vị:" />
-                  <ComboBox fx:id="dvi_cmb" prefHeight="25.0" prefWidth="177.0" />
-               </children>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="74.0">
-               <children>
-                  <Label prefHeight="24.0" prefWidth="150.0" text="Nhiệm vụ:" />
-                  <ComboBox fx:id="nv_cmb" prefHeight="25.0" prefWidth="177.0" />
-               </children>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="109.0">
-               <children>
-                  <Label prefHeight="24.0" prefWidth="150.0" text="Giờ bay trên không:" />
-                  <TextField fx:id="tk" />
-               </children>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="144.0">
-               <children>
-                  <Label prefHeight="24.0" prefWidth="150.0" text="Giờ bay mặt đất:" />
-                  <TextField fx:id="md" />
-               </children>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="169.0">
-               <children>
-                  <Label prefHeight="24.0" prefWidth="150.0" text="Nhiên liệu" />
-                  <TextField fx:id="nl" />
-               </children>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="194.0">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </HBox>
-            <Button mnemonicParsing="false" onAction="#savechitieu" text="save" />
+            <Label alignment="CENTER" prefHeight="24.0" prefWidth="213.0" text="Thêm Chỉ tiêu - Nhiệm vụ bay" textFill="WHITE">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
          </children>
-      </VBox>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </HBox>
+      <HBox>
+         <children>
+            <Label prefHeight="38.0" prefWidth="150.0" text="Đơn vị:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="dvi_cmb" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ComboBox>
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox>
+         <children>
+            <Label prefHeight="38.0" prefWidth="150.0" text="Nhiệm vụ bay:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="nv_cmb" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ComboBox>
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox layoutX="20.0" layoutY="94.0">
+         <children>
+            <Label prefHeight="38.0" prefWidth="150.0" text="Phương tiện:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="pt_cbb" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ComboBox>
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox>
+         <children>
+            <Label prefHeight="38.0" prefWidth="150.0" text="Giờ bay trên không:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tk" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 10;" />
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox>
+         <children>
+            <Label prefHeight="38.0" prefWidth="150.0" text="Giờ bay mặt đất:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="md" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 10;" />
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox>
+         <children>
+            <Label prefHeight="38.0" prefWidth="150.0" text="Nhiên liệu:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="nl" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 10;" />
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <children>
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#savechitieu" prefHeight="36.0" prefWidth="76.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Lưu">
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER" layoutX="158.0" layoutY="10.0" mnemonicParsing="false" onAction="#savechitieu" prefHeight="36.0" prefWidth="76.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Hủy">
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
    </children>
-</HBox>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" />
+   </padding>
+</VBox>

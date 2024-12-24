@@ -36,4 +36,10 @@ public class DialogMessage {
         Optional<ButtonType> result = alert.showAndWait();
         return result.get();
     }
+    public static void errorShowing(String m){
+        DialogMessage.callAlertWithMessage(null, null, "Something stills wrong! \n"+m, Alert.AlertType.WARNING);
+    }
+    public static void successShowing(){
+        DialogMessage.callAlertWithMessage(null, "Thanh cong",null , Alert.AlertType.WARNING);
+    }
 }

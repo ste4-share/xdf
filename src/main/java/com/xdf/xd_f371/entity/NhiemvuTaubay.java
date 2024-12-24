@@ -39,6 +39,17 @@ public class NhiemvuTaubay {
         this.nhienlieu = nhienlieu;
     }
 
+    public NhiemvuTaubay(int id, int dviXuatId, int pt_id, int ctnv_id, int quy_id, String tk, String md, Long nhienlieu) {
+        this.id = id;
+        this.dviXuatId = dviXuatId;
+        this.pt_id = pt_id;
+        this.ctnv_id = ctnv_id;
+        this.quy_id = quy_id;
+        this.tk = tk;
+        this.md = md;
+        this.nhienlieu = nhienlieu;
+    }
+
     @ManyToOne
     @JoinColumn(name = "ctnv_id", referencedColumnName = "id", insertable = false, updatable = false)
     private ChitietNhiemVu chitietNhiemVu;

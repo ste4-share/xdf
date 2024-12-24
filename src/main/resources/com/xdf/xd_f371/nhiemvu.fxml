@@ -112,15 +112,15 @@
                         <TableView fx:id="ctnv_pt" onMouseClicked="#chitieunvSelected" style="-fx-background-color: #ffffff;" stylesheets="@css/table_style.css">
                            <columns>
                               <TableColumn fx:id="stt_2" maxWidth="50.0" prefWidth="50.0" resizable="false" text="TT" />
-                              <TableColumn fx:id="dvi_x" maxWidth="150.0" prefWidth="150.0" resizable="false" text="Đơn vị" />
-                              <TableColumn fx:id="t2_pt" maxWidth="150.0" prefWidth="150.0" resizable="false" text="Phương tiện" />
-                              <TableColumn fx:id="t2_nv_2" maxWidth="175.0" prefWidth="175.0" resizable="false" text="Nhiệm vụ" />
-                              <TableColumn fx:id="ct_nv_2" maxWidth="175.0" prefWidth="175.0" resizable="false" text="Chi tiết nhiệm vụ" />
+                              <TableColumn fx:id="dvi_x" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Đơn vị" />
+                              <TableColumn fx:id="t2_pt" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Phương tiện" />
+                              <TableColumn fx:id="t2_nv_2" maxWidth="175.0" minWidth="150.0" prefWidth="175.0" text="Nhiệm vụ" />
+                              <TableColumn fx:id="ct_nv_2" minWidth="150.0" prefWidth="175.0" text="Chi tiết nhiệm vụ" />
                               <TableColumn prefWidth="162.0" text="Chi tiết nhiệm vụ">
                                  <columns>
-                                    <TableColumn fx:id="t2_tk_2" maxWidth="500.0" prefWidth="162.0" text="Trên không" />
-                                    <TableColumn fx:id="t2_md_2" maxWidth="500.0" prefWidth="162.0" text="Mặt đất" />
-                                    <TableColumn fx:id="t2_nl_2" maxWidth="500.0" prefWidth="162.0" text="Nhiên liệu" />
+                                    <TableColumn fx:id="t2_tk_2" minWidth="150.0" prefWidth="38.0" text="Trên không" />
+                                    <TableColumn fx:id="t2_md_2" minWidth="150.0" prefWidth="172.0" text="Mặt đất" />
+                                    <TableColumn fx:id="t2_nl_2" minWidth="150.0" prefWidth="162.0" text="Nhiên liệu" />
                                  </columns>
                               </TableColumn>
                            </columns>
@@ -237,33 +237,33 @@
                         <TableView fx:id="tieuthunhiemvu" onMouseClicked="#nhiemvu_selected" stylesheets="@css/table_style.css">
                            <columns>
                               <TableColumn fx:id="stt_3" maxWidth="50.0" prefWidth="50.0" resizable="false" text="TT" />
-                              <TableColumn fx:id="nv" maxWidth="175.0" prefWidth="175.0" resizable="false" text="Nhiệm vụ" />
+                              <TableColumn fx:id="nv" maxWidth="175.0" minWidth="150.0" prefWidth="175.0" resizable="false" text="Nhiệm vụ" />
                               <TableColumn fx:id="ct" maxWidth="175.0" minWidth="150.0" prefWidth="175.0" resizable="false" text="Chi tiết nhiệm vụ" />
                               <TableColumn fx:id="khoi1111" prefWidth="712.0" text="Hạn mức được QC cấp">
                                  <columns>
-                                    <TableColumn prefWidth="113.0" text="Xăng" fx:id="xang" />
-                                    <TableColumn fx:id="diezel" prefWidth="116.0" text="Diezel" />
-                                    <TableColumn fx:id="daubay" prefWidth="117.0" text="Dầu bay" />
-                                    <TableColumn fx:id="cong" prefWidth="134.0" text="Cộng" />
+                                    <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Xăng" fx:id="xang" />
+                                    <TableColumn fx:id="diezel" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Diezel" />
+                                    <TableColumn fx:id="daubay" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Dầu bay" />
+                                    <TableColumn fx:id="cong" maxWidth="100.0" minWidth="100.0" prefWidth="110.0" text="Cộng" />
                                  </columns>
                               </TableColumn>
                               <TableColumn fx:id="khoi11111" prefWidth="584.0" text="Hoạt động xe,máy">
                                  <columns>
                                     <TableColumn fx:id="khoi111" prefWidth="242.0" text="Xe, máy chạy xăng">
                                        <columns>
-                                          <TableColumn text="Km" fx:id="xang_km" />
-                                          <TableColumn prefWidth="92.0" text="Giờ" fx:id="xang_gio" />
+                                          <TableColumn maxWidth="75.0" minWidth="75.0" prefWidth="75.0" text="Km" fx:id="xang_km" />
+                                          <TableColumn maxWidth="75.0" minWidth="75.0" prefWidth="75.0" text="Giờ" fx:id="xang_gio" />
                                        </columns>
                                     </TableColumn>
                                     <TableColumn fx:id="khoi11" prefWidth="334.0" text="Xe máy chạy DO">
                                        <columns>
-                                          <TableColumn fx:id="do_km" prefWidth="68.0" text="Km" />
-                                          <TableColumn fx:id="do_gio" prefWidth="92.0" text="Giờ" />
+                                          <TableColumn fx:id="do_km" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" text="Km" />
+                                          <TableColumn fx:id="do_gio" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" text="Giờ" />
                                        </columns>
                                     </TableColumn>
                                     <TableColumn fx:id="khoi112" prefWidth="144.0" text="NLPL">
                                        <columns>
-                                          <TableColumn fx:id="nlpl_gio" prefWidth="108.0" text="Giờ" />
+                                          <TableColumn fx:id="nlpl_gio" minWidth="75.0" prefWidth="75.0" text="Giờ" />
                                        </columns>
                                     </TableColumn>
                                  </columns>

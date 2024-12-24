@@ -35,4 +35,7 @@ public class HanmucNhiemvuService {
     public List<NguonNx> getAllDviTructhuocByTaubay(int taubayId, int quyID){
         return hanmucNhiemvuTauBayRepo.getAllDviTructhuocByTaubay(taubayId,quyID);
     }
+    public NhiemvuTaubay saveHm(HanmucNhiemvuTaubayDto hm){
+        return hanmucNhiemvuTauBayRepo.save(new NhiemvuTaubay());
+    }
 }
