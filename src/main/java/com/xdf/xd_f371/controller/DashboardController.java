@@ -263,7 +263,6 @@ public class DashboardController implements Initializable {
         try {
             HBox hBox = (HBox) getNodeBySource(fxml);
             borderpane_base.setCenter(hBox);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

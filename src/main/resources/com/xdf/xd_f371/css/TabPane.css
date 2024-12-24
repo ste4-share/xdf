@@ -1,0 +1,4 @@
+.tab-pane .tab-label {
+    -fx-font-family: "Cambria"; /* Set the font family to Cambria */
+    -fx-font-size: 16px;        /* Optional: Set font size */
+}

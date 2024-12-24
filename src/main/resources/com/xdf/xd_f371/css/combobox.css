@@ -1,0 +1,11 @@
+/* Set font for the ComboBox displayed text */
+.combo-box .list-cell {
+    -fx-font-family: "Cambria"; /* Set font family */
+    -fx-font-size: 14px;        /* Set font size */
+}
+
+/* Set font for the selected text in the ComboBox */
+.combo-box .text {
+    -fx-font-family: "Cambria"; /* Set font family */
+    -fx-font-size: 14px;        /* Set font size */
+}
