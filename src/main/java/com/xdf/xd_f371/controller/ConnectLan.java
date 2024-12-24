@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.service.AccountService;
 import com.xdf.xd_f371.service.ConnectionService;
@@ -14,14 +13,11 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -78,7 +74,7 @@ public class ConnectLan implements Initializable {
                     pre_acc = acc.get();
                     primaryStage = new Stage();
                     Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371");
-                    MainApplicationApp.rootStage.close();
+                    InitProgressBar.stage.close();
                 }else{
                     DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
                             "Đăng nhập không thành công", Alert.AlertType.INFORMATION);
@@ -123,7 +119,7 @@ public class ConnectLan implements Initializable {
     }
     @FXML
     public void exit(ActionEvent actionEvent) {
-        MainApplicationApp.rootStage.close();
+        InitProgressBar.stage.close();
     }
     @FXML
     public void checkConnection(ActionEvent actionEvent) {

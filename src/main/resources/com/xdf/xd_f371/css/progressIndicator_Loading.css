@@ -1,0 +1,8 @@
+.transparent-progress-indicator .progress-bar {
+    -fx-background-color: transparent; /* Hide background circle */
+}
+
+.transparent-progress-indicator {
+    -fx-background-color: transparent; /* Hide outer background */
+    -fx-padding: 0; /* Remove padding if any */
+}

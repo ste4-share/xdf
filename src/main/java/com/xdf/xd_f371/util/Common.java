@@ -12,9 +12,8 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -75,7 +74,7 @@ public class Common {
     public static boolean isNumber(String in) {
         return in.matches("[^0A-Za-z][0-9]{0,18}");
     }
-    public static void task(Runnable task_call,Runnable success,Runnable fail) {
+    public static void task(Runnable task_call,Runnable success) {
         Task<Void> loadingTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -88,10 +87,37 @@ public class Common {
             }
             @Override
             protected void failed() {
-                fail.run();
+                DialogMessage.message("Error", "An unexpected error occurred","An unexpected error has occurred", Alert.AlertType.ERROR);
             }
         };
         // Start loading task in the background
         new Thread(loadingTask).start();
+    }
+    public static void LoadingUI(Stage primaryStage){
+        // Create the ProgressIndicator
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+
+        // Set the style for ProgressIndicator to make it background transparent
+        progressIndicator.setStyle(
+                "-fx-background-color: transparent;"   // Remove the background color
+                        + "-fx-progress-color: #da0b0b;"         // Set the progress color (customize as needed)
+                        + "-fx-border-color: transparent;"     // Remove the border around the ProgressIndicator
+        );
+
+        // Set up the layout for the root (StackPane)
+        StackPane root = new StackPane(progressIndicator);
+        root.setStyle("-fx-background-color: transparent;");  // Make the layout transparent
+
+        // Create a Scene with a transparent background
+        Scene scene = new Scene(root, 200, 200);
+        scene.setFill(javafx.scene.paint.Color.TRANSPARENT); // Make the scene transparent
+
+        // Make the window (Stage) fully transparent and remove the border/title bar
+        primaryStage.initStyle(StageStyle.TRANSPARENT);  // Remove window decorations and make it transparent
+        primaryStage.setOpacity(1);  // Ensure the window is fully visible
+
+        // Set the scene and show the stage
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 }
