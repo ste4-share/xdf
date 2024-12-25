@@ -1,11 +1,12 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.entity.Quarter;
+import com.xdf.xd_f371.service.AccountService;
 import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,15 +27,20 @@ import java.util.ResourceBundle;
 @Component
 public class SettingController implements Initializable {
     private String set_style = "-fx-background-color: red; ";
+    private boolean isChanged = false;
+    private boolean tf_isChanged = false;
+
     @Autowired
     private QuarterService quarterService;
+    @Autowired
+    private AccountService accountService;
 
     @FXML
-    private TextField q1_name,q2_name,q3_name,q4_name;
+    private TextField q1_name,q2_name,q3_name,q4_name,color,username,path;
     @FXML
     private Button savechangeBtn,browserBtn;
     @FXML
-    private Label year_lb,path_lb;
+    private Label year_lb;
     @FXML
     private DatePicker s_q1,e_q1,s_q2,e_q2,s_q3,e_q3,s_q4,e_q4;
     @FXML
@@ -47,11 +53,25 @@ public class SettingController implements Initializable {
         year_lb.setText(pre_year);
         clearField();
         initCurrentQuarterToField(pre_year);
+        username.setText(ConnectLan.pre_acc.getUsername());
+        Accounts a = accountService.findAccountByUsername(ConnectLan.pre_acc.getUsername());
+        color.setText(a.getColor());
+        path.setText(a.getPath());
+        listten_change(s_q1);
+        listten_change(e_q1);
+        listten_change(s_q2);
+        listten_change(e_q2);
+        listten_change(s_q3);
+        listten_change(e_q3);
+        listten_change(s_q4);
+        listten_change(e_q4);
+        tf_listten_change(username);
+        tf_listten_change(color);
+        tf_listten_change(path);
     }
     private void initCurrentQuarterToField(String pre_year){
 
         List<Quarter> preQuarter  = quarterService.findAllByYear(pre_year);
-
         if(preQuarter.isEmpty()){
             clearField();
         }else{
@@ -91,12 +111,14 @@ public class SettingController implements Initializable {
     public void save_Changed(ActionEvent actionEvent) {
         if (!isEmptyField(q1_name) && !isEmptyField(q2_name) && !isEmptyField(q3_name) && !isEmptyField(q4_name)) {
             if (isDuplicateDate()){
-                if (DialogMessage.callAlertWithMessage("Thông báo", "Thời gian mỗi quý phải là khoảng riêng biệt.",
-                        "Có lỗi xảy ra", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
-                    quarterService.save(new Quarter(q1_name.getText(), s_q1.getValue(),e_q1.getValue(),String.valueOf(Year.now().getValue()), 1));
-                    quarterService.save(new Quarter(q2_name.getText(), s_q2.getValue(),e_q2.getValue(),String.valueOf(Year.now().getValue()), 2));
-                    quarterService.save(new Quarter(q3_name.getText(), s_q3.getValue(),e_q3.getValue(),String.valueOf(Year.now().getValue()), 3));
-                    quarterService.save(new Quarter(q4_name.getText(), s_q4.getValue(),e_q4.getValue(),String.valueOf(Year.now().getValue()), 4));
+                if (DialogMessage.callAlertWithMessage(null, "Luu",
+                        "Luu thay doi?", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
+                    if (isChanged){
+                        saveQuarter();
+                    }
+                    if (tf_isChanged) {
+                        saveUser();
+                    }
                     DialogMessage.message("Thông báo", "Lưu thay đổi thành công",
                             "Thành công", Alert.AlertType.CONFIRMATION);
                 }
@@ -110,22 +132,66 @@ public class SettingController implements Initializable {
     public void pathChange(ActionEvent actionEvent) {
         setSelectDirectory(DashboardController.primaryStage);
     }
+    private void saveUser(){
+        Accounts a = accountService.findAccountByUsername(ConnectLan.pre_acc.getUsername());
+        if (DashboardController.o_path!=null){
+            a.setPath(DashboardController.o_path);
+            a.setColor(color.getText());
+            accountService.save(a);
+        }
+    }
+    private void saveQuarter(){
+        Quarter q1= quarterService.findByUnique(year_lb.getText(),1).orElse(null);
+        Quarter q2= quarterService.findByUnique(year_lb.getText(),2).orElse(null);
+        Quarter q3= quarterService.findByUnique(year_lb.getText(),3).orElse(null);
+        Quarter q4= quarterService.findByUnique(year_lb.getText(),4).orElse(null);
+        if (q1==null){
+            quarterService.save(new Quarter(q1_name.getText(), s_q1.getValue(),e_q1.getValue(),String.valueOf(Year.now().getValue()), 1));
+        }if (q2==null){
+            quarterService.save(new Quarter(q2_name.getText(), s_q2.getValue(),e_q2.getValue(),String.valueOf(Year.now().getValue()), 2));
+        }if (q3==null){
+            quarterService.save(new Quarter(q3_name.getText(), s_q3.getValue(),e_q3.getValue(),String.valueOf(Year.now().getValue()), 3));
+        }if (q4==null){
+            quarterService.save(new Quarter(q4_name.getText(), s_q4.getValue(),e_q4.getValue(),String.valueOf(Year.now().getValue()), 4));
+        }if (q1!=null){
+            quarterService.save(new Quarter(q1.getId(),q1_name.getText(), s_q1.getValue(),e_q1.getValue(),String.valueOf(Year.now().getValue()), 1));
+        }if (q2!=null){
+            quarterService.save(new Quarter(q2.getId(), q2_name.getText(), s_q2.getValue(),e_q2.getValue(),String.valueOf(Year.now().getValue()), 2));
+        }if (q3!=null){
+            quarterService.save(new Quarter(q3.getId(), q3_name.getText(), s_q3.getValue(),e_q3.getValue(),String.valueOf(Year.now().getValue()), 3));
+        }if (q4!=null){
+            quarterService.save(new Quarter(q4.getId(), q4_name.getText(), s_q4.getValue(),e_q4.getValue(),String.valueOf(Year.now().getValue()), 4));
+        }
+    }
 
     private void setSelectDirectory(Stage primaryStage){
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select a Directory");
 
-        // Optional: Set initial directory
-//        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         File selectedDirectory = directoryChooser.showDialog(primaryStage);
 
-        // Handle the result
         if (selectedDirectory != null) {
-            path_lb.setText(selectedDirectory.getAbsolutePath());
+            path.setText(selectedDirectory.getAbsolutePath());
+            DashboardController.o_path= selectedDirectory.getAbsolutePath();
         } else {
+            DashboardController.o_path = null;
             System.out.println("No directory selected.");
-            DialogMessage.message("", "No directory selected.","No directory selected.", Alert.AlertType.INFORMATION);
+            DialogMessage.message(null, null,"No directory selected.", Alert.AlertType.WARNING);
         }
+    }
+    private void listten_change(DatePicker dp){
+        dp.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                isChanged = true; // Mark as changed
+            }
+        });
+    }
+    private void tf_listten_change(TextField tf){
+        tf.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                tf_isChanged = true; // Mark as changed
+            }
+        });
     }
 
     private boolean isEmptyField(TextField tf){
@@ -137,7 +203,6 @@ public class SettingController implements Initializable {
     private boolean isDuplicateDate(){
         if (isFutureDate(s_q1.getValue(), e_q1.getValue())){
             setErrorStyle(s_q1,e_q1);
-
             return false;
         } else if (isFutureDate(e_q1.getValue(), s_q2.getValue())) {
             setErrorStyle(e_q1,s_q2);

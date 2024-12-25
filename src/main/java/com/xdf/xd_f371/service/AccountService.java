@@ -20,4 +20,7 @@ public class AccountService {
     public Optional<Accounts> login(String user, String pass){
         return accountRepo.login(user,hashService.generateSHA1Hash(pass));
     }
+    public Accounts save(Accounts a) {
+        return accountRepo.save(a);
+    }
 }

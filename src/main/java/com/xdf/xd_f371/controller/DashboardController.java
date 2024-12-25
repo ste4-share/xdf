@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 @Component
 public class DashboardController implements Initializable {
+    public static String o_path;
     public static Long so_select = 0L;
     public static Stage primaryStage;
     public static Stage xuatStage ;

@@ -30,4 +30,6 @@ public class Accounts {
     private String status;
     @Column(name = "create_at")
     private LocalDate create_at;
+    @Column(name = "path")
+    private String path;
 }

@@ -56,7 +56,13 @@
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="q1_name" prefHeight="37.0" prefWidth="152.0" />
+                  <TextField fx:id="q1_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font></TextField>
                   <Label alignment="CENTER" layoutX="554.0" layoutY="10.0" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
                      <font>
                         <Font name="Cambria Bold" size="13.0" />
@@ -88,7 +94,13 @@
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="q2_name" prefHeight="37.0" prefWidth="152.0" />
+                  <TextField fx:id="q2_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font></TextField>
                   <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
                      <font>
                         <Font name="Cambria Bold" size="13.0" />
@@ -116,7 +128,13 @@
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="q3_name" prefHeight="37.0" prefWidth="152.0" />
+                  <TextField fx:id="q3_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font></TextField>
                   <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
                      <font>
                         <Font name="Cambria Bold" size="13.0" />
@@ -144,7 +162,13 @@
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="q4_name" prefHeight="37.0" prefWidth="152.0" />
+                  <TextField fx:id="q4_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font></TextField>
                   <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
                      <font>
                         <Font name="Cambria Bold" size="13.0" />
@@ -186,14 +210,68 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Label fx:id="path_lb" layoutX="60.0" layoutY="10.0" prefHeight="35.0" prefWidth="488.0" style="-fx-border-color: #a8a8a8;">
-                     <font>
-                        <Font name="Cambria Bold" size="16.0" />
-                     </font>
+                  <TextField fx:id="path" prefHeight="37.0" prefWidth="500.0" style="-fx-background-radius: 10;">
                      <HBox.margin>
-                        <Insets left="30.0" />
+                        <Insets left="20.0" />
                      </HBox.margin>
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="BOTTOM_LEFT" layoutX="20.0" layoutY="281.0" prefHeight="50.0" prefWidth="1077.0">
+               <children>
+                  <Label prefHeight="47.0" prefWidth="338.0" text="Thông tin tài khoản:">
+                     <font>
+                        <Font name="Cambria Bold" size="17.0" />
+                     </font>
                   </Label>
+               </children>
+            </HBox>
+            <HBox layoutX="20.0" layoutY="331.0">
+               <children>
+                  <Separator prefHeight="0.0" prefWidth="751.0" />
+               </children>
+            </HBox>
+            <HBox alignment="BOTTOM_LEFT" layoutX="20.0" layoutY="383.0" prefHeight="50.0" prefWidth="1077.0">
+               <children>
+                  <Label prefHeight="47.0" prefWidth="240.0" text="Username:">
+                     <font>
+                        <Font name="Cambria Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="username" prefHeight="37.0" prefWidth="500.0" style="-fx-background-radius: 10;">
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox alignment="BOTTOM_LEFT" layoutX="20.0" layoutY="436.0" prefHeight="50.0" prefWidth="1077.0">
+               <children>
+                  <Label prefHeight="47.0" prefWidth="240.0" text="Màu sắc:">
+                     <font>
+                        <Font name="Cambria Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="color" prefHeight="37.0" prefWidth="500.0" style="-fx-background-radius: 10;">
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                  </TextField>
                </children>
             </HBox>
             <HBox alignment="BOTTOM_RIGHT" prefHeight="93.0" prefWidth="1077.0">

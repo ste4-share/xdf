@@ -93,4 +93,8 @@ public class LedgerService {
     public List<Ledger> getAllByQuarter(int quarter_id, String lp){
         return ledgersRepo.findAllByQuarter(quarter_id,lp);
     }
+
+    public void inactiveLedger(int so, String loaiphieu) {
+
+    }
 }

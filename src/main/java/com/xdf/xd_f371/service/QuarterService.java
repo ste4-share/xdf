@@ -29,4 +29,7 @@ public class QuarterService {
     public Quarter save(Quarter quarter){
         return quarterRepository.save(quarter);
     }
+    public Optional<Quarter> findByUnique(String year,int i){
+        return quarterRepository.findByUnique(year,i);
+    }
 }

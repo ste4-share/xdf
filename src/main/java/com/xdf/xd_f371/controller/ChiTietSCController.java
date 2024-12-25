@@ -2,7 +2,6 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.dto.LedgerDto;
-import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.LedgerService;
 import com.xdf.xd_f371.service.PhuongtienService;
@@ -16,7 +15,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.xssf.usermodel.*;
@@ -27,13 +25,14 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 @Controller
 public class ChiTietSCController implements Initializable {
+    private List<LedgerDto> ls = new ArrayList<>();
 
-    private List<LedgerDto> ls;
     @Autowired
     private ChitietNhiemvuService chitietNhiemvuService;
     @Autowired
@@ -44,15 +43,12 @@ public class ChiTietSCController implements Initializable {
     private LedgerService ledgerService;
 
     @FXML
-    private VBox vb_root;
-
-    @FXML
     private TableView<LedgerDto> tbChiTiet;
-
     @FXML
     private TableColumn<LedgerDto,String> fct_stt, fct_tenxd, fct_dongia,fct_phaixuat, fct_nhietdo, fct_tytrong, fct_vcf, fct_thucxuat, fct_tong;
     @FXML
     private Label lb_dvvc, lb_dvn, lb_so, lb_nguoinhan, lb_tungay, lb_denngay, lb_tcn, lb_lenhkh, lb_soxe, lb_loaiphieu,lb_giohd_md,lb_giohd_tk,lb_sokm;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         addNewImport();
@@ -247,6 +243,7 @@ public class ChiTietSCController implements Initializable {
     @FXML
     public void delClicked(MouseEvent mouseEvent) {
         if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+            ledgerService.inactiveLedger(ls.get(0).getBill_id(), ls.get(0).getLoai_phieu());
             DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
         }
     }

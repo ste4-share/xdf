@@ -18,4 +18,6 @@ public interface QuarterRepository extends JpaRepository<Quarter, Integer> {
     Optional<Quarter> findByName(@Param("name") String name);
     @Query(value = "select * from quarter where year like :y",nativeQuery = true)
     List<Quarter> findByYear(@Param("y") String year);
+    @Query(value = "select * from quarter where year like :y and index=:i",nativeQuery = true)
+    Optional<Quarter> findByUnique(@Param("y") String year,@Param("i") int i);
 }
