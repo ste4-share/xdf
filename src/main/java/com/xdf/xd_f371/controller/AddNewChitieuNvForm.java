@@ -64,6 +64,9 @@ public class AddNewChitieuNvForm implements Initializable {
             md.setText("00:00");
             nl.setText("0");
         }else{
+            pt_cbb.setDisable(true);
+            dvi_cmb.setDisable(true);
+            nv_cmb.setDisable(true);
             tk.setText(hm.getTk());
             md.setText(hm.getMd());
             nl.setText(String.valueOf(hm.getNhienlieu()));

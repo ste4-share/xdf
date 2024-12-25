@@ -132,7 +132,7 @@ public class TonkhoController implements Initializable {
         ls_tontruoc.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tontruoc_str"));
         ls_soluong.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("soluong_str"));
         ls_tonsau.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tonsau_str"));
-        ls_create_at.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("createTime"));
+        ls_create_at.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("createtime_str"));
         ls_lnv.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("type"));
         ls_gia.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("gia"));
     }

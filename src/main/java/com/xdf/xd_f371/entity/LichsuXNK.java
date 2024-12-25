@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "lichsuxnk")
@@ -50,6 +51,8 @@ public class LichsuXNK {
     private String soluong_str;
     @Column(insertable = false, updatable = false)
     private String tonsau_str;
+    @Column(insertable = false, updatable = false)
+    private String createtime_str;
 
     public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
                      String dvn, String dvx, String chungloaixd,int quyId) {
@@ -84,6 +87,7 @@ public class LichsuXNK {
         this.chungloaixd = chungloaixd;
         this.quyId = quyId;
         this.createTime = createTime;
+        this.createtime_str = createTime==null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
