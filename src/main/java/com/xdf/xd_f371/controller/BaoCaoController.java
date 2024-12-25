@@ -11,7 +11,6 @@ import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,7 +18,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -41,6 +39,8 @@ import java.util.*;
 @Component
 public class BaoCaoController implements Initializable {
     private static List<String> arr_tt = new ArrayList<>();
+    private final String file_name = "src/main/resources/com/xdf/xd_f371/xlsx_template/data.xlsx";
+    private final String dest_file = "baocao/baocao.xlsx";;
     @Autowired
     private TructhuocService tructhuocService;
     @Autowired
@@ -59,42 +59,10 @@ public class BaoCaoController implements Initializable {
         initquycbb();
     }
     @FXML
-    public void createbcnxt(ActionEvent actionEvent) throws SQLException, IOException {
-        String file_name = "src/main/resources/com/xdf/xd_f371/xlsx_template/data.xlsx";
-        String dest_file = "baocao/baocao.xlsx";
-        mapdataToNxtSheet(file_name);
-        SubQuery subQuery = new SubQuery();
-        System.out.println("query: " +getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-        saveBcTieuthuXdTheoNhiemvu(file_name);
-        saveBcThanhtoanNhienlieuBayTheoKeHoach(file_name);
-        copyFileExcel(file_name,dest_file);
-        try {
-            String[] env = {"ComSpec='C:\\WINDOWS\\system32\\cmd.exe'"};
-
-            Process process = Runtime.getRuntime().exec("cmd /c start .",env);
-//            Runtime.getRuntime().exec("cmd /c start excel "+ dest_file);
-            BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String line;
-            while ((line = stdOut.readLine()) != null) {
-                System.out.println("OUTPUT: " + line);
-            }
-            while ((line = stdErr.readLine()) != null) {
-                System.err.println("ERROR: " + line);
-            }
-            process.waitFor();
-        }catch (IOException | InterruptedException io){
-            DialogMessage.message("Message", io.getMessage(), "fail!", Alert.AlertType.INFORMATION);
-            throw new RuntimeException(io);
-        }
-    }
-    @FXML
     public void dvi_selected(ActionEvent actionEvent) {
-
     }
     @FXML
     public void quy_selected(ActionEvent actionEvent) {
-
     }
     private void initquycbb() {
         ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())),Quarter::getName, input-> quarterService.findByName(input).orElse(null));
@@ -315,4 +283,56 @@ public class BaoCaoController implements Initializable {
         }
         return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
     }
+    @FXML
+    public void bc_nxt(ActionEvent actionEvent) {
+        mapdataToNxtSheet(file_name);
+        copyFileExcel(file_name,dest_file);
+    }
+    @FXML
+    public void bc_ttnlbtkh(ActionEvent actionEvent) {
+        saveBcThanhtoanNhienlieuBayTheoKeHoach(file_name);
+        copyFileExcel(file_name,dest_file);
+    }
+    @FXML
+    public void bc_ttxdtnv(ActionEvent actionEvent) {
+        saveBcTieuthuXdTheoNhiemvu(file_name);
+        copyFileExcel(file_name,dest_file);
+    }
+    @FXML
+    public void bc_ptnn(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_pttk(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_hm_va_thucnhan(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_ttxd_xmt(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_ttxd_dmtt(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_dtsscd(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_ttns(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_lcv(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_nxtxd_nvk(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_nxt_hc(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_dauthau(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_ttxd_dientap(ActionEvent actionEvent) {
+    }
+
 }

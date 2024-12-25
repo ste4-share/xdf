@@ -2,6 +2,7 @@ package com.xdf.xd_f371.util;
 
 
 import com.xdf.xd_f371.MainApplicationApp;
+import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.controller.DashboardController;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -13,14 +14,20 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Common {
@@ -86,31 +93,36 @@ public class Common {
         // Start loading task in the background
         new Thread(loadingTask).start();
     }
-    public static void LoadingUI(Stage primaryStage){
-        // Create the ProgressIndicator
-        ProgressIndicator progressIndicator = new ProgressIndicator();
+    public static void mapExcelFile(String file_name, String sheetName, Function<XSSFWorkbook,Integer> mapData){
+        try{
+            File file = new File(file_name);
+            if (!file.exists()){
+                file.createNewFile();
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook wb = new XSSFWorkbook();
+                // Now creating Sheets using sheet object
+                mapData.apply(wb);
+                fis.close();
+                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
 
-        // Set the style for ProgressIndicator to make it background transparent
-        progressIndicator.setStyle(
-                "-fx-background-color: transparent;"   // Remove the background color
-                        + "-fx-progress-color: #da0b0b;"         // Set the progress color (customize as needed)
-                        + "-fx-border-color: transparent;"     // Remove the border around the ProgressIndicator
-        );
+                wb.write(fileOutputStream);
+                fileOutputStream.close();
+                wb.close();
+            }else{
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook wb = new XSSFWorkbook(fis);
+                mapData.apply(wb);
+                fis.close();
+                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+                XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
+                wb.write(fileOutputStream);
+                fileOutputStream.close();
+                wb.close();
+            }
 
-        // Set up the layout for the root (StackPane)
-        StackPane root = new StackPane(progressIndicator);
-        root.setStyle("-fx-background-color: transparent;");  // Make the layout transparent
-
-        // Create a Scene with a transparent background
-        Scene scene = new Scene(root, 200, 200);
-        scene.setFill(javafx.scene.paint.Color.TRANSPARENT); // Make the scene transparent
-
-        // Make the window (Stage) fully transparent and remove the border/title bar
-        primaryStage.initStyle(StageStyle.TRANSPARENT);  // Remove window decorations and make it transparent
-        primaryStage.setOpacity(1);  // Ensure the window is fully visible
-
-        // Set the scene and show the stage
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        } catch (IOException e) {
+            DialogMessage.message("THÔNG BÁO LỖI", e.getMessage(), "Có lỗi xảy ra!", Alert.AlertType.ERROR);
+            throw new RuntimeException(e);
+        }
     }
 }
