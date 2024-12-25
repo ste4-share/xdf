@@ -19,7 +19,8 @@ public interface ChitietNhiemvuRepo extends JpaRepository<ChitietNhiemVu, Intege
     List<NhiemVuDto> findAllBy();
     @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where lnv.task_name like :lnv")
     List<NhiemVuDto> findAllDtoById(@Param("lnv") String lnv);
-    Optional<ChitietNhiemVu> findByNhiemvu(String nhiemvu);
+    @Query(value = "select * from chitiet_nhiemvu where nhiemvu like :nv and nhiemvu_id=:nv_id",nativeQuery = true)
+    Optional<ChitietNhiemVu> findByNhiemvu(@Param("nv") String nhiemvu,@Param("nv_id") int nv_id);
     @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where n.tenNv like :nv and ct.nhiemvu like :chitiet")
     Optional<NhiemVuDto> findAllByChitietNhiemvu(@Param("nv") String nv, @Param("chitiet") String chitiet);
     @Query("select new ChitietNhiemVu(ct.id,ct.nhiemvu_id,ct.nhiemvu) from ChitietNhiemVu ct where ct.nhiemvu_id=:od")

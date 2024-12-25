@@ -127,19 +127,24 @@ public class XuatController extends CommonFactory implements Initializable {
     public void loaixuatAction(ActionEvent actionEvent) {
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
         if (lx.equals(LoaiXuat.X_K.getName())){
+
             initValueForLoaiXuatCbb(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()),
                     new ArrayList<>(),nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()),nguonNxService.findAll(),loaiXdService.findAllOrderby()
                     ,true);
             nl_km_hb.setDisable(true);
             nl_gio_hb.setDisable(true);
         } else if (lx.equals(LoaiXuat.NV.getName())) {
-            initValueForLoaiXuatCbb(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName()).stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()),
-                    phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()),nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName())
-                    ,false);
+            List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName());
+            List<String> str = new ArrayList<>();
+            ls.forEach(x->str.add(x.getTen_nv()  +" - "+ x.getChitiet()));
+            initValueForLoaiXuatCbb(str, phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()),
+                    nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName()),false);
             px_hbox.setDisable(false);
         } else if (lx.equals(LoaiXuat.HH.getName())) {
-            initValueForLoaiXuatCbb(chitietNhiemvuService.findAllDtoById(LoaiNVCons.HAOHUT.getName()).stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()),
-                    new ArrayList<>(),nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findAllOrderby(),true);
+            List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.HAOHUT.getName());
+            List<String> str = new ArrayList<>();
+            ls.forEach(x->str.add(x.getTen_nv()  +" - "+ x.getChitiet()));
+            initValueForLoaiXuatCbb(str, new ArrayList<>(),nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findAllOrderby(),true);
             dvi_nhan.setDisable(true);
         }
     }
@@ -162,7 +167,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void add(ActionEvent actionEvent) {
         LedgerDetails ld = getLedgerDetails();
-        if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")){
+        if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
             if (inv_price < ld.getSoluong()){
                 DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.ERROR);
             } else {
@@ -412,6 +417,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 return elem.toLowerCase().startsWith(t.getUserText().toLowerCase().trim());
             }).collect(Collectors.toList());
         });
+
     }
 
     private void mapXdForCombobox(){
@@ -596,7 +602,10 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     private ChitietNhiemVu identifyNhiemvu(){
         String text = tcx.getText();
-        return chitietNhiemvuService.findByNhiemvu(text).orElse(null);
+        String nv = text.substring(0,text.indexOf("-")).trim();
+        String ct = text.substring(text.indexOf("-")+1).trim();
+        Optional<NhiemVu> n = chitietNhiemvuService.findByName(nv,StatusCons.ACTIVED.getName());
+        return n.flatMap(nhiemVu -> chitietNhiemvuService.findByNhiemvu(ct, nhiemVu.getId())).orElse(null);
     }
     private String getStrInterval(){
         String hour_str = sogio.getText().trim();

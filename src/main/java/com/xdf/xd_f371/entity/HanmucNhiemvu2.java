@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.entity;
 
+import com.xdf.xd_f371.dto.HanmucNhiemvu2Dto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,8 +30,8 @@ public class HanmucNhiemvu2 {
     private Long xang;
 
     @ManyToOne
-    @JoinColumn(name = "nhiemvu_id", referencedColumnName = "id",insertable = false, updatable = false)
-    NhiemVu nhiemVu;
+    @JoinColumn(name = "nhiemvu_id",insertable = false, updatable = false)
+    ChitietNhiemVu chitietNhiemVu;
 
     public HanmucNhiemvu2(int quarter_id, int dvi_id, int nhiemvu_id, Long diezel, Long daubay, Long xang) {
         this.quarter_id = quarter_id;
@@ -39,5 +40,15 @@ public class HanmucNhiemvu2 {
         this.diezel = diezel;
         this.daubay = daubay;
         this.xang = xang;
+    }
+
+    public HanmucNhiemvu2(HanmucNhiemvu2Dto hm) {
+        this.id = hm.getId();
+        this.quarter_id = hm.getQuarter_id();
+        this.dvi_id = hm.getDvi_id();
+        this.nhiemvu_id = hm.getNhiemvu_id();
+        this.diezel = hm.getDiezel();
+        this.daubay = hm.getDaubay();
+        this.xang = hm.getXang();
     }
 }

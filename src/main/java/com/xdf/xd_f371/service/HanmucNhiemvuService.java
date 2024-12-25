@@ -19,8 +19,8 @@ public class HanmucNhiemvuService {
     private final HanmucNhiemvu2Repository hanmucNhiemvu2Repository;
     private final HanmucNhiemvuTauBayRepo hanmucNhiemvuTauBayRepo;
 
-    public List<HanmucNhiemvu2Dto> findAllDto(){
-        return hanmucNhiemvu2Repository.findAllDto();
+    public List<HanmucNhiemvu2Dto> findAllDto(int q){
+        return hanmucNhiemvu2Repository.findAllDto(q);
     }
     public HanmucNhiemvu2 save(HanmucNhiemvu2 hanmucNhiemvu2){
         return hanmucNhiemvu2Repository.save(hanmucNhiemvu2);

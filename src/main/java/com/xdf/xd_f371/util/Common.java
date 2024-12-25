@@ -3,11 +3,6 @@ package com.xdf.xd_f371.util;
 
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.controller.DashboardController;
-import com.xdf.xd_f371.dto.LoaiXangDauDto;
-import com.xdf.xd_f371.entity.Quarter;
-import com.xdf.xd_f371.service.LoaiXdService;
-import com.xdf.xd_f371.service.QuarterService;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -27,7 +21,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Common {
@@ -72,7 +65,7 @@ public class Common {
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: "+color+";-fx-border-color:#a8a8a8;-fx-background-radius:10;-fx-border-radius:10"));
     }
     public static boolean isNumber(String in) {
-        return in.matches("[^0A-Za-z][0-9]{0,18}");
+        return in.matches("[^A-Za-z][0-9]{0,18}");
     }
     public static void task(Runnable task_call,Runnable success) {
         Task<Void> loadingTask = new Task<Void>() {

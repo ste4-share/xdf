@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.AddNewHanMucNhiemvu">
+<VBox style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.AddNewHanMucNhiemvu">
    <children>
       <Label alignment="CENTER" prefHeight="43.0" prefWidth="572.0" text="Thêm hạn mức" textAlignment="CENTER">
          <font>
@@ -28,7 +27,7 @@
                   <Font name="Cambria Bold" size="13.0" />
                </font>
             </Label>
-            <ComboBox fx:id="nv_cbb" onAction="#nvselected" prefHeight="44.0" prefWidth="366.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
+            <ComboBox fx:id="nv_cbb" disable="true" onAction="#nvselected" prefHeight="44.0" prefWidth="366.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -44,7 +43,7 @@
                   <Font name="Cambria Bold" size="13.0" />
                </font>
             </Label>
-            <ComboBox fx:id="ct_cbb" prefHeight="44.0" prefWidth="366.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" />
+            <ComboBox fx:id="ct_cbb" disable="true" prefHeight="44.0" prefWidth="366.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" />
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />

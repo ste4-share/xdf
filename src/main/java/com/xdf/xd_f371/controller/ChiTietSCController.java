@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
@@ -242,5 +243,11 @@ public class ChiTietSCController implements Initializable {
         lb_giohd_md.setText(ls.get(0).getGiohd_md());
         lb_giohd_tk.setText(ls.get(0).getGiohd_tk());
         lb_sokm.setText(String.valueOf(ls.get(0).getSo_km()));
+    }
+    @FXML
+    public void delClicked(MouseEvent mouseEvent) {
+        if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+            DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
+        }
     }
 }

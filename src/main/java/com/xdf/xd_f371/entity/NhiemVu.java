@@ -41,9 +41,6 @@ public class NhiemVu implements Serializable {
     @JoinColumn(name = "assignment_type_id", referencedColumnName = "id" , insertable = false, updatable = false)
     private LoaiNhiemVu loaiNhiemVu;
 
-    @OneToMany(mappedBy = "nhiemVu", cascade = CascadeType.PERSIST)
-    private List<HanmucNhiemvu2> hanmucNhiemvu2s = new ArrayList<>();
-
     public NhiemVu(String tenNv, String status, int teamId, Integer assignmentTypeId, Integer priority, Integer priorityBc2) {
         this.tenNv = tenNv;
         this.status = status;

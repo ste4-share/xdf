@@ -22,12 +22,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
 public class NhiemvuController implements Initializable {
     public static Stage nvStage;
+    public static List<HanmucNhiemvuTaubayDto> hmnv = new ArrayList<>();
     public static HanmucNhiemvuTaubayDto hm = new HanmucNhiemvuTaubayDto();
+    public static List<HanmucNhiemvu2Dto> hm2_ls = new ArrayList<>();
     public static HanmucNhiemvu2Dto hm2 = new HanmucNhiemvu2Dto();
     @Autowired
     private QuarterService quarterService;
@@ -48,7 +53,7 @@ public class NhiemvuController implements Initializable {
     @FXML
     TableColumn<HanmucNhiemvuTaubayDto, String> stt_2,dvi_x,t2_pt,t2_nv_2,ct_nv_2,t2_tk_2,t2_md_2,t2_nl_2;
     @FXML
-    TableColumn<HanmucNhiemvu2Dto, String> nv,ct,xang,diezel,daubay,stt_3;
+    TableColumn<HanmucNhiemvu2Dto, String> nv,ct,xang,diezel,daubay,stt_3,cong;
     @FXML
     ComboBox<Quarter> quy_cbb;
     @FXML
@@ -64,28 +69,42 @@ public class NhiemvuController implements Initializable {
         initQuarterCbb();
         initDviTb();
         initNvTable();
-        initNhiemvuTaubay();
-        initHanmuc();
+        initQuyCbb();
+        hmnv = hanmucNhiemvuService.getAllBy();
+        initNhiemvuTaubay(hmnv);
+        hm2_ls = hanmucNhiemvuService.findAllDto(quy_cbb.getSelectionModel().getSelectedItem().getId());
+        initHanmuc(hm2_ls);
 
         inithanmucCellFactory();
         initNvCellFactory();
         initHanmucNhiemvuTaubayCellFactory();
     }
-    @FXML
-    public void nhiemvu_selected(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount()==2){
-        }
+    private void initQuyCbb() {
+        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
+        quy_cbb.getSelectionModel().select(DashboardController.findByTime);
     }
-    @FXML
-    public void addhanmucxangdau(ActionEvent actionEvent) {
+    private void initAddHm(){
         nvStage = new Stage();
         nvStage.initStyle(StageStyle.UTILITY);
         Common.openNewStage("addnew_nvhanmuc.fxml", nvStage,"HANMUC");
-        initHanmuc();
+    }
+    @FXML
+    public void nhiemvu_selected(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount()==2){
+            hm2 = tieuthunhiemvu.getSelectionModel().getSelectedItem();
+            if (hm2!=null){
+                initAddHm();
+                hm2_ls = hanmucNhiemvuService.findAllDto(quy_cbb.getSelectionModel().getSelectedItem().getId());
+                initHanmuc(hm2_ls);
+            }
+        }
     }
     @FXML
     public void dviSelected(ActionEvent actionEvent) {
-        if (dvi_cbb.getSelectionModel().getSelectedItem()!=null) {
+        NguonNx n = dvi_cbb.getSelectionModel().getSelectedItem();
+        if (n!=null) {
+            List<HanmucNhiemvuTaubayDto> prels = hmnv.stream().filter(x->x.getDonvi().equals(n.getTen())).toList();
+            initNhiemvuTaubay(prels);
         }
     }
     @FXML
@@ -111,16 +130,17 @@ public class NhiemvuController implements Initializable {
         nvStage = new Stage();
         nvStage.initStyle(StageStyle.UTILITY);
         Common.openNewStage("add_chitieunv.fxml", nvStage,null);
-        initNhiemvuTaubay();
+        hmnv = hanmucNhiemvuService.getAllBy();
+        initNhiemvuTaubay(hmnv);
     }
     private void initNvTable(){
         nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllBy()));
     }
-    private void initNhiemvuTaubay(){
-        ctnv_pt.setItems(FXCollections.observableList(hanmucNhiemvuService.getAllBy()));
+    private void initNhiemvuTaubay(List<HanmucNhiemvuTaubayDto> hmnv){
+        ctnv_pt.setItems(FXCollections.observableList(hmnv));
     }
-    private void initHanmuc(){
-        tieuthunhiemvu.setItems(FXCollections.observableList(hanmucNhiemvuService.findAllDto()));
+    private void initHanmuc(List<HanmucNhiemvu2Dto> ls){
+        tieuthunhiemvu.setItems(FXCollections.observableList(ls));
     }
     private void initDviTb() {
         ComponentUtil.setItemsToComboBox(dvi_cbb,nguonNxService.findByAllBy(),NguonNx::getTen,input->nguonNxService.findByTen(input).orElse(null));
@@ -143,9 +163,10 @@ public class NhiemvuController implements Initializable {
         stt_3.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tieuthunhiemvu.getItems().indexOf(column.getValue())+1).asString());
         nv.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("tenNv"));
         ct.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("chitiet_nhiemvu"));
-        xang.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("xang"));
-        diezel.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("diezel"));
-        daubay.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("daubay"));
+        xang.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("xang_str"));
+        diezel.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("diezel_str"));
+        daubay.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("daubay_str"));
+        cong.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("cong"));
     }
     private void initHanmucNhiemvuTaubayCellFactory() {
         stt_2.setSortable(false);
@@ -166,5 +187,4 @@ public class NhiemvuController implements Initializable {
         tieuthunhiemvu.setPrefWidth(DashboardController.screenWidth);
         tieuthunhiemvu.setPrefHeight(DashboardController.screenHeigh-350);
     }
-
 }

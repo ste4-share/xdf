@@ -1,8 +1,12 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.LoaiNhiemVu;
+import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Team;
+import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.model.StatusEnum;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
+import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -21,18 +25,45 @@ public class AddNvController implements Initializable {
     @FXML
     private ComboBox<Team> cbb_team;
     @FXML
-    private TextField lnv_tf,nv,ct;
+    private ComboBox<LoaiNhiemVu> cbb_lnv;
+    @FXML
+    private TextField nv,ct,xang,diezel,daubay;
     @FXML
     private Button add_btn,cancel_btn;
     @Autowired
     private ChitietNhiemvuService nhiemvuService;
+    @Autowired
+    private NguonNxService nguonNxService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initVar();
         initTeam();
-        initLoaiNv();
+        initLoaiNvCbb();
     }
-    private void initLoaiNv() {
-        Common.setHint(lnv_tf,nhiemvuService.getAllLoaiNv().stream().map(LoaiNhiemVu::getTask_name).toList());
+    private void initVar(){
+        xang.setText("0");
+        diezel.setText("0");
+        daubay.setText("0");
+    }
+    private boolean isValid(){
+        if (!Common.isNumber(xang.getText())){
+            xang.setStyle(CommonFactory.styleErrorField);
+            return false;
+        }else if (!Common.isNumber(daubay.getText())){
+            daubay.setStyle(CommonFactory.styleErrorField);
+            return false;
+        }else if (!Common.isNumber(diezel.getText())){
+            diezel.setStyle(CommonFactory.styleErrorField);
+            return false;
+        }
+        xang.setStyle(null);
+        daubay.setStyle(null);
+        diezel.setStyle(null);
+        return true;
+    }
+    private void initLoaiNvCbb() {
+        ComponentUtil.setItemsToComboBox(cbb_lnv,nhiemvuService.getAllLoaiNv(),LoaiNhiemVu::getTask_name,input-> nhiemvuService.findLoaiNvByName(input).orElse(null));
+        cbb_lnv.getSelectionModel().selectFirst();
     }
     private void initTeam() {
         ComponentUtil.setItemsToComboBox(cbb_team,nhiemvuService.findAllTeam(),Team::getTeam_code,input-> nhiemvuService.findByCode(input));
@@ -40,10 +71,6 @@ public class AddNvController implements Initializable {
     }
     @FXML
     public void teamAction(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void lnv_clicked(MouseEvent mouseEvent) {
-        lnv_tf.selectAll();
     }
     @FXML
     public void nv_clicked(MouseEvent mouseEvent) {
@@ -55,15 +82,24 @@ public class AddNvController implements Initializable {
     }
     @FXML
     public void addAction(ActionEvent actionEvent) {
-        if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
-            nhiemvuService.saveNhiemvu(cbb_team.getSelectionModel().getSelectedItem().getId(),nv.getText(),lnv_tf.getText(),ct.getText());
-            DialogMessage.message(null, "Them thanh cong",
-                    "Thanh cong", Alert.AlertType.INFORMATION);
-            NhiemvuController.nvStage.close();
+        LoaiNhiemVu lnv = cbb_lnv.getSelectionModel().getSelectedItem();
+        Team t = cbb_team.getSelectionModel().getSelectedItem();
+        NguonNx nx = nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()).get(0);
+        if (lnv!=null && t!=null && nx!=null){
+            if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
+                if (isValid()){
+                    nhiemvuService.saveNhiemvu(t.getId(),nv.getText(),lnv,ct.getText(),nx,xang.getText(),diezel.getText(),daubay.getText());
+                    NhiemvuController.nvStage.close();
+                }
+            }
         }
     }
+
     @FXML
     public void cancelAction(ActionEvent actionEvent) {
         NhiemvuController.nvStage.close();
+    }
+    @FXML
+    public void lnvAction(ActionEvent actionEvent) {
     }
 }
