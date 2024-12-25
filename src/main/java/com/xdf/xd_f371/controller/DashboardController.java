@@ -123,19 +123,16 @@ public class DashboardController implements Initializable {
         borderpane_base.setCenter(nx_vbox);
         getCurrentQuarter();
     }
-
     @FXML
     public void tonkho_menu_action(MouseEvent event) {
         setStyleForClickedMEnu(tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,nhiemvu_menu,setting,report);
         openFxml("tonkho.fxml");
     }
-
     @FXML
     public void nhiemvu_menu_action(MouseEvent mouseEvent) {
         setStyleForClickedMEnu(nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,setting,report);
         openFxml("nhiemvu.fxml");
     }
-
     public static Node getNodeBySource(String source) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
         fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);

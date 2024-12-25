@@ -8,7 +8,7 @@ import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.model.MucGiaEnum;
 import com.xdf.xd_f371.repo.*;
-import jakarta.transaction.Transactional;
+import com.xdf.xd_f371.util.DialogMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class LedgerService {
     private final LedgersRepo ledgersRepo;
     private final LedgerDetailRepo ledgerDetailRepo;
@@ -38,24 +37,28 @@ public class LedgerService {
     public Ledger save(Ledger ledger) {
         return ledgersRepo.save(ledger);
     }
-    @Transactional
     public Ledger saveLedgerWithDetails(Ledger ledger, List<LedgerDetails> details){
         Ledger savedLedger = ledgersRepo.save(ledger);
-        for (LedgerDetails detail : details) {
-            detail.setLedger(savedLedger);
-            detail.setLedger_id(savedLedger.getId());
-            ledgerDetailRepo.save(detail);
-            Inventory inventory= inventoryRepo.findByUnique(detail.getLoaixd_id(), ledger.getQuarter_id(), MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()).orElse(null);
-            Inventory inventory_1= inventoryRepo.findByUniqueGroupby(detail.getLoaixd_id(), ledger.getQuarter_id()).orElse(null);
-            if (inventory==null) {
-                if (inventory_1!=null) {
-                    createNewInv(ledger, detail,inventory_1);
-                    saveHistory(ledger,detail,inventory_1.getNhap_nvdx()-inventory_1.getXuat_nvdx());
+        try {
+            for (LedgerDetails detail : details) {
+                detail.setLedger(savedLedger);
+                detail.setLedger_id(savedLedger.getId());
+                ledgerDetailRepo.save(detail);
+                Inventory inventory= inventoryRepo.findByUnique(detail.getLoaixd_id(), ledger.getQuarter_id(), MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()).orElse(null);
+                Inventory inventory_1= inventoryRepo.findByUniqueGroupby(detail.getLoaixd_id(), ledger.getQuarter_id()).orElse(null);
+                if (inventory==null) {
+                    if (inventory_1!=null) {
+                        createNewInv(ledger, detail,inventory_1);
+                        saveHistory(ledger,detail,inventory_1.getNhap_nvdx()-inventory_1.getXuat_nvdx());
+                    }
+                } else {
+                    saveInv(ledger, detail, inventory);
+                    saveHistory(ledger,detail,inventory.getNhap_nvdx()-inventory.getXuat_nvdx());
                 }
-            } else {
-                saveInv(ledger, detail, inventory);
-                saveHistory(ledger,detail,inventory.getNhap_nvdx()-inventory.getXuat_nvdx());
             }
+        }catch (Exception e){
+            DialogMessage.errorShowing("Something wrong!");
+            e.printStackTrace();
         }
         return savedLedger;
     }

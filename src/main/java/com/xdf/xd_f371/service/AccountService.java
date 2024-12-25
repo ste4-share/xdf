@@ -17,6 +17,9 @@ public class AccountService {
     public Accounts findAccountByUsername(String username) {
         return accountRepo.findByUsername(username);
     }
+    public Optional<Accounts> findAccById(int id) {
+        return accountRepo.findById(id);
+    }
     public Optional<Accounts> login(String user, String pass){
         return accountRepo.login(user,hashService.generateSHA1Hash(pass));
     }

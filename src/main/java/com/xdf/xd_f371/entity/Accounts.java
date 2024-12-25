@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "accounts")
@@ -32,4 +33,7 @@ public class Accounts {
     private LocalDate create_at;
     @Column(name = "path")
     private String path;
+
+    @OneToMany(mappedBy = "accounts")
+    List<Ledger> ledgerList;
 }

@@ -1,18 +1,16 @@
 package com.xdf.xd_f371.dto;
 
-import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.util.TextToNumber;
 import lombok.*;
-
+import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-
+@Component
 @NoArgsConstructor
 @Getter
 @Setter
 public class MiniLedgerDto {
-
     private int so;
     private String so_str;
     private String loai_phieu;

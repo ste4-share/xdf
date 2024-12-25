@@ -79,10 +79,13 @@ public class Ledger {
     @Column(name = "lpt_2")
     private String lpt_2;
     @Column(name = "create_by")
-    private String create_by;
+    private int create_by;
     @Version
     private int version;
 
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LedgerDetails> ledgerDetails;
+    @ManyToOne
+    @JoinColumn(name = "create_by",nullable = false,insertable = false,updatable = false)
+    private Accounts accounts;
 }
