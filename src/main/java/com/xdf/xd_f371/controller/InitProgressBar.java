@@ -46,7 +46,7 @@ public class InitProgressBar implements Initializable {
                 MainApplicationApp.rootStage.close();
                 stage = new Stage();
                 try {
-                    stage.initStyle(StageStyle.UTILITY);
+                    stage.initStyle(StageStyle.TRANSPARENT);
                     Common.openNewStage_show("connect_lan.fxml", stage,"Connection to Server in LAN Network",MainApplicationApp.context);
                 } catch (IOException e) {
                     throw new RuntimeException(e);

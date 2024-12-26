@@ -64,7 +64,7 @@ public class LedgerService {
     }
     private void saveHistory(Ledger l,LedgerDetails ld, int tontruoc){
         LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(), tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
-        l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id(), LocalDate.now());
+        l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
         lichsuRepo.save(lichsuXNK);
     }
     private void saveInv(Ledger ledger, LedgerDetails detail, Inventory inventory) {

@@ -65,6 +65,8 @@ public class TonkhoController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         tb_tonkho.setPrefWidth(DashboardController.screenWidth);
         tb_tonkho.setPrefHeight(DashboardController.screenHeigh-350);
+        tb_history.setPrefWidth(DashboardController.screenWidth);
+        tb_history.setPrefHeight(DashboardController.screenHeigh-350);
 
         pickTonKho = new SpotDto();
         findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();

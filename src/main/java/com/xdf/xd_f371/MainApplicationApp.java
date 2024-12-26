@@ -31,7 +31,7 @@ public class MainApplicationApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         rootStage = stage;
-        stage.initStyle(StageStyle.UTILITY);
+        rootStage.initStyle(StageStyle.UTILITY);
         Common.openNewStage_show("initProgressBar.fxml", rootStage,null,context);
     }
     @Override

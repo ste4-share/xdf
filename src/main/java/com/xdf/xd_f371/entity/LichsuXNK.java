@@ -87,7 +87,7 @@ public class LichsuXNK {
         this.chungloaixd = chungloaixd;
         this.quyId = quyId;
         this.createTime = createTime;
-        this.createtime_str = createTime==null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        this.createtime_str = createTime == null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));

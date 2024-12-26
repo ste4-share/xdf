@@ -9,8 +9,10 @@ import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.service.TructhuocService;
+import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,7 +32,6 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.file.Files;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
@@ -131,7 +132,6 @@ public class BaoCaoController implements Initializable {
                 mapDataToSheet(wb.createSheet(sheetName), 8,subQuery.ttxd_nv(quy_cbb.getSelectionModel().getSelectedItem().getId(),dvi_cbb.getSelectionModel().getSelectedItem().getId()),4);
                 fis.close();
                 FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
                 wb.write(fileOutputStream);
                 fileOutputStream.close();
                 wb.close();
@@ -151,40 +151,14 @@ public class BaoCaoController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-    private void mapdataToNxtSheet(String file_name) {
-        String sheetName = "bc_nxt";
-        try{
-            File file = new File(file_name);
-            SubQuery subQuery = new SubQuery();
-            if (!file.exists()){
-                file.createNewFile();
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook();
-                // Now creating Sheets using sheet object
-                int row_ind= createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-                createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
-            }else{
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook(fis);
-                // Now creating Sheets using sheet object
-                int row_ind= createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-                createDataSheet(wb.getSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){
+        SubQuery subQuery = new SubQuery();
+        int row_ind = createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+        return createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+    }private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
+        SubQuery subQuery = new SubQuery();
+        int row_ind= createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+        return createDataSheet(wb.getSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
     }
     private int mapDataToSheet(XSSFSheet sheet,  int begin_data_current,String query, int begin_col){
         ReportDAO reportDAO = new ReportDAO();
@@ -267,26 +241,20 @@ public class BaoCaoController implements Initializable {
         arr_tt.clear();
         return nxtls.size()+11;
     }
-    private String getCusQueryNl(String begin_1,String end_q1, String end){
-        arr_tt.clear();
-        String n_sum1="";
-        String x_sum2="";
-        String n_case_1="";
-        String x_case_2="";
-        for (int i=0; i<tructhuocService.findAll().size(); i++) {
-            TrucThuoc tt = tructhuocService.findAll().get(i);
-            arr_tt.add(tt.getType());
-            n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
-            x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            n_case_1 = n_case_1.concat("max(case when tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as n"+tt.getType()+",");
-            x_case_2 = x_case_2.concat("max(case when tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as x"+tt.getType()+",");
-        }
-        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
-    }
     @FXML
     public void bc_nxt(ActionEvent actionEvent) {
-        mapdataToNxtSheet(file_name);
-        copyFileExcel(file_name,dest_file);
+        try {
+            Common.task(this::nxtmap,DialogMessage::successShowing,()->{});
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private void nxtmap(){
+        String sheetName = "bc_nxt";
+        Platform.runLater(()->{
+            Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+            copyFileExcel(file_name,dest_file);
+        });
     }
     @FXML
     public void bc_ttnlbtkh(ActionEvent actionEvent) {
@@ -333,6 +301,22 @@ public class BaoCaoController implements Initializable {
     }
     @FXML
     public void bc_ttxd_dientap(ActionEvent actionEvent) {
+    }
+    private String getCusQueryNl(String begin_1,String end_q1, String end){
+        arr_tt.clear();
+        String n_sum1="";
+        String x_sum2="";
+        String n_case_1="";
+        String x_case_2="";
+        for (int i=0; i<tructhuocService.findAll().size(); i++) {
+            TrucThuoc tt = tructhuocService.findAll().get(i);
+            arr_tt.add(tt.getType());
+            n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
+            x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
+            n_case_1 = n_case_1.concat("max(case when tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as n"+tt.getType()+",");
+            x_case_2 = x_case_2.concat("max(case when tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as x"+tt.getType()+",");
+        }
+        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
     }
 
 }
