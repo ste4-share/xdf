@@ -75,50 +75,6 @@ public class BaoCaoController implements Initializable {
         ComponentUtil.setItemsToComboBox(dvi_cbb, nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()),NguonNx::getTen,input-> nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
     }
-    private void saveBcThanhtoanNhienlieuBayTheoKeHoach(String file_name) {
-        String sheetName = "bc_ttnl_theo_kh";
-        try{
-            File file = new File(file_name);
-            SubQuery subQuery = new SubQuery();
-            if (!file.exists()){
-                file.createNewFile();
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook();
-                // Now creating Sheets using sheet object
-                mapDataToSheet(wb.createSheet(sheetName), 8,subQuery.ttnlbtkh_for_mb(quy_cbb.getSelectionModel().getSelectedItem().getId()),1);
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
-            }else{
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook(fis);
-
-                // Now creating Sheets using sheet object
-                if (wb!=null){
-                    int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,subQuery.ttnlbtkh_for_mb(quy_cbb.getSelectionModel().getSelectedItem().getId()),1);
-                    int row_index2 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,subQuery.ttnlbtkh_for_all(quy_cbb.getSelectionModel().getSelectedItem().getId()),1);
-                    int row_index3 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,subQuery.ttnlbtkh_for_dv(quy_cbb.getSelectionModel().getSelectedItem().getId()),1);
-                    mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,subQuery.ttnlbtkh_for_tongmaybay(quy_cbb.getSelectionModel().getSelectedItem().getId()),1);
-                }else{
-                    mapDataToSheet(wb.createSheet(sheetName), 8,subQuery.ttnlbtkh_for_mb(quy_cbb.getSelectionModel().getSelectedItem().getId()),1);
-                }
-
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-                XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
-            }
-
-        } catch (IOException e) {
-            DialogMessage.message("THÔNG BÁO LỖI", e.getMessage(), "Có lỗi xảy ra!", Alert.AlertType.ERROR);
-            throw new RuntimeException(e);
-        }
-    }
     private void saveBcTieuthuXdTheoNhiemvu(String file_name) {
         String sheetName = "t_thu_xd_theo_n_vu";
         try{
@@ -152,13 +108,137 @@ public class BaoCaoController implements Initializable {
         }
     }
     private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){
-        SubQuery subQuery = new SubQuery();
-        int row_ind = createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-        return createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-    }private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
-        SubQuery subQuery = new SubQuery();
-        int row_ind= createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(subQuery.nl_begin_q1(),subQuery.nl_end_q1(),subQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-        return createDataSheet(wb.getSheet(sheetName), row_ind,getCusQueryNl(subQuery.dmn_begin_q1(),subQuery.dmn_end_q1(),subQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+        int row_ind = createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(),SubQuery.nl_end_q1(),SubQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+        return createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(SubQuery.dmn_begin_q1(),SubQuery.dmn_end_q1(),SubQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+    }
+    private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
+        int row_ind= createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(),SubQuery.nl_end_q1(),SubQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+        return createDataSheet(wb.getSheet(sheetName), row_ind,getCusQueryNl(SubQuery.dmn_begin_q1(),SubQuery.dmn_end_q1(),SubQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+    }
+    private Integer map_ttnlbtkh_create(XSSFWorkbook wb,String sheetName){
+        return mapDataToSheet(wb.createSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(quy_cbb.getSelectionModel().getSelectedItem().getId()),1);
+    }
+    private Integer map_ttnlbtkh_getting(XSSFWorkbook wb,String sheetName){
+        Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
+        if (q!=null){
+            System.out.println("query1: "+SubQuery.ttnlbtkh_for_mb(q.getId()));
+            int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(q.getId()),1);
+            int row_index2 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,SubQuery.ttnlbtkh_for_all(q.getId()),1);
+            int row_index3 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,SubQuery.ttnlbtkh_for_dv(q.getId()),1);
+            return mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,SubQuery.ttnlbtkh_for_tongmaybay(q.getId()),1);
+        }
+        return 0;
+    }
+    private Integer map_ttxdtnv_create(XSSFWorkbook wb,String sheetName){
+        return mapDataToSheet(wb.createSheet(sheetName), 8,SubQuery.ttxd_nv(quy_cbb.getSelectionModel().getSelectedItem().getId(),dvi_cbb.getSelectionModel().getSelectedItem().getId()),4);
+    }
+    private Integer map_ttxdtnv_getting(XSSFWorkbook wb,String sheetName){
+        Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
+        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
+        if (q!=null && nx!=null){
+            System.out.println("query2: "+SubQuery.ttxd_nv(q.getId(),nx.getId()));
+            return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(q.getId(),nx.getId()),4);
+        }
+        return 0;
+    }
+    @FXML
+    public void bc_nxt(ActionEvent actionEvent) {
+        try {
+            Common.task(this::nxtmap,DialogMessage::successShowing,()->{});
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private void nxtmap(){
+        String sheetName = "bc_nxt";
+        Platform.runLater(()->{
+            Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+            copyFileExcel(file_name,dest_file);
+        });
+    }
+    @FXML
+    public void bc_ttnlbtkh(ActionEvent actionEvent) {
+        try {
+            Common.task(this::ttnlbtkh,DialogMessage::successShowing,()->{});
+        } catch (Exception e){
+            DialogMessage.errorShowing("Something wrong!");
+            e.printStackTrace();
+        }
+    }
+    private void ttnlbtkh(){
+        String sheetName = "bc_ttnl_theo_kh";
+        Platform.runLater(()->{
+            Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
+            copyFileExcel(file_name,dest_file);
+        });
+    }
+    @FXML
+    public void bc_ttxdtnv(ActionEvent actionEvent) {
+        try {
+            Common.task(this::ttxdtnv,DialogMessage::successShowing,()->{});
+        } catch (Exception e){
+            DialogMessage.errorShowing("Something wrong!");
+            e.printStackTrace();
+        }
+    }
+    private void ttxdtnv(){
+        String sheetName = "t_thu_xd_theo_n_vu";
+        Platform.runLater(()->{
+            Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
+            copyFileExcel(file_name,dest_file);
+        });
+    }
+    @FXML
+    public void bc_ptnn(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_pttk(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_hm_va_thucnhan(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_ttxd_xmt(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_ttxd_dmtt(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_dtsscd(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_ttns(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_lcv(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_nxtxd_nvk(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_nxt_hc(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_dauthau(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void bc_ttxd_dientap(ActionEvent actionEvent) {
+    }
+    private String getCusQueryNl(String begin_1,String end_q1, String end){
+        arr_tt.clear();
+        String n_sum1="";
+        String x_sum2="";
+        String n_case_1="";
+        String x_case_2="";
+        for (int i=0; i<tructhuocService.findAll().size(); i++) {
+            TrucThuoc tt = tructhuocService.findAll().get(i);
+            arr_tt.add(tt.getType());
+            n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
+            x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
+            n_case_1 = n_case_1.concat("max(case when tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as n"+tt.getType()+",");
+            x_case_2 = x_case_2.concat("max(case when tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as x"+tt.getType()+",");
+        }
+        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
     }
     private int mapDataToSheet(XSSFSheet sheet,  int begin_data_current,String query, int begin_col){
         ReportDAO reportDAO = new ReportDAO();
@@ -241,82 +321,4 @@ public class BaoCaoController implements Initializable {
         arr_tt.clear();
         return nxtls.size()+11;
     }
-    @FXML
-    public void bc_nxt(ActionEvent actionEvent) {
-        try {
-            Common.task(this::nxtmap,DialogMessage::successShowing,()->{});
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    private void nxtmap(){
-        String sheetName = "bc_nxt";
-        Platform.runLater(()->{
-            Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
-            copyFileExcel(file_name,dest_file);
-        });
-    }
-    @FXML
-    public void bc_ttnlbtkh(ActionEvent actionEvent) {
-        saveBcThanhtoanNhienlieuBayTheoKeHoach(file_name);
-        copyFileExcel(file_name,dest_file);
-    }
-    @FXML
-    public void bc_ttxdtnv(ActionEvent actionEvent) {
-        saveBcTieuthuXdTheoNhiemvu(file_name);
-        copyFileExcel(file_name,dest_file);
-    }
-    @FXML
-    public void bc_ptnn(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_pttk(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_hm_va_thucnhan(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_ttxd_xmt(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_ttxd_dmtt(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_dtsscd(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_ttns(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_lcv(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_nxtxd_nvk(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_nxt_hc(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_dauthau(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_ttxd_dientap(ActionEvent actionEvent) {
-    }
-    private String getCusQueryNl(String begin_1,String end_q1, String end){
-        arr_tt.clear();
-        String n_sum1="";
-        String x_sum2="";
-        String n_case_1="";
-        String x_case_2="";
-        for (int i=0; i<tructhuocService.findAll().size(); i++) {
-            TrucThuoc tt = tructhuocService.findAll().get(i);
-            arr_tt.add(tt.getType());
-            n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
-            x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            n_case_1 = n_case_1.concat("max(case when tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as n"+tt.getType()+",");
-            x_case_2 = x_case_2.concat("max(case when tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as x"+tt.getType()+",");
-        }
-        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
-    }
-
 }

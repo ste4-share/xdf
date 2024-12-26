@@ -12,7 +12,6 @@ import com.xdf.xd_f371.util.DialogMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -56,7 +55,7 @@ public class LedgerService {
                     saveHistory(ledger,detail,inventory.getNhap_nvdx()-inventory.getXuat_nvdx());
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e){
             DialogMessage.errorShowing("Something wrong!");
             e.printStackTrace();
         }

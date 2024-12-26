@@ -5,25 +5,25 @@ public class SubQuery {
     public SubQuery() {
     }
 
-    public String nl_begin_q1(){
+    public static String nl_begin_q1(){
         return "select max(stt_index) as stt,tinhchat,loai,CASE WHEN tenxd is null and grouping(tinhchat)=0 then loai else tenxd end,sum(tdk_sscd) as tdk_sscd,sum(tdk_nvdx) as tdk_nvdx,sum(cong) as cong,";
     }
-    public String nl_end_q1(){
+    public static String nl_end_q1(){
         return "max(priority_3), grouping(tinhchat) as tc_gr,grouping(loai) as loai_gr,grouping(tenxd) as xd_gr, max(priority_3) as pr from (select stt_index,tinhchat,loai,tenxd,max(tdk_sscd) as tdk_sscd,max(tdk_nvdx) as tdk_nvdx,max(tdk_sscd+tdk_nvdx) as cong,max(priority_3) as priority_3,";
     }
-    public String nl_end(int quarter_id){
+    public static String nl_end(int quarter_id){
         return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat like 'Nhiên liệu' and i.quarter_id="+quarter_id+" group by 1,2,3,4) s group by rollup(tinhchat,loai,tenxd) order by tc_gr desc,loai_gr desc,pr asc,xd_gr desc";
     }
-    public String dmn_begin_q1(){
+    public static String dmn_begin_q1(){
         return "select max(stt_index) as stt,chungloai,loai,CASE WHEN tenxd is null and grouping(chungloai)=0 then loai else tenxd end,sum(tdk_sscd) as tdk_sscd,sum(tdk_nvdx) as tdk_nvdx,sum(cong) as cong,";
     }
-    public String dmn_end_q1(){
+    public static String dmn_end_q1(){
         return "max(priority_3),grouping(chungloai) as cl_gr,grouping(loai) as loai_gr,grouping(tenxd) as xd_gr, max(priority_3) as pr from (select stt_index,chungloai,loai,tenxd,max(tdk_sscd) as tdk_sscd,max(tdk_nvdx) as tdk_nvdx,max(tdk_sscd+tdk_nvdx) as cong,max(priority_3) as priority_3,";
     }
-    public String dmn_end(int quarter_id){
+    public static String dmn_end(int quarter_id){
         return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat <> 'Nhiên liệu' and i.quarter_id="+quarter_id+" group by 1,2,3,4) s group by rollup(chungloai,loai,tenxd) order by chungloai desc,grouping(chungloai) desc,loai_gr desc,pr asc,xd_gr desc";
     }
-    public String ttxd_nv(int quy_id,int dv_id){
+    public static String ttxd_nv(int quy_id,int dv_id){
         return "select n, ten_nv,nhiemvu,xang,diezel,daubay,hm_cong,xm_xang_km,xm_xang_gio::text,xm_do_km,xm_do_gio::text,nlpl::text,x_choxe,x_chomay,x_cong,do_choxe,do_chomay,do_cong,nltt_nlpl,sd_tichluy,name_gr,tennv_gr,nv_gr\n" +
                 "from (select max(tt) as tt,max(pri) as pri,n,\n" +
                 "case when max(name_gr)=0 and max(tennv_gr)=1 then n else ten_nv end as ten_nv, \n" +
@@ -79,7 +79,7 @@ public class SubQuery {
                 "group by n,ten_nv,nhiemvu\n" +
                 "order by name_gr desc,tt,tennv_gr desc,pri,ten_nv,nv_gr desc) xxx\n";
     }
-    public String ttnlbtkh_for_mb(int qid){
+    public static String ttnlbtkh_for_mb(int qid){
         return "select 'A' as stt,'maybay' as ten,'Cho máy bay' as ten_nv,name_pt as nhiemvu,\n" +
                 "EXTRACT(epoch FROM sum(tk)) as tk,EXTRACT(epoch FROM sum(md)) as md, EXTRACT(epoch FROM sum(cong_giobay)) as cong_giobay,\n" +
                 "sum(nhienlieu) as nhienlieu,\n" +
@@ -104,7 +104,8 @@ public class SubQuery {
                 "where lpt_2 like 'MAYBAY'\n" +
                 "group by quarter_id,phuongtien_id) b on (a.quy=b.quarter_id and a.pt_id=b.phuongtien_id)) c\n" +
                 "group by rollup(name_pt) order by ten_gr desc,name_pt desc";
-    }public String ttnlbtkh_for_all(int qid){
+    }
+    public static String ttnlbtkh_for_all(int qid){
         return "select 'B' as stt,'nhiemvu' as ten,ten_nv, nhiemvu, \n" +
                 "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
                 "case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,\n" +
@@ -138,7 +139,8 @@ public class SubQuery {
                 "group by quarter_id,l.nhiemvu_id,nv) c on (rat2.quy=c.quarter_id and c.ctnv_id=rat2.ct_id)) d\n" +
                 "group by rollup(ten_nv,nhiemvu)) z\n" +
                 "group by ten_nv, nhiemvu order by tennv_gr desc,pri,ten_nv, nv_gr desc,nhiemvu";
-    }public String ttnlbtkh_for_dv(int q){
+    }
+    public static String ttnlbtkh_for_dv(int q){
         return "select 'C' as stt,ten,ten_nv,\n" +
                 "case when nhiemvu is null then ten else nhiemvu end as nhiemvu,\n" +
                 "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
@@ -176,7 +178,8 @@ public class SubQuery {
                 "group by rollup(ten,ten_nv,nhiemvu)) b\n" +
                 "group by pri,ten,ten_nv,nhiemvu\n" +
                 "order by ten_gr desc, ten desc,tennv_gr desc,pri asc,ten_nv,nv_gr desc";
-    }public String ttnlbtkh_for_tongmaybay(int q){
+    }
+    public static String ttnlbtkh_for_tongmaybay(int q){
         return "select 'D' as stt,name_pt as ten,ten_nv,case when nhiemvu is null then name_pt else nhiemvu end as nhiemvu,\n" +
                 "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
                 "case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,\n" +
