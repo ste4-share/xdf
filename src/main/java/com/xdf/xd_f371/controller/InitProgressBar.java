@@ -32,12 +32,12 @@ public class InitProgressBar implements Initializable {
             @Override
             protected Void call() throws Exception {
                 int total = 100;  // Total steps for the task
-                for (int i = 0; i <= total; i++) {
+                for (int i = 0; i <= total; i+=5) {
                     if (isCancelled()) {
                         break; // Stop task if it's cancelled
                     }
                     updateProgress(i, total);  // Update the progress bar
-                    Thread.sleep(20);  // Simulate a long-running task
+                    Thread.sleep(50);  // Simulate a long-running task
                 }
                 return null;
             }

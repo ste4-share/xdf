@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Quarter;
@@ -17,11 +18,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
-import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -51,11 +52,15 @@ public class BaoCaoController implements Initializable {
     @FXML
     ComboBox<NguonNx> dvi_cbb;
     @FXML
+    VBox rvb;
+    @FXML
     ComboBox<Quarter> quy_cbb;
     @FXML
-    Label fromdate,todate;
+    Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        rvb.setPrefWidth(DashboardController.screenWidth-300);
+        rvb.setPrefHeight(DashboardController.screenHeigh-300);
         initdvcbb();
         initquycbb();
     }
@@ -75,38 +80,6 @@ public class BaoCaoController implements Initializable {
         ComponentUtil.setItemsToComboBox(dvi_cbb, nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()),NguonNx::getTen,input-> nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
     }
-    private void saveBcTieuthuXdTheoNhiemvu(String file_name) {
-        String sheetName = "t_thu_xd_theo_n_vu";
-        try{
-            File file = new File(file_name);
-            SubQuery subQuery = new SubQuery();
-            if (!file.exists()){
-                file.createNewFile();
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook();
-                // Now creating Sheets using sheet object
-                mapDataToSheet(wb.createSheet(sheetName), 8,subQuery.ttxd_nv(quy_cbb.getSelectionModel().getSelectedItem().getId(),dvi_cbb.getSelectionModel().getSelectedItem().getId()),4);
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
-            }else{
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook wb = new XSSFWorkbook(fis);
-                // Now creating Sheets using sheet object
-                mapDataToSheet(wb.getSheet(sheetName), 8,subQuery.ttxd_nv(quy_cbb.getSelectionModel().getSelectedItem().getId(),dvi_cbb.getSelectionModel().getSelectedItem().getId()),4);
-                fis.close();
-                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-                wb.write(fileOutputStream);
-                fileOutputStream.close();
-                wb.close();
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
     private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){
         int row_ind = createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(),SubQuery.nl_end_q1(),SubQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
         return createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(SubQuery.dmn_begin_q1(),SubQuery.dmn_end_q1(),SubQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
@@ -121,7 +94,6 @@ public class BaoCaoController implements Initializable {
     private Integer map_ttnlbtkh_getting(XSSFWorkbook wb,String sheetName){
         Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
         if (q!=null){
-            System.out.println("query1: "+SubQuery.ttnlbtkh_for_mb(q.getId()));
             int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(q.getId()),1);
             int row_index2 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,SubQuery.ttnlbtkh_for_all(q.getId()),1);
             int row_index3 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,SubQuery.ttnlbtkh_for_dv(q.getId()),1);
@@ -136,57 +108,51 @@ public class BaoCaoController implements Initializable {
         Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
         NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
         if (q!=null && nx!=null){
-            System.out.println("query2: "+SubQuery.ttxd_nv(q.getId(),nx.getId()));
             return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(q.getId(),nx.getId()),4);
         }
         return 0;
     }
     @FXML
     public void bc_nxt(ActionEvent actionEvent) {
-        try {
-            Common.task(this::nxtmap,DialogMessage::successShowing,()->{});
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        Stage stage_1 = new Stage();
+        Common.getLoading(stage_1);
+        Platform.runLater(()->{
+            Common.task(this::nxtmap, stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
+            nxt_lb.setText("UPDATED");
+        });
     }
     private void nxtmap(){
         String sheetName = "bc_nxt";
-        Platform.runLater(()->{
-            Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
-            copyFileExcel(file_name,dest_file);
-        });
+        Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+        copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttnlbtkh(ActionEvent actionEvent) {
-        try {
-            Common.task(this::ttnlbtkh,DialogMessage::successShowing,()->{});
-        } catch (Exception e){
-            DialogMessage.errorShowing("Something wrong!");
-            e.printStackTrace();
-        }
+        Stage stage_1 = new Stage();
+        Common.getLoading(stage_1);
+        Platform.runLater(()-> {
+            Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+            ttnlbtkh_lb.setText("UPDATED");
+        });
     }
     private void ttnlbtkh(){
         String sheetName = "bc_ttnl_theo_kh";
-        Platform.runLater(()->{
-            Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
-            copyFileExcel(file_name,dest_file);
-        });
+        Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
+        copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttxdtnv(ActionEvent actionEvent) {
-        try {
-            Common.task(this::ttxdtnv,DialogMessage::successShowing,()->{});
-        } catch (Exception e){
-            DialogMessage.errorShowing("Something wrong!");
-            e.printStackTrace();
-        }
+        Stage stage_1 = new Stage();
+        Common.getLoading(stage_1);
+        Platform.runLater(()-> {
+            Common.task(this::ttxdtnv,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
+            ttxdtnv_lb.setText("UPDATED");
+        });
     }
     private void ttxdtnv(){
         String sheetName = "t_thu_xd_theo_n_vu";
-        Platform.runLater(()->{
-            Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
-            copyFileExcel(file_name,dest_file);
-        });
+        Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
+        copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ptnn(ActionEvent actionEvent) {

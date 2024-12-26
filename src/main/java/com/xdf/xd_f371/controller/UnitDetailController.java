@@ -6,12 +6,10 @@ import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,8 +43,8 @@ public class UnitDetailController implements Initializable {
     @FXML
     public void saveUnit(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage("Thông báo", "Lưu thay đổi", "Xác nhận Lưu thay đổi?",Alert.AlertType.CONFIRMATION)== ButtonType.OK){
-            nguonNxService.save(new NguonNx(DonviController.selectedUnit.getNguonnx_id(),unit_name_tf.getText(),DonviController.selectedUnit.getStatus(),
-                    DonviController.selectedUnit.getCode(),tructhuoc_cbb.getValue().getId()));
+            nguonNxService.saveNnxAndLedger(new NguonNx(DonviController.selectedUnit.getNguonnx_id(),unit_name_tf.getText(),DonviController.selectedUnit.getStatus(),
+                    DonviController.selectedUnit.getCode(),tructhuoc_cbb.getValue().getId()),tructhuoc_cbb.getSelectionModel().getSelectedItem());
             if (DialogMessage.callAlertWithMessage("Thông báo", "Thành công", "Đã lưu thay đổi",Alert.AlertType.INFORMATION)== ButtonType.OK){
                 DonviController.unit_stage.close();
             }

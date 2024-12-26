@@ -91,7 +91,6 @@ public class DashboardController implements Initializable {
         tbTTNX.setPrefWidth(screenWidth);
         tbTTNX.setPrefHeight(screenHeigh-300);
         preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
-        ctStage = new Stage();
         so_select=0L;
         getCurrentQuarter();
         ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
@@ -156,7 +155,12 @@ public class DashboardController implements Initializable {
     @FXML
     public void report_menu_action(MouseEvent mouseEvent) {
         setStyleForClickedMEnu(report,setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu);
-        openFxml("reporters.fxml");
+        try {
+            VBox vBox = (VBox) getNodeBySource("reporters.fxml");
+            borderpane_base.setCenter(vBox);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     @FXML
     public void quy_selected(ActionEvent actionEvent) {

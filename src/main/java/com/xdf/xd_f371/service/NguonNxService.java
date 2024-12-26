@@ -1,7 +1,11 @@
 package com.xdf.xd_f371.service;
 
+import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.entity.NguonNx;
+import com.xdf.xd_f371.entity.TrucThuoc;
+import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
+import com.xdf.xd_f371.util.DialogMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NguonNxService {
     private final NguonNxRepo nguonNxRepo;
+    private final LedgersRepo ledgersRepo;
 
     public List<NguonNx> findByStatus(String status){
         return nguonNxRepo.findByStatus(status);
@@ -31,5 +36,14 @@ public class NguonNxService {
     }
     public NguonNx save(NguonNx nguonNx){
         return nguonNxRepo.save(nguonNx);
+    }
+    public void saveNnxAndLedger(NguonNx n, TrucThuoc tt){
+        try {
+            nguonNxRepo.save(new NguonNx(n.getId(),n.getTen(),n.getStatus(),
+                    n.getCode(),n.getTructhuoc_id()));
+            ledgersRepo.updateTrucThuocFromNxx(n.getId(),tt.getType(), DashboardController.findByTime.getId());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

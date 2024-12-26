@@ -97,7 +97,7 @@ public class AddNewChitieuNvForm implements Initializable {
             }else{
                 hanmucNhiemvuService.save(new NhiemvuTaubay(hm.getNvtb_id(),n.getId(),p.getId(),ct.getCtnv_id(),DashboardController.findByTime.getId(),tk.getText(),md.getText(),Long.parseLong(nl.getText())));
             }
-            DialogMessage.successShowing();
+            DialogMessage.successShowing("Luu thanh cong");
             NhiemvuController.nvStage.close();
         } else {
             DialogMessage.errorShowing(null);

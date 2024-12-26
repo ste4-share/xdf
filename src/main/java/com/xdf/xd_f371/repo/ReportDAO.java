@@ -1,11 +1,11 @@
 package com.xdf.xd_f371.repo;
 
 import com.xdf.xd_f371.MainApplicationApp;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -14,7 +14,22 @@ public class ReportDAO {
             MainApplicationApp.context.getBean("entityManagerFactory", jakarta.persistence.EntityManagerFactory.class);
 
     public List<Object[]> findByWhatEver(String qry){
-        Query q = emf.createEntityManager().createNativeQuery(qry);
-        return q.getResultList();
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            Query q = em.createNativeQuery(qry);
+            // Perform operations
+            em.getTransaction().commit();
+            return q.getResultList();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;  // Rethrow the exception or handle it
+        } finally {
+            em.close();  // Make sure the EntityManager is always closed
+        }
+
     }
 }

@@ -388,7 +388,11 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     private void setNhiemvuForField(List<NhiemVuDto> nhiemVuDtos){
         acbLogin.dispose();
-        searchCompleteTion(nhiemVuDtos.stream().map(NhiemVuDto::getChitiet).collect(Collectors.toList()));
+        List<String> ls = new ArrayList<>();
+        nhiemVuDtos.forEach(i->{
+            ls.add(i.getTen_nv()+ " - " + i.getChitiet());
+        });
+        searchCompleteTion(ls);
     }
     private void initValueForLoaiXuatCbb(List<String> nhiemVuDtos, List<PhuongTien> pt,List<NguonNx> dvx,List<NguonNx> dvn,List<LoaiXangDauDto> lxd,boolean pxhbox) {
         disableFeature(pxhbox);

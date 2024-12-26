@@ -4,6 +4,7 @@ import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.Ledger;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,4 +33,7 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("qid") int qid);
     @Query(value = "select * from ledgers where quarter_id=:qid and loai_phieu like :lp", nativeQuery = true)
     List<Ledger> findAllByQuarter(@Param("qid") int quarterId,@Param("lp") String lp);
+    @Modifying
+    @Query(value = "update ledgers set tructhuoc=:c where dvi_nhan_id=:nid or dvi_xuat_id=:nid and quarter_id=:qid", nativeQuery = true)
+    int updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code,@Param("qid") int qId);
 }

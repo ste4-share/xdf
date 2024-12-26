@@ -79,7 +79,7 @@ public class AddNewHanMucNhiemvu implements Initializable {
         if (DialogMessage.callAlertWithMessage(null, "Xac nhan them moi","Them moi", Alert.AlertType.CONFIRMATION) == ButtonType.OK){
             if (isvalid()){
                 saveHm();
-                DialogMessage.successShowing();
+                DialogMessage.successShowing("Luu thanh cong");
                 NhiemvuController.nvStage.close();
             }else{
                 DialogMessage.errorShowing("Sai dinh dang, vui long thu lai.");

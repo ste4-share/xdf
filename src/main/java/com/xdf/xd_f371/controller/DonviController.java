@@ -75,7 +75,6 @@ public class DonviController implements Initializable {
         nhomtructhuoc.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("nhomtructhuoc"));
         col_create_time.setCellValueFactory(new PropertyValueFactory<TructhuocDto, String>("timestamp"));
     }
-
     private void showUnitsDetailScreen() throws IOException {
         selectedUnit = tb_unit.getSelectionModel().getSelectedItem();
         unit_stage = new Stage();
@@ -83,7 +82,6 @@ public class DonviController implements Initializable {
         fillDataForTable_nguonnx();
         tb_unit.refresh();
     }
-
     @FXML
     public void searchButtonUnit(ActionEvent actionEvent) {
     }
@@ -112,7 +110,6 @@ public class DonviController implements Initializable {
     public void unit_clicked(MouseEvent mouseEvent) throws IOException {
         if (mouseEvent.getClickCount()==2){
             showUnitsDetailScreen();
-            fillDataForTable_nguonnx();
             tb_unit.refresh();
         }
     }

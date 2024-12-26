@@ -60,21 +60,21 @@ public class SubQuery {
                 "from hanmuc_nhiemvu2 hm2 right join chitiet_nhiemvu ct on hm2.nhiemvu_id=ct.id right join nhiemvu n on ct.nhiemvu_id=n.id\n" +
                 "join team t on n.team_id=t.id\n" +
                 "left join (select nhiemvu_id,dvi_xuat_id,sum(so_km) as km, sum(giohd_md::interval) as gio from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt like 'XE_CHAY_XANG' OR l.lpt like 'MAY_CHAY_XANG' group by 1,2) a on (ct.id=a.nhiemvu_id and hm2.dvi_id=a.dvi_xuat_id)\n" +
+                "where l.lpt like 'XE_CHAY_XANG' OR l.lpt like 'MAY_CHAY_XANG' and l.status like 'ACTIVE' group by 1,2) a on (ct.id=a.nhiemvu_id and hm2.dvi_id=a.dvi_xuat_id)\n" +
                 "left join (select nhiemvu_id,dvi_xuat_id,sum(so_km) as km, sum(giohd_md::interval) as gio from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt like 'XE_CHAY_DIEZEL' OR l.lpt like 'MAY_CHAY_DIEZEL' group by 1,2) b on (ct.id=b.nhiemvu_id and hm2.dvi_id=b.dvi_xuat_id)\n" +
+                "where l.lpt like 'XE_CHAY_DIEZEL' OR l.lpt like 'MAY_CHAY_DIEZEL' and l.status like 'ACTIVE' group by 1,2) b on (ct.id=b.nhiemvu_id and hm2.dvi_id=b.dvi_xuat_id)\n" +
                 "left join (select nhiemvu_id,dvi_xuat_id,sum(giohd_md::interval + giohd_tk::interval) as gio from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'MAYBAY' group by 1,2) e on (ct.id=e.nhiemvu_id and hm2.dvi_id=e.dvi_xuat_id)\n" +
+                "where l.lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' group by 1,2) e on (ct.id=e.nhiemvu_id and hm2.dvi_id=e.dvi_xuat_id)\n" +
                 "left join (select nhiemvu_id,dvi_xuat_id, sum(so_luong) as choxe from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'XE' and chung_loai like 'Xăng' group by 1,2) c on (ct.id=c.nhiemvu_id and hm2.dvi_id=c.dvi_xuat_id) \n" +
+                "where l.lpt_2 like 'XE' and chung_loai like 'Xăng' and l.status like 'ACTIVE' group by 1,2) c on (ct.id=c.nhiemvu_id and hm2.dvi_id=c.dvi_xuat_id) \n" +
                 "left join (select nhiemvu_id,dvi_xuat_id, sum(so_luong) as chomay from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'MAY' and chung_loai like 'Xăng' group by 1,2) d on (ct.id=d.nhiemvu_id and hm2.dvi_id=d.dvi_xuat_id)\n" +
+                "where l.lpt_2 like 'MAY' and chung_loai like 'Xăng' and l.status like 'ACTIVE' group by 1,2) d on (ct.id=d.nhiemvu_id and hm2.dvi_id=d.dvi_xuat_id)\n" +
                 "left join (select nhiemvu_id,dvi_xuat_id, sum(so_luong) as choxe from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'XE' and chung_loai like 'Diezel' group by 1,2) f on (ct.id=f.nhiemvu_id and hm2.dvi_id=f.dvi_xuat_id) \n" +
+                "where l.lpt_2 like 'XE' and chung_loai like 'Diezel' and l.status like 'ACTIVE' group by 1,2) f on (ct.id=f.nhiemvu_id and hm2.dvi_id=f.dvi_xuat_id) \n" +
                 "left join (select nhiemvu_id,dvi_xuat_id, sum(so_luong) as chomay from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'MAY' and chung_loai like 'Diezel' group by 1,2) g on (ct.id=g.nhiemvu_id and hm2.dvi_id=g.dvi_xuat_id)\n" +
+                "where l.lpt_2 like 'MAY' and chung_loai like 'Diezel' and l.status like 'ACTIVE' group by 1,2) g on (ct.id=g.nhiemvu_id and hm2.dvi_id=g.dvi_xuat_id)\n" +
                 "left join (select nhiemvu_id,dvi_xuat_id, sum(so_luong) as nlpl from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'MAYBAY' and (chung_loai like 'Dầu bay' or chung_loai like 'Dầu Hạ cấp') group by 1,2) h on (ct.id=h.nhiemvu_id and hm2.dvi_id=h.dvi_xuat_id) where quarter_id="+quy_id+" and dvi_id="+dv_id+") zz\n" +
+                "where l.lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and (chung_loai like 'Dầu bay' or chung_loai like 'Dầu Hạ cấp') group by 1,2) h on (ct.id=h.nhiemvu_id and hm2.dvi_id=h.dvi_xuat_id) where quarter_id="+quy_id+" and dvi_id="+dv_id+") zz\n" +
                 "group by rollup(n,ten_nv,nhiemvu)) zxy\n" +
                 "group by n,ten_nv,nhiemvu\n" +
                 "order by name_gr desc,tt,tennv_gr desc,pri,ten_nv,nv_gr desc) xxx\n";
@@ -101,7 +101,7 @@ public class SubQuery {
                 "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
                 "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
-                "where lpt_2 like 'MAYBAY'\n" +
+                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE'\n" +
                 "group by quarter_id,phuongtien_id) b on (a.quy=b.quarter_id and a.pt_id=b.phuongtien_id)) c\n" +
                 "group by rollup(name_pt) order by ten_gr desc,name_pt desc";
     }
@@ -135,7 +135,7 @@ public class SubQuery {
                 "sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,\n" +
                 "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
+                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE'\n" +
                 "group by quarter_id,l.nhiemvu_id,nv) c on (rat2.quy=c.quarter_id and c.ctnv_id=rat2.ct_id)) d\n" +
                 "group by rollup(ten_nv,nhiemvu)) z\n" +
                 "group by ten_nv, nhiemvu order by tennv_gr desc,pri,ten_nv, nv_gr desc,nhiemvu";
@@ -173,7 +173,7 @@ public class SubQuery {
                 "left join (SELECT quarter_id,dvi_xuat_id,l.nhiemvu_id as ctnv_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,\n" +
                 "sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
+                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE'\n" +
                 "group by quarter_id,dvi_xuat_id,l.nhiemvu_id) a on (quy_id=a.quarter_id and a.dvi_xuat_id=rat.nnx and a.ctnv_id=rat.ct_id)\n" +
                 "group by rollup(ten,ten_nv,nhiemvu)) b\n" +
                 "group by pri,ten,ten_nv,nhiemvu\n" +
@@ -215,7 +215,7 @@ public class SubQuery {
                 "left join (SELECT quarter_id,phuongtien_id,l.nhiemvu_id as ctnv_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,\n" +
                 "sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
+                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE'\n" +
                 "group by quarter_id,phuongtien_id,l.nhiemvu_id) a on (quy_id=a.quarter_id and a.phuongtien_id=rat.pt_id and a.ctnv_id=rat.ct_id)\n" +
                 "group by rollup(name_pt,ten_nv,nhiemvu)) b\n" +
                 "where name_pt is not null\n" +

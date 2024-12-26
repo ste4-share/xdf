@@ -34,12 +34,12 @@ public class DialogMessage {
         alert.setContentText(content);
 
         Optional<ButtonType> result = alert.showAndWait();
-        return result.get();
+        return result.orElse(null);
     }
     public static void errorShowing(String m){
-        DialogMessage.callAlertWithMessage(null, null, "Something stills wrong! \n"+m, Alert.AlertType.WARNING);
+        DialogMessage.message(null, null, "Something stills wrong! \n"+m, Alert.AlertType.WARNING);
     }
-    public static void successShowing(){
-        DialogMessage.callAlertWithMessage(null, "Thanh cong",null , Alert.AlertType.WARNING);
+    public static void successShowing(String message){
+        DialogMessage.message(null, message,null , Alert.AlertType.WARNING);
     }
 }

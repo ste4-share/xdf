@@ -11,7 +11,7 @@ public class ConnectionService {
 
     public boolean checkConnection(String ip, int port) {
         try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(ip, port), 5000); // 5-second timeout
+            socket.connect(new InetSocketAddress(ip, port), 30000); // 5-second timeout
             return true;
         } catch (IOException e) {
             return false;

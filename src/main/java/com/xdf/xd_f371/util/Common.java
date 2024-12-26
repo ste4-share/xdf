@@ -29,6 +29,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,20 +71,30 @@ public class Common {
         });
     }
     public static void getLoading(Stage primaryStage){
+        // Create the ProgressIndicator
         ProgressIndicator progressIndicator = new ProgressIndicator();
+
+        // Set the style for ProgressIndicator to make it background transparent
         progressIndicator.setStyle(
                 "-fx-background-color: transparent;"   // Remove the background color
                         + "-fx-progress-color: green;"         // Set the progress color (customize as needed)
                         + "-fx-border-color: transparent;"     // Remove the border around the ProgressIndicator
         );
+        progressIndicator.setVisible(true);
+        // Set up the layout for the root (StackPane)
         StackPane root = new StackPane(progressIndicator);
         root.setStyle("-fx-background-color: transparent;");  // Make the layout transparent
-        Scene scene = new Scene(root, 100, 100);
-        scene.setFill(null); // Make the scene transparent
 
+        // Create a Scene with a transparent background
+        Scene scene = new Scene(root, 200, 200);
+        scene.setFill(Color.TRANSPARENT); // Make the scene transparent
+
+        // Make the window (Stage) fully transparent and remove the border/title bar
         primaryStage.initStyle(StageStyle.TRANSPARENT);  // Remove window decorations and make it transparent
         primaryStage.setOpacity(1);  // Ensure the window is fully visible
-
+        primaryStage.initModality(Modality.APPLICATION_MODAL); // Make the stage modal
+        primaryStage.setAlwaysOnTop(true); // Optional: Keep it above other stages
+        // Set the scene and show the stage
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -95,38 +108,45 @@ public class Common {
     public static boolean isNumber(String in) {
         return in.matches("[^A-Za-z][0-9]{0,18}");
     }
-    public static void task(Runnable task_call,Runnable success,Runnable close) {
-        Stage stage_1 = new Stage();
-        Common.getLoading(stage_1);
+    public static void task(Runnable task_call,Runnable success,Runnable message) {
+
         Task<Void> loadingTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                Platform.runLater(()->{
-                    task_call.run();
-                    System.out.println("A");
-                    stage_1.close();
-                    System.out.println("B");
-                });
+                task_call.run();
                 return null;
             }
             @Override
             protected void succeeded() {
-                Platform.runLater(() -> {
-                    close.run();
-                    success.run();
-                });
+                success.run();
+                message.run();
+            }
+            @Override
+            protected void cancelled() {
+                success.run();
+                DialogMessage.message("Timeout", "The task took too long and has been cancelled.","Task Timed Out", Alert.AlertType.WARNING);
             }
             @Override
             protected void failed() {
+                success.run();
                 DialogMessage.message("Error", "An unexpected error occurred","An unexpected error has occurred", Alert.AlertType.ERROR);
-                Platform.runLater(() -> {
-                    close.run();
-                    stage_1.close();
-                });
             }
         };
         // Start loading task in the background
-        new Thread(loadingTask).start();
+        Thread thread = new Thread(loadingTask);
+        thread.setDaemon(true);
+        thread.start();
+        // Set a timeout for the task
+        setTaskTimeout(loadingTask, 30, TimeUnit.SECONDS);
+    }
+    private static void setTaskTimeout(Task<?> task, long timeout, TimeUnit unit) {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(() -> {
+            if (!task.isDone()) {
+                task.cancel();
+            }
+            scheduler.shutdown();
+        }, timeout, unit);
     }
     public static void mapExcelFile(String file_name,Function<XSSFWorkbook,Integer> mapData_createNew,Function<XSSFWorkbook,Integer> mapData_get){
         try{
