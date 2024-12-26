@@ -44,6 +44,7 @@ import java.util.ResourceBundle;
 @Component
 public class DashboardController implements Initializable {
     public static String o_path;
+    public static String lp = null;
     public static Long so_select = 0L;
     public static Stage primaryStage;
     public static Stage xuatStage ;
@@ -174,6 +175,7 @@ public class DashboardController implements Initializable {
         if (mouseEvent.getClickCount()==2){
             try {
                 so_select = (long) tbTTNX.getSelectionModel().getSelectedItem().getSo();
+                lp = tbTTNX.getSelectionModel().getSelectedItem().getLoai_phieu();
                 Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT");
             }catch (NullPointerException e){
                 e.printStackTrace();

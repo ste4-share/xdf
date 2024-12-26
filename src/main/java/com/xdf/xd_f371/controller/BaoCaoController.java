@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Quarter;

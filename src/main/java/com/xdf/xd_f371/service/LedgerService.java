@@ -22,7 +22,7 @@ public class LedgerService {
     private final InventoryRepo inventoryRepo;
     private final LichsuRepo lichsuRepo;
     public List<LedgerDto> getLedgers() {
-        return ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.so_select,DashboardController.findByTime.getId());
+        return ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.so_select,DashboardController.findByTime.getId(),DashboardController.lp);
     }
     public List<MiniLedgerDto> findInterfaceLedger(String status, int quarter_id){
         return ledgersRepo.findInterfaceLedger(status, quarter_id);

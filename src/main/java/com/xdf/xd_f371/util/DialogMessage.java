@@ -40,6 +40,6 @@ public class DialogMessage {
         DialogMessage.message(null, null, "Something stills wrong! \n"+m, Alert.AlertType.WARNING);
     }
     public static void successShowing(String message){
-        DialogMessage.message(null, message,null , Alert.AlertType.WARNING);
+        DialogMessage.message(null, message,null , Alert.AlertType.INFORMATION);
     }
 }
