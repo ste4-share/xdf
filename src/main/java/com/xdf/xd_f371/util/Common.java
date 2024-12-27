@@ -2,10 +2,7 @@ package com.xdf.xd_f371.util;
 
 
 import com.xdf.xd_f371.MainApplicationApp;
-import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.controller.DashboardController;
-import jakarta.validation.constraints.Null;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -71,30 +68,21 @@ public class Common {
         });
     }
     public static void getLoading(Stage primaryStage){
-        // Create the ProgressIndicator
         ProgressIndicator progressIndicator = new ProgressIndicator();
-
-        // Set the style for ProgressIndicator to make it background transparent
         progressIndicator.setStyle(
-                "-fx-background-color: transparent;"   // Remove the background color
-                        + "-fx-progress-color: green;"         // Set the progress color (customize as needed)
-                        + "-fx-border-color: transparent;"     // Remove the border around the ProgressIndicator
+                "-fx-background-color: transparent;"
+                        + "-fx-progress-color: green;"
+                        + "-fx-border-color: transparent;"
         );
         progressIndicator.setVisible(true);
-        // Set up the layout for the root (StackPane)
         StackPane root = new StackPane(progressIndicator);
-        root.setStyle("-fx-background-color: transparent;");  // Make the layout transparent
-
-        // Create a Scene with a transparent background
+        root.setStyle("-fx-background-color: transparent;");
         Scene scene = new Scene(root, 200, 200);
-        scene.setFill(Color.TRANSPARENT); // Make the scene transparent
-
-        // Make the window (Stage) fully transparent and remove the border/title bar
-        primaryStage.initStyle(StageStyle.TRANSPARENT);  // Remove window decorations and make it transparent
-        primaryStage.setOpacity(1);  // Ensure the window is fully visible
-        primaryStage.initModality(Modality.APPLICATION_MODAL); // Make the stage modal
-        primaryStage.setAlwaysOnTop(true); // Optional: Keep it above other stages
-        // Set the scene and show the stage
+        scene.setFill(Color.TRANSPARENT);
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
+        primaryStage.setOpacity(1);
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.setAlwaysOnTop(true);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

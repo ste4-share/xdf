@@ -80,6 +80,8 @@ public class Ledger {
     private String lpt_2;
     @Column(name = "create_by")
     private int create_by;
+    @Column(name = "root_id")
+    private int root_id;
     @Version
     private int version;
 

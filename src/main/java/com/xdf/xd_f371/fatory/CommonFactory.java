@@ -34,6 +34,8 @@ public class CommonFactory {
     protected TructhuocService tructhuocService;
     @Autowired
     protected InventoryService inventoryService;
+    @Autowired
+    protected ConfigurationService configurationService;
     @FXML
     protected TableView<LedgerDetails> tbView;
     @FXML

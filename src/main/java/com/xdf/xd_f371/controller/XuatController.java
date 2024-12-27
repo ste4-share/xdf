@@ -490,6 +490,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledger.setLoai_phieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         ledger.setDvi_nhan_id(dvn==null? 0 : dvn.getId());
         ledger.setDvi_xuat_id(dvx.getId());
+        ledger.setRoot_id(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).orElse(null).getValue()));
         ledger.setNguoi_nhan(nguoinhan.getText());
         ledger.setSo_xe(soxe.getText());
         ledger.setLenh_so(lenhso.getText());

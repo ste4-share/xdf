@@ -21,7 +21,7 @@
                   <Insets left="10.0" />
                </HBox.margin>
             </Label>
-            <ComboBox fx:id="dvi_cbb" onAction="#dvi_selected" prefHeight="38.0" prefWidth="318.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+            <ComboBox fx:id="dvi_cbb" disable="true" onAction="#dvi_selected" prefHeight="38.0" prefWidth="318.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

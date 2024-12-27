@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.cons.StatusCons;
@@ -206,6 +207,8 @@ public class NhapController extends CommonFactory implements Initializable {
         return null;
     }
     private Ledger getLedger() {
+        NguonNx dvx = cmb_dvvc.getSelectionModel().getSelectedItem();
+        NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
         ledger.setBill_id(Integer.parseInt(soTf.getText()));
@@ -214,11 +217,12 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
         ledger.setStatus(StatusCons.ACTIVED.getName());
-        ledger.setDvi_nhan(cmb_dvn.getValue().getTen());
-        ledger.setDvi_xuat(cmb_dvvc.getValue().getTen());
+        ledger.setDvi_nhan(dvn.getTen());
+        ledger.setDvi_xuat(dvx.getTen());
         ledger.setLoai_phieu(LoaiPhieuCons.PHIEU_NHAP.getName());
-        ledger.setDvi_nhan_id(cmb_dvn.getValue().getId());
-        ledger.setDvi_xuat_id(cmb_dvvc.getValue().getId());
+        ledger.setDvi_nhan_id(dvn.getId());
+        ledger.setDvi_xuat_id(dvx.getId());
+        ledger.setRoot_id(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).orElse(null).getValue()));
         ledger.setNguoi_nhan(recvTf.getText());
         ledger.setSo_xe(soXe.getText());
         ledger.setLenh_so(lenhKHso.getText());

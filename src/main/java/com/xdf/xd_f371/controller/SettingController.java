@@ -132,6 +132,9 @@ public class SettingController implements Initializable {
     public void pathChange(ActionEvent actionEvent) {
         setSelectDirectory(DashboardController.primaryStage);
     }
+    @FXML
+    public void rootCbbAction(ActionEvent actionEvent) {
+    }
     private void saveUser(){
         Accounts a = accountService.findAccountByUsername(ConnectLan.pre_acc.getUsername());
         if (DashboardController.o_path!=null){

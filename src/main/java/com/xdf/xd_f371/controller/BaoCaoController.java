@@ -107,6 +107,7 @@ public class BaoCaoController implements Initializable {
         Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
         NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
         if (q!=null && nx!=null){
+            System.out.println("query: " + SubQuery.ttxd_nv(q.getId(),nx.getId()));
             return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(q.getId(),nx.getId()),4);
         }
         return 0;
@@ -195,13 +196,17 @@ public class BaoCaoController implements Initializable {
         String x_sum2="";
         String n_case_1="";
         String x_case_2="";
+        Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
+        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
         for (int i=0; i<tructhuocService.findAll().size(); i++) {
             TrucThuoc tt = tructhuocService.findAll().get(i);
             arr_tt.add(tt.getType());
             n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
             x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            n_case_1 = n_case_1.concat("max(case when tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhonhap_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as n"+tt.getType()+",");
-            x_case_2 = x_case_2.concat("max(case when tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') is null then 0 else tonkhoxuat_xd2("+quy_cbb.getSelectionModel().getSelectedItem().getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+dvi_cbb.getSelectionModel().getSelectedItem().getId()+",'ACTIVE') end) as x"+tt.getType()+",");
+            n_case_1 = n_case_1.concat("max(case when tonkhonhap_xd2("+q.getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+nx.getId()+",'ACTIVE') " +
+                    "is null then 0 else tonkhonhap_xd2("+q.getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+nx.getId()+",'ACTIVE') end) as n"+tt.getType()+",");
+            x_case_2 = x_case_2.concat("max(case when tonkhoxuat_xd2("+q.getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+nx.getId()+",'ACTIVE') " +
+                    "is null then 0 else tonkhoxuat_xd2("+q.getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+nx.getId()+",'ACTIVE') end) as x"+tt.getType()+",");
         }
         return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
     }
