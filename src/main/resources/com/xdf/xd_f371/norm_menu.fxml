@@ -81,7 +81,7 @@
             </HBox>
             <TableView fx:id="pt_tb" onMousePressed="#pt_selected" stylesheets="@css/table_style.css">
               <columns>
-                  <TableColumn fx:id="stt" minWidth="0.0" prefWidth="45.0" text="STT" />
+                  <TableColumn fx:id="stt" maxWidth="50.0" prefWidth="45.0" resizable="false" text="STT" />
                 <TableColumn prefWidth="105.0" text="Tên" fx:id="xmt_name" />
                 <TableColumn fx:id="type_name" prefWidth="73.0" text="Loại" />
                   <TableColumn fx:id="tructhuoc" prefWidth="97.0" text="Trực thuộc" />

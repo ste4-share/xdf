@@ -126,12 +126,13 @@ public class Common {
                 success.run();
                 DialogMessage.message("Timeout", "The task took too long and has been cancelled.","Task Timed Out", Alert.AlertType.WARNING);
             }
-            @Override
-            protected void failed() {
-                success.run();
-                DialogMessage.message("Error", "An unexpected error occurred","An unexpected error has occurred", Alert.AlertType.ERROR);
-            }
         };
+        loadingTask.setOnFailed(workerStateEvent -> {
+            Throwable exception = loadingTask.getException();
+            if (exception != null) {
+                DialogMessage.errorShowing(exception.getMessage());
+            }
+        });
         // Start loading task in the background
         Thread thread = new Thread(loadingTask);
         thread.setDaemon(true);

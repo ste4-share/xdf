@@ -102,7 +102,7 @@ public class ConnectLan implements Initializable {
     private boolean isvalid(String user, String p,String ip,String po){
         if (!user.isEmpty()){
             if (!p.isEmpty()){
-                if (ip.matches(regex)){
+                if (ip.matches(regex) || ip.equals("localhost")){
                     if (Common.isNumber(po.trim())){
                         return true;
                     }else {
