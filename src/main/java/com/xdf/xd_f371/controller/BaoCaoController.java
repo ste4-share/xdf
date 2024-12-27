@@ -12,15 +12,16 @@ import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -107,7 +108,6 @@ public class BaoCaoController implements Initializable {
         Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
         NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
         if (q!=null && nx!=null){
-            System.out.println("query: " + SubQuery.ttxd_nv(q.getId(),nx.getId()));
             return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(q.getId(),nx.getId()),4);
         }
         return 0;
