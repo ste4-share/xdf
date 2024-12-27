@@ -107,14 +107,14 @@ public class DashboardController implements Initializable {
     @FXML
     public void importActionClick(ActionEvent actionEvent) throws IOException{
         primaryStage = new Stage();
-        Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP");
+        Common.openNewStage2("nhap.fxml", primaryStage,"FORM NHAP");
         setDataToViewTable();
     }
 
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
         xuatStage = new Stage();
-        Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT");
+        Common.openNewStage2("xuat.fxml", xuatStage,"FORM XUAT");
         setDataToViewTable();
     }
     @FXML

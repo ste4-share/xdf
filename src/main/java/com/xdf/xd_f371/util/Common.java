@@ -48,7 +48,20 @@ public class Common {
         stage.setTitle(title);
         stage.showAndWait();
     }
-
+    public static void openNewStage2(String fxml_url, Stage stage, String title){
+        Parent root = null;
+        try {
+            root = (Parent) DashboardController.getNodeBySource(fxml_url);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle(title);
+        stage.showAndWait();
+    }
     public static void openNewStage_show(String fxml_url, Stage stage, String title, ConfigurableApplicationContext context) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(fxml_url));
         fxmlLoader.setControllerFactory(context::getBean);

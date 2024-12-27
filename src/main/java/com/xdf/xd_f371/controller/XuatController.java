@@ -39,11 +39,11 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private DatePicker tungay,denngay;
     @FXML
-    private RadioButton md_rd,tk_rd,may_rd, xe_rd, mb_rd,sscd_rd,nvdx_rd;
+    private RadioButton md_rd,tk_rd, mb_rd,nvdx_rd;
     @FXML
     private ComboBox<PhuongTien> xmt_cbb;
     @FXML
-    private Label inv_lb, dm_gio, dm_km,lb_dm_km,lb_dm_gio,chungloai_lb;
+    private Label inv_lb, dm_gio, dm_km,lb_dm_km,lb_dm_gio,chungloai_lb,loai_xmt;
     @FXML
     private ComboBox<NguonNx> dvn_cbb,dvx_cbb;
     @FXML
@@ -107,8 +107,11 @@ public class XuatController extends CommonFactory implements Initializable {
             }else{
                 mapItemsForDonvi(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()), dvx_cbb);
             }
+            mapLoaixdByList(pt);
+            loai_xmt.setText(pt.getLoaiPhuongTien().getTypeName());
         }
     }
+
     private void setlabelDinhmuc(PhuongTien pt){
         if (pt!=null){
             dinhMuc = dinhmucService.findDinhmucByPhuongtien(pt.getId(), DashboardController.findByTime.getId()).orElse(null);
@@ -246,7 +249,7 @@ public class XuatController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = FxUtilTest.getComboBoxValue(cbb_tenxd);
         if (lxd!=null){
             cbb_tenxd.setStyle(null);
-            chungloai_lb.setText(lxd.getLoai());
+            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
             mapPrice(lxd.getXd_id());
         }
     }
@@ -386,6 +389,15 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_tenxd.getSelectionModel().selectFirst();
         px_hbox.setDisable(pxhb);
     }
+    private void mapLoaixdByList(PhuongTien pt){
+        if (pt.getLoaiPhuongTien().getTypeName().equals(LoaiPTEnum.MAY_CHAY_XANG.getNameVehicle()) || pt.getLoaiPhuongTien().getTypeName().equals(LoaiPTEnum.XE_CHAY_XANG.getNameVehicle())){
+            cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByTypeNAme(LoaiXDCons.XANG.getName())));
+            cbb_tenxd.getSelectionModel().selectFirst();
+        } else if (pt.getLoaiPhuongTien().getTypeName().equals(LoaiPTEnum.MAY_CHAY_DIEZEL.getNameVehicle()) || pt.getLoaiPhuongTien().getTypeName().equals(LoaiPTEnum.XE_CHAY_DIEZEL.getNameVehicle())) {
+            cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByTypeNAme(LoaiXDCons.DIEZEL.getName())));
+            cbb_tenxd.getSelectionModel().selectFirst();
+        }
+    }
     private void setNhiemvuForField(List<NhiemVuDto> nhiemVuDtos){
         acbLogin.dispose();
         List<String> ls = new ArrayList<>();
@@ -428,7 +440,7 @@ public class XuatController extends CommonFactory implements Initializable {
         setXangDauCombobox(cbb_tenxd, loaiXdService);
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
-            chungloai_lb.setText(lxd.getLoai());
+            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
             mapPrice(lxd.getXd_id());
         }
     }

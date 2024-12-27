@@ -39,6 +39,8 @@ public class LoaiXdService {
     }
     public List<LoaiXangDauDto> findByType(String code1,String code2){
         return loaiXangDauRepo.findByType(code1,code2);
+    }public List<LoaiXangDauDto> findByTypeNAme(String code){
+        return loaiXangDauRepo.findByTypeName(code);
     }
     public List<LoaiXangDau> findAll(){
         return loaiXangDauRepo.findAll();

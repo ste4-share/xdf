@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.HanmucNhiemvu2Dto;
 import com.xdf.xd_f371.entity.ChitietNhiemVu;
@@ -8,6 +9,7 @@ import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.NhiemVu;
 import com.xdf.xd_f371.model.StatusEnum;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
+import com.xdf.xd_f371.service.ConfigurationService;
 import com.xdf.xd_f371.service.HanmucNhiemvuService;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.util.Common;
@@ -41,6 +43,8 @@ public class AddNewHanMucNhiemvu implements Initializable {
     ChitietNhiemvuService chitietNhiemvuService;
     @Autowired
     HanmucNhiemvuService hanmucNhiemvuService;
+    @Autowired
+    ConfigurationService configurationService;
     @Autowired
     NguonNxService nguonNxService;
 
@@ -89,14 +93,41 @@ public class AddNewHanMucNhiemvu implements Initializable {
     private void saveHm(){
         try {
             HanmucNhiemvu2Dto hm = NhiemvuController.hm2;
-            hm.setXang(Long.parseLong(xang_tf.getText()));
-            hm.setDiezel(Long.parseLong(diezel_tf.getText()));
-            hm.setDaubay(Long.parseLong(daubay_tf.getText()));
-            hanmucNhiemvuService.save(new HanmucNhiemvu2(hm));
+            ChitietNhiemVu ct = ct_cbb.getSelectionModel().getSelectedItem();
+            if (ct!=null){
+                if (isDetectAss(hm.getNhiemvu_id(),ct)){
+                    saveXdB(hm,ct);
+                    hanmucNhiemvuService.save(new HanmucNhiemvu2(hm));
+                } else {
+                    Optional<HanmucNhiemvu2> exitst = hanmucNhiemvuService.findByUnique(hm.getQuarter_id(),ct.getId());
+                    saveXdB(hm,ct);
+                    if (exitst.isPresent()) {
+                        hm.setId(exitst.get().getId());
+                        hanmucNhiemvuService.save(new HanmucNhiemvu2(hm));
+                    } else {
+                        hanmucNhiemvuService.save(new HanmucNhiemvu2(hm.getQuarter_id(), hm.getDvi_id(),hm.getNhiemvu_id(), hm.getDiezel(), hm.getDaubay(), hm.getXang()));
+                    }
+                }
+            }
             NhiemvuController.nvStage.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             DialogMessage.errorShowing(e.getMessage());
         }
+    }
+    private void saveXdB(HanmucNhiemvu2Dto hm,ChitietNhiemVu ct){
+        hm.setNhiemvu_id(ct.getId());
+        hm.setXang(Long.parseLong(xang_tf.getText()));
+        hm.setDiezel(Long.parseLong(diezel_tf.getText()));
+        hm.setDaubay(Long.parseLong(daubay_tf.getText()));
+    }
+    private boolean isDetectAss(int ctnv_id,ChitietNhiemVu ct){
+
+        if (ct!=null){
+            if (ct.getId()==ctnv_id){
+                return true;
+            }
+        }
+        return false;
     }
     private boolean isvalid(){
         if (Common.isNumber(xang_tf.getText()) && Common.isNumber(daubay_tf.getText()) && Common.isNumber(diezel_tf.getText())){
@@ -114,5 +145,24 @@ public class AddNewHanMucNhiemvu implements Initializable {
         if (nv!=null){
             initChitietNhiemvuCbb(chitietNhiemvuService.findByNhiemvuId(nv.getId()));
         }
+    }
+    @FXML
+    public void ctAction(ActionEvent actionEvent) {
+        ChitietNhiemVu ct = ct_cbb.getSelectionModel().getSelectedItem();
+        if (ct!=null){
+            Optional<HanmucNhiemvu2> exitst = hanmucNhiemvuService.findByUnique(DashboardController.findByTime.getId(),ct.getId());
+            if (exitst.isPresent()){
+                setVal(exitst.get());
+            }else {
+                xang_tf.setText("0");
+                diezel_tf.setText("0");
+                daubay_tf.setText("0");
+            }
+        }
+    }
+    private void setVal(HanmucNhiemvu2 hm){
+        xang_tf.setText(String.valueOf(hm.getXang()));
+        diezel_tf.setText(String.valueOf(hm.getDiezel()));
+        daubay_tf.setText(String.valueOf(hm.getDaubay()));
     }
 }

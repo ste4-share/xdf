@@ -20,6 +20,8 @@ public interface LoaiXangDauRepo extends JpaRepository<LoaiXangDau, Integer> {
     Optional<LoaiXangDauDto> findById(@Param("id") int id);
     @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd where cl.code like :code1 or cl.code like :code2 order by cl.priority_1,cl.priority_2,cl.priority_3")
     List<LoaiXangDauDto> findByType(@Param("code1") String code1,@Param("code2") String code2);
+    @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd where cl.code like :code1 order by cl.priority_1,cl.priority_2,cl.priority_3")
+    List<LoaiXangDauDto> findByTypeName(@Param("code1") String code1);
     @Query("select new com.xdf.xd_f371.dto.LoaiXangDauDto(lxd.id,cl.id,lxd.maxd, lxd.tenxd, cl.loai, cl.chungloai,cl.tinhchat, cl.code,lxd.status) from ChungLoaiXd cl join cl.loaiXangDau lxd order by cl.priority_1,cl.priority_2,cl.priority_3")
     List<LoaiXangDauDto> findAllBy();
 

@@ -421,7 +421,7 @@
       </AnchorPane>
       <TableView id="billViewTb" fx:id="tbView" layoutX="14.0" layoutY="652.0" onMouseClicked="#select_item" prefHeight="158.0" prefWidth="1172.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;">
         <columns>
-          <TableColumn fx:id="stt" maxWidth="50.0" prefWidth="31.0" resizable="false" text="TT" />
+          <TableColumn fx:id="stt" prefWidth="31.0" text="TT" />
           <TableColumn fx:id="tenxd" prefWidth="127.0" text="Tên Xăng dầu" />
             <TableColumn fx:id="dongia" minWidth="0.0" prefWidth="110.0" text="Đơn giá" />
             <TableColumn fx:id="tbTong" prefWidth="369.0" text="Số lượng">

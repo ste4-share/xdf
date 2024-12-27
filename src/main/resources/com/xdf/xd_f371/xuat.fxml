@@ -56,7 +56,7 @@
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="loai_xuat_cbb" onAction="#loaixuatAction" prefHeight="40.0" prefWidth="162.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                                    <ComboBox fx:id="loai_xuat_cbb" onAction="#loaixuatAction" prefHeight="40.0" prefWidth="162.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -100,7 +100,7 @@
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox onAction="#nvSelected" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" fx:id="xmt_cbb">
+                                    <ComboBox onAction="#nvSelected" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" fx:id="xmt_cbb">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -122,7 +122,7 @@
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="dm_gio" layoutX="209.0" layoutY="10.0" prefHeight="22.0" prefWidth="75.0">
+                                    <Label fx:id="dm_gio" layoutX="209.0" layoutY="10.0" prefHeight="22.0" prefWidth="53.0">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
@@ -132,7 +132,12 @@
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="dm_km" layoutX="359.0" layoutY="10.0" prefHeight="22.0" prefWidth="75.0">
+                                    <Label fx:id="dm_km" layoutX="359.0" layoutY="10.0" prefHeight="22.0" prefWidth="59.0">
+                                       <font>
+                                          <Font name="Cambria Bold Italic" size="11.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="loai_xmt" layoutX="419.0" layoutY="10.0" prefHeight="22.0" prefWidth="89.0">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
@@ -146,7 +151,7 @@
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="dvn_cbb" onAction="#dvnSelectedAction" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                                    <ComboBox fx:id="dvn_cbb" onAction="#dvnSelectedAction" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -163,7 +168,7 @@
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="dvx_cbb" cache="true" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                                    <ComboBox fx:id="dvx_cbb" cache="true" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -384,7 +389,7 @@
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <DatePicker fx:id="tungay" editable="false" prefHeight="40.0" prefWidth="155.0">
+                                    <DatePicker fx:id="tungay" editable="false" prefHeight="40.0" prefWidth="155.0" style="-fx-background-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -397,7 +402,7 @@
                                           <Insets left="20.0" />
                                        </HBox.margin>
                                     </Label>
-                                    <DatePicker fx:id="denngay" editable="false" layoutX="107.0" layoutY="10.0" prefHeight="40.0" prefWidth="155.0">
+                                    <DatePicker fx:id="denngay" editable="false" layoutX="107.0" layoutY="10.0" prefHeight="40.0" prefWidth="155.0" style="-fx-background-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -439,7 +444,7 @@
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="cbb_tenxd" editable="true" onAction="#selectxd" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                                    <ComboBox fx:id="cbb_tenxd" editable="true" onAction="#selectxd" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -456,7 +461,7 @@
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="cbb_dongia" onAction="#dongiaSelected" prefHeight="40.0" prefWidth="327.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                                    <ComboBox fx:id="cbb_dongia" onAction="#dongiaSelected" prefHeight="40.0" prefWidth="327.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -685,7 +690,7 @@
                <children>
                   <TableView fx:id="tbView" onMouseClicked="#selected_item" prefHeight="201.0" prefWidth="1152.0">
                     <columns>
-                      <TableColumn fx:id="stt" maxWidth="50.0" prefWidth="49.0" resizable="false" text="STT" />
+                      <TableColumn fx:id="stt" prefWidth="49.0" text="STT" />
                       <TableColumn fx:id="tenxd" prefWidth="156.0" text="TÊN XĂNG DẦU" />
                         <TableColumn fx:id="dongia" prefWidth="134.0" text="ĐƠN GIÁ" />
                         <TableColumn prefWidth="598.0" text="SỐ LƯỢNG">

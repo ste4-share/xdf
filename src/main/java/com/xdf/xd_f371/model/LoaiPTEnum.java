@@ -2,6 +2,12 @@ package com.xdf.xd_f371.model;
 
 public enum LoaiPTEnum {
     XE("XE"),
+    MB_CD("MB-CD"),
+    XE_CHAY_DIEZEL("XE_CHAY_DIEZEL"),
+    XE_CHAY_XANG("XE_CHAY_XANG"),
+    MAY_CHAY_DIEZEL("MAY_CHAY_DIEZEL"),
+    MAY_CHAY_XANG("MAY_CHAY_XANG"),
+    MB_TT("MB-TT"),
     MAY("MAY"),
     MAYBAY("MAYBAY");
 
