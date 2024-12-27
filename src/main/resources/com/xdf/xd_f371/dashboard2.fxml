@@ -265,7 +265,7 @@
                      <children>
                         <HBox alignment="BOTTOM_LEFT">
                            <children>
-                              <Button fx:id="importBtn" mnemonicParsing="false" onAction="#importActionClick" prefHeight="35.0" prefWidth="88.0" style="-fx-background-color: #00cc44;" text="Nhập" textFill="WHITE">
+                              <Button fx:id="importBtn" mnemonicParsing="false" onAction="#importActionClick" prefHeight="36.0" prefWidth="125.0" style="-fx-background-color: #040cb5; -fx-background-radius: 10;" text="Nhập" textFill="WHITE">
                                  <font>
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
@@ -276,7 +276,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#exportBtnClick" prefHeight="34.0" prefWidth="88.0" style="-fx-background-color: #005ce6;" text="Xuất" textFill="WHITE">
+                              <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#exportBtnClick" prefHeight="36.0" prefWidth="125.0" style="-fx-background-color: #27b50e; -fx-background-radius: 10;" text="Xuất" textFill="WHITE">
                                  <font>
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>

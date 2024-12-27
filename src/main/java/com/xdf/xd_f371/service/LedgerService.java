@@ -62,8 +62,13 @@ public class LedgerService {
         return savedLedger;
     }
     private void saveHistory(Ledger l,LedgerDetails ld, int tontruoc){
-        LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(), tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
-        l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
+        if (l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
+            LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(), tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
+                    l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
+            lichsuRepo.save(lichsuXNK);
+        }
+        LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc+ld.getSoluong(), ld.getSoluong(), tontruoc, ld.getDon_gia(),  ld.getSscd_nvdx(),
+                l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
         lichsuRepo.save(lichsuXNK);
     }
     private void saveInv(Ledger ledger, LedgerDetails detail, Inventory inventory) {
@@ -80,16 +85,16 @@ public class LedgerService {
     }
     private void createNewInv(Ledger ledger, LedgerDetails detail, Inventory inventory){
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
-            inventory.setNhap_nvdx(inventory.getNhap_nvdx()+detail.getSoluong());
-        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())){
-            inventory.setXuat_nvdx(inventory.getXuat_nvdx()+detail.getSoluong());
+            inventory.setNhap_nvdx(detail.getSoluong());
+            inventoryRepo.save(new Inventory(detail.getLoaixd_id(),ledger.getQuarter_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
+                    inventory.getNhap_nvdx(),0, 0,0,
+                    inventory.getStatus(),detail.getDon_gia()));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            inventory.setNhap_sscd(inventory.getNhap_sscd()+detail.getSoluong());
-        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            inventory.setXuat_sscd(inventory.getXuat_sscd()+detail.getSoluong());
+            inventory.setNhap_sscd(detail.getSoluong());
+            inventoryRepo.save(new Inventory(detail.getLoaixd_id(),ledger.getQuarter_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
+                    0,detail.getSoluong(), 0,0,
+                    inventory.getStatus(),detail.getDon_gia()));
         }
-        inventoryRepo.save(new Inventory(detail.getLoaixd_id(),ledger.getQuarter_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
-                inventory.getNhap_nvdx(),inventory.getNhap_sscd(),inventory.getXuat_nvdx(),inventory.getXuat_sscd(), inventory.getStatus(),detail.getDon_gia()));
     }
 
     public List<Ledger> getAllByQuarter(int quarter_id, String lp){

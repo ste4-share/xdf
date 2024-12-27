@@ -125,6 +125,7 @@ public class NhapController extends CommonFactory implements Initializable {
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setMa_xd(lxd.getMaxd());
         ledgerDetails.setTen_xd(lxd.getTenxd());
+        ledgerDetails.setChung_loai(lxd.getChungloai());
         ledgerDetails.setSscd_nvdx(nvdx_rd.isSelected() ? Purpose.NVDX.getName():Purpose.SSCD.getName());
         ledgerDetails.setLoaixd_id(lxd.getXd_id());
         ledgerDetails.setDon_gia(p);

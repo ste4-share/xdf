@@ -76,6 +76,8 @@ public class DashboardController implements Initializable {
     @FXML
     public TableView<MiniLedgerDto> tbTTNX;
     @FXML
+    private Button importBtn,exportBtn;
+    @FXML
     private TableColumn<MiniLedgerDto, String> nguoitao,so,ngaytao, loaiphieu,dvi_nhan,dvi_xuat,nvu, soluong,tong;
     @FXML
     private HBox dvi_menu,nxt_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu,setting,report;
@@ -91,6 +93,8 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tbTTNX.setPrefWidth(screenWidth);
         tbTTNX.setPrefHeight(screenHeigh-300);
+        Common.hoverButton(importBtn ,"#040cb5");
+        Common.hoverButton(exportBtn,"#27b50e");
         preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
         so_select=0L;
         getCurrentQuarter();
@@ -176,7 +180,7 @@ public class DashboardController implements Initializable {
             try {
                 so_select = (long) tbTTNX.getSelectionModel().getSelectedItem().getSo();
                 lp = tbTTNX.getSelectionModel().getSelectedItem().getLoai_phieu();
-                Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT");
+                Common.openNewStage2("chitietsc.fxml", ctStage,"CHI TIẾT");
             }catch (NullPointerException e){
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -245,7 +249,8 @@ public class DashboardController implements Initializable {
     }
     private void setPagination_nxt(){
         pagination_tbnxt.setPageFactory(this::createPage);
-        pagination_tbnxt.setPrefHeight(800);
+        pagination_tbnxt.setPrefHeight(screenHeigh-300);
+        pagination_tbnxt.setPrefWidth(screenWidth);
         pagination_tbnxt.setPageCount((ttp_ls.size()/rowsPerPage) +1);
     }
     private Node createPage(int pageIndex) {
