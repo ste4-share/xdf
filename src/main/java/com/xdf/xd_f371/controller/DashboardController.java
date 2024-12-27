@@ -4,6 +4,7 @@ import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.Common;
@@ -20,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -41,6 +43,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 @Component
 public class DashboardController implements Initializable {
     public static String o_path;
@@ -50,7 +53,6 @@ public class DashboardController implements Initializable {
     public static Stage xuatStage ;
     public static Stage ctStage;
     public static Quarter findByTime;
-    public static List<Ledger> ledgerList = new ArrayList<>();
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
     public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
@@ -76,7 +78,11 @@ public class DashboardController implements Initializable {
     @FXML
     public TableView<MiniLedgerDto> tbTTNX;
     @FXML
+    private TextField tf_search;
+    @FXML
     private Button importBtn,exportBtn;
+    @FXML
+    private ImageView img_v;
     @FXML
     private TableColumn<MiniLedgerDto, String> nguoitao,so,ngaytao, loaiphieu,dvi_nhan,dvi_xuat,nvu, soluong,tong;
     @FXML
@@ -95,15 +101,17 @@ public class DashboardController implements Initializable {
         tbTTNX.setPrefHeight(screenHeigh-300);
         Common.hoverButton(importBtn ,"#040cb5");
         Common.hoverButton(exportBtn,"#27b50e");
+
         preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
         so_select=0L;
         getCurrentQuarter();
         ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
-        ledgerList = ledgerService.getAll();
         getCurrentTiming();
         customStyleMenu();
         setDataToPhieuCombobox();
-        setDataToViewTable();
+        setLedgersToTable(ttp_ls);
+        setFactoryCell();
+        setPagination_nxt(ttp_ls);
         initQuyCombobox();
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
     }
@@ -112,14 +120,18 @@ public class DashboardController implements Initializable {
     public void importActionClick(ActionEvent actionEvent) throws IOException{
         primaryStage = new Stage();
         Common.openNewStage2("nhap.fxml", primaryStage,"FORM NHAP");
-        setDataToViewTable();
+        mapLEdgerToTb();
     }
 
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
         xuatStage = new Stage();
         Common.openNewStage2("xuat.fxml", xuatStage,"FORM XUAT");
-        setDataToViewTable();
+        mapLEdgerToTb();
+    }
+    private void mapLEdgerToTb(){
+        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
+        setLedgersToTable(ttp_ls);
     }
     @FXML
     public void nxt_menu_action(MouseEvent event) {
@@ -187,9 +199,6 @@ public class DashboardController implements Initializable {
             }
         }
     }
-    @FXML
-    public void search_phieu_tnxt(ActionEvent actionEvent) {
-    }
     private void initQuyCombobox(){
         ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
         quy_cbb.getSelectionModel().selectFirst();
@@ -232,8 +241,11 @@ public class DashboardController implements Initializable {
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
     }
-    public void setDataToViewTable(){
-        ttp_ls =ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
+    private void setLedgersToTable(List<MiniLedgerDto> ls){
+        tbTTNX.setItems(FXCollections.observableList(ls));
+        tbTTNX.refresh();
+    }
+    public void setFactoryCell(){
         nguoitao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("username"));
         so.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("so_str"));
         loaiphieu.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("loai_phieu"));
@@ -243,15 +255,12 @@ public class DashboardController implements Initializable {
         soluong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("count_str"));
         tong.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("tong_str"));
         ngaytao.setCellValueFactory(new PropertyValueFactory<MiniLedgerDto,String>("timestamp_str"));
-        tbTTNX.setItems(FXCollections.observableList(ttp_ls));
-        tbTTNX.refresh();
-        setPagination_nxt();
     }
-    private void setPagination_nxt(){
+    private void setPagination_nxt(List<MiniLedgerDto> ls){
         pagination_tbnxt.setPageFactory(this::createPage);
         pagination_tbnxt.setPrefHeight(screenHeigh-300);
         pagination_tbnxt.setPrefWidth(screenWidth);
-        pagination_tbnxt.setPageCount((ttp_ls.size()/rowsPerPage) +1);
+        pagination_tbnxt.setPageCount((ls.size()/rowsPerPage) +1);
     }
     private Node createPage(int pageIndex) {
         int fromIndex = pageIndex * rowsPerPage;
@@ -276,5 +285,40 @@ public class DashboardController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
+    private boolean isNumber(String text) {
+        if (Common.isNumber(text)){
+            tf_search.setStyle(null);
+            return true;
+        }
+        DialogMessage.message(null,null,"Số không được chứa ký tự.", Alert.AlertType.WARNING);
+        tf_search.setStyle(CommonFactory.styleErrorField);
+        return false;
+    }
+    @FXML
+    public void searchClicked(MouseEvent mouseEvent) {
+        tf_search.setStyle(null);
+        tf_search.selectAll();
+    }
+    @FXML
+    public void seachAction(MouseEvent mouseEvent) {
+        String text = tf_search.getText().trim();
+        if(!text.isEmpty()){
+            if (isNumber(text)){
+                List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->String.valueOf(x.getSo()).contains(text)).toList();
+                setPagination_nxt(ls);
+                setLedgersToTable(ls);
+            }
+        } else {
+            setPagination_nxt(ttp_ls);
+            setLedgersToTable(ttp_ls);
+        }
+    }
+    @FXML
+    public void search_exit(MouseEvent mouseEvent) {
+        img_v.setStyle("-fx-opacity: 1.0;");
+    }
+    @FXML
+    public void search_enter(MouseEvent mouseEvent) {
+        img_v.setStyle("-fx-opacity: 0.7;");
+    }
 }
