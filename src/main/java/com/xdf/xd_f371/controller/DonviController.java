@@ -18,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -78,7 +79,7 @@ public class DonviController implements Initializable {
     private void showUnitsDetailScreen() throws IOException {
         selectedUnit = tb_unit.getSelectionModel().getSelectedItem();
         unit_stage = new Stage();
-        Common.openNewStage("unit_detail.fxml",unit_stage,null);
+        Common.openNewStage("unit_detail.fxml",unit_stage,null, StageStyle.DECORATED);
         fillDataForTable_nguonnx();
         tb_unit.refresh();
     }
@@ -89,7 +90,7 @@ public class DonviController implements Initializable {
     public void addUnitAction(ActionEvent actionEvent){
         selectedUnit = tb_unit.getSelectionModel().getSelectedItem();
         unit_stage = new Stage();
-        Common.openNewStage("add_unit.fxml", unit_stage, "Thêm mới");
+        Common.openNewStage("add_unit.fxml", unit_stage, "Thêm mới", StageStyle.DECORATED);
         fillDataForTable_nguonnx();
         tb_unit.refresh();
     }

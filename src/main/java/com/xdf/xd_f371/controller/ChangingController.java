@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -76,7 +77,7 @@ public class ChangingController implements Initializable {
     }
     private void openChangeQuantityForm(){
         addAff_stage = new Stage();
-        Common.openNewStage("quantity_form.fxml", addAff_stage, "EDIT");
+        Common.openNewStage("quantity_form.fxml", addAff_stage, "EDIT", StageStyle.DECORATED);
     }
     public void cancelForm(ActionEvent actionEvent) {
         TonkhoController.tk_stage.close();

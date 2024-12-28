@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javafx.stage.StageStyle;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -170,14 +171,14 @@ public class TonkhoController implements Initializable {
         if (mouseEvent.getClickCount() == 2 && spotDto != null) {
             pickTonKho = spotDto;
             tk_stage = new Stage();
-            Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi");
+            Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi", StageStyle.DECORATED);
             fillDataToTableTonkho(findByTime.getId());
         }
     }
     @FXML
     public void addnew_petro(ActionEvent actionEvent) {
         tk_stage = new Stage();
-        Common.openNewStage("add_inv_form.fxml", tk_stage,"THEM MOI");
+        Common.openNewStage("add_inv_form.fxml", tk_stage,"THEM MOI", StageStyle.DECORATED);
     }
     @FXML
     public void timkiem_tk_clicked(MouseEvent mouseEvent) {

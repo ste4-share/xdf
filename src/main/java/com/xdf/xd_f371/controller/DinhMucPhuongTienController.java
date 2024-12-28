@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -124,6 +125,6 @@ public class DinhMucPhuongTienController implements Initializable {
 
     private void openAddScreen(){
         norm_stage = new Stage();
-        Common.openNewStage("add_pt.fxml",norm_stage,"Thêm phương tiện");
+        Common.openNewStage("add_pt.fxml",norm_stage,"Thêm phương tiện", StageStyle.DECORATED);
     }
 }

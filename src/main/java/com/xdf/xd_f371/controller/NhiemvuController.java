@@ -86,7 +86,7 @@ public class NhiemvuController implements Initializable {
     private void initAddHm(){
         nvStage = new Stage();
         nvStage.initStyle(StageStyle.UTILITY);
-        Common.openNewStage("addnew_nvhanmuc.fxml", nvStage,"HANMUC");
+        Common.openNewStage("addnew_nvhanmuc.fxml", nvStage,"HANMUC", StageStyle.DECORATED);
     }
     @FXML
     public void nhiemvu_selected(MouseEvent mouseEvent) {
@@ -123,13 +123,13 @@ public class NhiemvuController implements Initializable {
     public void addNvAction(ActionEvent actionEvent) {
         nvStage = new Stage();
         nvStage.initStyle(StageStyle.UTILITY);
-        Common.openNewStage("add_nv.fxml", nvStage,null);
+        Common.openNewStage("add_nv.fxml", nvStage,null, StageStyle.DECORATED);
         initNvTable();
     }
     private void openAddChitieuForm(){
         nvStage = new Stage();
         nvStage.initStyle(StageStyle.UTILITY);
-        Common.openNewStage("add_chitieunv.fxml", nvStage,null);
+        Common.openNewStage("add_chitieunv.fxml", nvStage,null, StageStyle.DECORATED);
         hmnv = hanmucNhiemvuService.getAllBy();
         initNhiemvuTaubay(hmnv);
     }

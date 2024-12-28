@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -64,7 +65,7 @@ public class ConnectLan implements Initializable {
             Platform.runLater(()->{
                 primaryStage = new Stage();
                 Common.task(this::login,()-> InitProgressBar.stage.close(),()-> {});
-                Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371");
+                Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
             });
         }catch (Exception e){
             e.printStackTrace();

@@ -30,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -119,14 +120,14 @@ public class DashboardController implements Initializable {
     @FXML
     public void importActionClick(ActionEvent actionEvent) throws IOException{
         primaryStage = new Stage();
-        Common.openNewStage2("nhap.fxml", primaryStage,"FORM NHAP");
+        Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP", StageStyle.UTILITY);
         mapLEdgerToTb();
     }
 
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
         xuatStage = new Stage();
-        Common.openNewStage2("xuat.fxml", xuatStage,"FORM XUAT");
+        Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT",StageStyle.UTILITY);
         mapLEdgerToTb();
     }
     private void mapLEdgerToTb(){
@@ -184,18 +185,22 @@ public class DashboardController implements Initializable {
     }
     @FXML
     public void loc_phieu(ActionEvent actionEvent) {
+        String lp = cbb_loaiphieu_filter.getSelectionModel().getSelectedItem();
+        if (lp!=null){
+            List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->String.valueOf(x.getLoai_phieu()).equals(lp)).toList();
+            setPagination_nxt(ls);
+            setLedgersToTable(ls);
+        }
     }
     @FXML
     public void tb_selected(MouseEvent mouseEvent) {
         ctStage = new Stage();
         if (mouseEvent.getClickCount()==2){
-            try {
-                so_select = (long) tbTTNX.getSelectionModel().getSelectedItem().getSo();
-                lp = tbTTNX.getSelectionModel().getSelectedItem().getLoai_phieu();
-                Common.openNewStage2("chitietsc.fxml", ctStage,"CHI TIẾT");
-            }catch (NullPointerException e){
-                e.printStackTrace();
-                throw new RuntimeException(e);
+            MiniLedgerDto m = tbTTNX.getSelectionModel().getSelectedItem();
+            if (m!=null){
+                so_select = (long) m.getSo();
+                lp = m.getLoai_phieu();
+                Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT",StageStyle.UTILITY);
             }
         }
     }

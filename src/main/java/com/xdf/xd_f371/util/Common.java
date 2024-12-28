@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -33,8 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Common {
-
-    public static void openNewStage(String fxml_url, Stage stage, String title){
+    public static void openNewStage(String fxml_url, Stage stage, String title, StageStyle s){
         Parent root = null;
         try {
             root = (Parent) DashboardController.getNodeBySource(fxml_url);
@@ -43,21 +45,7 @@ public class Common {
         }
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.initStyle(StageStyle.DECORATED);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle(title);
-        stage.showAndWait();
-    }
-    public static void openNewStage2(String fxml_url, Stage stage, String title){
-        Parent root = null;
-        try {
-            root = (Parent) DashboardController.getNodeBySource(fxml_url);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.initStyle(StageStyle.UTILITY);
+        stage.initStyle(s);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle(title);
         stage.showAndWait();
@@ -110,7 +98,6 @@ public class Common {
         return in.matches("[^A-Za-z][0-9]{0,18}");
     }
     public static void task(Runnable task_call,Runnable success,Runnable message) {
-
         Task<Void> loadingTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -174,10 +161,17 @@ public class Common {
                 fileOutputStream.close();
                 wb.close();
             }
-
         } catch (IOException e) {
             DialogMessage.message("THÔNG BÁO LỖI", e.getMessage(), "Có lỗi xảy ra!", Alert.AlertType.ERROR);
             throw new RuntimeException(e);
+        }
+    }
+    public static boolean isDirectory(String path){
+        Path paths = Paths.get(path);
+        if (Files.exists(paths)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
