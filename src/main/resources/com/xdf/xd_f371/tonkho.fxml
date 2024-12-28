@@ -95,7 +95,7 @@
                                     </HBox>
                                     <TableView fx:id="tb_tonkho" onMouseClicked="#setClickToTonTb" stylesheets="@css/table_style.css">
                                       <columns>
-                                        <TableColumn fx:id="col_stt_tk" maxWidth="50.0" prefWidth="50.0" resizable="false" text="STT" />
+                                        <TableColumn fx:id="col_stt_tk" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
                                           <TableColumn fx:id="col_tenxd_tk" prefWidth="115.0" text="Tên Xăng Dầu" />
                                           <TableColumn fx:id="col_cl" prefWidth="91.0" text="Chủng loại" />
                                           <TableColumn fx:id="col_nvdx_tk11" prefWidth="331.0" text="Tồn đầu kỳ">
@@ -184,7 +184,7 @@
                                     </HBox>
                                     <TableView fx:id="tb_history" onKeyReleased="#ls_kr" stylesheets="@css/table_style.css">
                                        <columns>
-                                          <TableColumn fx:id="ls_stt" maxWidth="50.0" minWidth="20.0" prefWidth="50.0" resizable="false" text="STT" />
+                                          <TableColumn fx:id="ls_stt" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
                                           <TableColumn fx:id="col_tenxd_qt1" prefWidth="627.0" text="Thông tin phiếu">
                                              <columns>
                                                 <TableColumn fx:id="ls_so" prefWidth="119.0" text="Số" />

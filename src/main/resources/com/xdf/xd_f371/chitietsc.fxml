@@ -243,7 +243,7 @@
          <children>
             <TableView fx:id="tbChiTiet" prefHeight="241.0" prefWidth="1106.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
               <columns>
-                <TableColumn fx:id="fct_stt" prefWidth="75.0" text="STT" />
+                <TableColumn fx:id="fct_stt" maxWidth="50.0" minWidth="45.0" prefWidth="75.0" text="STT" />
                 <TableColumn fx:id="fct_tenxd" prefWidth="122.0" text="Tên Xăng dầu" />
                   <TableColumn fx:id="fct_dongia" prefWidth="122.0" text="Đơn giá" />
                   <TableColumn prefWidth="122.0" text="Số lượng">

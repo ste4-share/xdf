@@ -49,7 +49,7 @@
                         </VBox>
                         <TableView fx:id="tb_unit" onMouseReleased="#unit_clicked" stylesheets="@css/table_style.css">
                            <columns>
-                              <TableColumn fx:id="stt" maxWidth="50.0" prefWidth="50.0" resizable="false" text="STT" />
+                              <TableColumn fx:id="stt" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="STT" />
                               <TableColumn fx:id="col_name_unit" prefWidth="75.0" text="Tên đơn vị" />
                               <TableColumn fx:id="col_affilated" prefWidth="75.0" text="Trực thuộc" />
                               <TableColumn fx:id="nhomtructhuoc" prefWidth="75.0" text="Nhóm trực thuộc" />
@@ -106,7 +106,7 @@
                         </HBox>
                         <TableView fx:id="tb_property" onMouseClicked="#tb_tcn_clicked" stylesheets="@css/table_style.css">
                           <columns>
-                              <TableColumn fx:id="tc_stt" maxWidth="50.0" minWidth="20.0" prefWidth="50.0" resizable="false" text="STT" />
+                              <TableColumn fx:id="tc_stt" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="STT" />
                             <TableColumn fx:id="col_property_name" prefWidth="75.0" text="Tính chất" />
                               <TableColumn fx:id="col_property_status" prefWidth="75.0" text="Loại phiếu" />
                           </columns>

@@ -1,63 +1,88 @@
+/* General TableView styling */
 .table-view {
-    -fx-border-color: #dddddd; /* Light gray border */
-    -fx-border-radius: 8px; /* Rounded corners for the table */
+    -fx-border-color: #cccccc; /* Light gray border around the table */
+    -fx-border-width: 1px; /* Thin table border */
     -fx-background-color: #ffffff; /* White background */
-    -fx-background-radius: 8px; /* Match border radius */
-    -fx-padding: 8px; /* Padding around the table */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 2, 2); /* Subtle shadow effect */
+    -fx-border-radius: 5px; /* Rounded corners for the table */
+    -fx-background-radius: 5px;
 }
 
-.table-view .column-header-background {
-    -fx-background-color: linear-gradient(to bottom, #6a9bf1, #497de0); /* Gradient for header */
-    -fx-background-radius: 8px 8px 0 0; /* Rounded top corners for the header */
-}
-
+/* Header styling */
 .table-view .column-header {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white; /* White text for headers */
-    -fx-padding: 10px; /* Extra padding for headers */
+    -fx-background-color: linear-gradient(to bottom, #eaeaea, #d5d5d5); /* Subtle gradient */
+    -fx-text-fill: #333333; /* Dark gray text */
+    -fx-font-family: "Cambria", serif; /* Elegant serif font for header */
+    -fx-font-size: 14px; /* Font size for header */
+    -fx-font-weight: bold; /* Bold text for headers */
+    -fx-alignment: CENTER;
+    -fx-padding: 9px; /* Padding for taller headers */
+    -fx-border-color: #bbbbbb; /* Light border around the header cells */
+    -fx-border-width: 1px 1px 1px 0; /* Borders on top, right, and bottom */
 }
 
-.table-row-cell {
-    -fx-background-color: #ffffff; /* White background for rows */
-    -fx-border-color: transparent; /* No visible border between rows */
+/* Header separator lines */
+.table-view .column-header-background {
+    -fx-border-color: #bbbbbb; /* Border for header background */
+    -fx-border-width: 0 0 1px 0; /* Bottom border only */
 }
 
-.table-row-cell:odd {
-    -fx-background-color: #f9f9f9; /* Light gray for alternate rows */
+
+/* Row styling */
+.table-view .row-cell {
+    -fx-font-family: "Cambria", serif; /* Cambria font for rows */
+    -fx-font-size: 14px; /* Font size for rows */
+    -fx-text-fill: #444444; /* Darker gray text for readability */
+    -fx-alignment: CENTER_LEFT; /* Align text to the left */
+    -fx-padding: 14px 16px; /* Padding for larger rows */
+    -fx-border-color: #dddddd; /* Borders around each cell */
+    -fx-border-width: 0 1px 1px 0; /* Borders on the right and bottom */
+    -fx-background-color: transparent; /* Default background */
+}
+/* Optional: Adjust alternating row colors */
+.table-view .table-row-cell:nth-child(odd) {
+    -fx-background-color: #f4f4f4; /* Light gray for odd rows */
 }
 
-.table-row-cell:hover {
-    -fx-background-color: #e7f0ff; /* Light blue hover effect */
+.table-view .table-row-cell:nth-child(even) {
+    -fx-background-color: #ffffff; /* White for even rows */
 }
 
-.table-cell {
-    -fx-padding: 12px; /* Padding inside each cell */
-    -fx-font-size: 13px; /* Font size for cell text */
-    -fx-text-fill: #333333; /* Dark gray text color */
+/* Hover effect for rows */
+.table-view .table-row-cell:hover {
+    -fx-background-color: #e0f3ff; /* Light blue hover effect */
 }
 
-.table-cell:selected {
-    -fx-background-color: #497de0; /* Blue for selected cell */
-    -fx-text-fill: white; /* White text for selected cell */
-    -fx-font-weight: bold;
+/* Row selection effect */
+.table-view .table-row-cell:selected {
+    -fx-background-color: #004a94; /* Light blue when selected */
+    -fx-text-fill: #000000; /* Dark text when selected */
 }
 
-.table-view:focused .table-row-cell:selected {
-    -fx-background-color: #84a9f6; /* Lighter blue for selected row when focused */
-    -fx-text-fill: white;
+/* Corner styling */
+.table-view .corner {
+    -fx-background-color: #d5d5d5; /* Match header background */
 }
 
-.table-view .scroll-bar {
-    -fx-background-color: transparent; /* Transparent scroll bar background */
+/* ScrollBar customization */
+.scroll-bar {
+    -fx-background-color: transparent;
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #b0c4f9; /* Light blue thumb */
-    -fx-background-radius: 4px;
+    -fx-background-color: #b0b0b0; /* Gray scrollbar thumb */
+    -fx-background-radius: 5px;
 }
 
 .scroll-bar .thumb:hover {
-    -fx-background-color: #6a9bf1; /* Slightly darker blue on hover */
+    -fx-background-color: #888888; /* Darker thumb on hover */
+}
+
+.scroll-bar .track {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Focused TableView */
+.table-view:focused {
+    -fx-focus-color: #64b5f6; /* Blue focus color */
+    -fx-faint-focus-color: rgba(100, 181, 246, 0.2);
 }

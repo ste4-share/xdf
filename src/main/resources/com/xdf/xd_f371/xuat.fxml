@@ -690,7 +690,7 @@
                <children>
                   <TableView fx:id="tbView" onMouseClicked="#selected_item" prefHeight="201.0" prefWidth="1152.0">
                     <columns>
-                      <TableColumn fx:id="stt" prefWidth="49.0" text="STT" />
+                      <TableColumn fx:id="stt" maxWidth="50.0" minWidth="45.0" prefWidth="49.0" text="STT" />
                       <TableColumn fx:id="tenxd" prefWidth="156.0" text="TÊN XĂNG DẦU" />
                         <TableColumn fx:id="dongia" prefWidth="134.0" text="ĐƠN GIÁ" />
                         <TableColumn prefWidth="598.0" text="SỐ LƯỢNG">

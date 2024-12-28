@@ -122,7 +122,7 @@
             </HBox>
             <HBox>
                <children>
-                  <Button fx:id="ckbtn" mnemonicParsing="false" onAction="#checkConnection" prefHeight="24.0" prefWidth="109.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="kiểm tra kết nối">
+                  <Button fx:id="ckbtn" mnemonicParsing="false" onAction="#checkConnection" prefHeight="24.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="kiểm tra kết nối">
                      <font>
                         <Font name="Cambria Bold" size="11.0" />
                      </font>
@@ -142,7 +142,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="59.0" prefWidth="477.0">
                <children>
-                  <Button fx:id="connect" mnemonicParsing="false" onAction="#connectedClicked" prefHeight="42.0" prefWidth="144.0" style="-fx-background-color: #009107; -fx-border-color: #000000;" text="Kết nối" textFill="WHITE">
+                  <Button fx:id="connect" mnemonicParsing="false" onAction="#connectedClicked" prefHeight="42.0" prefWidth="144.0" style="-fx-background-color: #009107; -fx-border-color: #000000; -fx-border-radius: 10; -fx-background-radius: 10;" text="Kết nối" textFill="WHITE">
                      <font>
                         <Font name="Cambria Bold" size="18.0" />
                      </font>
@@ -150,7 +150,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="exitbtn" mnemonicParsing="false" onAction="#exit" prefHeight="42.0" prefWidth="144.0" style="-fx-background-color: #5b5b5b; -fx-border-color: #000000;" text="Thoát" textFill="WHITE">
+                  <Button fx:id="exitbtn" mnemonicParsing="false" onAction="#exit" prefHeight="42.0" prefWidth="144.0" style="-fx-background-color: #5b5b5b; -fx-border-color: #000000; -fx-border-radius: 10; -fx-background-radius: 10;" text="Thoát" textFill="WHITE">
                      <font>
                         <Font name="Cambria Bold" size="18.0" />
                      </font>

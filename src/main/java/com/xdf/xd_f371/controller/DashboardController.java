@@ -66,7 +66,7 @@ public class DashboardController implements Initializable {
     @FXML
     private BorderPane borderpane_base;
     @FXML
-    private VBox nx_vbox, vb_nxt_tb;
+    private VBox nx_vbox;
     @FXML
     private ComboBox<String> cbb_loaiphieu_filter;
     @FXML

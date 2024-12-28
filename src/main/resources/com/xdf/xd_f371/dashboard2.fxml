@@ -192,7 +192,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="591.0" onMouseClicked="#setting_menu_action" prefHeight="86.0" prefWidth="244.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                  <HBox alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="591.0" prefHeight="86.0" prefWidth="244.0" styleClass="dvi-men" stylesheets="@css/menu.css">
                      <children>
                         <Label fx:id="preUser" prefHeight="50.0" prefWidth="120.0" text="USER:" textFill="WHITE">
                            <HBox.margin>
@@ -340,7 +340,7 @@
                         </HBox>
                         <VBox fx:id="vb_nxt_tb">
                            <children>
-                              <TableView fx:id="tbTTNX" onMouseClicked="#tb_selected" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" stylesheets="@css/table_style.css">
+                              <TableView fx:id="tbTTNX" onMouseClicked="#tb_selected" stylesheets="@css/table_style.css">
                                 <columns>
                                     <TableColumn fx:id="nguoitao" prefWidth="105.0" text="Người tạo" />
                                   <TableColumn fx:id="so" prefWidth="60.0" text="Số" />

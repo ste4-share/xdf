@@ -11,11 +11,13 @@ import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.HanmucNhiemvuService;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.PhuongtienService;
+import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ public class AddNewChitieuNvForm implements Initializable {
     @FXML
     private ComboBox<PhuongTien> pt_cbb;
     @FXML
+    private Button savebtn,cancelBtn;
+    @FXML
     private TextField tk,md,nl;
 
     @Autowired
@@ -51,6 +55,8 @@ public class AddNewChitieuNvForm implements Initializable {
         initChiTietNhiemVu();
         initPT();
         initField();
+        Common.hoverButton(cancelBtn,"#ffffff");
+        Common.hoverButton(savebtn,"#ffffff");
     }
     private void initPT() {
         ComponentUtil.setItemsToComboBox(pt_cbb,phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()),
@@ -102,5 +108,9 @@ public class AddNewChitieuNvForm implements Initializable {
         } else {
             DialogMessage.errorShowing(null);
         }
+    }
+    @FXML
+    public void cancel(ActionEvent actionEvent) {
+        NhiemvuController.nvStage.close();
     }
 }
