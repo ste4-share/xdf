@@ -47,7 +47,6 @@ import java.util.ResourceBundle;
 
 @Component
 public class DashboardController implements Initializable {
-    public static String o_path;
     public static String lp = null;
     public static Long so_select = 0L;
     public static Stage primaryStage;
@@ -62,7 +61,7 @@ public class DashboardController implements Initializable {
     private String setupLayout = "-fx-border-color: #aaaaaa;\n" +
             "-fx-background-color: #aaaaaa;\n";
 
-    private static int rowsPerPage = 9;
+    private static int rowsPerPage = 15;
 
     @FXML
     private BorderPane borderpane_base;
@@ -187,10 +186,17 @@ public class DashboardController implements Initializable {
     public void loc_phieu(ActionEvent actionEvent) {
         String lp = cbb_loaiphieu_filter.getSelectionModel().getSelectedItem();
         if (lp!=null){
-            List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->String.valueOf(x.getLoai_phieu()).equals(lp)).toList();
-            setPagination_nxt(ls);
-            setLedgersToTable(ls);
+            if (lp.equals("ALL")){
+                mapData(ttp_ls);
+            }else{
+                List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->String.valueOf(x.getLoai_phieu()).equals(lp)).toList();
+                mapData(ls);
+            }
         }
+    }
+    private void mapData(List<MiniLedgerDto> ls){
+        setPagination_nxt(ls);
+        setLedgersToTable(ls);
     }
     @FXML
     public void tb_selected(MouseEvent mouseEvent) {
@@ -225,8 +231,8 @@ public class DashboardController implements Initializable {
     private void setDataToPhieuCombobox(){
         List<String> nx_ = new ArrayList<>();
         nx_.add("ALL");
-        nx_.add("PHIẾU NHẬP");
-        nx_.add("PHIẾU XUẤT");
+        nx_.add("NHAP");
+        nx_.add("XUAT");
         cbb_loaiphieu_filter.setItems(FXCollections.observableArrayList(nx_));
         cbb_loaiphieu_filter.getSelectionModel().selectFirst();
     }
@@ -310,12 +316,10 @@ public class DashboardController implements Initializable {
         if(!text.isEmpty()){
             if (isNumber(text)){
                 List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->String.valueOf(x.getSo()).contains(text)).toList();
-                setPagination_nxt(ls);
-                setLedgersToTable(ls);
+                mapData(ls);
             }
         } else {
-            setPagination_nxt(ttp_ls);
-            setLedgersToTable(ttp_ls);
+            mapData(ttp_ls);
         }
     }
     @FXML

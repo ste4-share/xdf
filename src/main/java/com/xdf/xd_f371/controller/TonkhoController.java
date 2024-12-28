@@ -13,11 +13,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javafx.stage.StageStyle;
+import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -71,18 +73,23 @@ public class TonkhoController implements Initializable {
 
         pickTonKho = new SpotDto();
         findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
-        setQuarterListToCbb();
+        tkt = inventoryService.getAllSpots(findByTime.getId());
 
+        setQuarterListToCbb();
         setTonkhoTongToCol();
         fillDataToTableTonkho(findByTime.getId());
         setLichsuTb();
         fillDataToTableLichsu(findByTime.getId());
+
         searching(tkt.stream().map(SpotDto::getTenxd).toList());
         searching_ls(histories.stream().map(LichsuXNK::getTen_xd).toList());
     }
     private void fillDataToTableLichsu(int id) {
         histories =lichsuService.findAllByQuyid(id);
         tb_history.setItems(FXCollections.observableArrayList(histories));
+    }
+    private void mapLsTb(List<LichsuXNK> ls){
+        tb_history.setItems(FXCollections.observableArrayList(ls));
     }
     private void setQuarterListToCbb(){
         ComponentUtil.setItemsToComboBox(cbb_quarter, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
@@ -97,12 +104,14 @@ public class TonkhoController implements Initializable {
     }
     @FXML
     public void selectQuarter(ActionEvent actionEvent) {
-
         fillDataToTableTonkho(getCurrentQuarter().getId());
     }
     private void fillDataToTableTonkho(int quy_id){
         tkt = inventoryService.getAllSpots(quy_id);
         tb_tonkho.setItems( FXCollections.observableArrayList(tkt));
+    }
+    private void mapInvTb(List<SpotDto> ls){
+        tb_tonkho.setItems( FXCollections.observableArrayList(ls));
     }
     private void setTonkhoTongToCol(){
         col_stt_tk.setSortable(false);
@@ -122,7 +131,6 @@ public class TonkhoController implements Initializable {
         col_sscd_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_sscd_str"));
         col_cong_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_total"));
     }
-
     private void setLichsuTb(){
         ls_stt.setSortable(false);
         ls_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_history.getItems().indexOf(column.getValue())+1).asString());
@@ -187,5 +195,25 @@ public class TonkhoController implements Initializable {
     @FXML
     public void ls_search_clicked(MouseEvent mouseEvent) {
         ls_search.selectAll();
+    }
+    @FXML
+    public void inv_kr(KeyEvent keyEvent) {
+        String text = search_inventory.getText().trim();
+        if (!text.isEmpty()){
+            List<SpotDto> ls = tkt.stream().filter(x->x.getTenxd().equals(text)).toList();
+            mapInvTb(ls);
+        }else{
+            mapInvTb(tkt);
+        }
+    }
+    @FXML
+    public void ls_kr(KeyEvent keyEvent) {
+        String text = ls_search.getText().trim();
+        if (!text.isEmpty()){
+            List<LichsuXNK> ls = histories.stream().filter(x->x.getTen_xd().equals(text)).toList();
+            mapLsTb(ls);
+        }else{
+            mapLsTb(histories);
+        }
     }
 }

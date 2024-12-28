@@ -2,6 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.entity.Quarter;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.AccountService;
 import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
@@ -27,6 +28,7 @@ import java.util.ResourceBundle;
 @Component
 public class SettingController implements Initializable {
     private String set_style = "-fx-background-color: red; ";
+    private static String o_path;
     private boolean isChanged = false;
     private boolean tf_isChanged = false;
 
@@ -121,6 +123,8 @@ public class SettingController implements Initializable {
                     }
                     DialogMessage.message("Thông báo", "Lưu thay đổi thành công",
                             "Thành công", Alert.AlertType.CONFIRMATION);
+                    ConnectLan.pre_acc.setPath(path.getText());
+                    ConnectLan.pre_acc.setColor(color.getText());
                 }
             }else{
                 DialogMessage.message("Thông báo", "Thời gian mỗi quý phải là khoảng riêng biệt.",
@@ -136,11 +140,13 @@ public class SettingController implements Initializable {
     public void rootCbbAction(ActionEvent actionEvent) {
     }
     private void saveUser(){
-        Accounts a = accountService.findAccountByUsername(ConnectLan.pre_acc.getUsername());
-        if (DashboardController.o_path!=null){
-            a.setPath(DashboardController.o_path);
+        try {
+            Accounts a = accountService.findAccountByUsername(ConnectLan.pre_acc.getUsername());
+            a.setPath(path.getText());
             a.setColor(color.getText());
             accountService.save(a);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
     private void saveQuarter(){
@@ -175,9 +181,9 @@ public class SettingController implements Initializable {
 
         if (selectedDirectory != null) {
             path.setText(selectedDirectory.getAbsolutePath());
-            DashboardController.o_path= selectedDirectory.getAbsolutePath();
+            o_path= selectedDirectory.getAbsolutePath();
         } else {
-            DashboardController.o_path = null;
+            o_path = null;
             System.out.println("No directory selected.");
             DialogMessage.message(null, null,"No directory selected.", Alert.AlertType.WARNING);
         }

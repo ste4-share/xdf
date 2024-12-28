@@ -65,17 +65,17 @@
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="56.0">
                                        <children>
-                                          <Label prefHeight="55.0" prefWidth="102.0" text="Tìm kiếm:">
+                                          <Label prefHeight="55.0" prefWidth="118.0" text="Tìm kiếm:">
                                              <font>
-                                                <Font name="Cambria Bold" size="16.0" />
+                                                <Font name="Cambria Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="search_inventory" onMouseClicked="#timkiem_tk_clicked" prefHeight="36.0" prefWidth="293.0" style="-fx-background-radius: 10;">
+                                          <TextField fx:id="search_inventory" onKeyReleased="#inv_kr" onMouseClicked="#timkiem_tk_clicked" prefHeight="36.0" prefWidth="293.0" promptText="JetA-1K.." style="-fx-background-radius: 10;">
                                              <cursor>
                                                 <Cursor fx:constant="TEXT" />
                                              </cursor>
                                              <font>
-                                                <Font name="Cambria" size="18.0" />
+                                                <Font name="Cambria" size="16.0" />
                                              </font></TextField>
                                           <Button fx:id="add_btn" mnemonicParsing="false" onAction="#addnew_petro" prefHeight="30.0" prefWidth="108.0" style="-fx-background-color: #0202ba; -fx-border-color: #a8a8a8; -fx-border-radius: 20; -fx-background-radius: 20;" text="Thêm mới" textFill="WHITE">
                                              <font>
@@ -89,6 +89,9 @@
                                              </HBox.margin>
                                           </Button>
                                        </children>
+                                       <VBox.margin>
+                                          <Insets left="10.0" />
+                                       </VBox.margin>
                                     </HBox>
                                     <TableView fx:id="tb_tonkho" onMouseClicked="#setClickToTonTb" stylesheets="@css/table_style.css">
                                       <columns>
@@ -146,7 +149,7 @@
                                        <children>
                                           <Label alignment="CENTER" prefHeight="55.0" prefWidth="102.0" text="Tìm kiếm:">
                                              <font>
-                                                <Font name="Cambria Bold" size="16.0" />
+                                                <Font name="Cambria Bold" size="14.0" />
                                              </font>
                                           </Label>
                                           <TextField fx:id="ls_search" onMouseClicked="#ls_search_clicked" prefHeight="37.0" prefWidth="293.0" style="-fx-background-radius: 10;">
@@ -154,7 +157,7 @@
                                                 <Cursor fx:constant="TEXT" />
                                              </cursor>
                                              <font>
-                                                <Font name="Cambria" size="18.0" />
+                                                <Font name="Cambria" size="16.0" />
                                              </font>
                                           </TextField>
                                           <Label alignment="CENTER" prefHeight="43.0" prefWidth="123.0" text="Từ ngày:">
@@ -179,7 +182,7 @@
                                           </DatePicker>
                                        </children>
                                     </HBox>
-                                    <TableView fx:id="tb_history" stylesheets="@css/table_style.css">
+                                    <TableView fx:id="tb_history" onKeyReleased="#ls_kr" stylesheets="@css/table_style.css">
                                        <columns>
                                           <TableColumn fx:id="ls_stt" maxWidth="50.0" minWidth="20.0" prefWidth="50.0" resizable="false" text="STT" />
                                           <TableColumn fx:id="col_tenxd_qt1" prefWidth="627.0" text="Thông tin phiếu">
