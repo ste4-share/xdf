@@ -167,10 +167,14 @@ public class Common {
         }
     }
     public static boolean isDirectory(String path){
-        Path paths = Paths.get(path);
-        if (Files.exists(paths)) {
-            return true;
-        } else {
+        try {
+            Path paths = Paths.get(path);
+            if (Files.exists(paths)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (RuntimeException e) {
             return false;
         }
     }
