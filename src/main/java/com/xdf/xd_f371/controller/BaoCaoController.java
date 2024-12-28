@@ -29,10 +29,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
@@ -41,8 +39,8 @@ import java.util.*;
 @Component
 public class BaoCaoController implements Initializable {
     private static List<String> arr_tt = new ArrayList<>();
-    private final String file_name = "src/main/resources/com/xdf/xd_f371/xlsx_template/data.xlsx";
-    private final String dest_file = "baocao/baocao.xlsx";;
+    private final String file_name = System.getProperty("user.dir")+"\\xlsx_template\\data.xlsx";
+    private final String dest_file = ConnectLan.pre_acc.getPath()+"/baocao.xlsx";;
     @Autowired
     private TructhuocService tructhuocService;
     @Autowired
@@ -124,7 +122,7 @@ public class BaoCaoController implements Initializable {
     private void nxtmap(){
         String sheetName = "bc_nxt";
         Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
-        copyFileExcel(file_name,dest_file);
+        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttnlbtkh(ActionEvent actionEvent) {
@@ -138,7 +136,7 @@ public class BaoCaoController implements Initializable {
     private void ttnlbtkh(){
         String sheetName = "bc_ttnl_theo_kh";
         Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
-        copyFileExcel(file_name,dest_file);
+        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttxdtnv(ActionEvent actionEvent) {
@@ -152,7 +150,7 @@ public class BaoCaoController implements Initializable {
     private void ttxdtnv(){
         String sheetName = "t_thu_xd_theo_n_vu";
         Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
-        copyFileExcel(file_name,dest_file);
+        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ptnn(ActionEvent actionEvent) {
@@ -241,32 +239,6 @@ public class BaoCaoController implements Initializable {
             }
         }
         return nxtls.size();
-    }
-    public void copyFileExcel(String sour, String target){
-        if (deleteExcel(target)){
-            File source = new File(sour);
-            File dest = new File(target);
-            if (source.exists()){
-                long start = System.nanoTime();
-                try {
-                    Files.copy(source.toPath(), dest.toPath());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                System.out.println("Time taken by Java7 Files Copy = "+(System.nanoTime()-start));
-            }else {
-                System.out.println("source file doesn't exists");
-            }
-        }
-    }
-    private boolean deleteExcel(String file_name){
-        File file = new File(file_name);
-        try {
-            return file.delete();
-        }
-        catch(Exception e) {
-            throw new RuntimeException(e);
-        }
     }
     private int createDataSheet(XSSFSheet sheet, int begin_data_current,String query) {
         int sizett = arr_tt.size();

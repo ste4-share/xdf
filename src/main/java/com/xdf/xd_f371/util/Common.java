@@ -178,4 +178,32 @@ public class Common {
             return false;
         }
     }
+    public static void copyFileExcel(String sour, String target){
+        deleteExcel(target);
+        File source = new File(sour);
+        File dest = new File(target);
+        if (source.exists()){
+            long start = System.nanoTime();
+            try {
+                Files.copy(source.toPath(), dest.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            System.out.println("Time taken by Java7 Files Copy = "+(System.nanoTime()-start));
+        }else {
+            System.out.println("source file doesn't exists");
+        }
+    }
+    private static boolean deleteExcel(String file_name){
+        File file = new File(file_name);
+        try {
+            if (file.exists()){
+                return file.delete();
+            }
+            return false;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

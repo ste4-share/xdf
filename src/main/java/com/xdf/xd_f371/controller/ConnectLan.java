@@ -62,36 +62,32 @@ public class ConnectLan implements Initializable {
     @FXML
     public void connectedClicked(ActionEvent actionEvent) {
         try {
-            Platform.runLater(()->{
-                primaryStage = new Stage();
-                Common.task(this::login,()-> InitProgressBar.stage.close(),()-> {});
-                Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
-            });
+            String user = username.getText().trim();
+            String p = passwd.getText().trim();
+            String i = ip.getText().trim();
+            String po = port.getText().trim();
+            if (isvalid(user,p,i,po)){
+                if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
+                    rememberme(user,p,i,po);
+                    Optional<Accounts> acc = accountService.login(user,p);
+                    if (acc.isPresent()){
+                        pre_acc = acc.get();
+                        primaryStage = new Stage();
+                        Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
+                    } else {
+                        DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
+                                "Đăng nhập không thành công", Alert.AlertType.INFORMATION);
+                    }
+                }else{
+                    DialogMessage.message(null, "Vui long kiem tra lai ip va port", "That bai", Alert.AlertType.CONFIRMATION);
+                    conn_status.setText("FAIL");
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    private void login(){
-       String user = username.getText().trim();
-       String p = passwd.getText().trim();
-       String i = ip.getText().trim();
-       String po = port.getText().trim();
-       if (isvalid(user,p,i,po)){
-           if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
-               rememberme(user,p,i,po);
-               Optional<Accounts> acc = accountService.login(user,p);
-               if (acc.isPresent()){
-                   pre_acc = acc.get();
-               } else {
-                   DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
-                           "Đăng nhập không thành công", Alert.AlertType.INFORMATION);
-               }
-           }else{
-               DialogMessage.message(null, "Vui long kiem tra lai ip va port", "That bai", Alert.AlertType.CONFIRMATION);
-               conn_status.setText("FAIL");
-           }
-       }
-    }
+
     private void rememberme(String user, String p,String i,String po){
         boolean rememberMe = ck_save.isSelected();
         if (rememberMe) {

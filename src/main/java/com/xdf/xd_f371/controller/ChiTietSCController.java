@@ -76,7 +76,7 @@ public class ChiTietSCController implements Initializable {
             String file_name_1 = "/phieu_nhap_xuat.xlsx";
             if (Common.isDirectory(ConnectLan.pre_acc.getPath())){
                     Platform.runLater(()->{
-                        copyFileExcel(temp_file_name, ConnectLan.pre_acc.getPath()+"/"+file_name_1);
+                        Common.copyFileExcel(temp_file_name, ConnectLan.pre_acc.getPath()+"/"+file_name_1);
                         StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_acc.getPath()).append("/").append(file_name_1);
                         Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input.createSheet(getPhieu()),true),
                                 (input)->fillDataToPhieuNhap(input.getSheet(getPhieu()),false));
@@ -101,34 +101,8 @@ public class ChiTietSCController implements Initializable {
         }
         return "phieu_xuat";
     }
-    private boolean deleteExcel(String file_name){
-        File file = new File(file_name);
-        try {
-            if (file.exists()){
-                return file.delete();
-            }
-            return false;
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void copyFileExcel(String sour, String target){
-        deleteExcel(target);
-        File source = new File(sour);
-        File dest = new File(target);
-        if (source.exists()){
-            long start = System.nanoTime();
-            try {
-                Files.copy(source.toPath(), dest.toPath());
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-            System.out.println("Time taken by Java7 Files Copy = "+(System.nanoTime()-start));
-        }else {
-            System.out.println("source file doesn't exists");
-        }
-    }
+
+
     private int fillDataToPhieuNhap(XSSFSheet sheet,boolean isNew){
         setCEll(sheet, ls.get(0).getDvi_nhan(), 3,3,isNew);
         setCEll(sheet, ls.get(0).getDvi_xuat(), 4,3,isNew);

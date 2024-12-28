@@ -57,8 +57,13 @@ public class SettingController implements Initializable {
         initCurrentQuarterToField(pre_year);
         username.setText(ConnectLan.pre_acc.getUsername());
         Accounts a = accountService.findAccountByUsername(ConnectLan.pre_acc.getUsername());
-        color.setText(a.getColor());
-        path.setText(a.getPath());
+        if (a!=null){
+            color.setText(a.getColor());
+            path.setText(a.getPath());
+        }else{
+            color.setText(null);
+            path.setText(null);
+        }
         listten_change(s_q1);
         listten_change(e_q1);
         listten_change(s_q2);
