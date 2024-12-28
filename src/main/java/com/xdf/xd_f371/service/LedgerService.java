@@ -66,10 +66,11 @@ public class LedgerService {
             LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(), tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
                     l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
             lichsuRepo.save(lichsuXNK);
+        }else {
+            LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc+ld.getSoluong(), ld.getSoluong(), tontruoc, ld.getDon_gia(),  ld.getSscd_nvdx(),
+                    l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
+            lichsuRepo.save(lichsuXNK);
         }
-        LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc+ld.getSoluong(), ld.getSoluong(), tontruoc, ld.getDon_gia(),  ld.getSscd_nvdx(),
-                l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
-        lichsuRepo.save(lichsuXNK);
     }
     private void saveInv(Ledger ledger, LedgerDetails detail, Inventory inventory) {
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {

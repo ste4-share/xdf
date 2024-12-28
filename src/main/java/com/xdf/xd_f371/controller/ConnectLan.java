@@ -29,6 +29,8 @@ public class ConnectLan implements Initializable {
     private static final String CREDENTIALS_FILE = "credentials.properties";
     public static Stage primaryStage;
     public static Accounts pre_acc = new Accounts();
+    public static String ip_pre;
+    public static String port_pre;
     private String zeroTo255 = "(\\d{1,2}|(0|1)\\d{2}|2[0-4]\\d|25[0-5])";
     private String regex
             = zeroTo255 + "\\."
@@ -55,6 +57,8 @@ public class ConnectLan implements Initializable {
         Common.hoverButton(exitbtn,"#5b5b5b");
         Common.hoverButton(ckbtn,"#ffffff");
         conn_status.setText("-----");
+        ip_pre = "";
+        port_pre = "0";
         // Load saved credentials if available
         loadCredentials(username,ip,port, passwd, ck_save);
         connect.requestFocus();
@@ -71,7 +75,10 @@ public class ConnectLan implements Initializable {
                     rememberme(user,p,i,po);
                     Optional<Accounts> acc = accountService.login(user,p);
                     if (acc.isPresent()){
+                        ip_pre = i;
+                        port_pre=po;
                         pre_acc = acc.get();
+                        connectionService.maintainConnection();
                         primaryStage = new Stage();
                         Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
                     } else {

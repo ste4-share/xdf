@@ -25,9 +25,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -87,9 +84,6 @@ public class Common {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    public static LocalDate localdateToDate(Date input){
-        return LocalDate.ofInstant(input.toInstant(), ZoneId.systemDefault());
-    }
     public static void hoverButton(Button button, String color) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: "+color+"; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10;-fx-border-radius:10"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: "+color+";-fx-border-color:#a8a8a8;-fx-background-radius:10;-fx-border-radius:10"));
@@ -121,11 +115,9 @@ public class Common {
                 DialogMessage.errorShowing(exception.getMessage());
             }
         });
-        // Start loading task in the background
         Thread thread = new Thread(loadingTask);
         thread.setDaemon(true);
         thread.start();
-        // Set a timeout for the task
         setTaskTimeout(loadingTask, 30, TimeUnit.SECONDS);
     }
     private static void setTaskTimeout(Task<?> task, long timeout, TimeUnit unit) {

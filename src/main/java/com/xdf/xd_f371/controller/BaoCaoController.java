@@ -40,7 +40,7 @@ import java.util.*;
 public class BaoCaoController implements Initializable {
     private static List<String> arr_tt = new ArrayList<>();
     private final String file_name = System.getProperty("user.dir")+"\\xlsx_template\\data.xlsx";
-    private final String dest_file = ConnectLan.pre_acc.getPath()+"/baocao.xlsx";;
+    private static String dest_file;
     @Autowired
     private TructhuocService tructhuocService;
     @Autowired
@@ -57,6 +57,7 @@ public class BaoCaoController implements Initializable {
     Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        dest_file = ConnectLan.pre_acc.getPath()+"\\baocao.xlsx";
         rvb.setPrefWidth(DashboardController.screenWidth-300);
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
         initdvcbb();
@@ -116,13 +117,13 @@ public class BaoCaoController implements Initializable {
         Common.getLoading(stage_1);
         Platform.runLater(()->{
             Common.task(this::nxtmap, stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
+            Common.copyFileExcel(file_name,dest_file);
             nxt_lb.setText("UPDATED");
         });
     }
     private void nxtmap(){
         String sheetName = "bc_nxt";
         Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
-        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttnlbtkh(ActionEvent actionEvent) {
@@ -130,13 +131,13 @@ public class BaoCaoController implements Initializable {
         Common.getLoading(stage_1);
         Platform.runLater(()-> {
             Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+            Common.copyFileExcel(file_name,dest_file);
             ttnlbtkh_lb.setText("UPDATED");
         });
     }
     private void ttnlbtkh(){
         String sheetName = "bc_ttnl_theo_kh";
         Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
-        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttxdtnv(ActionEvent actionEvent) {
@@ -144,13 +145,13 @@ public class BaoCaoController implements Initializable {
         Common.getLoading(stage_1);
         Platform.runLater(()-> {
             Common.task(this::ttxdtnv,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
+            Common.copyFileExcel(file_name,dest_file);
             ttxdtnv_lb.setText("UPDATED");
         });
     }
     private void ttxdtnv(){
         String sheetName = "t_thu_xd_theo_n_vu";
         Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
-        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ptnn(ActionEvent actionEvent) {

@@ -114,6 +114,16 @@ public class DashboardController implements Initializable {
         setPagination_nxt(ttp_ls);
         initQuyCombobox();
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
+        startUpdatingLedgerData();
+    }
+    private void startUpdatingLedgerData() {
+        LedgerUpdateService service = new LedgerUpdateService();
+        service.setOnSucceeded(event -> {
+            List<MiniLedgerDto> ls =service.getValue();
+            setLedgersToTable(ls);
+            setPagination_nxt(ls);
+        });
+        service.start();
     }
 
     @FXML
