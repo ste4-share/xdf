@@ -34,6 +34,6 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     @Query(value = "select * from ledgers where quarter_id=:qid and loai_phieu like :lp", nativeQuery = true)
     List<Ledger> findAllByQuarter(@Param("qid") int quarterId,@Param("lp") String lp);
     @Modifying
-    @Query(value = "update ledgers set tructhuoc=:c where dvi_nhan_id=:nid or dvi_xuat_id=:nid and quarter_id=:qid", nativeQuery = true)
-    int updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code,@Param("qid") int qId);
+    @Query(value = "update ledgers set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid) and quarter_id=:qid", nativeQuery = true)
+    void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code,@Param("qid") int qId);
 }

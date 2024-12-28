@@ -75,12 +75,14 @@ public class ConnectLan implements Initializable {
                     rememberme(user,p,i,po);
                     Optional<Accounts> acc = accountService.login(user,p);
                     if (acc.isPresent()){
+                        InitProgressBar.stage.close();
                         ip_pre = i;
                         port_pre=po;
                         pre_acc = acc.get();
                         connectionService.maintainConnection();
                         primaryStage = new Stage();
                         Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
+
                     } else {
                         DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
                                 "Đăng nhập không thành công", Alert.AlertType.INFORMATION);

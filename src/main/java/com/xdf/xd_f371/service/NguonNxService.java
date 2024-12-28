@@ -37,6 +37,7 @@ public class NguonNxService {
     public NguonNx save(NguonNx nguonNx){
         return nguonNxRepo.save(nguonNx);
     }
+
     public void saveNnxAndLedger(NguonNx n, TrucThuoc tt){
         try {
             nguonNxRepo.save(new NguonNx(n.getId(),n.getTen(),n.getStatus(),

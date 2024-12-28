@@ -18,6 +18,10 @@ public class MainApplicationApp extends Application {
     }
     @Override
     public void start(Stage stage) throws Exception {
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            System.err.println("Uncaught exception in thread " + thread.getName() + ": " + throwable.getMessage());
+            throwable.printStackTrace();
+        });
         rootStage = stage;
         rootStage.initStyle(StageStyle.TRANSPARENT);
         Common.openNewStage_show("initProgressBar.fxml", rootStage,null,context);

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -173,11 +174,10 @@ public class Common {
     public static void copyFileExcel(String sour, String target){
         deleteExcel(target);
         File source = new File(sour);
-        File dest = new File(target);
         if (source.exists()){
             long start = System.nanoTime();
             try {
-                Files.copy(source.toPath(), dest.toPath());
+                Files.copy(Paths.get(sour), Paths.get(target), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -191,6 +191,7 @@ public class Common {
         File file = new File(file_name);
         try {
             if (file.exists()){
+                System.out.println("fi");
                 return file.delete();
             }
             return false;

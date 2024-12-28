@@ -48,7 +48,7 @@ public class LedgerService {
                 if (inventory==null) {
                     if (inventory_1!=null) {
                         createNewInv(ledger, detail,inventory_1);
-                        saveHistory(ledger,detail,inventory_1.getNhap_nvdx()-inventory_1.getXuat_nvdx());
+                        saveHistory(ledger,detail,0);
                     }
                 } else {
                     saveInv(ledger, detail, inventory);
@@ -63,7 +63,7 @@ public class LedgerService {
     }
     private void saveHistory(Ledger l,LedgerDetails ld, int tontruoc){
         if (l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-            LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(), tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
+            LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(), (tontruoc+ld.getSoluong()), ld.getDon_gia(),  ld.getSscd_nvdx(),
                     l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
             lichsuRepo.save(lichsuXNK);
         }else {

@@ -48,6 +48,8 @@ public class LichsuXNK {
     @Column(insertable = false, updatable = false)
     private String tontruoc_str;
     @Column(insertable = false, updatable = false)
+    private String gia_str;
+    @Column(insertable = false, updatable = false)
     private String soluong_str;
     @Column(insertable = false, updatable = false)
     private String tonsau_str;
@@ -71,6 +73,7 @@ public class LichsuXNK {
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
+        this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
     }
     public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
                      String dvn, String dvx, String chungloaixd,int quyId,LocalDate createTime) {
@@ -91,5 +94,6 @@ public class LichsuXNK {
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
+        this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
     }
 }
