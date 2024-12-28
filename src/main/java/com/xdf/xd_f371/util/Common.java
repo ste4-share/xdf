@@ -113,6 +113,7 @@ public class Common {
         loadingTask.setOnFailed(workerStateEvent -> {
             Throwable exception = loadingTask.getException();
             if (exception != null) {
+                success.run();
                 DialogMessage.errorShowing(exception.getMessage());
             }
         });
@@ -157,6 +158,8 @@ public class Common {
         } catch (IOException e) {
             DialogMessage.message("THÔNG BÁO LỖI", e.getMessage(), "Có lỗi xảy ra!", Alert.AlertType.ERROR);
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
     public static boolean isDirectory(String path){
@@ -191,7 +194,6 @@ public class Common {
         File file = new File(file_name);
         try {
             if (file.exists()){
-                System.out.println("fi");
                 return file.delete();
             }
             return false;

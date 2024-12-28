@@ -26,7 +26,6 @@ public class InitProgressBar implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         count();
     }
-
     private void count(){
         Task<Void> task = new Task<Void>() {
             @Override

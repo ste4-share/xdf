@@ -81,8 +81,13 @@ public class ConnectLan implements Initializable {
                         pre_acc = acc.get();
                         connectionService.maintainConnection();
                         primaryStage = new Stage();
+                        primaryStage.setOnCloseRequest(event -> {
+                            if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                                Platform.exit(); // Cleanly stop the JavaFX thread
+                                System.exit(0);  // Ensure JVM termination
+                            }
+                        });
                         Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
-
                     } else {
                         DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
                                 "Đăng nhập không thành công", Alert.AlertType.INFORMATION);

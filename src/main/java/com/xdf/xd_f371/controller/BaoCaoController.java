@@ -115,15 +115,15 @@ public class BaoCaoController implements Initializable {
     public void bc_nxt(ActionEvent actionEvent) {
         Stage stage_1 = new Stage();
         Common.getLoading(stage_1);
-        Platform.runLater(()->{
-            Common.task(this::nxtmap, stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
-            Common.copyFileExcel(file_name,dest_file);
+        Platform.runLater(()-> {
+            Common.task(this::nxtmap, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
             nxt_lb.setText("UPDATED");
         });
     }
-    private void nxtmap(){
+    private void nxtmap() {
         String sheetName = "bc_nxt";
         Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttnlbtkh(ActionEvent actionEvent) {
@@ -131,13 +131,13 @@ public class BaoCaoController implements Initializable {
         Common.getLoading(stage_1);
         Platform.runLater(()-> {
             Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-            Common.copyFileExcel(file_name,dest_file);
             ttnlbtkh_lb.setText("UPDATED");
         });
     }
     private void ttnlbtkh(){
         String sheetName = "bc_ttnl_theo_kh";
         Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
+        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttxdtnv(ActionEvent actionEvent) {
@@ -145,13 +145,13 @@ public class BaoCaoController implements Initializable {
         Common.getLoading(stage_1);
         Platform.runLater(()-> {
             Common.task(this::ttxdtnv,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
-            Common.copyFileExcel(file_name,dest_file);
             ttxdtnv_lb.setText("UPDATED");
         });
     }
     private void ttxdtnv(){
         String sheetName = "t_thu_xd_theo_n_vu";
         Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
+        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ptnn(ActionEvent actionEvent) {
