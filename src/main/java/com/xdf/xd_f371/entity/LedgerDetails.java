@@ -37,6 +37,8 @@ public class LedgerDetails {
     private int he_so_vcf;
     @Column(name = "don_gia")
     @NotNull
+    @Min(value = 0)
+    @Positive
     private int don_gia;
     @Column(name = "loaixd_id")
     private int loaixd_id;

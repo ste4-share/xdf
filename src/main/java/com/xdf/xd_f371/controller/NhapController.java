@@ -32,7 +32,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 @Component
 public class NhapController extends CommonFactory implements Initializable {
-    private static List<LedgerDetails> ls_socai;
     private static List<Ledger> current_ledger_list = new ArrayList<>();
     @FXML
     private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
@@ -42,7 +41,7 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     private DatePicker tungay, denngay;
     @FXML
-    private RadioButton nvdx_rd,sscd_rd;
+    private RadioButton nvdx_rd;
     @FXML
     private Button addbtn,importbtn,cancelbtn;
 
@@ -146,6 +145,7 @@ public class NhapController extends CommonFactory implements Initializable {
     private void setcellFactoryNhap(){
         setcellFactory("phainhap_str","thucnhap_str");
         tbView.setItems(FXCollections.observableList(ls_socai));
+        tbView.refresh();
     }
     @FXML
     private void btnInsert(ActionEvent event){
@@ -153,7 +153,9 @@ public class NhapController extends CommonFactory implements Initializable {
         if (!outfieldValid(tcNhap, "tinh chat nhap khoong duoc de trong.")){
             cmb_tenxd.setStyle(null);
             if (validateField(ld).isEmpty()) {
-                ls_socai.add(ld);
+                if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
+                    ls_socai.add(ld);
+                }
                 setcellFactoryNhap();
                 setTonKhoLabel(inventory_quantity+ld.getSoluong());
                 clearHH();
@@ -217,7 +219,7 @@ public class NhapController extends CommonFactory implements Initializable {
         NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
-        ledger.setBill_id(Integer.parseInt(soTf.getText()));
+        ledger.setBill_id(Integer.parseInt(soTf.getText().trim().isEmpty() ? "0" : soTf.getText()));
         ledger.setQuarter_id(DashboardController.findByTime.getId());
         ledger.setAmount(ls_socai.stream().mapToLong(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());

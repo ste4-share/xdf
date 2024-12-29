@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 public class XuatController extends CommonFactory implements Initializable {
     private static List<Ledger> current_ledger_list = new ArrayList<>();
     private static long inv_price;
-    private static List<LedgerDetails> ls_socai;
     private static AutoCompletionBinding<String> acbLogin;
     private static DinhMuc dinhMuc;
 
@@ -171,37 +170,20 @@ public class XuatController extends CommonFactory implements Initializable {
         LedgerDetails ld = getLedgerDetails();
         if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
             if (inv_price < ld.getSoluong()){
-                DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.ERROR);
+                DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.WARNING);
             } else {
                 if (validateField(ld).isEmpty()) {
-                    if (!isDuplicate(ld.getLoaixd_id(),ld.getThuc_xuat(),ld.getPhai_xuat())){
+                    if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_xuat(),ld.getPhai_xuat(),LoaiPhieuCons.PHIEU_XUAT.getName())){
                         ls_socai.add(ld);
                     }
                     setCellValueFactoryXuat();
                     clearFields();
                 } else {
                     DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                            "Nhập sai định dạng.", Alert.AlertType.ERROR);
+                            "Nhập sai định dạng.", Alert.AlertType.WARNING);
                 }
             }
         }
-    }
-    private boolean isDuplicate(int xd_id,int tx, int px){
-        for (int i =0; i< ls_socai.size(); i++){
-            LedgerDetails ld = ls_socai.get(i);
-            if (ld.getLoaixd_id() == xd_id){
-                ld.setThuc_xuat(ld.getThuc_xuat() + tx);
-                ld.setPhai_xuat(ld.getPhai_xuat() + px);
-                ld.setSoluong(ld.getThuc_xuat() + tx);
-                ld.setSoluong_px((long) ld.getPhai_xuat() + px);
-                ld.setThucxuat_str(TextToNumber.textToNum(String.valueOf(ld.getThuc_xuat())));
-                ld.setPhaixuat_str(TextToNumber.textToNum(String.valueOf(ld.getPhai_xuat())));
-                ld.setThanhtien_str(TextToNumber.textToNum(String.valueOf((long) ld.getThuc_xuat()*ld.getDon_gia())));
-                ls_socai.set(i, ld);
-                return true;
-            }
-        }
-        return false;
     }
     @FXML
     public void xuat(ActionEvent actionEvent) {
