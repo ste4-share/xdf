@@ -118,8 +118,8 @@ public class BaoCaoController implements Initializable {
         Platform.runLater(()-> {
             Common.task(this::nxtmap, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
             nxt_lb.setText("UPDATED");
-            Common.openDesktop();
         });
+
     }
     private void nxtmap() {
         String sheetName = "bc_nxt";
@@ -133,7 +133,6 @@ public class BaoCaoController implements Initializable {
         Platform.runLater(()-> {
             Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
             ttnlbtkh_lb.setText("UPDATED");
-            Common.openDesktop();
         });
     }
     private void ttnlbtkh(){
@@ -149,7 +148,6 @@ public class BaoCaoController implements Initializable {
         Platform.runLater(()-> {
             Common.task(this::ttxdtnv,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
             ttxdtnv_lb.setText("UPDATED");
-            Common.openDesktop();
         });
     }
     private void ttxdtnv(){

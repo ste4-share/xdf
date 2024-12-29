@@ -36,7 +36,7 @@ public class Inventory {
     private String status;
     @Column(name = "price")
     private int price;
-    @Column(name = "create_at")
+    @Column(name = "create_at", insertable = false,updatable = false)
     private LocalDate create_at;
 
     @ManyToOne

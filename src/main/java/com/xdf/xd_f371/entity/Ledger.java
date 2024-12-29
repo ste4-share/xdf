@@ -83,6 +83,8 @@ public class Ledger {
     private int create_by;
     @Column(name = "root_id")
     private int root_id;
+    @Column(name = "pt_id")
+    private int pt_id;
     @Version
     private int version;
 

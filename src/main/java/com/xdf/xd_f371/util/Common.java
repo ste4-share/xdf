@@ -116,6 +116,7 @@ public class Common {
             protected void succeeded() {
                 success.run();
                 message.run();
+                Common.openDesktop();
             }
             @Override
             protected void cancelled() {

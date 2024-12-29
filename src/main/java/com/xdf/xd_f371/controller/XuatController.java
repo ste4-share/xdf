@@ -218,17 +218,28 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void cal_nl_gio(ActionEvent actionEvent) {
+        calNlTheoGio();
+    }
+    private void calNlTheoGio(){
         float phut = (float) Integer.parseInt(sophut.getText())/60;
         int du = (Integer.parseInt(sophut.getText()))/60;
         float gio = Integer.parseInt(sogio.getText()) + phut + du;
-        if (mb_rd.isSelected()){
-            if (tk_rd.isSelected()){
-                nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_tk_gio())));
-            } else{
-                nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_md_gio())));
+        PhuongTien pt =xmt_cbb.getSelectionModel().getSelectedItem();
+        if (pt!=null){
+            DinhMuc dm = dinhmucService.findDinhmucByPhuongtien(pt.getId(), DashboardController.findByTime.getId()).orElse(null);
+            if (dm!=null){
+                if (mb_rd.isSelected()){
+                    if (tk_rd.isSelected()){
+                        nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, dm.getDm_tk_gio())));
+                    } else{
+                        nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, dm.getDm_md_gio())));
+                    }
+                }else{
+                    nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, dm.getDm_xm_gio())));
+                }
+            }else{
+                DialogMessage.errorShowing("Không tìm thấy định mức cho phương tiện " + pt.getName());
             }
-        }else{
-            nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_xm_gio())));
         }
     }
     @FXML
@@ -464,6 +475,7 @@ public class XuatController extends CommonFactory implements Initializable {
         NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
         NguonNx dvn = dvn_cbb.getSelectionModel().getSelectedItem();
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
+        PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
 
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
@@ -498,8 +510,11 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setLoaigiobay(tk_rd.isSelected() ? TypeCons.TREN_KHONG.getName() : TypeCons.MAT_DAT.getName());
             ledger.setNhiemvu(identifyNhiemvu().getNhiemvu());
             ledger.setNhiemvu_id(identifyNhiemvu().getId());
-            ledger.setLpt(phuongtienService.findById(xmt_cbb.getValue().getId()).orElse(null).getLoaiPhuongTien().getTypeName());
-            ledger.setLpt_2(phuongtienService.findById(xmt_cbb.getValue().getId()).orElse(null).getLoaiPhuongTien().getType());
+            if (pt!=null){
+                ledger.setPt_id(pt.getId());
+                ledger.setLpt(phuongtienService.findById(pt.getId()).orElse(null).getLoaiPhuongTien().getTypeName());
+                ledger.setLpt_2(phuongtienService.findById(pt.getId()).orElse(null).getLoaiPhuongTien().getType());
+            }
             if (tk_rd.isSelected()){
                 ledger.setSo_km(0);
                 ledger.setGiohd_tk(getStrInterval());

@@ -427,7 +427,7 @@
                                           <ToggleGroup fx:id="sscd_nvdx_toggle" />
                                        </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton fx:id="sscd_rd" mnemonicParsing="false" prefHeight="46.0" prefWidth="102.0" text="SSCD" toggleGroup="$sscd_nvdx_toggle">
+                                    <RadioButton fx:id="sscd_rd" disable="true" mnemonicParsing="false" prefHeight="46.0" prefWidth="102.0" text="SSCD" toggleGroup="$sscd_nvdx_toggle">
                                        <font>
                                           <Font name="Cambria Bold" size="12.0" />
                                        </font>
