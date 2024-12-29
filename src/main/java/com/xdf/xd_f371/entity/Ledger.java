@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -68,8 +69,8 @@ public class Ledger {
     private int nhiemvu_id;
     @Column(name = "tcn_id")
     private int tcn_id;
-    @Column(name = "timestamp",insertable = false)
-    private LocalDate timestamp;
+    @Column(name = "timestamp",insertable = false,updatable = false)
+    private LocalDateTime timestamp;
     @Column(name = "loainv")
     private String loainv;
     @Column(name = "tructhuoc")

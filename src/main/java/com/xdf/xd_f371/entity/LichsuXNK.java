@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
@@ -31,7 +31,7 @@ public class LichsuXNK {
     @Column(name = "gia")
     private int gia;
     @Column(name = "timestamp",insertable = false,updatable = false)
-    private LocalDate createTime;
+    private LocalDateTime createTime;
     @Column(name = "type")
     private String type;
     @Column(name = "so")
@@ -76,7 +76,7 @@ public class LichsuXNK {
         this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
     }
     public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
-                     String dvn, String dvx, String chungloaixd,int quyId,LocalDate createTime) {
+                     String dvn, String dvx, String chungloaixd, int quyId, LocalDateTime createTime) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;
         this.tontruoc = tontruoc;
@@ -90,7 +90,7 @@ public class LichsuXNK {
         this.chungloaixd = chungloaixd;
         this.quyId = quyId;
         this.createTime = createTime;
-        this.createtime_str = createTime == null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        this.createtime_str = (createTime == null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));

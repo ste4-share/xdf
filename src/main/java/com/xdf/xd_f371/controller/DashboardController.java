@@ -137,6 +137,11 @@ public class DashboardController implements Initializable {
         setLedgersToTable(ttp_ls);
         setPagination_nxt(ttp_ls);
     }
+    public static Node getNodeBySource(String source) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
+        fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
+        return fxmlLoader.load();
+    }
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
         xuatStage = new Stage();
@@ -158,11 +163,6 @@ public class DashboardController implements Initializable {
     public void nhiemvu_menu_action(MouseEvent mouseEvent) {
         setStyleForClickedMEnu(nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,setting,report);
         openFxml("nhiemvu.fxml");
-    }
-    public static Node getNodeBySource(String source) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
-        fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
-        return fxmlLoader.load();
     }
     @FXML
     public void dinhmuc_menu_action(MouseEvent event) {
@@ -205,8 +205,8 @@ public class DashboardController implements Initializable {
         }
     }
     private void mapData(List<MiniLedgerDto> ls){
-        setPagination_nxt(ls);
         setLedgersToTable(ls);
+        setPagination_nxt(ls);
     }
     @FXML
     public void tb_selected(MouseEvent mouseEvent) {
@@ -291,12 +291,19 @@ public class DashboardController implements Initializable {
     }
     private void setStyleForClickedMEnu(HBox selected, HBox remainder1,HBox remainder2,HBox remainder3,HBox remainder4,HBox remainder5,HBox re6){
         selected.setStyle(setupLayout);
+        selected.setDisable(true);
         remainder1.setStyle(resetLayout);
+        remainder1.setDisable(false);
         remainder2.setStyle(resetLayout);
+        remainder2.setDisable(false);
         remainder3.setStyle(resetLayout);
+        remainder3.setDisable(false);
         remainder4.setStyle(resetLayout);
+        remainder4.setDisable(false);
         remainder5.setStyle(resetLayout);
+        remainder5.setDisable(false);
         re6.setStyle(resetLayout);
+        re6.setDisable(false);
     }
     private void openFxml(String fxml){
         try {

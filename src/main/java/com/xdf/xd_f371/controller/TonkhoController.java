@@ -216,4 +216,12 @@ public class TonkhoController implements Initializable {
             mapLsTb(histories);
         }
     }
+    @FXML
+    public void sd_clicked(ActionEvent actionEvent) {
+        System.out.println("from date" + s_date.getValue().toString());
+    }
+    @FXML
+    public void ed_clicked(ActionEvent actionEvent) {
+        System.out.println("from date" + e_date.getValue().toString());
+    }
 }
