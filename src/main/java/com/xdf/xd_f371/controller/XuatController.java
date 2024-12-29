@@ -206,17 +206,22 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void xuat(ActionEvent actionEvent) {
-        if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
-            Ledger l = getLedger();
-            if (validateField(l).isEmpty()) {
-                Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: "+ res.getBill_id(),
-                        "Thanh cong", Alert.AlertType.INFORMATION);
-                DashboardController.xuatStage.close();
-            }else{
-                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
-                        "Nhập sai định dạng.", Alert.AlertType.ERROR);
+        if (!ls_socai.isEmpty()) {
+            if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
+                Ledger l = getLedger();
+                if (validateField(l).isEmpty()) {
+                    Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                    DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
+                            "Thanh cong", Alert.AlertType.INFORMATION);
+                    DashboardController.xuatStage.close();
+                } else {
+                    DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
+                            "Nhập sai định dạng.", Alert.AlertType.ERROR);
+                }
             }
+        }else{
+            DialogMessage.message(null, "Phiếu trống!!!",
+                    null, Alert.AlertType.WARNING);
         }
     }
     @FXML

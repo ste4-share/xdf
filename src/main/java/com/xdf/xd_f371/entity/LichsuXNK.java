@@ -30,7 +30,7 @@ public class LichsuXNK {
     private int tonsau;
     @Column(name = "gia")
     private int gia;
-    @Column(name = "timestamp")
+    @Column(name = "timestamp",insertable = false,updatable = false)
     private LocalDate createTime;
     @Column(name = "type")
     private String type;

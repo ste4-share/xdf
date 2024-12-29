@@ -166,17 +166,22 @@ public class NhapController extends CommonFactory implements Initializable {
 
     @FXML
     private void btnImport(ActionEvent actionEvent) {
-        if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
-            Ledger l = getLedger();
-            if (validateField(l).isEmpty()) {
-                Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong.. so: "+ res.getBill_id(),
-                        "Thanh cong", Alert.AlertType.INFORMATION);
-                DashboardController.primaryStage.close();
-            }else{
-                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
-                        "Nhập sai định dạng.", Alert.AlertType.ERROR);
+        if (!ls_socai.isEmpty()){
+            if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+                Ledger l = getLedger();
+                if (validateField(l).isEmpty()) {
+                    Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                    DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong.. so: "+ res.getBill_id(),
+                            "Thanh cong", Alert.AlertType.INFORMATION);
+                    DashboardController.primaryStage.close();
+                }else{
+                    DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
+                            "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                }
             }
+        }else{
+            DialogMessage.message(null, "Phiếu trống!!!",
+                    null, Alert.AlertType.WARNING);
         }
     }
     private String changeStyleTextFieldByValidation(Object o){

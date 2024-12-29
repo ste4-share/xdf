@@ -130,18 +130,18 @@ public class DashboardController implements Initializable {
     public void importActionClick(ActionEvent actionEvent) throws IOException{
         primaryStage = new Stage();
         Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP", StageStyle.UTILITY);
-        mapLEdgerToTb();
+        updateData();
     }
-
+    private void updateData(){
+        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
+        setLedgersToTable(ttp_ls);
+        setPagination_nxt(ttp_ls);
+    }
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
         xuatStage = new Stage();
         Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT",StageStyle.UTILITY);
-        mapLEdgerToTb();
-    }
-    private void mapLEdgerToTb(){
-        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
-        setLedgersToTable(ttp_ls);
+        updateData();
     }
     @FXML
     public void nxt_menu_action(MouseEvent event) {
