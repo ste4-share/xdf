@@ -1,10 +1,10 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.LoaiNhiemVu;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Team;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.xdf.xd_f371.model.StatusEnum;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.util.Common;
@@ -84,7 +84,7 @@ public class AddNvController implements Initializable {
     public void addAction(ActionEvent actionEvent) {
         LoaiNhiemVu lnv = cbb_lnv.getSelectionModel().getSelectedItem();
         Team t = cbb_team.getSelectionModel().getSelectedItem();
-        NguonNx nx = nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()).get(0);
+        NguonNx nx = nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()).get(0);
         if (lnv!=null && t!=null && nx!=null){
             if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 if (isValid()){

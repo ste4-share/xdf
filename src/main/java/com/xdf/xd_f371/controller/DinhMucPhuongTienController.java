@@ -1,9 +1,9 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.entity.NguonNx;
-import com.xdf.xd_f371.model.LoaiPTEnum;
-import com.xdf.xd_f371.model.StatusEnum;
+import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.util.Common;
@@ -56,7 +56,7 @@ public class DinhMucPhuongTienController implements Initializable {
         Common.hoverButton(addBtn, "#ffffff");
     }
     private void initNguonnxCbb() {
-        ComponentUtil.setItemsToComboBox(units_cbb,nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()),NguonNx::getTen,input-> nguonNxService.findByTen(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(units_cbb,nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),NguonNx::getTen, input-> nguonNxService.findByTen(input).orElse(null));
         units_cbb.getSelectionModel().selectLast();
     }
     private void fillDatatoptTable(String lpt) {

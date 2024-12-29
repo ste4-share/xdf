@@ -1,8 +1,8 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.xdf.xd_f371.model.StatusEnum;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.ComponentUtil;
@@ -44,7 +44,7 @@ public class AddUnitForm implements Initializable {
             TrucThuoc tt = tructhuoc_cbb.getSelectionModel().getSelectedItem();
             if(isValid){
                 if (tt!=null) {
-                    nguonNxService.save(new NguonNx(unit_name.getText(),code.getText(), StatusEnum.NORMAL_STATUS.getName(), tt.getId()));
+                    nguonNxService.save(new NguonNx(unit_name.getText(),code.getText(), StatusCons.NORMAL_STATUS.getName(), tt.getId()));
                     DialogMessage.callAlertWithMessage(null, "Thanh cong", "Them moi thanh cong",Alert.AlertType.WARNING);
                     DonviController.unit_stage.close();
                 } else {

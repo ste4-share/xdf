@@ -1,4 +1,4 @@
-package com.xdf.xd_f371.model;
+package com.xdf.xd_f371.cons;
 
 public enum LoaiPTEnum {
     XE("XE"),

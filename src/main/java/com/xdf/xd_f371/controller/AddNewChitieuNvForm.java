@@ -6,7 +6,7 @@ import com.xdf.xd_f371.dto.NhiemVuDto;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.NhiemvuTaubay;
 import com.xdf.xd_f371.entity.PhuongTien;
-import com.xdf.xd_f371.model.LoaiPTEnum;
+import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.HanmucNhiemvuService;
 import com.xdf.xd_f371.service.NguonNxService;

@@ -6,7 +6,7 @@ import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.model.MucGiaEnum;
+import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import lombok.RequiredArgsConstructor;

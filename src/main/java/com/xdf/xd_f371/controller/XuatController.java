@@ -4,7 +4,6 @@ import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.xdf.xd_f371.model.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.*;
 import javafx.collections.FXCollections;
@@ -105,7 +104,7 @@ public class XuatController extends CommonFactory implements Initializable {
             if (!nguonNx.isEmpty()){
                 mapItemsForDonvi(nguonNx,dvx_cbb);
             }else{
-                mapItemsForDonvi(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()), dvx_cbb);
+                mapItemsForDonvi(nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()), dvx_cbb);
             }
             mapLoaixdByList(pt);
             loai_xmt.setText(pt.getLoaiPhuongTien().getTypeName());
@@ -132,7 +131,7 @@ public class XuatController extends CommonFactory implements Initializable {
         if (lx.equals(LoaiXuat.X_K.getName())){
 
             initValueForLoaiXuatCbb(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()),
-                    new ArrayList<>(),nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()),nguonNxService.findAll(),loaiXdService.findAllOrderby()
+                    new ArrayList<>(),nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),nguonNxService.findAll(),loaiXdService.findAllOrderby()
                     ,true);
             nl_km_hb.setDisable(true);
             nl_gio_hb.setDisable(true);
@@ -425,7 +424,7 @@ public class XuatController extends CommonFactory implements Initializable {
     private void initLoaiXuatCbb() {
         loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.HH.getName())));
         loai_xuat_cbb.getSelectionModel().selectFirst();
-        mapItemsForDonvi(nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()), dvx_cbb);
+        mapItemsForDonvi(nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()), dvx_cbb);
         mapItemsForDonvi(nguonNxService.findAll(),dvn_cbb);
         List<PhuongTien> pt= new ArrayList<>();
         mapItemsForXeMayTau(pt);

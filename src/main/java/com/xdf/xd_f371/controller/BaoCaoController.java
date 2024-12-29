@@ -1,10 +1,10 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.entity.TrucThuoc;
-import com.xdf.xd_f371.model.StatusEnum;
 import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.QuarterService;
@@ -76,7 +76,7 @@ public class BaoCaoController implements Initializable {
         fromdate.setText(quy_cbb.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
     }
     private void initdvcbb(){
-        ComponentUtil.setItemsToComboBox(dvi_cbb, nguonNxService.findByStatus(StatusEnum.ROOT_STATUS.getName()),NguonNx::getTen,input-> nguonNxService.findByTen(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(dvi_cbb, nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),NguonNx::getTen, input-> nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
     }
     private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){

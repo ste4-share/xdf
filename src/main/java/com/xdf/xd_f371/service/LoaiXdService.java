@@ -5,7 +5,7 @@ import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.ChungLoaiXd;
 import com.xdf.xd_f371.entity.Inventory;
 import com.xdf.xd_f371.entity.LoaiXangDau;
-import com.xdf.xd_f371.model.MucGiaEnum;
+import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.repo.ChungLoaiXdRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import jakarta.transaction.Transactional;
