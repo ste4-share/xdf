@@ -79,14 +79,7 @@ public class ChiTietSCController implements Initializable {
                         StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_acc.getPath()).append("/").append(file_name_1);
                         Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input.createSheet(getPhieu()),true),
                                 (input)->fillDataToPhieuNhap(input.getSheet(getPhieu()),false));
-                        try {
-                            DialogMessage.successShowing("Success");
-                            File directoryPath = new File(ConnectLan.pre_acc.getPath());
-                            Desktop desktop = Desktop.getDesktop();
-                            desktop.open(directoryPath);
-                        } catch (IOException io) {
-                            throw new RuntimeException(io);
-                        }
+                        Common.openDesktop();
                     });
             }else {
                 DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_acc.getPath() + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);

@@ -43,7 +43,8 @@ public class LedgerService {
                 detail.setLedger(savedLedger);
                 detail.setLedger_id(savedLedger.getId());
                 ledgerDetailRepo.save(detail);
-                Inventory inventory= inventoryRepo.findByUnique(detail.getLoaixd_id(), ledger.getQuarter_id(), MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()).orElse(null);
+                Inventory inventory= inventoryRepo.findByUnique(detail.getLoaixd_id(), ledger.getQuarter_id(),
+                        MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()).orElse(null);
                 Inventory inventory_1= inventoryRepo.findByUniqueGroupby(detail.getLoaixd_id(), ledger.getQuarter_id()).orElse(null);
                 if (inventory==null) {
                     if (inventory_1!=null) {
@@ -81,6 +82,14 @@ public class LedgerService {
             inventory.setNhap_sscd(inventory.getNhap_sscd()+detail.getSoluong());
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
             inventory.setXuat_sscd(inventory.getXuat_sscd()+detail.getSoluong());
+        }
+        if (inventory.getNhap_nvdx()-inventory.getXuat_nvdx()<=0){
+            inventory.setStatus(MucGiaEnum.OUT_STOCK_NVDX.getStatus());
+        }if (inventory.getNhap_sscd()-inventory.getXuat_sscd()<=0){
+            inventory.setStatus(MucGiaEnum.OUT_STOCK_NVDX.getStatus());
+        }
+        if (inventory.getNhap_sscd()-inventory.getXuat_sscd()<=0 && inventory.getNhap_nvdx()-inventory.getXuat_nvdx()<=0){
+            inventory.setStatus(MucGiaEnum.OUT_STOCK_ALL.getStatus());
         }
         inventoryRepo.save(inventory);
     }

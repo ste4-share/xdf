@@ -118,6 +118,7 @@ public class BaoCaoController implements Initializable {
         Platform.runLater(()-> {
             Common.task(this::nxtmap, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
             nxt_lb.setText("UPDATED");
+            Common.openDesktop();
         });
     }
     private void nxtmap() {
@@ -132,12 +133,14 @@ public class BaoCaoController implements Initializable {
         Platform.runLater(()-> {
             Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
             ttnlbtkh_lb.setText("UPDATED");
+            Common.openDesktop();
         });
     }
     private void ttnlbtkh(){
         String sheetName = "bc_ttnl_theo_kh";
         Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
+
     }
     @FXML
     public void bc_ttxdtnv(ActionEvent actionEvent) {
@@ -146,6 +149,7 @@ public class BaoCaoController implements Initializable {
         Platform.runLater(()-> {
             Common.task(this::ttxdtnv,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
             ttxdtnv_lb.setText("UPDATED");
+            Common.openDesktop();
         });
     }
     private void ttxdtnv(){

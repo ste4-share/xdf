@@ -2,12 +2,15 @@ package com.xdf.xd_f371.util;
 
 
 import com.xdf.xd_f371.MainApplicationApp;
+import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -18,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -57,6 +61,15 @@ public class Common {
         stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
+    }
+    public static void openDesktop(){
+        try {
+            File directoryPath = new File(ConnectLan.pre_acc.getPath());
+            Desktop desktop = Desktop.getDesktop();
+            desktop.open(directoryPath);
+        } catch (IOException io) {
+            throw new RuntimeException(io);
+        }
     }
     public static void setHint(TextField textField, List<String> strls) {
         TextFields.bindAutoCompletion(textField, t -> {

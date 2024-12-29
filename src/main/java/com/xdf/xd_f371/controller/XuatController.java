@@ -173,9 +173,10 @@ public class XuatController extends CommonFactory implements Initializable {
                 DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.WARNING);
             } else {
                 if (validateField(ld).isEmpty()) {
-                    if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_xuat(),ld.getPhai_xuat(),LoaiPhieuCons.PHIEU_XUAT.getName())){
+                    if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_xuat(),ld.getPhai_xuat(),LoaiPhieuCons.PHIEU_XUAT.getName())) {
                         ls_socai.add(ld);
                     }
+                    setInv_lb(inv_price-ld.getSoluong());
                     setCellValueFactoryXuat();
                     clearFields();
                 } else {
@@ -693,7 +694,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
                     ls_socai.remove(ld);
-                    setInv_lb(inv_price-ld.getSoluong());
+                    setInv_lb(inv_price+ld.getSoluong());
                     tbView.setItems(FXCollections.observableList(ls_socai));
                     tbView.refresh();
                 }
