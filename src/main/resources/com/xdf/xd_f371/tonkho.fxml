@@ -152,7 +152,7 @@
                                                 <Font name="Cambria Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="ls_search" onKeyReleased="#ls_kr" onMouseClicked="#ls_search_clicked" prefHeight="37.0" prefWidth="293.0" style="-fx-background-radius: 10;">
+                                          <TextField fx:id="ls_search" onKeyReleased="#ls_kr" onMouseClicked="#ls_search_clicked" prefHeight="37.0" prefWidth="293.0" promptText="nhập tên xd" style="-fx-background-radius: 10;">
                                              <cursor>
                                                 <Cursor fx:constant="TEXT" />
                                              </cursor>
@@ -170,16 +170,19 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </DatePicker>
-                                          <Label alignment="CENTER" prefHeight="43.0" prefWidth="90.0" text="----&gt;">
+                                          <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="55.0" prefWidth="102.0" text="Số:">
                                              <font>
-                                                <Font name="DejaVu Sans Bold" size="12.0" />
+                                                <Font name="Cambria Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <DatePicker fx:id="e_date" onAction="#ed_clicked" prefHeight="40.0" prefWidth="184.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                                          <TextField fx:id="ls_search_so" layoutX="112.0" layoutY="19.0" onKeyReleased="#ls_so_kr" onMouseClicked="#ls_search_so_clicked" prefHeight="37.0" prefWidth="293.0" promptText="Nhập số" style="-fx-background-radius: 10;">
                                              <cursor>
-                                                <Cursor fx:constant="HAND" />
+                                                <Cursor fx:constant="TEXT" />
                                              </cursor>
-                                          </DatePicker>
+                                             <font>
+                                                <Font name="Cambria" size="16.0" />
+                                             </font>
+                                          </TextField>
                                        </children>
                                     </HBox>
                                     <TableView fx:id="tb_history" stylesheets="@css/table_style.css">

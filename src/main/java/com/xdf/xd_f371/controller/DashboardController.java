@@ -217,6 +217,7 @@ public class DashboardController implements Initializable {
                 so_select = (long) m.getSo();
                 lp = m.getLoai_phieu();
                 Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT",StageStyle.UTILITY);
+                updateData();
             }
         }
     }

@@ -50,7 +50,7 @@ public class TonkhoController implements Initializable {
     public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,
             ls_tenxd, ls_cl, ls_tontruoc,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
     @FXML
-    private TextField ls_search, search_inventory;
+    private TextField ls_search, search_inventory,ls_search_so;
     @FXML
     private DatePicker s_date, e_date;
     @FXML
@@ -212,7 +212,7 @@ public class TonkhoController implements Initializable {
         if (!text.isEmpty()){
             List<LichsuXNK> ls = histories.stream().filter(x->x.getTen_xd().equals(text)).toList();
             mapLsTb(ls);
-        }else{
+        } else {
             mapLsTb(histories);
         }
     }
@@ -221,7 +221,17 @@ public class TonkhoController implements Initializable {
         System.out.println("from date" + s_date.getValue().toString());
     }
     @FXML
-    public void ed_clicked(ActionEvent actionEvent) {
-        System.out.println("from date" + e_date.getValue().toString());
+    public void ls_search_so_clicked(MouseEvent mouseEvent) {
+        ls_search_so.selectAll();
+    }
+    @FXML
+    public void ls_so_kr(KeyEvent keyEvent) {
+        String text = ls_search_so.getText().trim();
+        if (!text.isEmpty()){
+            List<LichsuXNK> ls = histories.stream().filter(x->x.getSo()==Integer.parseInt(text)).toList();
+            mapLsTb(ls);
+        } else {
+            mapLsTb(histories);
+        }
     }
 }

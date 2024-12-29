@@ -29,11 +29,15 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
 
     @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
             "a.username, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join " +
-            "l.ledgerDetails ld join l.accounts a where l.status like :s and l.quarter_id=:qid group by 1,2,3,4,5,6,7 order by l.timestamp desc")
+            "l.ledgerDetails ld join l.accounts a where l.status like :s and l.quarter_id=:qid " +
+            "group by 1,2,3,4,5,6,7 order by l.timestamp desc")
     List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("qid") int qid);
     @Query(value = "select * from ledgers where quarter_id=:qid and loai_phieu like :lp", nativeQuery = true)
     List<Ledger> findAllByQuarter(@Param("qid") int quarterId,@Param("lp") String lp);
     @Modifying
     @Query(value = "update ledgers set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid) and quarter_id=:qid", nativeQuery = true)
     void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code,@Param("qid") int qId);
+    @Modifying
+    @Query(value = "update ledgers set status='IN_ACTIVE' where bill_id=:so and loai_phieu like :lp and quarter_id=:qid", nativeQuery = true)
+    void inactiveLedgers(@Param("so") int so,@Param("lp") String lp,@Param("qid") int qId);
 }

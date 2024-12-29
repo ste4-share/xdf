@@ -9,6 +9,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -110,8 +111,8 @@ public class LedgerService {
     public List<Ledger> getAllByQuarter(int quarter_id, String lp){
         return ledgersRepo.findAllByQuarter(quarter_id,lp);
     }
-
+    @Transactional
     public void inactiveLedger(int so, String loaiphieu) {
-
+        ledgersRepo.inactiveLedgers(so,loaiphieu,DashboardController.findByTime.getId());
     }
 }
