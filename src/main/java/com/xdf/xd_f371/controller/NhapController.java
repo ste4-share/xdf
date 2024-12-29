@@ -131,7 +131,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setPhai_nhap(pn);
         ledgerDetails.setThuc_nhap(tn);
         ledgerDetails.setNhiet_do_tt(tThucTe.getText().isEmpty() ? 0 : Double.parseDouble(tThucTe.getText()));
-        ledgerDetails.setHe_so_vcf(vcf.getText().isEmpty() ? 0 : Integer.parseInt(vcf.getText()));
+        ledgerDetails.setHe_so_vcf(vcf.getText().isEmpty() ? 0 : Double.parseDouble(vcf.getText()));
         ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
         ledgerDetails.setSoluong(tn);
         ledgerDetails.setThanhtien((long) tn * p);

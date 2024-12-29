@@ -44,7 +44,7 @@ public class LedgerDto {
     private int phai_xuat;
     private double nhiet_do_tt;
     private double ty_trong;
-    private int he_so_vcf;
+    private double he_so_vcf;
     private int don_gia;
     private int loaixd_id;
     private int phuongtien_id;
@@ -71,7 +71,7 @@ public class LedgerDto {
                      int sl_tieuthu_md, int sl_tieuthu_tk, int dvi_nhan_id, int dvi_xuat_id,
                      String loai_phieu, String dvi_nhan, String dvi_xuat, String loaigiobay, String nguoi_nhan, String so_xe, String lenh_so, String nhiemvu, int nhiemvu_id,
                      int tcn_id, String ma_xd, String ten_xd, String chung_loai, String chat_luong, int phai_xuat, double nhiet_do_tt, double ty_trong,
-                     int he_so_vcf, int don_gia, int loaixd_id, int phuongtien_id, int thuc_xuat, int thuc_xuat_tk,
+                     double he_so_vcf, int don_gia, int loaixd_id, int phuongtien_id, int thuc_xuat, int thuc_xuat_tk,
                      int soluong, int thuc_nhap, int phai_nhap, int haohut_sl, String loainv, Long nl_gio, Long nl_km, Long soluong_px) {
         this.ledger_id = ledger_id;
         this.ledger_detail_id = ledger_detail_id;

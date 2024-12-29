@@ -58,14 +58,17 @@ public class CommonFactory {
         field.setStyle(null);
     }
     protected void validateToSettingStyle(TextField tf) {
-        if (!isNumber(tf.getText())){
-            tf.setStyle(styleErrorField);
-        }else{
+        if (isNumber(tf.getText()) || isNumberDouble(tf.getText())){
             tf.setStyle(null);
+        }else{
+            tf.setStyle(styleErrorField);
         }
     }
     protected boolean isNumber(String in) {
         return in.matches("[^0A-Za-z][0-9]{0,18}");
+    }
+    protected boolean isNumberDouble(String in) {
+        return in.matches("^([+-]?\\d*\\.?\\d*)$");
     }
     protected boolean outfieldValid(TextField tf, String mes){
         if (tf.getText().trim().equals("")) {

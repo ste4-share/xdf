@@ -86,6 +86,7 @@ public class ConnectLan implements Initializable {
                                 Platform.exit(); // Cleanly stop the JavaFX thread
                                 System.exit(0);  // Ensure JVM termination
                             }
+                            event.consume(); // Prevent the stage from closing
                         });
                         Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
                     } else {

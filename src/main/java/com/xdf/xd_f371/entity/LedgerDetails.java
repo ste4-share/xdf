@@ -34,7 +34,7 @@ public class LedgerDetails {
     private double ty_trong;
     @Column(name = "he_so_vcf")
     @NotNull
-    private int he_so_vcf;
+    private double he_so_vcf;
     @Column(name = "don_gia")
     @NotNull
     @Min(value = 0)
