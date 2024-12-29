@@ -40,7 +40,8 @@ public class SpotDto {
     private String sscd_str;
     private String total;
 
-    public SpotDto(int lxd_id, String maxd, String tenxd,String chungloai,Long tdk_nvdx, Long tdk_sscd, Long nhap_nvdx,Long xuat_nvdx,Long nvdx, Long nhap_sscd, Long xuat_sscd,Long sscd) {
+    public SpotDto(int lxd_id, String maxd, String tenxd,String chungloai,Long tdk_nvdx, Long tdk_sscd, Long nhap_nvdx,Long xuat_nvdx,Long nvdx,
+                   Long nhap_sscd, Long xuat_sscd,Long sscd) {
         this.lxd_id = lxd_id;
         this.maxd = maxd;
         this.tenxd = tenxd;

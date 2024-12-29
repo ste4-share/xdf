@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Value;
+
 @Entity
 @Table(name = "ledger_details")
 @Getter
@@ -74,6 +76,14 @@ public class LedgerDetails {
     @Min(value = 0)
     @Positive
     private Long soluong_px;
+    @Column(name = "nhap_nvdx")
+    private Long nhap_nvdx = 0L;
+    @Column(name = "nhap_sscd")
+    private Long nhap_sscd = 0L;
+    @Column(name = "xuat_nvdx")
+    private Long xuat_nvdx = 0L;
+    @Column(name = "xuat_sscd")
+    private Long xuat_sscd = 0L;
 
     @Column(insertable = false, updatable = false)
     private String thanhtien_str;

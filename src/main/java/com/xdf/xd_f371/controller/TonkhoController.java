@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.SpotDto;
+import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
@@ -19,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javafx.stage.StageStyle;
-import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,12 +34,12 @@ import java.util.stream.Collectors;
 public class TonkhoController implements Initializable {
 
     public static Stage tk_stage;
-    private static List<SpotDto> tkt = new ArrayList<>();
+    private static List<TonkhoDto> tkt = new ArrayList<>();
     private static List<LichsuXNK> histories = new ArrayList<>();
     private static Quarter findByTime;
-    public static SpotDto pickTonKho = new SpotDto();
+    public static TonkhoDto pickTonKho = new TonkhoDto();
     @FXML
-    public TableView<SpotDto> tb_tonkho;
+    public TableView<TonkhoDto> tb_tonkho;
     @FXML
     public TableView<LichsuXNK> tb_history;
     @FXML
@@ -71,9 +71,9 @@ public class TonkhoController implements Initializable {
         tb_history.setPrefWidth(DashboardController.screenWidth);
         tb_history.setPrefHeight(DashboardController.screenHeigh-350);
 
-        pickTonKho = new SpotDto();
+        pickTonKho = new TonkhoDto();
         findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
-        tkt = inventoryService.getAllSpots(findByTime.getId());
+        tkt = inventoryService.getAllTonkho(findByTime.getId());
 
         setQuarterListToCbb();
         setTonkhoTongToCol();
@@ -81,7 +81,7 @@ public class TonkhoController implements Initializable {
         setLichsuTb();
         fillDataToTableLichsu(findByTime.getId());
 
-        searching(tkt.stream().map(SpotDto::getTenxd).toList());
+        searching(tkt.stream().map(TonkhoDto::getTenxd).toList());
         searching_ls(histories.stream().map(LichsuXNK::getTen_xd).toList());
     }
     private void fillDataToTableLichsu(int id) {
@@ -107,17 +107,17 @@ public class TonkhoController implements Initializable {
         fillDataToTableTonkho(getCurrentQuarter().getId());
     }
     private void fillDataToTableTonkho(int quy_id){
-        tkt = inventoryService.getAllSpots(quy_id);
+        tkt = inventoryService.getAllTonkho(quy_id);
         tb_tonkho.setItems( FXCollections.observableArrayList(tkt));
     }
-    private void mapInvTb(List<SpotDto> ls){
+    private void mapInvTb(List<TonkhoDto> ls){
         tb_tonkho.setItems( FXCollections.observableArrayList(ls));
     }
     private void setTonkhoTongToCol(){
         col_stt_tk.setSortable(false);
         col_stt_tk.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_tonkho.getItems().indexOf(column.getValue())+1).asString());
         col_tenxd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tenxd"));
-        col_cl.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("chungloai"));
+        col_cl.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("loai"));
         col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_nvdx_str"));
         col_sscd_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_sscd_str"));
         col_cong_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_total"));
@@ -175,7 +175,7 @@ public class TonkhoController implements Initializable {
     }
     @FXML
     public void setClickToTonTb(MouseEvent mouseEvent) {
-        SpotDto spotDto = tb_tonkho.getSelectionModel().getSelectedItem();
+        TonkhoDto spotDto = tb_tonkho.getSelectionModel().getSelectedItem();
         if (mouseEvent.getClickCount() == 2 && spotDto != null) {
             pickTonKho = spotDto;
             tk_stage = new Stage();
@@ -200,7 +200,7 @@ public class TonkhoController implements Initializable {
     public void inv_kr(KeyEvent keyEvent) {
         String text = search_inventory.getText().trim();
         if (!text.isEmpty()){
-            List<SpotDto> ls = tkt.stream().filter(x->x.getTenxd().equals(text)).toList();
+            List<TonkhoDto> ls = tkt.stream().filter(x->x.getTenxd().equals(text)).toList();
             mapInvTb(ls);
         }else{
             mapInvTb(tkt);

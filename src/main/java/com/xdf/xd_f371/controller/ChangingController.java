@@ -1,7 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.PriceAndQuantityDto;
-import com.xdf.xd_f371.dto.SpotDto;
+import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
 import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.service.InventoryService;
@@ -29,7 +29,7 @@ public class ChangingController implements Initializable {
     public static int sum = 0;
     public static int quantity =0;
     public static int quantity_convert =0;
-    private static SpotDto tonkho_selected;
+    private static TonkhoDto tonkho_selected;
     private static List<PriceAndQuantityDto> sscd_ls_buf = new ArrayList<>();
     private static List<PriceAndQuantityDto> nvdx_ls_buf = new ArrayList<>();
     public static List<Inventory> list = new ArrayList<>();
@@ -48,7 +48,7 @@ public class ChangingController implements Initializable {
         nvdx_ls_buf = new ArrayList<>();
         tonkho_selected = TonkhoController.pickTonKho;
         petro_name.setText(tonkho_selected.getTenxd());
-        list = inventoryService.findByPetro_idAndQuarter_id(tonkho_selected.getLxd_id(),DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
+        list = inventoryService.findByPetro_idAndQuarter_id(tonkho_selected.getPetro_id(),DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
         setNvdxTable(nvdx_tb);
         setSScdTable(sscd_tb);
         setVisibleForBtn(true, true);

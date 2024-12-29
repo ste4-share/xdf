@@ -145,7 +145,6 @@ public class ChiTietSCController implements Initializable {
         } else {
             System.out.println("The sheet is empty.");
         }
-
     }
 
     private void setCEll(XSSFSheet sheet, String value, int row_num, int cell_num,boolean isNew){

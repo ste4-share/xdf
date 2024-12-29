@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.repo;
 
 import com.xdf.xd_f371.dto.SpotDto;
+import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +24,24 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "sum(xuat_sscd) as xuat_sscd, max(status) as status,max(price) as price, max(create_at) as create_at " +
             "from inventory where petro_id=:p and quarter_id=:qid group by 2,3 order by price",nativeQuery = true)
     Optional<Inventory> findByUniqueGroupby(@Param("p") int petro_id,@Param("qid") int quarter_id);
-    @Query(value = "select new com.xdf.xd_f371.dto.SpotDto(lxd.id,lxd.maxd,lxd.tenxd,cl.loai,sum(i.tdk_nvdx),sum(i.tdk_sscd),sum(i.nhap_nvdx),sum(i.xuat_nvdx),sum(i.nhap_nvdx-i.xuat_nvdx),sum(i.nhap_sscd),sum(i.xuat_sscd),sum(i.nhap_sscd-i.xuat_sscd)) from Inventory i join i.loaiXangDau lxd join lxd.chungLoaiXd cl on cl.id=lxd.petroleum_type_id where i.quarter_id=:qid group by 1,2,3,4,cl.priority_1,cl.priority_2,cl.priority_3 order by cl.priority_1,cl.priority_2,cl.priority_3")
+    @Query(value = "select new com.xdf.xd_f371.dto.SpotDto(lxd.id,lxd.maxd,lxd.tenxd,cl.loai,sum(i.tdk_nvdx),sum(i.tdk_sscd),sum(i.nhap_nvdx),sum(i.xuat_nvdx)," +
+            "sum(i.nhap_nvdx-i.xuat_nvdx),sum(i.nhap_sscd),sum(i.xuat_sscd),sum(i.nhap_sscd-i.xuat_sscd)) from Inventory i join i.loaiXangDau lxd join lxd.chungLoaiXd cl on cl.id=lxd.petroleum_type_id where i.quarter_id=:qid group by 1,2,3,4,cl.priority_1,cl.priority_2,cl.priority_3 order by cl.priority_1,cl.priority_2,cl.priority_3")
     List<SpotDto> getAllSpots(@Param("qid") int quarter_id);
+    @Query(value = "select i.petro_id,maxd,tenxd,loai,i.tdk_nvdx,i.tdk_sscd,\n" +
+            "case when a.nhap_nvdx is null then 0 else a.nhap_nvdx end as nhap_nvdx,\n" +
+            "case when a.xuat_nvdx is null then 0 else a.xuat_nvdx end as xuat_nvdx,\n" +
+            "case when a.nhap_nvdx-a.xuat_nvdx is null then 0 else a.nhap_nvdx-a.xuat_nvdx end as nvdx,\n" +
+            "case when a.nhap_sscd is null then 0 else a.nhap_sscd end as nhap_sscd,\n" +
+            "case when a.xuat_sscd is null then 0 else a.xuat_sscd end as xuat_sscd,\n" +
+            "case when a.nhap_sscd-a.xuat_sscd is null then 0 else a.nhap_sscd-a.xuat_sscd end as sscd from inventory i\n" +
+            "left join (SELECT loaixd_id,ten_xd,chung_loai,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd \n" +
+            "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
+            "where status like 'ACTIVE' and quarter_id=20\n" +
+            "group by 1,2,3) a on i.petro_id=a.loaixd_id\n" +
+            "left join loaixd2 lxd on lxd.id=i.petro_id\n" +
+            "left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
+            "where quarter_id=20\n" +
+            "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
+    List<Object[]> getAllTonkho(@Param("qid") int quarter_id);
+
 }

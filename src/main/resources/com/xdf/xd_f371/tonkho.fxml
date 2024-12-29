@@ -175,7 +175,7 @@
                                                 <Font name="Cambria Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="ls_search_so" layoutX="112.0" layoutY="19.0" onKeyReleased="#ls_so_kr" onMouseClicked="#ls_search_so_clicked" prefHeight="37.0" prefWidth="293.0" promptText="Nhập số" style="-fx-background-radius: 10;">
+                                          <TextField fx:id="ls_search_so" layoutX="112.0" layoutY="19.0" onKeyReleased="#ls_so_kr" onMouseClicked="#ls_search_so_clicked" prefHeight="37.0" prefWidth="143.0" promptText="Nhập số" style="-fx-background-radius: 10;">
                                              <cursor>
                                                 <Cursor fx:constant="TEXT" />
                                              </cursor>

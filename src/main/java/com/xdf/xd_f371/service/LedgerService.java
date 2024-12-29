@@ -43,10 +43,11 @@ public class LedgerService {
             for (LedgerDetails detail : details) {
                 detail.setLedger(savedLedger);
                 detail.setLedger_id(savedLedger.getId());
+                saveQuantity(detail,savedLedger);
                 ledgerDetailRepo.save(detail);
-                Inventory inventory= inventoryRepo.findByUnique(detail.getLoaixd_id(), ledger.getQuarter_id(),
+                Inventory inventory = inventoryRepo.findByUnique(detail.getLoaixd_id(), ledger.getQuarter_id(),
                         MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()).orElse(null);
-                Inventory inventory_1= inventoryRepo.findByUniqueGroupby(detail.getLoaixd_id(), ledger.getQuarter_id()).orElse(null);
+                Inventory inventory_1 = inventoryRepo.findByUniqueGroupby(detail.getLoaixd_id(), ledger.getQuarter_id()).orElse(null);
                 if (inventory==null) {
                     if (inventory_1!=null) {
                         createNewInv(ledger, detail,inventory_1);
@@ -72,6 +73,17 @@ public class LedgerService {
             LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc+ld.getSoluong(), ld.getSoluong(), tontruoc, ld.getDon_gia(),  ld.getSscd_nvdx(),
                     l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
             lichsuRepo.save(lichsuXNK);
+        }
+    }
+    private void saveQuantity(LedgerDetails detail, Ledger ledger){
+        if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
+            detail.setNhap_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
+        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())){
+            detail.setXuat_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
+        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
+            detail.setNhap_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
+        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
+            detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
         }
     }
     private void saveInv(Ledger ledger, LedgerDetails detail, Inventory inventory) {
