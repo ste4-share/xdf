@@ -452,7 +452,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 setInv_lb(i.getNhap_nvdx()-i.getXuat_nvdx());
             }
         }else{
-            DialogMessage.message("Thong bao", loaiXdService.findById(xd_id).get().getTenxd()+" da het, vui long nhap them.","Het hang", Alert.AlertType.WARNING);
+            DialogMessage.message("Thong bao", loaiXdService.findById(xd_id).orElse(null).getTenxd()+" da het, vui long nhap them.","Het hang", Alert.AlertType.WARNING);
             setXangDauCombobox(cbb_tenxd, loaiXdService);
             cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
         }

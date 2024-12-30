@@ -107,23 +107,21 @@ public class LedgerService {
     }
     private void createNewInv(Ledger ledger, LedgerDetails detail, Inventory inventory){
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
+            inventory.setNhap_nvdx(detail.getSoluong());
             if (inventory.getNhap_nvdx()-inventory.getXuat_nvdx()>0){
-                inventory.setNhap_nvdx(detail.getSoluong());
                 inventoryRepo.save(new Inventory(detail.getLoaixd_id(),ledger.getQuarter_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
                         inventory.getNhap_nvdx(),0, 0,0, MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()));
             }else{
-                inventory.setNhap_nvdx(detail.getSoluong());
                 inventoryRepo.save(new Inventory(detail.getLoaixd_id(),ledger.getQuarter_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
                         inventory.getNhap_nvdx(),0, 0,0, MucGiaEnum.OUT_STOCK_NVDX.getStatus(), detail.getDon_gia()));
             }
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
+            inventory.setNhap_sscd(detail.getSoluong());
             if (inventory.getNhap_sscd()-inventory.getXuat_sscd()>0) {
-                inventory.setNhap_sscd(detail.getSoluong());
                 inventoryRepo.save(new Inventory(detail.getLoaixd_id(), ledger.getQuarter_id(), inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
                         0, detail.getSoluong(), 0, 0,
                         MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()));
             } else {
-                inventory.setNhap_sscd(detail.getSoluong());
                 inventoryRepo.save(new Inventory(detail.getLoaixd_id(), ledger.getQuarter_id(), inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
                         0, detail.getSoluong(), 0, 0,
                         MucGiaEnum.OUT_STOCK_SSCD.getStatus(), detail.getDon_gia()));
