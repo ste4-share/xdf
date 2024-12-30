@@ -1,13 +1,11 @@
 package com.xdf.xd_f371.service;
 
-import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,9 +32,6 @@ public class InventoryService {
     }
     public Inventory findById(int id){
         return inventoryRepo.findById(id).orElse(null);
-    }
-    public List<SpotDto> getAllSpots(int quarter_id){
-        return inventoryRepo.getAllSpots(quarter_id);
     }
     public List<TonkhoDto> getAllTonkho(int quarter_id){
         return mapToTonkhoDto(inventoryRepo.getAllTonkho(quarter_id));

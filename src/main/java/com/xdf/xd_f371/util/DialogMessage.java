@@ -18,9 +18,9 @@ public class DialogMessage {
 
     public static ButtonType callAlert(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText("Warning !");
-        alert.setContentText("Are you sure you want to perform this action ?");
+        alert.setTitle(null);
+        alert.setHeaderText("Xác nhận");
+        alert.setContentText("Xác nhận thêm mới");
 
         Optional<ButtonType> result = alert.showAndWait();
         //Button.Ok

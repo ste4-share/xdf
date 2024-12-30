@@ -223,19 +223,6 @@
          <children>
             <HBox alignment="BOTTOM_LEFT" prefWidth="1126.0">
                <children>
-                  <Label layoutX="280.0" layoutY="23.0" prefHeight="28.0" prefWidth="99.0" text="Quý:">
-                     <font>
-                        <Font name="Cambria Bold" size="16.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="quy_cbb" disable="true" onAction="#quy_selected" prefHeight="41.0" prefWidth="240.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <HBox.margin>
-                        <Insets right="30.0" />
-                     </HBox.margin>
-                  </ComboBox>
                   <Label prefHeight="28.0" prefWidth="99.0" text="Từ ngày:">
                      <font>
                         <Font name="Cambria" size="16.0" />

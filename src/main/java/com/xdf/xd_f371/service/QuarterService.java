@@ -17,8 +17,8 @@ public class QuarterService {
     public Optional<Quarter> findByCurrentTime(LocalDate currentTime){
         return quarterRepository.findByCurrentTime(currentTime);
     }
-    public Optional<Quarter> findByName(String name){
-        return quarterRepository.findByName(name);
+    public Optional<Quarter> findByIndex(String in){
+        return quarterRepository.findByIndex(in);
     }
     public List<Quarter> findAllByYear(String year){
         return quarterRepository.findByYear(year);
@@ -29,7 +29,7 @@ public class QuarterService {
     public Quarter save(Quarter quarter){
         return quarterRepository.save(quarter);
     }
-    public Optional<Quarter> findByUnique(String year,int i){
+    public Optional<Quarter> findByUnique(String year,String i){
         return quarterRepository.findByUnique(year,i);
     }
 }

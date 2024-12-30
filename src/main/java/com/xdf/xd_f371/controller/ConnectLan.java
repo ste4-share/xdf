@@ -3,6 +3,7 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.service.AccountService;
 import com.xdf.xd_f371.service.ConnectionService;
+import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.application.Platform;
@@ -20,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -28,6 +30,7 @@ import java.util.ResourceBundle;
 public class ConnectLan implements Initializable {
     private static final String CREDENTIALS_FILE = "credentials.properties";
     public static Stage primaryStage;
+    public static Stage primaryStage2;
     public static Accounts pre_acc = new Accounts();
     public static String ip_pre;
     public static String port_pre;
@@ -51,6 +54,8 @@ public class ConnectLan implements Initializable {
     private AccountService accountService;
     @Autowired
     private ConnectionService connectionService;
+    @Autowired
+    private QuarterService quarterService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Common.hoverButton(connect,"#009107");
@@ -81,6 +86,7 @@ public class ConnectLan implements Initializable {
                         pre_acc = acc.get();
                         connectionService.maintainConnection();
                         primaryStage = new Stage();
+                        primaryStage2 = new Stage();
                         primaryStage.setOnCloseRequest(event -> {
                             if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
                                 Platform.exit(); // Cleanly stop the JavaFX thread
@@ -88,7 +94,13 @@ public class ConnectLan implements Initializable {
                             }
                             event.consume(); // Prevent the stage from closing
                         });
-                        Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
+                        if (quarterService.findByCurrentTime(LocalDate.now()).isPresent()){
+                            Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
+                        }else{
+                            DialogMessage.message(null, "Quý chưa được khởi tạo",
+                                    "Cần tạo mới quý trước khi nhập xuất", Alert.AlertType.INFORMATION);
+                            Common.openNewStage("quarter_generating.fxml", primaryStage2, null,StageStyle.UTILITY);
+                        }
                     } else {
                         DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
                                 "Đăng nhập không thành công", Alert.AlertType.INFORMATION);

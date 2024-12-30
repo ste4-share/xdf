@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.dto.SpotDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
@@ -43,7 +42,7 @@ public class TonkhoController implements Initializable {
     @FXML
     public TableView<LichsuXNK> tb_history;
     @FXML
-    public TableColumn<SpotDto, String> col_stt_tk,col_tenxd_tk,col_cl,col_nvdx_tdk,col_sscd_tdk,
+    public TableColumn<TonkhoDto, String> col_stt_tk,col_tenxd_tk,col_cl,col_nvdx_tdk,col_sscd_tdk,
             col_cong_tdk, col_nhap_nvdx, col_xuat_nvdx,col_nvdx, col_nhap_sscd, col_xuat_sscd,col_sscd,
             col_nvdx_tck,col_sscd_tck,col_cong_tck;
     @FXML
@@ -92,7 +91,7 @@ public class TonkhoController implements Initializable {
         tb_history.setItems(FXCollections.observableArrayList(ls));
     }
     private void setQuarterListToCbb(){
-        ComponentUtil.setItemsToComboBox(cbb_quarter, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(cbb_quarter, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getIndex, input -> quarterService.findByIndex(input).orElse(null));
         cbb_quarter.getSelectionModel().select(findByTime);
         setLabel();
     }
@@ -116,20 +115,20 @@ public class TonkhoController implements Initializable {
     private void setTonkhoTongToCol(){
         col_stt_tk.setSortable(false);
         col_stt_tk.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_tonkho.getItems().indexOf(column.getValue())+1).asString());
-        col_tenxd_tk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tenxd"));
-        col_cl.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("loai"));
-        col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_nvdx_str"));
-        col_sscd_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_sscd_str"));
-        col_cong_tdk.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tdk_total"));
-        col_nhap_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nhap_nvdx_str"));
-        col_xuat_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("xuat_nvdx_str"));
-        col_nvdx.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nvdx_str"));
-        col_nhap_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("nhap_sscd_str"));
-        col_xuat_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("xuat_sscd_str"));
-        col_sscd.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("sscd_str"));
-        col_nvdx_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_nvdx_str"));
-        col_sscd_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_sscd_str"));
-        col_cong_tck.setCellValueFactory(new PropertyValueFactory<SpotDto, String>("tck_total"));
+        col_tenxd_tk.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tenxd"));
+        col_cl.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("loai"));
+        col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tdk_nvdx_str"));
+        col_sscd_tdk.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tdk_sscd_str"));
+        col_cong_tdk.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tdk_total"));
+        col_nhap_nvdx.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("nhap_nvdx_str"));
+        col_xuat_nvdx.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("xuat_nvdx_str"));
+        col_nvdx.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("nvdx_str"));
+        col_nhap_sscd.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("nhap_sscd_str"));
+        col_xuat_sscd.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("xuat_sscd_str"));
+        col_sscd.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("sscd_str"));
+        col_nvdx_tck.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tck_nvdx_str"));
+        col_sscd_tck.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tck_sscd_str"));
+        col_cong_tck.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tck_total"));
     }
     private void setLichsuTb(){
         ls_stt.setSortable(false);

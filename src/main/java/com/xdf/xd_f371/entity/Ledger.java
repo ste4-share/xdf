@@ -21,7 +21,7 @@ public class Ledger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "quarter_id")
-    private int quarter_id;
+    private int quarter_id=0;
     @Column(name = "bill_id")
     @NotNull
     @Min(1)

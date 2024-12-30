@@ -80,7 +80,7 @@ public class NhiemvuController implements Initializable {
         initHanmucNhiemvuTaubayCellFactory();
     }
     private void initQuyCbb() {
-        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getIndex, input -> quarterService.findByIndex(input).orElse(null));
         quy_cbb.getSelectionModel().select(DashboardController.findByTime);
     }
     private void initAddHm(){
@@ -147,7 +147,7 @@ public class NhiemvuController implements Initializable {
         dvi_cbb.getSelectionModel().selectFirst();
     }
     private void initQuarterCbb(){
-        ComponentUtil.setItemsToComboBox(quy_cbb,quarterService.findAll(),Quarter::getName,input->quarterService.findByName(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(quy_cbb,quarterService.findAll(),Quarter::getIndex,input->quarterService.findByIndex(input).orElse(null));
         quy_cbb.getSelectionModel().selectFirst();
     }
     private void initNvCellFactory() {

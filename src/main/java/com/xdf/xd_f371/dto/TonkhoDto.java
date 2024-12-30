@@ -61,9 +61,9 @@ public class TonkhoDto {
         this.nhap_sscd_str = TextToNumber.textToNum(nhap_sscd);
         this.xuat_sscd_str = TextToNumber.textToNum(xuat_sscd);
         this.sscd_str = TextToNumber.textToNum(sscd);
-        this.tck_nvdx_str = TextToNumber.textToNum(nvdx);
-        this.tck_sscd_str = TextToNumber.textToNum(sscd);
-        this.tck_total = TextToNumber.textToNum(nvdx+sscd);
+        this.tck_nvdx_str = TextToNumber.textToNum(String.valueOf(tdk_nvdx+Long.parseLong(nvdx)));
+        this.tck_sscd_str = TextToNumber.textToNum(String.valueOf(tdk_sscd+Long.parseLong(sscd)));
+        this.tck_total = TextToNumber.textToNum(String.valueOf(tdk_nvdx+Long.parseLong(nvdx)+tdk_sscd+Long.parseLong(sscd)));
     }
 
     public TonkhoDto() {

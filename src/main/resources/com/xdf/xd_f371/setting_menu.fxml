@@ -49,7 +49,7 @@
             </HBox>
             <HBox layoutX="20.0" layoutY="59.0">
                <children>
-                  <Label prefHeight="35.0" prefWidth="127.0" text="Quý 1:">
+                  <Label prefHeight="35.0" prefWidth="127.0" text="Quý hiện tại:">
                      <HBox.margin>
                         <Insets left="50.0" />
                      </HBox.margin>
@@ -57,7 +57,7 @@
                         <Font name="Cambria" size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="q1_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
+                  <TextField fx:id="q_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
@@ -69,7 +69,7 @@
                         <Font name="Cambria Bold" size="13.0" />
                      </font>
                   </Label>
-                  <DatePicker fx:id="s_q1" prefHeight="37.0" prefWidth="205.0">
+                  <DatePicker fx:id="s_q" prefHeight="37.0" prefWidth="205.0">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -79,109 +79,7 @@
                         <Font name="Cambria Bold" size="13.0" />
                      </font>
                   </Label>
-                  <DatePicker fx:id="e_q1" layoutX="187.0" layoutY="10.0" prefHeight="37.0" prefWidth="205.0" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox layoutX="20.0" layoutY="113.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="127.0" text="Quý 2:">
-                     <HBox.margin>
-                        <Insets left="50.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font name="Cambria" size="16.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="q2_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
-                     <cursor>
-                        <Cursor fx:constant="TEXT" />
-                     </cursor>
-                     <font>
-                        <Font name="Cambria" size="14.0" />
-                     </font></TextField>
-                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
-                     <font>
-                        <Font name="Cambria Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <DatePicker fx:id="s_q2" prefHeight="37.0" prefWidth="205.0" />
-                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
-                     <font>
-                        <Font name="Cambria Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <DatePicker fx:id="e_q2" prefHeight="37.0" prefWidth="205.0" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox layoutX="20.0" layoutY="190.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="127.0" text="Quý 3:">
-                     <HBox.margin>
-                        <Insets left="50.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font name="Cambria" size="16.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="q3_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
-                     <cursor>
-                        <Cursor fx:constant="TEXT" />
-                     </cursor>
-                     <font>
-                        <Font name="Cambria" size="14.0" />
-                     </font></TextField>
-                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
-                     <font>
-                        <Font name="Cambria Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <DatePicker fx:id="s_q3" prefHeight="37.0" prefWidth="205.0" />
-                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
-                     <font>
-                        <Font name="Cambria Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <DatePicker fx:id="e_q3" prefHeight="37.0" prefWidth="205.0" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox layoutX="20.0" layoutY="230.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="127.0" text="Quý 4:">
-                     <HBox.margin>
-                        <Insets left="50.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font name="Cambria" size="16.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="q4_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
-                     <cursor>
-                        <Cursor fx:constant="TEXT" />
-                     </cursor>
-                     <font>
-                        <Font name="Cambria" size="14.0" />
-                     </font></TextField>
-                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
-                     <font>
-                        <Font name="Cambria Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <DatePicker fx:id="s_q4" prefHeight="37.0" prefWidth="205.0" />
-                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
-                     <font>
-                        <Font name="Cambria Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <DatePicker fx:id="e_q4" prefHeight="37.0" prefWidth="205.0" />
+                  <DatePicker fx:id="e_q" layoutX="187.0" layoutY="10.0" prefHeight="37.0" prefWidth="205.0" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />

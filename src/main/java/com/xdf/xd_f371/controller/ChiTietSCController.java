@@ -24,8 +24,6 @@ import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.awt.*;
-import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
@@ -100,7 +98,7 @@ public class ChiTietSCController implements Initializable {
         setCEll(sheet, ls.get(0).getDvi_xuat(), 4,3,isNew);
         if (tcnService.findById(ls.get(0).getTcn_id()).orElse(null)==null){
             setCEll(sheet, chitietNhiemvuService.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu(), 5,3,isNew);
-        }else{
+        } else {
             setCEll(sheet, tcnService.findById(ls.get(0).getTcn_id()).orElse(null).getName(), 5,3,isNew);
         }
 

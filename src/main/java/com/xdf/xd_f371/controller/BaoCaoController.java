@@ -70,7 +70,7 @@ public class BaoCaoController implements Initializable {
     public void quy_selected(ActionEvent actionEvent) {
     }
     private void initquycbb() {
-        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())),Quarter::getName, input-> quarterService.findByName(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())),Quarter::getIndex, input-> quarterService.findByIndex(input).orElse(null));
         quy_cbb.getSelectionModel().select(quarterService.findByCurrentTime(LocalDate.now()).orElse(null));
         todate.setText(quy_cbb.getValue().getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         fromdate.setText(quy_cbb.getValue().getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));

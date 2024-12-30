@@ -70,8 +70,6 @@ public class DashboardController implements Initializable {
     @FXML
     private ComboBox<String> cbb_loaiphieu_filter;
     @FXML
-    private ComboBox<Quarter> quy_cbb;
-    @FXML
     private Label lb_from, lb_to,datetime_showing,preUser;
     @FXML
     private Pagination pagination_tbnxt;
@@ -112,7 +110,6 @@ public class DashboardController implements Initializable {
         setLedgersToTable(ttp_ls);
         setFactoryCell();
         setPagination_nxt(ttp_ls);
-        initQuyCombobox();
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
         startUpdatingLedgerData();
     }
@@ -190,9 +187,6 @@ public class DashboardController implements Initializable {
         }
     }
     @FXML
-    public void quy_selected(ActionEvent actionEvent) {
-    }
-    @FXML
     public void loc_phieu(ActionEvent actionEvent) {
         String lp = cbb_loaiphieu_filter.getSelectionModel().getSelectedItem();
         if (lp!=null){
@@ -221,10 +215,6 @@ public class DashboardController implements Initializable {
             }
         }
     }
-    private void initQuyCombobox(){
-        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getName, input -> quarterService.findByName(input).orElse(null));
-        quy_cbb.getSelectionModel().selectFirst();
-    }
     private void getCurrentQuarter(){
         if (quarterService.findByCurrentTime(LocalDate.now()).isPresent()){
             findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
@@ -232,13 +222,14 @@ public class DashboardController implements Initializable {
             lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
             lb_from.setTextFill(Color.rgb(33, 12, 162));
             lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        }else {
+        } else {
             DialogMessage.message("Thông báo", "Vui lòng tạo quý cho nam: " + Year.now().getValue(),
                     "HẾt quý", Alert.AlertType.CONFIRMATION);
             setStyleForClickedMEnu(setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report);
             openFxml("setting_menu.fxml");
         }
     }
+
     private void setDataToPhieuCombobox(){
         List<String> nx_ = new ArrayList<>();
         nx_.add("ALL");
