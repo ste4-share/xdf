@@ -233,4 +233,9 @@ public class TonkhoController implements Initializable {
             mapLsTb(histories);
         }
     }
+    @FXML
+    public void switchAction(ActionEvent actionEvent) {
+        tk_stage = new Stage();
+        Common.openNewStage("switch_quarter.fxml", tk_stage,null, StageStyle.UTILITY);
+    }
 }

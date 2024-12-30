@@ -29,6 +29,9 @@ public class QuarterService {
     public List<Quarter> findAll(){
         return quarterRepository.findAll();
     }
+    public List<Quarter> findAllDescSD(){
+        return quarterRepository.findAllDescSD();
+    }
     public Quarter save(Quarter quarter){
         return quarterRepository.save(quarter);
     }
