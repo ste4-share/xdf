@@ -1,14 +1,16 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Quarter;
-import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class ConvertController implements Initializable {
     private Label prv_sd,pre_sd,prv_ed,pre_ed;
     @Autowired
     private QuarterService quarterService;
+    @Autowired
+    private InventoryService inventoryService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,7 +75,14 @@ public class ConvertController implements Initializable {
     }
     @FXML
     public void convertAction(ActionEvent actionEvent) {
-
-        TonkhoController.tk_stage.close();
+        Quarter pre = pre_cbb.getSelectionModel().getSelectedItem();
+        Quarter prv = prv_cbb.getSelectionModel().getSelectedItem();
+        if (DialogMessage.callAlert()== ButtonType.OK){
+            if (pre!=null && prv!=null){
+                inventoryService.saveInvWhenSwitchQuarter(prv.getId(),pre.getId());
+                DialogMessage.successShowing("Thanh cong");
+                TonkhoController.tk_stage.close();
+            }
+        }
     }
 }

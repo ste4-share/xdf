@@ -1,19 +1,17 @@
 package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.MucGiaEnum;
-import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.InvDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
-import com.xdf.xd_f371.entity.LoaiXangDau;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LedgersRepo;
-import com.xdf.xd_f371.repo.LoaiXangDauRepo;
-import jakarta.persistence.Column;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,8 +31,8 @@ public class InventoryService {
     public Optional<Inventory> findByUniqueGroupby(int xdid, int qid){
         return inventoryRepo.findByUniqueGroupby(xdid, qid);
     }
-    public Optional<Inventory> findByUnique(int petro_id, int quarter_id,String st,int p){
-        return inventoryRepo.findByUnique(petro_id,quarter_id,st,p);
+    public Optional<Inventory> findByUnique(int petro_id, int quarter_id,int p){
+        return inventoryRepo.findByUnique(petro_id,quarter_id,p);
     }
     public Inventory save(Inventory inventory){
         return inventoryRepo.save(inventory);
@@ -54,9 +52,11 @@ public class InventoryService {
     }
     public List<InvDto> mapToInvDto(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InvDto((int) row[0],(String) row[1],(String) row[2],(int) row[3],(int) row[4],(int) row[5],(int) row[6],(int) row[7],(int) row[8]))
+                .map(row -> new InvDto((int) row[0],(String) row[1],(String) row[2],(int) row[3],(int) row[4],((BigDecimal) row[5]).intValue(),
+                        ((BigDecimal) row[6]).intValue(),((BigDecimal) row[7]).intValue(),((BigDecimal) row[8]).intValue()))
                 .collect(Collectors.toList());
     }
+    @Transactional
     public void saveInvWhenSwitchQuarter(int previous_q_id,int pre_q_id){
         List<InvDto> previous_invs = mapToInvDto(ledgersRepo.findAllInvByQuarter(previous_q_id));
         if (!previous_invs.isEmpty()){

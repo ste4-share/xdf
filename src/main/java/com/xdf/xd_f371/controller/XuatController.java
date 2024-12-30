@@ -87,7 +87,7 @@ public class XuatController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (lxd != null && gia != null) {
-            Optional<Inventory> in = inventoryService.findByUnique(lxd.getXd_id(),DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus(),gia);
+            Optional<Inventory> in = inventoryService.findByUnique(lxd.getXd_id(),DashboardController.findByTime.getId(),gia);
             in.ifPresent(inventory -> setInv_lb(inventory.getNhap_nvdx() - inventory.getXuat_nvdx()));
         }
     }

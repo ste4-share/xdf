@@ -35,7 +35,13 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
     @Query(value = "select * from ledgers where quarter_id=:qid and loai_phieu like :lp", nativeQuery = true)
     List<Ledger> findAllByQuarter(@Param("qid") int quarterId,@Param("lp") String lp);
-    @Query(value = "select lxd.id,maxd,tenxd,petroleum_type_id,don_gia,nhap_nvdx,nhap_sscd,xuat_nvdx,xuat_sscd from loaixd2 lxd left join (select loaixd_id, ma_xd,ten_xd,chung_loai,don_gia,sum(nhap_nvdx) as nhap_nvdx,\n" +
+    @Query(value = "select lxd.id,maxd,tenxd,petroleum_type_id,\n" +
+            "case when don_gia is null then 0 else don_gia end as don_gia,\n" +
+            "case when nhap_nvdx is null then 0 else nhap_nvdx end as nhap_nvdx,\n" +
+            "case when nhap_sscd is null then 0 else nhap_sscd end as nhap_sscd,\n" +
+            "case when xuat_nvdx is null then 0 else xuat_nvdx end as xuat_nvdx,\n" +
+            "case when xuat_sscd is null then 0 else xuat_sscd end as xuat_sscd\n" +
+            "from loaixd2 lxd left join (select loaixd_id, ma_xd,ten_xd,chung_loai,don_gia,sum(nhap_nvdx) as nhap_nvdx,\n" +
             "sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd\n" +
             "from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
             "where status like 'ACTIVE' and quarter_id=20\n" +
