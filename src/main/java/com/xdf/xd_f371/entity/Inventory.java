@@ -21,21 +21,21 @@ public class Inventory {
     @Column(name = "quarter_id")
     private int quarter_id;
     @Column(name = "tdk_nvdx")
-    private int tdk_nvdx;
+    private int tdk_nvdx=0;
     @Column(name = "tdk_sscd")
-    private int tdk_sscd;
+    private int tdk_sscd=0;
     @Column(name = "nhap_nvdx")
-    private int nhap_nvdx;
+    private int nhap_nvdx=0;
     @Column(name = "nhap_sscd")
-    private int nhap_sscd;
+    private int nhap_sscd=0;
     @Column(name = "xuat_nvdx")
-    private int xuat_nvdx;
+    private int xuat_nvdx=0;
     @Column(name = "xuat_sscd")
-    private int xuat_sscd;
+    private int xuat_sscd=0;
     @Column(name = "status")
     private String status;
     @Column(name = "price")
-    private int price;
+    private int price=0;
     @Column(name = "create_at", insertable = false,updatable = false)
     private LocalDate create_at;
 
