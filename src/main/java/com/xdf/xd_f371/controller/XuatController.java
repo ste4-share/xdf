@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,8 +35,6 @@ public class XuatController extends CommonFactory implements Initializable {
 
     @FXML
     private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong,nl_gio,nl_km;
-    @FXML
-    private DatePicker tungay,denngay;
     @FXML
     private RadioButton md_rd,tk_rd, mb_rd,nvdx_rd;
     @FXML
@@ -74,6 +73,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ls_socai = new ArrayList<>();
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         nvdx_rd.setSelected(true);
+        tungay.setValue(LocalDate.now());
         initDefailtVar();
         initLoaiXuatCbb();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));

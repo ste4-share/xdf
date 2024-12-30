@@ -103,7 +103,7 @@ public class DashboardController implements Initializable {
         preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
         so_select=0L;
         getCurrentQuarter();
-        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
+        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime);
         getCurrentTiming();
         customStyleMenu();
         setDataToPhieuCombobox();
@@ -130,7 +130,7 @@ public class DashboardController implements Initializable {
         updateData();
     }
     private void updateData(){
-        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime.getId());
+        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime);
         setLedgersToTable(ttp_ls);
         setPagination_nxt(ttp_ls);
     }

@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -25,8 +26,8 @@ public class LedgerService {
     public List<LedgerDto> getLedgers() {
         return ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.so_select,DashboardController.findByTime.getId(),DashboardController.lp);
     }
-    public List<MiniLedgerDto> findInterfaceLedger(String status, int quarter_id){
-        return ledgersRepo.findInterfaceLedger(status, quarter_id);
+    public List<MiniLedgerDto> findInterfaceLedger(String status, Quarter q){
+        return ledgersRepo.findInterfaceLedger(status, q.getStart_date(),q.getEnd_date());
     }
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();

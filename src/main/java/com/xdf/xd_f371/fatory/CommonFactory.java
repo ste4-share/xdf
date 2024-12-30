@@ -42,6 +42,8 @@ public class CommonFactory {
     @FXML
     protected TableView<LedgerDetails> tbView;
     @FXML
+    protected DatePicker tungay, denngay;
+    @FXML
     protected TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phainx,col_nhietdo,col_tytrong,col_vcf,col_thucnx,col_thanhtien;
 
     protected List<String> validateField(Object object){

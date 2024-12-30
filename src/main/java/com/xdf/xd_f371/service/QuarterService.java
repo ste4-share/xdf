@@ -17,6 +17,9 @@ public class QuarterService {
     public Optional<Quarter> findByCurrentTime(LocalDate currentTime){
         return quarterRepository.findByCurrentTime(currentTime);
     }
+    public Optional<Quarter> findPreviousTime(){
+        return quarterRepository.findPreviousTime();
+    }
     public Optional<Quarter> findByIndex(String in){
         return quarterRepository.findByIndex(in);
     }

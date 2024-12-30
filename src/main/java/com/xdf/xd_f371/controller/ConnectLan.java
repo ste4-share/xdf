@@ -94,12 +94,20 @@ public class ConnectLan implements Initializable {
                             }
                             event.consume(); // Prevent the stage from closing
                         });
+                        primaryStage2.setOnCloseRequest(event -> {
+                            if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                                Platform.exit(); // Cleanly stop the JavaFX thread
+                                System.exit(0);  // Ensure JVM termination
+                            }
+                            event.consume(); // Prevent the stage from closing
+                        });
                         if (quarterService.findByCurrentTime(LocalDate.now()).isPresent()){
                             Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
                         }else{
                             DialogMessage.message(null, "Quý chưa được khởi tạo",
                                     "Cần tạo mới quý trước khi nhập xuất", Alert.AlertType.INFORMATION);
-                            Common.openNewStage("quarter_generating.fxml", primaryStage2, null,StageStyle.UTILITY);
+                            Common.openNewStage("quarter_generating.fxml", primaryStage2, null,StageStyle.UNDECORATED);
+
                         }
                     } else {
                         DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",

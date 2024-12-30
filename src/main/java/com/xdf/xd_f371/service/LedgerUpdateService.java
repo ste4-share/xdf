@@ -24,7 +24,7 @@ public class LedgerUpdateService extends ScheduledService<List<MiniLedgerDto>> {
         return new Task<List<MiniLedgerDto>>() {
             @Override
             protected List<MiniLedgerDto> call() throws Exception {
-                return ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), DashboardController.findByTime.getId());
+                return ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), DashboardController.findByTime);
             }
         };
     }

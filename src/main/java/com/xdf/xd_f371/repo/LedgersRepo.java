@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -29,9 +30,9 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
 
     @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
             "a.username, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join " +
-            "l.ledgerDetails ld join l.accounts a where l.status like :s and l.quarter_id=:qid " +
+            "l.ledgerDetails ld join l.accounts a where l.status like :s and l.from_date between :sd and :ed " +
             "group by 1,2,3,4,5,6,7 order by l.timestamp desc")
-    List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("qid") int qid);
+    List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
     @Query(value = "select * from ledgers where quarter_id=:qid and loai_phieu like :lp", nativeQuery = true)
     List<Ledger> findAllByQuarter(@Param("qid") int quarterId,@Param("lp") String lp);
     @Modifying

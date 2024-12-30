@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,8 +39,6 @@ public class NhapController extends CommonFactory implements Initializable {
             donGiaTf, thucNhap,phaiNhap,tThucTe, vcf,tyTrong;
     @FXML
     private Label lb_tontheoxd, notification,chungloai_lb;
-    @FXML
-    private DatePicker tungay, denngay;
     @FXML
     private RadioButton nvdx_rd;
     @FXML
@@ -64,6 +63,7 @@ public class NhapController extends CommonFactory implements Initializable {
         tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
         notification.setText("");
+        tungay.setValue(LocalDate.now());
         nvdx_rd.setSelected(true);
 
         Common.hoverButton(addbtn ,"#027a20");

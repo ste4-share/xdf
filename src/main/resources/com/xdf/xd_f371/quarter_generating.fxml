@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="245.0" prefWidth="415.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.QuarterController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="279.0" prefWidth="424.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.QuarterController">
    <children>
       <HBox alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="40.0" prefWidth="580.0" style="-fx-background-color: #0cb038;">
          <children>
@@ -92,6 +92,15 @@
          <VBox.margin>
             <Insets top="10.0" />
          </VBox.margin>
+      </HBox>
+      <HBox layoutX="20.0" layoutY="70.0" prefHeight="29.0" prefWidth="404.0">
+         <children>
+            <Label fx:id="pre_quarter" prefHeight="28.0" prefWidth="398.0">
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+            </Label>
+         </children>
       </HBox>
    </children>
    <padding>
