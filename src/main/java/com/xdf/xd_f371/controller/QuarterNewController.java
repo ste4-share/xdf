@@ -2,7 +2,9 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.NhiemVuDto;
 import com.xdf.xd_f371.entity.Quarter;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.QuarterService;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -41,7 +43,8 @@ public class QuarterNewController implements Initializable {
     private void initQuarterTb() {
         Integer y = year_cbb.getSelectionModel().getSelectedItem();
         if (y!=null){
-            quy_tb.setItems(FXCollections.observableList(quarterService.findAllByYear(String.valueOf(y))));
+            ls = quarterService.findAllByYear(String.valueOf(y));
+            quy_tb.setItems(FXCollections.observableList(ls));
         }
     }
 
@@ -63,13 +66,22 @@ public class QuarterNewController implements Initializable {
     }
     @FXML
     public void add(ActionEvent actionEvent) {
-        if (q_name.getText().trim().isEmpty()) {
+        if (!q_name.getText().trim().isEmpty()) {
             ls.add(new Quarter(sd.getValue(),ed.getValue(),String.valueOf(year_cbb.getSelectionModel().getSelectedItem()), q_name.getText()));
+            quy_tb.setItems(FXCollections.observableList(ls));
+        }else{
+            q_name.setStyle(CommonFactory.styleErrorField);
         }
     }
     @FXML
     public void save(ActionEvent actionEvent) {
-
+        if (!ls.isEmpty()){
+            for (Quarter l : ls) {
+                quarterService.save(l);
+            }
+            DialogMessage.successShowing("success");
+            DashboardController.primaryStage.close();
+        }
     }
     @FXML
     public void exit(ActionEvent actionEvent) {
