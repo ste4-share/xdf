@@ -22,13 +22,15 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "sum(xuat_sscd) as xuat_sscd, max(status) as status,max(price) as price, max(create_at) as create_at " +
             "from inventory where petro_id=:p and quarter_id=:qid group by 2,3 order by price",nativeQuery = true)
     Optional<Inventory> findByUniqueGroupby(@Param("p") int petro_id,@Param("qid") int quarter_id);
-    @Query(value = "select i.petro_id,maxd,tenxd,loai,i.tdk_nvdx,i.tdk_sscd,\n" +
-            "case when a.nhap_nvdx is null then 0 else a.nhap_nvdx end as nhap_nvdx,\n" +
-            "case when a.xuat_nvdx is null then 0 else a.xuat_nvdx end as xuat_nvdx,\n" +
-            "case when a.nhap_nvdx-a.xuat_nvdx is null then 0 else a.nhap_nvdx-a.xuat_nvdx end as nvdx,\n" +
-            "case when a.nhap_sscd is null then 0 else a.nhap_sscd end as nhap_sscd,\n" +
-            "case when a.xuat_sscd is null then 0 else a.xuat_sscd end as xuat_sscd,\n" +
-            "case when a.nhap_sscd-a.xuat_sscd is null then 0 else a.nhap_sscd-a.xuat_sscd end as sscd from inventory i\n" +
+    @Query(value = "select i.petro_id,maxd,tenxd,loai,max(i.tdk_nvdx) as tdk_nvdx,max(i.tdk_sscd),\n" +
+            "case when max(a.nhap_nvdx) is null then 0 else max(a.nhap_nvdx) end as nhap_nvdx,\n" +
+            "case when max(a.xuat_nvdx) is null then 0 else max(a.xuat_nvdx) end as xuat_nvdx,\n" +
+            "case when max(a.nhap_nvdx-a.xuat_nvdx) is null then 0 else max(a.nhap_nvdx-a.xuat_nvdx) end as nvdx,\n" +
+            "case when max(a.nhap_sscd) is null then 0 else max(a.nhap_sscd) end as nhap_sscd,\n" +
+            "case when max(a.xuat_sscd) is null then 0 else max(a.xuat_sscd) end as xuat_sscd,\n" +
+            "case when max(a.nhap_sscd-a.xuat_sscd) is null then 0 else max(a.nhap_sscd-a.xuat_sscd) end as sscd,\n" +
+            "max(cl.priority_1),max(cl.priority_2),max(cl.priority_3)\n" +
+            "from inventory i\n" +
             "left join (SELECT loaixd_id,ten_xd,chung_loai,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd \n" +
             "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
             "where status like 'ACTIVE' and quarter_id=:qid\n" +
@@ -36,6 +38,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "left join loaixd2 lxd on lxd.id=i.petro_id\n" +
             "left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
             "where quarter_id=:qid\n" +
+            "group by 1,2,3,4,cl.priority_1,cl.priority_2,cl.priority_3\n" +
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkho(@Param("qid") int quarter_id);
 
