@@ -69,7 +69,7 @@ public class XuatController extends CommonFactory implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(),LoaiPhieuCons.PHIEU_XUAT.getName());
+        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime,LoaiPhieuCons.PHIEU_XUAT.getName());
         ls_socai = new ArrayList<>();
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         nvdx_rd.setSelected(true);
@@ -165,23 +165,43 @@ public class XuatController extends CommonFactory implements Initializable {
         setLoaiXangDauByRadio(LoaiPTEnum.MAY.getNameVehicle(), false,LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName());
         setNhiemvuForField(chitietNhiemvuService.findAllDtoBy(LoaiNVCons.NV_BAY.getName()));
     }
+
+    private boolean isCbb(LoaiXangDauDto lxd,Integer gia){
+        if (lxd!=null){
+            if (gia!=null){
+                return true;
+            }else{
+                cbb_dongia.setStyle(styleErrorField);
+                DialogMessage.message("Error", lxd.getTenxd()+" - Het hang","Co loi xay ra", Alert.AlertType.ERROR);
+            }
+        }else{
+            cbb_tenxd.setStyle(styleErrorField);
+            DialogMessage.message("Error", "ten xang dau khong xac dinh","Co loi xay ra", Alert.AlertType.ERROR);
+        }
+        return false;
+    }
+
     @FXML
     public void add(ActionEvent actionEvent) {
-        LedgerDetails ld = getLedgerDetails();
-        if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
-            if (inv_price < ld.getSoluong()){
-                DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.WARNING);
-            } else {
-                if (validateField(ld).isEmpty()) {
-                    if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_xuat(),ld.getPhai_xuat(),LoaiPhieuCons.PHIEU_XUAT.getName())) {
-                        ls_socai.add(ld);
-                    }
-                    setInv_lb(inv_price-ld.getSoluong());
-                    setCellValueFactoryXuat();
-                    clearFields();
+        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
+        if (isCbb(lxd,gia)){
+            LedgerDetails ld = getLedgerDetails(lxd,gia);
+            if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
+                if (inv_price < ld.getSoluong()){
+                    DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.WARNING);
                 } else {
-                    DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                            "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                    if (validateField(ld).isEmpty()) {
+                        if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_xuat(),ld.getPhai_xuat(),LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                            ls_socai.add(ld);
+                        }
+                        setInv_lb(inv_price-ld.getSoluong());
+                        setCellValueFactoryXuat();
+                        clearFields();
+                    } else {
+                        DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                                "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                    }
                 }
             }
         }
@@ -315,7 +335,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void so_clicked(MouseEvent mouseEvent) {
         cleanErrorField(so);
-        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(),LoaiPhieuCons.PHIEU_XUAT.getName());
+        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime,LoaiPhieuCons.PHIEU_XUAT.getName());
     }
     @FXML
     public void so_km_clicked(MouseEvent mouseEvent) {
@@ -554,18 +574,12 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return ledger;
     }
-    private LedgerDetails getLedgerDetails(){
+    private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd, Integer gia){
         LedgerDetails ledgerDetails = new LedgerDetails();
 
         int txuat = thucxuat.getText().isEmpty() ? 0 : Integer.parseInt(thucxuat.getText());
         int pxuat = phaixuat.getText().isEmpty() ? 0 : Integer.parseInt(phaixuat.getText());
 
-        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
-        if (lxd ==null){
-            cbb_tenxd.setStyle(styleErrorField);
-            DialogMessage.message("Error", "ten xang dau khong xac dinh","Co loi xay ra", Alert.AlertType.ERROR);
-            throw new RuntimeException("error");
-        }
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
 
@@ -573,7 +587,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setMa_xd(lxd.getMaxd());
         ledgerDetails.setSscd_nvdx(nvdx_rd.isSelected() ? Purpose.NVDX.getName():Purpose.SSCD.getName());
         ledgerDetails.setChung_loai(lxd.getChungloai());
-        ledgerDetails.setDon_gia(Integer.parseInt(String.valueOf(cbb_dongia.getSelectionModel().getSelectedItem())));
+        ledgerDetails.setDon_gia(gia);
         ledgerDetails.setPhai_xuat(pxuat);
         ledgerDetails.setThuc_xuat(txuat);
         ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText().isEmpty() ? "0" : nhietdo.getText()));

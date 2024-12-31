@@ -58,7 +58,7 @@ public class NhapController extends CommonFactory implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(),LoaiPhieuCons.PHIEU_NHAP.getName());
+        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime,LoaiPhieuCons.PHIEU_NHAP.getName());
         ls_socai = new ArrayList<>();
         tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
@@ -110,17 +110,11 @@ public class NhapController extends CommonFactory implements Initializable {
         cmb_dvn.getSelectionModel().selectFirst();
     }
 
-    private LedgerDetails getLedgerDetails(){
+    private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd){
         int tn = thucNhap.getText().isEmpty() ? 0 : Integer.parseInt(thucNhap.getText());
         int pn = phaiNhap.getText().isEmpty() ? 0 : Integer.parseInt(phaiNhap.getText());
         int p = donGiaTf.getText().trim().isEmpty() ? 0 : Integer.parseInt(donGiaTf.getText());
-        LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
-        if (lxd==null){
-            cmb_tenxd.setStyle(styleErrorField);
-            DialogMessage.message("Lỗi", "...",
-                    "Ten xang dau khong xac dinh.", Alert.AlertType.ERROR);
-            throw new RuntimeException("Ten xang dau khong xac dinh.");
-        }
+
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setMa_xd(lxd.getMaxd());
         ledgerDetails.setTen_xd(lxd.getTenxd());
@@ -149,21 +143,29 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     @FXML
     private void btnInsert(ActionEvent event){
-        LedgerDetails ld = getLedgerDetails();
-        if (!outfieldValid(tcNhap, "tinh chat nhap khoong duoc de trong.")){
-            cmb_tenxd.setStyle(null);
-            if (validateField(ld).isEmpty()) {
-                if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
-                    ls_socai.add(ld);
+        LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
+        if (lxd!=null) {
+            LedgerDetails ld = getLedgerDetails(lxd);
+            if (!outfieldValid(tcNhap, "tinh chat nhap khoong duoc de trong.")){
+                cmb_tenxd.setStyle(null);
+                if (validateField(ld).isEmpty()) {
+                    if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
+                        ls_socai.add(ld);
+                    }
+                    setcellFactoryNhap();
+                    setTonKhoLabel(inventory_quantity+ld.getSoluong());
+                    clearHH();
+                }else{
+                    DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                            "Nhập sai định dạng.", Alert.AlertType.ERROR);
                 }
-                setcellFactoryNhap();
-                setTonKhoLabel(inventory_quantity+ld.getSoluong());
-                clearHH();
-            }else{
-                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                        "Nhập sai định dạng.", Alert.AlertType.ERROR);
             }
+        }else{
+            cmb_tenxd.setStyle(styleErrorField);
+            DialogMessage.message("Lỗi", "...",
+                    "Ten xang dau khong xac dinh.", Alert.AlertType.ERROR);
         }
+
     }
 
     @FXML
@@ -326,7 +328,7 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     public void so_clicked(MouseEvent mouseEvent) {
         cleanErrorField(soTf);
-        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime.getId(), LoaiPhieuCons.PHIEU_NHAP.getName());
+        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime, LoaiPhieuCons.PHIEU_NHAP.getName());
         notification.setText("");
     }
     @FXML

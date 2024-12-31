@@ -44,8 +44,7 @@ public class ConvertController implements Initializable {
         pre_cbb.getSelectionModel().selectFirst();
         Quarter q = pre_cbb.getSelectionModel().getSelectedItem();
         if (q!=null){
-            pre_sd.setText(q.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            pre_ed.setText(q.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            setTe(pre_sd,pre_ed,q);
         }
     }
     private void setPrv_cbb(){
@@ -53,9 +52,12 @@ public class ConvertController implements Initializable {
         prv_cbb.getSelectionModel().selectFirst();
         Quarter q = prv_cbb.getSelectionModel().getSelectedItem();
         if (q!=null){
-            prv_sd.setText(q.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            prv_ed.setText(q.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            setTe(prv_sd,prv_ed,q);
         }
+    }
+    private void setTe(Label sd,Label ed,Quarter q){
+        sd.setText(q.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        ed.setText(q.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
     }
     @FXML
     public void prv(ActionEvent actionEvent) {
@@ -79,7 +81,7 @@ public class ConvertController implements Initializable {
         Quarter prv = prv_cbb.getSelectionModel().getSelectedItem();
         if (DialogMessage.callAlert()== ButtonType.OK){
             if (pre!=null && prv!=null){
-                inventoryService.saveInvWhenSwitchQuarter(prv.getId(),pre.getId());
+                inventoryService.saveInvWhenSwitchQuarter(prv,pre.getId());
                 DialogMessage.successShowing("Thanh cong");
                 TonkhoController.tk_stage.close();
             }

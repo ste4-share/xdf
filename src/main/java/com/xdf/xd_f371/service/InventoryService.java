@@ -4,6 +4,7 @@ import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.dto.InvDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
+import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LedgersRepo;
 import jakarta.transaction.Transactional;
@@ -57,8 +58,8 @@ public class InventoryService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void saveInvWhenSwitchQuarter(int previous_q_id,int pre_q_id){
-        List<InvDto> previous_invs = mapToInvDto(ledgersRepo.findAllInvByQuarter(previous_q_id));
+    public void saveInvWhenSwitchQuarter(Quarter q, int pre_q_id){
+        List<InvDto> previous_invs = mapToInvDto(ledgersRepo.findAllInvByQuarter(q.getStart_date(),q.getEnd_date()));
         if (!previous_invs.isEmpty()){
             previous_invs.forEach(x->{
                 if (x.getNhap_nvdx()-x.getXuat_nvdx()<=0 && x.getNhap_sscd()-x.getXuat_sscd()<=0){

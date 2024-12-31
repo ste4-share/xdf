@@ -23,7 +23,8 @@ public class LedgerService {
     private final InventoryRepo inventoryRepo;
     private final LichsuRepo lichsuRepo;
     public List<LedgerDto> getLedgers() {
-        return ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.so_select,DashboardController.findByTime.getId(),DashboardController.lp);
+        return ledgersRepo.findLedgerByBillIdAndQuarter_id(DashboardController.so_select,DashboardController.findByTime.getStart_date(),
+                DashboardController.findByTime.getEnd_date(),DashboardController.lp);
     }
     public List<MiniLedgerDto> findInterfaceLedger(String status, Quarter q){
         return ledgersRepo.findInterfaceLedger(status, q.getStart_date(),q.getEnd_date());
@@ -129,8 +130,8 @@ public class LedgerService {
         }
     }
 
-    public List<Ledger> getAllByQuarter(int quarter_id, String lp){
-        return ledgersRepo.findAllByQuarter(quarter_id,lp);
+    public List<Ledger> getAllByQuarter(Quarter q, String lp){
+        return ledgersRepo.findAllByQuarter(q.getStart_date(),q.getEnd_date(),lp);
     }
     @Transactional
     public void inactiveLedger(int so, String loaiphieu) {
