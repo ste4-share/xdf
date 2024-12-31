@@ -22,8 +22,6 @@ public class NhiemvuTaubay {
     private int pt_id;
     @Column(name = "ctnv_id")
     private int ctnv_id;
-    @Column(name = "quy_id")
-    private int quy_id;
     @Column(name = "tk")
     private String tk;
     @Column(name = "md")
@@ -32,21 +30,19 @@ public class NhiemvuTaubay {
     private Long nhienlieu;
     @Column(name = "years")
     private int years = LocalDate.now().getYear();
-    public NhiemvuTaubay(int dviXuatId, int pt_id, int ctnv_id, int quy_id, String tk, String md, Long nhienlieu) {
+    public NhiemvuTaubay(int dviXuatId, int pt_id, int ctnv_id, String tk, String md, Long nhienlieu) {
         this.dviXuatId = dviXuatId;
         this.pt_id = pt_id;
         this.ctnv_id = ctnv_id;
-        this.quy_id = quy_id;
         this.tk = tk;
         this.md = md;
         this.nhienlieu = nhienlieu;
     }
-    public NhiemvuTaubay(int id, int dviXuatId, int pt_id, int ctnv_id, int quy_id, String tk, String md, Long nhienlieu) {
+    public NhiemvuTaubay(int id, int dviXuatId, int pt_id, int ctnv_id, String tk, String md, Long nhienlieu) {
         this.id = id;
         this.dviXuatId = dviXuatId;
         this.pt_id = pt_id;
         this.ctnv_id = ctnv_id;
-        this.quy_id = quy_id;
         this.tk = tk;
         this.md = md;
         this.nhienlieu = nhienlieu;

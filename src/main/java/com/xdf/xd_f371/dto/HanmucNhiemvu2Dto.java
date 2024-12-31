@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class HanmucNhiemvu2Dto {
     private int id;
-    private int quarter_id;
+    private int years;
     private int dvi_id;
     private int nhiemvu_id;
     private Long diezel;
@@ -24,23 +24,9 @@ public class HanmucNhiemvu2Dto {
     private String xang_str;
     private String cong;
 
-    public HanmucNhiemvu2Dto(int id,int quarter_id, int dvi_id, int nhiemvu_id, Long diezel, Long daubay, Long xang, String tenNv, String chitiet_nhiemvu) {
+    public HanmucNhiemvu2Dto(int id,int years, int dvi_id, int nhiemvu_id, Long diezel, Long daubay, Long xang, String tenNv, String chitiet_nhiemvu) {
         this.id = id;
-        this.quarter_id = quarter_id;
-        this.dvi_id = dvi_id;
-        this.nhiemvu_id = nhiemvu_id;
-        this.diezel = diezel;
-        this.daubay = daubay;
-        this.xang = xang;
-        diezel_str = TextToNumber.textToNum(String.valueOf(diezel));
-        daubay_str = TextToNumber.textToNum(String.valueOf(daubay));
-        xang_str = TextToNumber.textToNum(String.valueOf(xang));
-        cong = TextToNumber.textToNum(String.valueOf(xang+daubay+diezel));
-        this.tenNv = tenNv;
-        this.chitiet_nhiemvu = chitiet_nhiemvu;
-    }
-    public HanmucNhiemvu2Dto(int quarter_id, int dvi_id, int nhiemvu_id, Long diezel, Long daubay, Long xang, String tenNv, String chitiet_nhiemvu) {
-        this.quarter_id = quarter_id;
+        this.years = years;
         this.dvi_id = dvi_id;
         this.nhiemvu_id = nhiemvu_id;
         this.diezel = diezel;

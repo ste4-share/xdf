@@ -96,13 +96,13 @@ public class AddNewHanMucNhiemvu implements Initializable {
                     saveXdB(hm,ct);
                     hanmucNhiemvuService.save(new HanmucNhiemvu2(hm));
                 } else {
-                    Optional<HanmucNhiemvu2> exitst = hanmucNhiemvuService.findByUnique(hm.getQuarter_id(),ct.getId());
+                    Optional<HanmucNhiemvu2> exitst = hanmucNhiemvuService.findByUnique(hm.getYears(),ct.getId());
                     saveXdB(hm,ct);
                     if (exitst.isPresent()) {
                         hm.setId(exitst.get().getId());
                         hanmucNhiemvuService.save(new HanmucNhiemvu2(hm));
                     } else {
-                        hanmucNhiemvuService.save(new HanmucNhiemvu2(hm.getQuarter_id(), hm.getDvi_id(),hm.getNhiemvu_id(), hm.getDiezel(), hm.getDaubay(), hm.getXang()));
+                        hanmucNhiemvuService.save(new HanmucNhiemvu2(hm.getDvi_id(),hm.getNhiemvu_id(), hm.getDiezel(), hm.getDaubay(), hm.getXang()));
                     }
                 }
             }

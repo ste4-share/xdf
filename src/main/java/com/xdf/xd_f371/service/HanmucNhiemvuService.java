@@ -26,8 +26,8 @@ public class HanmucNhiemvuService {
     public List<HanmucNhiemvu2> findAllByYearHmnv(int y){
         return hanmucNhiemvu2Repository.findAllByYear(y);
     }
-    public Optional<HanmucNhiemvu2> findByUnique(int q,int ctnv){
-        return hanmucNhiemvu2Repository.findByUnique(q,ctnv);
+    public Optional<HanmucNhiemvu2> findByUnique(int y,int ctnv){
+        return hanmucNhiemvu2Repository.findByUnique(y,ctnv);
     }
     public HanmucNhiemvu2 save(HanmucNhiemvu2 hanmucNhiemvu2){
         return hanmucNhiemvu2Repository.save(hanmucNhiemvu2);

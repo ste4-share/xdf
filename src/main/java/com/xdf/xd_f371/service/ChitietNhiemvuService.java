@@ -96,7 +96,7 @@ public class ChitietNhiemvuService {
                 DialogMessage.errorShowing("Nhiem vu da ton tai.");
             }else{
                 ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(n_v.get().getId(),ct));
-                hanmucNhiemvuService.save(new HanmucNhiemvu2(DashboardController.findByTime.getId(), nx.getId(),ct2.getId(),
+                hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
                         Long.parseLong(diezel_tf),Long.parseLong(d),Long.parseLong(x)));
                 DialogMessage.message(null, "Them thanh cong",
                         "Thanh cong", Alert.AlertType.INFORMATION);
@@ -104,7 +104,7 @@ public class ChitietNhiemvuService {
         }else{
             NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,lnv.getId(),99,99));
             ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(n.getId(),ct));
-            hanmucNhiemvuService.save(new HanmucNhiemvu2(DashboardController.findByTime.getId(), nx.getId(),ct2.getId(),
+            hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
                     Long.parseLong(diezel_tf),Long.parseLong(d),Long.parseLong(x)));
             DialogMessage.message(null, "Them thanh cong",
                     "Thanh cong", Alert.AlertType.INFORMATION);
