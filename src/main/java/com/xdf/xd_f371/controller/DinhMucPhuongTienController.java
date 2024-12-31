@@ -2,12 +2,15 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
+import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -23,6 +26,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
@@ -37,6 +42,8 @@ public class DinhMucPhuongTienController implements Initializable {
     @FXML
     ComboBox<NguonNx> units_cbb;
     @FXML
+    ComboBox<Integer> year_cbb;
+    @FXML
     RadioButton xe_radio,may_radio,mb_radio;
     @FXML
     TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,km,h,md,tk,createtime,tructhuoc;
@@ -45,15 +52,22 @@ public class DinhMucPhuongTienController implements Initializable {
     private DinhmucService dinhmucService;
     @Autowired
     private NguonNxService nguonNxService;
+    @Autowired
+    private QuarterService quarterService;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pt_tb.setPrefWidth(DashboardController.screenWidth);
         pt_tb.setPrefHeight(DashboardController.screenHeigh-300);
         xe_radio.setSelected(true);
         setfactoryForTable();
+        initYearCbb();
         initNguonnxCbb();
         fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
         Common.hoverButton(addBtn, "#ffffff");
+    }
+    private void initYearCbb() {
+        year_cbb.setItems(FXCollections.observableList(quarterService.getAllYear()));
+        year_cbb.getSelectionModel().selectFirst();
     }
     private void initNguonnxCbb() {
         ComponentUtil.setItemsToComboBox(units_cbb,nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),NguonNx::getTen, input-> nguonNxService.findByTen(input).orElse(null));
@@ -61,8 +75,32 @@ public class DinhMucPhuongTienController implements Initializable {
     }
     private void fillDatatoptTable(String lpt) {
         NguonNx dvi = units_cbb.getSelectionModel().getSelectedItem();
-        if (dvi!=null){
-            pt_tb.setItems(FXCollections.observableList(dinhmucService.findAllBy(DashboardController.findByTime.getId(), lpt)));
+        Integer y = year_cbb.getSelectionModel().getSelectedItem();
+        if (dvi!=null && y!=null){
+            List<DinhMucPhuongTienDto> ls = dinhmucService.findAllBy(y, lpt);
+            if (!ls.isEmpty()){
+                pt_tb.setItems(FXCollections.observableList(ls));
+            }else {
+                if (DialogMessage.callAlertWithMessage(null,null,"Chưa đặt định mức cho phương tiện năm " + LocalDate.now().getYear()+
+                                ". Bạn có muốn chuyển định mức năm "+(LocalDate.now().getYear()-1)+" để dùng cho năm "+(LocalDate.now().getYear())
+                        , Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                    switchDinhmuc();
+                    xe_radio.setSelected(true);
+                    fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
+                }
+            }
+        }
+    }
+    private void switchDinhmuc(){
+        List<DinhMuc> previousDm = dinhmucService.findAllByYear((LocalDate.now().getYear()-1));
+        if (!previousDm.isEmpty()){
+            previousDm.forEach(x->{
+                x.setYears(LocalDate.now().getYear());
+                dinhmucService.save(x);
+            });
+            DialogMessage.successShowing("Chuyen doi thanh cong");
+        } else {
+            DialogMessage.errorShowing("Khong co du lieu tu nam "+(LocalDate.now().getYear()-1));
         }
     }
     private void setfactoryForTable(){
@@ -98,7 +136,8 @@ public class DinhMucPhuongTienController implements Initializable {
         dinhMucPhuongTienDto.setQuantity(0);
         dinhMucPhuongTienDto.setNnx_id(units_cbb.getSelectionModel().getSelectedItem().getId());
         openAddScreen();
-        fillDatatoptTable(dinhMucPhuongTienDto.getType());
+        fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
+        xe_radio.setSelected(true);
     }
     @FXML
     public void pt_selected(MouseEvent mouseEvent) throws IOException {
@@ -126,5 +165,10 @@ public class DinhMucPhuongTienController implements Initializable {
     private void openAddScreen(){
         norm_stage = new Stage();
         Common.openNewStage("add_pt.fxml",norm_stage,"Thêm phương tiện", StageStyle.DECORATED);
+    }
+    @FXML
+    public void yearAction(ActionEvent actionEvent) {
+        xe_radio.setSelected(true);
+        fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
     }
 }

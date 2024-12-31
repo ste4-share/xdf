@@ -24,6 +24,6 @@ public interface QuarterRepository extends JpaRepository<Quarter, Integer> {
     Optional<Quarter> findPreviousTime();
     @Query(value = "select * from quarter order by end_date desc",nativeQuery = true)
     List<Quarter> findAllDescSD();
-    @Query("SELECT year FROM quarter q group by q.year order by q.year desc")
+    @Query(value = "SELECT year FROM quarter q group by q.year order by q.year desc",nativeQuery = true)
     List<Integer> getAllYear();
 }

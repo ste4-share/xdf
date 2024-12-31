@@ -8,6 +8,7 @@ import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -69,16 +70,51 @@ public class NhiemvuController implements Initializable {
         initDviTb();
         initNvTable();
         initYearCbb();
-        Integer y = year_cbb.getSelectionModel().getSelectedItem();
-        if (y!=null){
-            hmnv = hanmucNhiemvuService.getAllByYear(y);
-            initNhiemvuTaubay(hmnv);
-            hm2_ls = hanmucNhiemvuService.findAllDto(y);
-            initHanmuc(hm2_ls);
-        }
+        initHanmucTb();
         inithanmucCellFactory();
         initNvCellFactory();
         initHanmucNhiemvuTaubayCellFactory();
+    }
+
+    private void initHanmucTb() {
+        Integer y = year_cbb.getSelectionModel().getSelectedItem();
+        if (y!=null){
+            hmnv = hanmucNhiemvuService.getAllByYear(y);
+            if (!hmnv.isEmpty()){
+                initNhiemvuTaubay(hmnv);
+            }else{
+                switchNvTb(y);
+            }
+            hm2_ls = hanmucNhiemvuService.findAllDto(y);
+            if (!hm2_ls.isEmpty()){
+                initHanmuc(hm2_ls);
+            }else{
+                switchHmnv(y);
+            }
+        }
+    }
+    private void switchHmnv(Integer y) {
+        List<HanmucNhiemvu2> hm = hanmucNhiemvuService.findAllByYearHmnv(y-1);
+        if (hm.isEmpty()){
+            DialogMessage.successShowing("Du lieu nam "+ (y-1)+" trong.!!!");
+        }else{
+            hm.forEach(x->{
+                x.setYears(y);
+                hanmucNhiemvuService.save(x);
+            });
+        }
+    }
+
+    private void switchNvTb(int y) {
+        List<NhiemvuTaubay> hm = hanmucNhiemvuService.findAllByYear(y-1);
+        if (hm.isEmpty()){
+            DialogMessage.successShowing("Du lieu nam "+ (y-1)+" trong.!!!");
+        }else{
+            hm.forEach(x->{
+                x.setYears(y);
+                hanmucNhiemvuService.save(x);
+            });
+        }
     }
 
     private void initYearCbb() {
@@ -96,7 +132,7 @@ public class NhiemvuController implements Initializable {
             hm2 = tieuthunhiemvu.getSelectionModel().getSelectedItem();
             Integer y = year_cbb.getSelectionModel().getSelectedItem();
             if (y!=null){
-                if (hm2!=null){
+                if (hm2!=null) {
                     initAddHm();
                     hm2_ls = hanmucNhiemvuService.findAllDto(y);
                     initHanmuc(hm2_ls);

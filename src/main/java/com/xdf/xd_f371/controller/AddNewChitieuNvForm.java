@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
@@ -97,13 +99,19 @@ public class AddNewChitieuNvForm implements Initializable {
         PhuongTien p = pt_cbb.getSelectionModel().getSelectedItem();
         if (n!=null && ct!=null && p!=null){
             HanmucNhiemvuTaubayDto hm = NhiemvuController.hm;
-            if (hm==null){
-                hanmucNhiemvuService.save(new NhiemvuTaubay(n.getId(),p.getId(),ct.getCtnv_id(),DashboardController.findByTime.getId(),tk.getText(),md.getText(),Long.parseLong(nl.getText())));
-                NhiemvuController.nvStage.close();
+            Optional<HanmucNhiemvuTaubayDto> unique = hanmucNhiemvuService.findHmUnique(LocalDate.now().getYear(), p.getId(),ct.getCtnv_id(),n.getId());
+            if (unique.isPresent()){
+                hanmucNhiemvuService.save(new NhiemvuTaubay(unique.get().getNvtb_id(),n.getId(),p.getId(),ct.getCtnv_id(),
+                        DashboardController.findByTime.getId(),tk.getText(),md.getText(),Long.parseLong(nl.getText())));
             }else{
-                hanmucNhiemvuService.save(new NhiemvuTaubay(hm.getNvtb_id(),n.getId(),p.getId(),ct.getCtnv_id(),DashboardController.findByTime.getId(),tk.getText(),md.getText(),Long.parseLong(nl.getText())));
+                if (hm==null){
+                    hanmucNhiemvuService.save(new NhiemvuTaubay(n.getId(),p.getId(),ct.getCtnv_id(),DashboardController.findByTime.getId(),tk.getText(),md.getText(),Long.parseLong(nl.getText())));
+                    NhiemvuController.nvStage.close();
+                }else{
+                    hanmucNhiemvuService.save(new NhiemvuTaubay(hm.getNvtb_id(),n.getId(),p.getId(),ct.getCtnv_id(),DashboardController.findByTime.getId(),tk.getText(),md.getText(),Long.parseLong(nl.getText())));
+                }
+                DialogMessage.successShowing("Luu thanh cong");
             }
-            DialogMessage.successShowing("Luu thanh cong");
             NhiemvuController.nvStage.close();
         } else {
             DialogMessage.errorShowing(null);

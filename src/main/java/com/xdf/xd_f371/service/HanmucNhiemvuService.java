@@ -23,6 +23,9 @@ public class HanmucNhiemvuService {
     public List<HanmucNhiemvu2Dto> findAllDto(int y){
         return hanmucNhiemvu2Repository.findAllDto(y);
     }
+    public List<HanmucNhiemvu2> findAllByYearHmnv(int y){
+        return hanmucNhiemvu2Repository.findAllByYear(y);
+    }
     public Optional<HanmucNhiemvu2> findByUnique(int q,int ctnv){
         return hanmucNhiemvu2Repository.findByUnique(q,ctnv);
     }
@@ -34,6 +37,9 @@ public class HanmucNhiemvuService {
     }
     public NhiemvuTaubay save(NhiemvuTaubay nhiemvuTaubay){
         return hanmucNhiemvuTauBayRepo.save(nhiemvuTaubay);
+    }
+    public List<NhiemvuTaubay> findAllByYear(int year){
+        return hanmucNhiemvuTauBayRepo.findAllByYear(year);
     }
 
     public List<NguonNx> getAllDviTructhuocByTaubay(int taubayId, int quyID){

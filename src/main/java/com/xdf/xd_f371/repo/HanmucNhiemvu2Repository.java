@@ -16,6 +16,9 @@ public interface HanmucNhiemvu2Repository extends JpaRepository<HanmucNhiemvu2, 
             "from HanmucNhiemvu2 hm join hm.chitietNhiemVu ct join ct.nhiemVu n join n.team t where hm.years=:y order by t.tt,n.priority")
     List<HanmucNhiemvu2Dto> findAllDto(@Param("y") int y);
 
+    @Query(value = "select * from hanmuc_nhiemvu2 where years=:y",nativeQuery = true)
+    List<HanmucNhiemvu2> findAllByYear(@Param("y") int y);
+
     @Query(value = "select * from hanmuc_nhiemvu2 where nhiemvu_id=:n and quarter_id=:q",nativeQuery = true)
     Optional<HanmucNhiemvu2> findByUnique(@Param("q") int q,@Param("n") int ctnv);
 }

@@ -22,4 +22,6 @@ public interface HanmucNhiemvuTauBayRepo extends JpaRepository<NhiemvuTaubay,Lon
             "left join nvtb.nguonNx n join nvtb.chitietNhiemVu ctnv join nvtb.phuongTien pt join ctnv.nhiemVu nv " +
             "where nvtb.years=:y and nvtb.pt_id=:pid and nvtb.ctnv_id=:nv_id and nvtb.dviXuatId=:dvi_id order by n.ten")
     Optional<HanmucNhiemvuTaubayDto> findHmUnique(@Param("y") int y,@Param("pid") int pid,@Param("nv_id") int nv_id,@Param("dvi_id") int dvi_id);
+    @Query(value = "select * from hanmuc_nhiemvu_taubay where years=:y",nativeQuery = true)
+    List<NhiemvuTaubay> findAllByYear(@Param("y") int year);
 }

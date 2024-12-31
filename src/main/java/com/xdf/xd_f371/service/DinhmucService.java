@@ -15,8 +15,11 @@ import java.util.Optional;
 public class DinhmucService {
     private final DinhMucRepo dinhMucRepo;
 
-    public List<DinhMucPhuongTienDto> findAllBy(int quarter_id,String lpt){
-        return dinhMucRepo.findAllBy(quarter_id,lpt);
+    public List<DinhMucPhuongTienDto> findAllBy(int y,String lpt){
+        return dinhMucRepo.findAllBy(y,lpt);
+    }
+    public List<DinhMuc> findAllByYear(int y){
+        return dinhMucRepo.findAllByYear(y);
     }
     public DinhMuc save(DinhMuc dinhMuc){
         return dinhMucRepo.save(dinhMuc);

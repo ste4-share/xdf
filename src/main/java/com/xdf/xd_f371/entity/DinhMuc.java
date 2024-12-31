@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Table(name = "dinhmuc")
 @Entity
 @Getter
@@ -28,6 +30,8 @@ public class DinhMuc {
     private int phuongtien_id;
     @Column(name = "quarter_id")
     private int quarter_id;
+    @Column(name = "years")
+    private int years= LocalDate.now().getYear();
 
     @ManyToOne
     @JoinColumn(name = "quarter_id", referencedColumnName = "id", insertable = false, updatable = false)
