@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -53,9 +54,9 @@ public class AddNewChitieuNvForm implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initNguonnxCbb();
         initChiTietNhiemVu();
         initPT();
+        initNguonnxCbb();
         initField();
         Common.hoverButton(cancelBtn,"#ffffff");
         Common.hoverButton(savebtn,"#ffffff");
@@ -84,8 +85,12 @@ public class AddNewChitieuNvForm implements Initializable {
         }
     }
     private void initNguonnxCbb() {
-        ComponentUtil.setItemsToComboBox(dvi_cmb,nguonNxService.findByAllBy(),NguonNx::getTen,input->nguonNxService.findByTen(input).orElse(null));
-        dvi_cmb.getSelectionModel().selectFirst();
+        PhuongTien pt = pt_cbb.getSelectionModel().getSelectedItem();
+        if (pt!=null){
+            List<NguonNx> nguonNx = hanmucNhiemvuService.getAllDviTructhuocByTaubay(pt.getId(),LocalDate.now().getYear());
+            ComponentUtil.setItemsToComboBox(dvi_cmb,nguonNx,NguonNx::getTen,input->nguonNxService.findByTen(input).orElse(null));
+            dvi_cmb.getSelectionModel().selectFirst();
+        }
     }
     private void initChiTietNhiemVu() {
         ComponentUtil.setItemsToComboBox(nv_cmb,chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName()),NhiemVuDto::getChitiet,
@@ -120,5 +125,9 @@ public class AddNewChitieuNvForm implements Initializable {
     @FXML
     public void cancel(ActionEvent actionEvent) {
         NhiemvuController.nvStage.close();
+    }
+    @FXML
+    public void ptActon(ActionEvent actionEvent) {
+        initNguonnxCbb();
     }
 }

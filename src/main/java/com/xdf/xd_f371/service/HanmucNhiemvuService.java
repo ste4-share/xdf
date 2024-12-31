@@ -42,8 +42,8 @@ public class HanmucNhiemvuService {
         return hanmucNhiemvuTauBayRepo.findAllByYear(year);
     }
 
-    public List<NguonNx> getAllDviTructhuocByTaubay(int taubayId, int quyID){
-        return hanmucNhiemvuTauBayRepo.getAllDviTructhuocByTaubay(taubayId,quyID);
+    public List<NguonNx> getAllDviTructhuocByTaubay(int taubayId, int y){
+        return hanmucNhiemvuTauBayRepo.getAllDviTructhuocByTaubay(taubayId,y);
     }
     public Optional<HanmucNhiemvuTaubayDto> findHmUnique(int y,int pid,int nv_id,int dvi_id){
         return hanmucNhiemvuTauBayRepo.findHmUnique(y,pid,nv_id,dvi_id);

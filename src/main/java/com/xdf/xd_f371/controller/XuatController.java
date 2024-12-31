@@ -99,7 +99,7 @@ public class XuatController extends CommonFactory implements Initializable {
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
         setlabelDinhmuc(pt);
         if (pt!=null){
-            List<NguonNx> nguonNx = hanmucNhiemvuService.getAllDviTructhuocByTaubay(pt.getId(),DashboardController.findByTime.getId());
+            List<NguonNx> nguonNx = hanmucNhiemvuService.getAllDviTructhuocByTaubay(pt.getId(),LocalDate.now().getYear());
             if (!nguonNx.isEmpty()){
                 mapItemsForDonvi(nguonNx,dvx_cbb);
             }else{
