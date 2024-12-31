@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "hanmuc_nhiemvu_taubay")
 @Getter
@@ -28,7 +30,8 @@ public class NhiemvuTaubay {
     private String md;
     @Column(name = "nhienlieu")
     private Long nhienlieu;
-
+    @Column(name = "years")
+    private int years = LocalDate.now().getYear();
     public NhiemvuTaubay(int dviXuatId, int pt_id, int ctnv_id, int quy_id, String tk, String md, Long nhienlieu) {
         this.dviXuatId = dviXuatId;
         this.pt_id = pt_id;
@@ -38,7 +41,6 @@ public class NhiemvuTaubay {
         this.md = md;
         this.nhienlieu = nhienlieu;
     }
-
     public NhiemvuTaubay(int id, int dviXuatId, int pt_id, int ctnv_id, int quy_id, String tk, String md, Long nhienlieu) {
         this.id = id;
         this.dviXuatId = dviXuatId;
@@ -49,7 +51,6 @@ public class NhiemvuTaubay {
         this.md = md;
         this.nhienlieu = nhienlieu;
     }
-
     @ManyToOne
     @JoinColumn(name = "ctnv_id", referencedColumnName = "id", insertable = false, updatable = false)
     private ChitietNhiemVu chitietNhiemVu;

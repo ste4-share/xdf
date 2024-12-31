@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface QuarterRepository extends JpaRepository<Quarter, Integer> {
-    @Query(value = "select * from quarter where :current_time between start_date and end_date",nativeQuery = true)
+    @Query(value = "select * from quarter where :current_time between start_date and end_date limit 1",nativeQuery = true)
     Optional<Quarter> findByCurrentTime(@Param("current_time") LocalDate currentTime);
     @Query(value = "select * from quarter where index like :in",nativeQuery = true)
     Optional<Quarter> findByIndex(@Param("in") String index);
@@ -24,4 +24,6 @@ public interface QuarterRepository extends JpaRepository<Quarter, Integer> {
     Optional<Quarter> findPreviousTime();
     @Query(value = "select * from quarter order by end_date desc",nativeQuery = true)
     List<Quarter> findAllDescSD();
+    @Query("SELECT year FROM quarter q group by q.year order by q.year desc")
+    List<Integer> getAllYear();
 }

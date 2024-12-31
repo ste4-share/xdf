@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -54,10 +53,11 @@ public class NhiemvuController implements Initializable {
     TableColumn<HanmucNhiemvuTaubayDto, String> stt_2,dvi_x,t2_pt,t2_nv_2,ct_nv_2,t2_tk_2,t2_md_2,t2_nl_2;
     @FXML
     TableColumn<HanmucNhiemvu2Dto, String> nv,ct,xang,diezel,daubay,stt_3,cong;
-    @FXML
-    ComboBox<Quarter> quy_cbb;
+
     @FXML
     ComboBox<NguonNx> dvi_cbb;
+    @FXML
+    ComboBox<Integer> year_cbb;
     @FXML
     TableView<NhiemVuDto> nv_tb;
     @FXML
@@ -66,22 +66,24 @@ public class NhiemvuController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setScreen();
-        initQuarterCbb();
         initDviTb();
         initNvTable();
-        initQuyCbb();
-        hmnv = hanmucNhiemvuService.getAllBy();
-        initNhiemvuTaubay(hmnv);
-        hm2_ls = hanmucNhiemvuService.findAllDto(quy_cbb.getSelectionModel().getSelectedItem().getId());
-        initHanmuc(hm2_ls);
-
+        initYearCbb();
+        Integer y = year_cbb.getSelectionModel().getSelectedItem();
+        if (y!=null){
+            hmnv = hanmucNhiemvuService.getAllByYear(y);
+            initNhiemvuTaubay(hmnv);
+            hm2_ls = hanmucNhiemvuService.findAllDto(y);
+            initHanmuc(hm2_ls);
+        }
         inithanmucCellFactory();
         initNvCellFactory();
         initHanmucNhiemvuTaubayCellFactory();
     }
-    private void initQuyCbb() {
-        ComponentUtil.setItemsToComboBox(quy_cbb, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getIndex, input -> quarterService.findByIndex(input).orElse(null));
-        quy_cbb.getSelectionModel().select(DashboardController.findByTime);
+
+    private void initYearCbb() {
+        year_cbb.setItems(FXCollections.observableList(quarterService.getAllYear()));
+        year_cbb.getSelectionModel().selectFirst();
     }
     private void initAddHm(){
         nvStage = new Stage();
@@ -92,10 +94,13 @@ public class NhiemvuController implements Initializable {
     public void nhiemvu_selected(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount()==2){
             hm2 = tieuthunhiemvu.getSelectionModel().getSelectedItem();
-            if (hm2!=null){
-                initAddHm();
-                hm2_ls = hanmucNhiemvuService.findAllDto(quy_cbb.getSelectionModel().getSelectedItem().getId());
-                initHanmuc(hm2_ls);
+            Integer y = year_cbb.getSelectionModel().getSelectedItem();
+            if (y!=null){
+                if (hm2!=null){
+                    initAddHm();
+                    hm2_ls = hanmucNhiemvuService.findAllDto(y);
+                    initHanmuc(hm2_ls);
+                }
             }
         }
     }
@@ -130,8 +135,11 @@ public class NhiemvuController implements Initializable {
         nvStage = new Stage();
         nvStage.initStyle(StageStyle.UTILITY);
         Common.openNewStage("add_chitieunv.fxml", nvStage,null, StageStyle.DECORATED);
-        hmnv = hanmucNhiemvuService.getAllBy();
-        initNhiemvuTaubay(hmnv);
+        Integer y = year_cbb.getSelectionModel().getSelectedItem();
+        if (y!=null){
+            hmnv = hanmucNhiemvuService.getAllByYear(y);
+            initNhiemvuTaubay(hmnv);
+        }
     }
     private void initNvTable(){
         nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllBy()));
@@ -145,10 +153,6 @@ public class NhiemvuController implements Initializable {
     private void initDviTb() {
         ComponentUtil.setItemsToComboBox(dvi_cbb,nguonNxService.findByAllBy(),NguonNx::getTen,input->nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
-    }
-    private void initQuarterCbb(){
-        ComponentUtil.setItemsToComboBox(quy_cbb,quarterService.findAll(),Quarter::getIndex,input->quarterService.findByIndex(input).orElse(null));
-        quy_cbb.getSelectionModel().selectFirst();
     }
     private void initNvCellFactory() {
         stt_1.setSortable(false);
@@ -186,5 +190,15 @@ public class NhiemvuController implements Initializable {
         nv_tb.setPrefHeight(DashboardController.screenHeigh-350);
         tieuthunhiemvu.setPrefWidth(DashboardController.screenWidth);
         tieuthunhiemvu.setPrefHeight(DashboardController.screenHeigh-350);
+    }
+    @FXML
+    public void yearSelected(ActionEvent actionEvent) {
+        Integer y = year_cbb.getSelectionModel().getSelectedItem();
+        if (y!=null){
+            hmnv = hanmucNhiemvuService.getAllByYear(y);
+            initNhiemvuTaubay(hmnv);
+            hm2_ls = hanmucNhiemvuService.findAllDto(y);
+            initHanmuc(hm2_ls);
+        }
     }
 }

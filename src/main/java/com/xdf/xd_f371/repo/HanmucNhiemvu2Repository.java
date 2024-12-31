@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface HanmucNhiemvu2Repository extends JpaRepository<HanmucNhiemvu2, Integer> {
     @Query("select new com.xdf.xd_f371.dto.HanmucNhiemvu2Dto(hm.id,hm.quarter_id,hm.dvi_id,hm.nhiemvu_id,hm.diezel,hm.daubay,hm.xang,n.tenNv,ct.nhiemvu) " +
-            "from HanmucNhiemvu2 hm join hm.chitietNhiemVu ct join ct.nhiemVu n join n.team t where hm.quarter_id=:q order by t.tt,n.priority")
-    List<HanmucNhiemvu2Dto> findAllDto(@Param("q") int q);
+            "from HanmucNhiemvu2 hm join hm.chitietNhiemVu ct join ct.nhiemVu n join n.team t where hm.years=:y order by t.tt,n.priority")
+    List<HanmucNhiemvu2Dto> findAllDto(@Param("y") int y);
 
     @Query(value = "select * from hanmuc_nhiemvu2 where nhiemvu_id=:n and quarter_id=:q",nativeQuery = true)
     Optional<HanmucNhiemvu2> findByUnique(@Param("q") int q,@Param("n") int ctnv);

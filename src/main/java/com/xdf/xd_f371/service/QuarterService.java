@@ -38,4 +38,7 @@ public class QuarterService {
     public Optional<Quarter> findByUnique(String year,String i){
         return quarterRepository.findByUnique(year,i);
     }
+    public List<Integer> getAllYear(){
+        return quarterRepository.getAllYear();
+    }
 }

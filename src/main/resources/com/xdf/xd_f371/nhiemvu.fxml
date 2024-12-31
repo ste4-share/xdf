@@ -16,256 +16,266 @@
 
 <HBox style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.NhiemvuController">
    <children>
-      <TabPane fx:id="tab" style="-fx-background-color: #ffffff;" stylesheets="@css/TabPane.css" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-           <Tab text="Nhiệm vụ">
-               <content>
-                  <VBox>
-                     <children>
-                        <HBox>
+      <VBox>
+         <children>
+            <HBox>
+               <children>
+                  <Label prefHeight="41.0" prefWidth="58.0" text="Năm:">
+                     <font>
+                        <Font name="Cambria Bold" size="13.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Label>
+                  <ComboBox fx:id="year_cbb" onAction="#yearSelected" prefHeight="40.0" prefWidth="110.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" stylesheets="@css/combobox.css">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ComboBox>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <TabPane fx:id="tab" style="-fx-background-color: #ffffff;" stylesheets="@css/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                 <Tab text="Nhiệm vụ">
+                     <content>
+                        <VBox>
                            <children>
-                              <Label prefHeight="34.0" prefWidth="99.0" text="Tìm kiếm:">
-                                 <font>
-                                    <Font name="Cambria Bold" size="13.0" />
-                                 </font>
-                              </Label>
-                              <TextField prefHeight="40.0" prefWidth="249.0" style="-fx-background-radius: 10;">
-                                 <font>
-                                    <Font name="Cambria" size="18.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="TEXT" />
-                                 </cursor>
-                              </TextField>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <TableView fx:id="nv_tb" onMouseClicked="#nhiemvu_selected" stylesheets="@css/table_style.css">
-                          <columns>
-                              <TableColumn fx:id="stt_1" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
-                            <TableColumn fx:id="tennv" prefWidth="75.0" text="Nhiệm vụ" />
-                              <TableColumn fx:id="ctnv" prefWidth="144.0" text="Chi tiết nhiệm vụ" />
-                              <TableColumn fx:id="lnv" prefWidth="144.0" text="Loại nhiệm vụ" />
-                              <TableColumn fx:id="khoi" prefWidth="144.0" text="Loại nhiệm vụ" />
-                          </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </TableView>
-                        <HBox alignment="TOP_RIGHT">
-                           <children>
-                              <Button fx:id="addnv_btn" mnemonicParsing="false" onAction="#addNvAction" prefHeight="43.0" prefWidth="81.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Thêm">
-                                 <HBox.margin>
-                                    <Insets top="10.0" />
-                                 </HBox.margin>
+                              <HBox>
+                                 <children>
+                                    <Label prefHeight="34.0" prefWidth="99.0" text="Tìm kiếm:">
+                                       <font>
+                                          <Font name="Cambria Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField prefHeight="40.0" prefWidth="249.0" style="-fx-background-radius: 10;">
+                                       <font>
+                                          <Font name="Cambria" size="18.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="TEXT" />
+                                       </cursor>
+                                    </TextField>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <TableView fx:id="nv_tb" onMouseClicked="#nhiemvu_selected" stylesheets="@css/table_style.css">
+                                <columns>
+                                    <TableColumn fx:id="stt_1" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
+                                  <TableColumn fx:id="tennv" prefWidth="75.0" text="Nhiệm vụ" />
+                                    <TableColumn fx:id="ctnv" prefWidth="144.0" text="Chi tiết nhiệm vụ" />
+                                    <TableColumn fx:id="lnv" prefWidth="144.0" text="Loại nhiệm vụ" />
+                                    <TableColumn fx:id="khoi" prefWidth="144.0" text="Loại nhiệm vụ" />
+                                </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
-                                 <font>
-                                    <Font name="Cambria Bold" size="16.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </HBox>
-                     </children>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </VBox>
-               </content>
-          </Tab>
-           <Tab text="Chỉ tiêu nhiệm vụ bay">
-               <content>
-                  <VBox>
-                     <children>
-                        <HBox>
-                           <children>
-                              <Label prefHeight="41.0" prefWidth="76.0" text="Đơn vị:">
-                                 <font>
-                                    <Font name="Cambria Bold" size="13.0" />
-                                 </font>
+                              </TableView>
+                              <HBox alignment="TOP_RIGHT">
+                                 <children>
+                                    <Button fx:id="addnv_btn" mnemonicParsing="false" onAction="#addNvAction" prefHeight="43.0" prefWidth="81.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Thêm">
+                                       <HBox.margin>
+                                          <Insets top="10.0" />
+                                       </HBox.margin>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font name="Cambria Bold" size="16.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <ComboBox fx:id="dvi_cbb" onAction="#dviSelected" prefHeight="40.0" prefWidth="377.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" stylesheets="@css/combobox.css">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ComboBox>
+                              </HBox>
                            </children>
-                           <VBox.margin>
-                              <Insets bottom="20.0" left="10.0" top="20.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <TableView fx:id="ctnv_pt" onMouseClicked="#chitieunvSelected" style="-fx-background-color: #ffffff;" stylesheets="@css/table_style.css">
-                           <columns>
-                              <TableColumn fx:id="stt_2" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
-                              <TableColumn fx:id="dvi_x" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Đơn vị" />
-                              <TableColumn fx:id="t2_pt" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Phương tiện" />
-                              <TableColumn fx:id="t2_nv_2" maxWidth="175.0" minWidth="150.0" prefWidth="175.0" text="Nhiệm vụ" />
-                              <TableColumn fx:id="ct_nv_2" minWidth="150.0" prefWidth="175.0" text="Chi tiết nhiệm vụ" />
-                              <TableColumn prefWidth="162.0" text="Chi tiết nhiệm vụ">
-                                 <columns>
-                                    <TableColumn fx:id="t2_tk_2" minWidth="150.0" prefWidth="38.0" text="Trên không" />
-                                    <TableColumn fx:id="t2_md_2" minWidth="150.0" prefWidth="172.0" text="Mặt đất" />
-                                    <TableColumn fx:id="t2_nl_2" minWidth="150.0" prefWidth="162.0" text="Nhiên liệu" />
-                                 </columns>
-                              </TableColumn>
-                           </columns>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                        <HBox alignment="BOTTOM_RIGHT">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                           <children>
-                              <Button fx:id="add_btn_ctb" alignment="CENTER" mnemonicParsing="false" onAction="#addchitieuBay" prefHeight="43.0" prefWidth="81.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Thêm">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                                 <font>
-                                    <Font name="Cambria Bold" size="16.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </content>
-          </Tab>
-           <Tab text="Hạn mức">
-               <content>
-                  <VBox layoutY="6.0">
-                     <children>
-                        <HBox>
-                           <children>
-                              <Label prefHeight="41.0" prefWidth="122.0" text="Đơn vị:">
-                                 <font>
-                                    <Font name="Cambria Bold" size="13.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <ComboBox fx:id="dvi_cbb1" onAction="#dviSelected" prefHeight="45.0" prefWidth="377.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="20.0" left="10.0" top="20.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <TableView fx:id="ctnv_pt1" onMouseClicked="#chitieunvSelected" style="-fx-background-color: #ffffff;" stylesheets="@css/table_style.css">
-                           <columns>
-                              <TableColumn fx:id="t2_tt11" prefWidth="33.0" text="TT" />
-                              <TableColumn fx:id="dvi_x1" prefWidth="150.0" text="Đơn vị" />
-                              <TableColumn fx:id="t2_pt1" prefWidth="150.0" text="Phương tiện" />
-                              <TableColumn fx:id="t2_nv_21" prefWidth="150.0" text="Nhiệm vụ" />
-                              <TableColumn fx:id="ct_nv_21" prefWidth="162.0" text="Chi tiết nhiệm vụ" />
-                              <TableColumn prefWidth="162.0" text="Chi tiết nhiệm vụ">
-                                 <columns>
-                                    <TableColumn fx:id="t2_tk_21" prefWidth="162.0" text="Trên không" />
-                                    <TableColumn fx:id="t2_md_21" prefWidth="162.0" text="Mặt đất" />
-                                    <TableColumn fx:id="t2_nl_21" prefWidth="162.0" text="Nhiên liệu" />
-                                 </columns>
-                              </TableColumn>
-                           </columns>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                     </children>
-                  </VBox>
-               </content>
-               <content>
-                  <HBox>
-                     <children>
-                        <Label layoutX="10.0" layoutY="10.0" prefHeight="47.0" prefWidth="85.0" text="Đơn vị">
-                           <font>
-                              <Font name="Cambria Bold" size="19.0" />
-                           </font>
-                           <HBox.margin>
+                           <padding>
                               <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                     </children>
-                  </HBox>
-               </content>
-               <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
+                           </padding>
+                        </VBox>
+                     </content>
+                </Tab>
+                 <Tab text="Chỉ tiêu nhiệm vụ bay">
+                     <content>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label prefHeight="41.0" prefWidth="76.0" text="Đơn vị:">
+                                       <font>
+                                          <Font name="Cambria Bold" size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="dvi_cbb" onAction="#dviSelected" prefHeight="40.0" prefWidth="377.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" stylesheets="@css/combobox.css">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </ComboBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" left="10.0" top="20.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <TableView fx:id="ctnv_pt" onMouseClicked="#chitieunvSelected" style="-fx-background-color: #ffffff;" stylesheets="@css/table_style.css">
+                                 <columns>
+                                    <TableColumn fx:id="stt_2" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
+                                    <TableColumn fx:id="dvi_x" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Đơn vị" />
+                                    <TableColumn fx:id="t2_pt" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Phương tiện" />
+                                    <TableColumn fx:id="t2_nv_2" maxWidth="175.0" minWidth="150.0" prefWidth="175.0" text="Nhiệm vụ" />
+                                    <TableColumn fx:id="ct_nv_2" minWidth="150.0" prefWidth="175.0" text="Chi tiết nhiệm vụ" />
+                                    <TableColumn prefWidth="162.0" text="Chi tiết nhiệm vụ">
+                                       <columns>
+                                          <TableColumn fx:id="t2_tk_2" minWidth="150.0" prefWidth="38.0" text="Trên không" />
+                                          <TableColumn fx:id="t2_md_2" minWidth="150.0" prefWidth="172.0" text="Mặt đất" />
+                                          <TableColumn fx:id="t2_nl_2" minWidth="150.0" prefWidth="162.0" text="Nhiên liệu" />
+                                       </columns>
+                                    </TableColumn>
+                                 </columns>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                              <HBox alignment="BOTTOM_RIGHT">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Button fx:id="add_btn_ctb" alignment="CENTER" mnemonicParsing="false" onAction="#addchitieuBay" prefHeight="43.0" prefWidth="81.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Thêm">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font name="Cambria Bold" size="16.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+                 <Tab text="Hạn mức">
+                     <content>
+                        <VBox layoutY="6.0">
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label prefHeight="41.0" prefWidth="122.0" text="Đơn vị:">
+                                       <font>
+                                          <Font name="Cambria Bold" size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="dvi_cbb1" onAction="#dviSelected" prefHeight="45.0" prefWidth="377.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" left="10.0" top="20.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <TableView fx:id="ctnv_pt1" onMouseClicked="#chitieunvSelected" style="-fx-background-color: #ffffff;" stylesheets="@css/table_style.css">
+                                 <columns>
+                                    <TableColumn fx:id="t2_tt11" prefWidth="33.0" text="TT" />
+                                    <TableColumn fx:id="dvi_x1" prefWidth="150.0" text="Đơn vị" />
+                                    <TableColumn fx:id="t2_pt1" prefWidth="150.0" text="Phương tiện" />
+                                    <TableColumn fx:id="t2_nv_21" prefWidth="150.0" text="Nhiệm vụ" />
+                                    <TableColumn fx:id="ct_nv_21" prefWidth="162.0" text="Chi tiết nhiệm vụ" />
+                                    <TableColumn prefWidth="162.0" text="Chi tiết nhiệm vụ">
+                                       <columns>
+                                          <TableColumn fx:id="t2_tk_21" prefWidth="162.0" text="Trên không" />
+                                          <TableColumn fx:id="t2_md_21" prefWidth="162.0" text="Mặt đất" />
+                                          <TableColumn fx:id="t2_nl_21" prefWidth="162.0" text="Nhiên liệu" />
+                                       </columns>
+                                    </TableColumn>
+                                 </columns>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </content>
+                     <content>
                         <HBox>
                            <children>
-                              <Label layoutX="10.0" layoutY="10.0" prefHeight="34.0" prefWidth="85.0" text="Quý :">
+                              <Label layoutX="10.0" layoutY="10.0" prefHeight="47.0" prefWidth="85.0" text="Đơn vị">
                                  <font>
-                                    <Font name="Cambria Bold" size="13.0" />
+                                    <Font name="Cambria Bold" size="19.0" />
                                  </font>
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
                               </Label>
-                              <ComboBox fx:id="quy_cbb" layoutX="124.0" layoutY="10.0" prefHeight="40.0" prefWidth="359.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" stylesheets="@css/combobox.css">
+                           </children>
+                        </HBox>
+                     </content>
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <HBox>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <TableView fx:id="tieuthunhiemvu" onMouseClicked="#nhiemvu_selected" stylesheets="@css/table_style.css">
+                                 <columns>
+                                    <TableColumn fx:id="stt_3" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
+                                    <TableColumn fx:id="nv" maxWidth="1000.0" minWidth="150.0" prefWidth="175.0" text="Nhiệm vụ" />
+                                    <TableColumn fx:id="ct" maxWidth="1000.0" minWidth="150.0" prefWidth="175.0" text="Chi tiết nhiệm vụ" />
+                                    <TableColumn fx:id="khoi1111" prefWidth="712.0" text="Hạn mức được QC cấp">
+                                       <columns>
+                                          <TableColumn minWidth="100.0" prefWidth="100.0" text="Xăng" fx:id="xang" />
+                                          <TableColumn fx:id="diezel" minWidth="100.0" prefWidth="100.0" text="Diezel" />
+                                          <TableColumn fx:id="daubay" minWidth="100.0" prefWidth="100.0" text="Dầu bay" />
+                                          <TableColumn fx:id="cong" minWidth="100.0" prefWidth="110.0" text="Cộng" />
+                                       </columns>
+                                    </TableColumn>
+                                 </columns>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
-                                 </cursor></ComboBox>
+                                 </cursor>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                              <HBox alignment="TOP_RIGHT">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </HBox>
                            </children>
-                           <VBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <TableView fx:id="tieuthunhiemvu" onMouseClicked="#nhiemvu_selected" stylesheets="@css/table_style.css">
-                           <columns>
-                              <TableColumn fx:id="stt_3" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
-                              <TableColumn fx:id="nv" maxWidth="1000.0" minWidth="150.0" prefWidth="175.0" text="Nhiệm vụ" />
-                              <TableColumn fx:id="ct" maxWidth="1000.0" minWidth="150.0" prefWidth="175.0" text="Chi tiết nhiệm vụ" />
-                              <TableColumn fx:id="khoi1111" prefWidth="712.0" text="Hạn mức được QC cấp">
-                                 <columns>
-                                    <TableColumn minWidth="100.0" prefWidth="100.0" text="Xăng" fx:id="xang" />
-                                    <TableColumn fx:id="diezel" minWidth="100.0" prefWidth="100.0" text="Diezel" />
-                                    <TableColumn fx:id="daubay" minWidth="100.0" prefWidth="100.0" text="Dầu bay" />
-                                    <TableColumn fx:id="cong" minWidth="100.0" prefWidth="110.0" text="Cộng" />
-                                 </columns>
-                              </TableColumn>
-                           </columns>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                        <HBox alignment="TOP_RIGHT">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </content>
-         </Tab>
-        </tabs>
-      </TabPane>
+                        </VBox>
+                     </content>
+               </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </VBox>
    </children>
    <cursor>
       <Cursor fx:constant="HAND" />
