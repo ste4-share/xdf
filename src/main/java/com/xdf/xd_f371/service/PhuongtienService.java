@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,14 +54,14 @@ public class PhuongtienService {
         try {
             if (pt.getPhuongtien_id()==0){
                 PhuongTien p = phuongtienRepo.save(new PhuongTien(pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
-                dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId(),pt.getQuarter_id()));
+                dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId()));
             }else{
                 PhuongTien p = phuongtienRepo.save(new PhuongTien(pt.getPhuongtien_id(),pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
-                DinhMuc dm = dinhMucRepo.findDinhmucByPhuongtien(p.getId(),pt.getQuarter_id()).orElse(null);
+                DinhMuc dm = dinhMucRepo.findDinhmucByPhuongtien(p.getId(), LocalDate.now().getYear()).orElse(null);
                 if (dm!=null){
-                    dinhMucRepo.save(new DinhMuc(dm.getId(),pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId(),pt.getQuarter_id()));
+                    dinhMucRepo.save(new DinhMuc(dm.getId(),pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId()));
                 } else {
-                    dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId(),pt.getQuarter_id()));
+                    dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId()));
                 }
             }
         }catch (Exception e){

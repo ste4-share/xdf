@@ -80,7 +80,7 @@ public class AddBtnPt implements Initializable {
         }
     }
     private void savePtDm(DinhMucPhuongTienDto dm){
-        dm.setName(pt_name.getText());
+        dm.setName_pt(pt_name.getText());
         dm.setQuantity(Integer.parseInt(quantity.getText()));
         dm.setDm_xm_gio(Integer.parseInt(h.getText()));
         dm.setDm_xm_km(Integer.parseInt(km.getText()));

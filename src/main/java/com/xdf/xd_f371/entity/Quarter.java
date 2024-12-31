@@ -40,9 +40,6 @@ public class Quarter {
         this.year = year;
         this.index = index;
     }
-
-    @OneToMany(mappedBy = "quarter",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DinhMuc> dinhMucList;
     @OneToMany(mappedBy = "quarter",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NhiemvuTaubay> nhiemvuTaubays;
 }

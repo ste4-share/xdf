@@ -24,7 +24,7 @@ public class DinhmucService {
     public DinhMuc save(DinhMuc dinhMuc){
         return dinhMucRepo.save(dinhMuc);
     }
-    public Optional<DinhMuc> findDinhmucByPhuongtien(@Param("pt_id") int pt_id, @Param("quarter_id") int quarter_id){
-        return dinhMucRepo.findDinhmucByPhuongtien(pt_id, quarter_id);
+    public Optional<DinhMuc> findDinhmucByPhuongtien(int pt_id, int y){
+        return dinhMucRepo.findDinhmucByPhuongtien(pt_id, y);
     }
 }

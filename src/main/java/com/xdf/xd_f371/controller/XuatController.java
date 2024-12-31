@@ -112,7 +112,7 @@ public class XuatController extends CommonFactory implements Initializable {
 
     private void setlabelDinhmuc(PhuongTien pt){
         if (pt!=null){
-            dinhMuc = dinhmucService.findDinhmucByPhuongtien(pt.getId(), DashboardController.findByTime.getId()).orElse(null);
+            dinhMuc = dinhmucService.findDinhmucByPhuongtien(pt.getId(), LocalDate.now().getYear()).orElse(null);
             if (dinhMuc!=null){
                 if (mb_rd.isSelected()){
                     setDinhmucToLabel("Đ.mức TK:", "Đ.mức MD:",dinhMuc.getDm_tk_gio(),dinhMuc.getDm_md_gio());
@@ -172,15 +172,14 @@ public class XuatController extends CommonFactory implements Initializable {
                 return true;
             }else{
                 cbb_dongia.setStyle(styleErrorField);
-                DialogMessage.message("Error", lxd.getTenxd()+" - Het hang","Co loi xay ra", Alert.AlertType.ERROR);
+                DialogMessage.message(null, lxd.getTenxd()+" - Het hang","Mặt hàng này đã hết, vui lòng nhập thêm.", Alert.AlertType.WARNING);
             }
         }else{
             cbb_tenxd.setStyle(styleErrorField);
-            DialogMessage.message("Error", "ten xang dau khong xac dinh","Co loi xay ra", Alert.AlertType.ERROR);
+            DialogMessage.message(null, "ten xang dau khong xac dinh","Co loi xay ra", Alert.AlertType.WARNING);
         }
         return false;
     }
-
     @FXML
     public void add(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
@@ -246,7 +245,7 @@ public class XuatController extends CommonFactory implements Initializable {
         float gio = Integer.parseInt(sogio.getText()) + phut + du;
         PhuongTien pt =xmt_cbb.getSelectionModel().getSelectedItem();
         if (pt!=null){
-            DinhMuc dm = dinhmucService.findDinhmucByPhuongtien(pt.getId(), DashboardController.findByTime.getId()).orElse(null);
+            DinhMuc dm = dinhmucService.findDinhmucByPhuongtien(pt.getId(), LocalDate.now().getYear()).orElse(null);
             if (dm!=null){
                 if (mb_rd.isSelected()){
                     if (tk_rd.isSelected()){
@@ -275,7 +274,8 @@ public class XuatController extends CommonFactory implements Initializable {
     public void km_keyrealese(KeyEvent keyEvent) {
         if (!nl_km.getText().isEmpty() && isNumber(nl_km.getText())){
             try{
-                nl_km.setText(String.valueOf(cal_phaixuat_km(Integer.parseInt(sokm.getText()), Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), DashboardController.findByTime.getId()).orElse(null)).getDm_xm_km())));
+                nl_km.setText(String.valueOf(cal_phaixuat_km(Integer.parseInt(sokm.getText()),
+                        Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), LocalDate.now().getYear()).orElse(null)).getDm_xm_km())));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -471,10 +471,6 @@ public class XuatController extends CommonFactory implements Initializable {
             if (i != null){
                 setInv_lb(i.getNhap_nvdx()-i.getXuat_nvdx());
             }
-        }else{
-            DialogMessage.message("Thong bao", loaiXdService.findById(xd_id).orElse(null).getTenxd()+" da het, vui long nhap them.","Het hang", Alert.AlertType.WARNING);
-            setXangDauCombobox(cbb_tenxd, loaiXdService);
-            cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
         }
     }
     private void setCellValueFactoryXuat(){

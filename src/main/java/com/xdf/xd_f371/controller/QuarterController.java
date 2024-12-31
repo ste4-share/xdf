@@ -2,6 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 @Component
 public class QuarterController implements Initializable {
+    public static Stage quarterStage;
     @FXML
     private Button addNewBtn,cancelBtn;
     @FXML
@@ -34,6 +36,8 @@ public class QuarterController implements Initializable {
     private Label pre_quarter;
     @Autowired
     private QuarterService quarterService;
+    @Autowired
+    private InventoryService inventoryService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setPrevioutDate();
@@ -56,12 +60,18 @@ public class QuarterController implements Initializable {
         if (DialogMessage.callAlert()== ButtonType.OK){
             if (isValid()) {
                 try {
-                    quarterService.save(new Quarter(s_time.getValue(),e_time.getValue(),String.valueOf(e_time.getValue().getYear()),quy.getText()));
-                    ConnectLan.primaryStage = new Stage();
-                    Common.openNewStage("dashboard2.fxml", ConnectLan.primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
-                    ConnectLan.primaryStage2.close();
+                    Quarter q = new Quarter(s_time.getValue(),e_time.getValue(),String.valueOf(e_time.getValue().getYear()),quy.getText());
+                    inventoryService.firstTimeSetup(q);
+                    quarterStage = new Stage();
+                    quarterStage.setOnCloseRequest(event -> {
+                        if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                            Platform.exit();
+                            System.exit(0);
+                        }
+                        event.consume();
+                    });
+                    Common.openNewStage("dashboard2.fxml", quarterStage,"XĂNG DẦU F371", StageStyle.DECORATED);
                 } catch (DataIntegrityViolationException e) {
-                    // Handle duplicate unique key exception
                     quy.setStyle(CommonFactory.styleErrorField);
                     DialogMessage.errorShowing("Tên quý đã tồn tại trong năm, vui lòng thử lại");
                 }
@@ -70,9 +80,8 @@ public class QuarterController implements Initializable {
     }
     @FXML
     public void cancel(ActionEvent actionEvent) {
-        ConnectLan.primaryStage2.close();
-        Platform.exit(); // Cleanly stop the JavaFX thread
-        System.exit(0);  // Ensure JVM termination
+        Platform.exit();
+        System.exit(0);
     }
     @FXML
     public void e_timeAction(ActionEvent actionEvent) {

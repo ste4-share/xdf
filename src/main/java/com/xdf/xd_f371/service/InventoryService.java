@@ -7,12 +7,13 @@ import com.xdf.xd_f371.entity.Inventory;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LedgersRepo;
+import com.xdf.xd_f371.repo.LoaiXangDauRepo;
+import com.xdf.xd_f371.repo.QuarterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 public class InventoryService {
     private final InventoryRepo inventoryRepo;
     private final LedgersRepo ledgersRepo;
+    private final LoaiXangDauRepo loaiXangDauRepo;
+    private final QuarterRepository quarterRepository;
 
     public List<Inventory> findByQuarter_id(int quarter_id){
         return inventoryRepo.findByQuarter_id(quarter_id);
@@ -71,5 +74,12 @@ public class InventoryService {
                 }
             });
         }
+    }
+    @Transactional
+    public void firstTimeSetup(Quarter q){
+        Quarter quarter = quarterRepository.save(q);
+        loaiXangDauRepo.findAll().forEach(x->{
+            inventoryRepo.save(new Inventory(x.getId(),quarter.getId(),MucGiaEnum.OUT_STOCK_ALL.getStatus()));
+        });
     }
 }

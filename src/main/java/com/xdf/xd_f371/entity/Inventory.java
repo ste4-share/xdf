@@ -55,4 +55,10 @@ public class Inventory {
         this.status = status;
         this.price = price;
     }
+
+    public Inventory(int petro_id, int quarter_id, String status) {
+        this.petro_id = petro_id;
+        this.quarter_id = quarter_id;
+        this.status = status;
+    }
 }

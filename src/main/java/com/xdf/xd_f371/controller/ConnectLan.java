@@ -30,7 +30,6 @@ import java.util.ResourceBundle;
 public class ConnectLan implements Initializable {
     private static final String CREDENTIALS_FILE = "credentials.properties";
     public static Stage primaryStage;
-    public static Stage primaryStage2;
     public static Accounts pre_acc = new Accounts();
     public static String ip_pre;
     public static String port_pre;
@@ -86,15 +85,7 @@ public class ConnectLan implements Initializable {
                         pre_acc = acc.get();
                         connectionService.maintainConnection();
                         primaryStage = new Stage();
-                        primaryStage2 = new Stage();
                         primaryStage.setOnCloseRequest(event -> {
-                            if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                                Platform.exit(); // Cleanly stop the JavaFX thread
-                                System.exit(0);  // Ensure JVM termination
-                            }
-                            event.consume(); // Prevent the stage from closing
-                        });
-                        primaryStage2.setOnCloseRequest(event -> {
                             if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
                                 Platform.exit(); // Cleanly stop the JavaFX thread
                                 System.exit(0);  // Ensure JVM termination
@@ -106,9 +97,9 @@ public class ConnectLan implements Initializable {
                         }else{
                             DialogMessage.message(null, "Quý chưa được khởi tạo",
                                     "Cần tạo mới quý trước khi nhập xuất", Alert.AlertType.INFORMATION);
-                            Common.openNewStage("quarter_generating.fxml", primaryStage2, null,StageStyle.UNDECORATED);
-
+                            Common.openNewStage("quarter_generating.fxml", primaryStage, null,StageStyle.UNDECORATED);
                         }
+                        ConnectLan.primaryStage.close();
                     } else {
                         DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
                                 "Đăng nhập không thành công", Alert.AlertType.INFORMATION);
