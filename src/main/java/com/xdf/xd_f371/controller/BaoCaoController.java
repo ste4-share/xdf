@@ -101,13 +101,18 @@ public class BaoCaoController implements Initializable {
         return 0;
     }
     private Integer map_ttxdtnv_create(XSSFWorkbook wb,String sheetName){
-        return mapDataToSheet(wb.createSheet(sheetName), 8,SubQuery.ttxd_nv(quy_cbb.getSelectionModel().getSelectedItem().getId(),dvi_cbb.getSelectionModel().getSelectedItem().getId()),4);
+        Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
+        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
+        if (q!=null && nx!=null) {
+            return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.ttxd_nv(Integer.parseInt(q.getYear()), nx.getId()), 4);
+        }
+        return 0;
     }
     private Integer map_ttxdtnv_getting(XSSFWorkbook wb,String sheetName){
         Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
         NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
         if (q!=null && nx!=null){
-            return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(q.getId(),nx.getId()),4);
+            return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(Integer.parseInt(q.getYear()),nx.getId()),4);
         }
         return 0;
     }

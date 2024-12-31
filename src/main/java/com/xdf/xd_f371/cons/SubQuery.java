@@ -21,7 +21,7 @@ public class SubQuery {
     public static String dmn_end(int quarter_id){
         return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat <> 'Nhiên liệu' and i.quarter_id="+quarter_id+" group by 1,2,3,4) s group by rollup(chungloai,loai,tenxd) order by chungloai desc,grouping(chungloai) desc,loai_gr desc,pr asc,xd_gr desc";
     }
-    public static String ttxd_nv(int quy_id,int dv_id){
+    public static String ttxd_nv(int y,int dv_id){
         return "select max(tt) as tt,max(pri) as pri,n,\n" +
                 "case when grouping(n)=0 and grouping(ten_nv)=1 then n else ten_nv end as ten_nv, \n" +
                 "case when grouping(n)=0 and grouping(ten_nv)=1 then n when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end as nhiemvu,\n" +
@@ -72,7 +72,7 @@ public class SubQuery {
                 "left join (select nhiemvu_id,root_id, sum(so_luong) as nlpl from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
                 "where l.lpt_2 like 'MAYBAY' and (ld.chung_loai like 'Dầu bay' or ld.chung_loai like 'Dầu Hạ cấp') and l.status like 'ACTIVE' group by 1,2) h \n" +
                 "on (ct.id=h.nhiemvu_id and hm2.dvi_id=h.root_id) \n" +
-                "where quarter_id="+quy_id+" and dvi_id="+dv_id+") zz\n" +
+                "where years="+y+" and dvi_id="+dv_id+") zz\n" +
                 "group by n,ten_nv,nhiemvu) aaa\n" +
                 "group by rollup(n,ten_nv,nhiemvu)\n" +
                 "order by name_gr desc,tt,tennv_gr desc,pri,ten_nv,nv_gr desc\n" +
