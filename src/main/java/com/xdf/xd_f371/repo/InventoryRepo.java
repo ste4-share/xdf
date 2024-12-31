@@ -13,8 +13,10 @@ import java.util.Optional;
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
     @Query(value = "select * from inventory where quarter_id=:quarter_id",nativeQuery = true)
     List<Inventory> findByQuarter_id(@Param("quarter_id") int quarter_id);
-    @Query(value = "select * from inventory where petro_id=:petro_id and quarter_id=:quarter_id and status like :st order by price",nativeQuery = true)
-    List<Inventory> findByPetro_idAndQuarter_id(@Param("petro_id") int petro_id,@Param("quarter_id") int quarter_id,@Param("st") String st);
+    @Query(value = "select * from inventory where petro_id=:petro_id and quarter_id=:quarter_id order by price",nativeQuery = true)
+    List<Inventory> findByPetro_idAndQuarter_id(@Param("petro_id") int petro_id,@Param("quarter_id") int quarter_id);
+    @Query(value = "select * from inventory where petro_id=:petro_id and quarter_id=:quarter_id and status like :st order by price ",nativeQuery = true)
+    List<Inventory> findByPetro_idAndQuarter_idStatus(@Param("petro_id") int petro_id,@Param("quarter_id") int quarter_id,@Param("st") String st);
     @Query(value = "select * from inventory where petro_id=:petro_id and quarter_id=:quarter_id and price=:p order by price",nativeQuery = true)
     Optional<Inventory> findByUnique(@Param("petro_id") int petro_id,@Param("quarter_id") int quarter_id,@Param("p") int p);
     @Query(value = "select max(id) as id,petro_id,quarter_id,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd," +

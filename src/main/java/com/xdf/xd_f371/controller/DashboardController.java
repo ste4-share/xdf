@@ -338,4 +338,10 @@ public class DashboardController implements Initializable {
     public void search_enter(MouseEvent mouseEvent) {
         img_v.setStyle("-fx-opacity: 0.7;");
     }
+    @FXML
+    public void quyAction(ActionEvent actionEvent) {
+        primaryStage = new Stage();
+        Common.openNewStage("quarter.fxml", primaryStage,null, StageStyle.UTILITY);
+        updateData();
+    }
 }

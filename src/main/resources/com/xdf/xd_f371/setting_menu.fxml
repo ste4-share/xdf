@@ -4,7 +4,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
@@ -16,75 +15,7 @@
    <children>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0" prefWidth="1097.0" style="-fx-background-color: #ffffff;">
          <children>
-            <HBox layoutX="20.0" layoutY="20.0" prefHeight="31.0" prefWidth="1077.0">
-               <children>
-                  <Label prefHeight="47.0" prefWidth="338.0" text="Thông tin quý">
-                     <font>
-                        <Font name="Cambria Bold" size="17.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="10.0">
-               <children>
-                  <Separator prefHeight="0.0" prefWidth="751.0" />
-               </children>
-            </HBox>
-            <HBox prefHeight="39.0" prefWidth="777.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="127.0" text="Năm:">
-                     <HBox.margin>
-                        <Insets left="50.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font name="Cambria Bold" size="16.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="year_lb" layoutX="60.0" layoutY="10.0" prefHeight="35.0" prefWidth="127.0" text="2000">
-                     <font>
-                        <Font name="Cambria Bold" size="19.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-            <HBox layoutX="20.0" layoutY="59.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="127.0" text="Quý hiện tại:">
-                     <HBox.margin>
-                        <Insets left="50.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font name="Cambria" size="16.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="q_name" prefHeight="37.0" prefWidth="152.0" style="-fx-background-radius: 10;">
-                     <cursor>
-                        <Cursor fx:constant="TEXT" />
-                     </cursor>
-                     <font>
-                        <Font name="Cambria" size="14.0" />
-                     </font></TextField>
-                  <Label alignment="CENTER" layoutX="554.0" layoutY="10.0" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
-                     <font>
-                        <Font name="Cambria Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <DatePicker fx:id="s_q" prefHeight="37.0" prefWidth="205.0">
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </DatePicker>
-                  <Label alignment="CENTER" layoutX="60.0" layoutY="10.0" prefHeight="35.0" prefWidth="127.0" text="===&gt;&gt;&gt;">
-                     <font>
-                        <Font name="Cambria Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <DatePicker fx:id="e_q" layoutX="187.0" layoutY="10.0" prefHeight="37.0" prefWidth="205.0" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" />
             <HBox alignment="BOTTOM_LEFT" layoutX="20.0" layoutY="20.0" prefHeight="50.0" prefWidth="1077.0">
                <children>
                   <Label prefHeight="47.0" prefWidth="338.0" text="Đường dẫn xuất file báo cáo:">

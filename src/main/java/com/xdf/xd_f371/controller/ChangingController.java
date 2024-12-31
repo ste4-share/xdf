@@ -48,7 +48,7 @@ public class ChangingController implements Initializable {
         nvdx_ls_buf = new ArrayList<>();
         tonkho_selected = TonkhoController.pickTonKho;
         petro_name.setText(tonkho_selected.getTenxd());
-        list = inventoryService.findByPetro_idAndQuarter_id(tonkho_selected.getPetro_id(),DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
+        list = inventoryService.findByPetro_idAndQuarter_id(tonkho_selected.getPetro_id(),DashboardController.findByTime.getId());
         setNvdxTable(nvdx_tb);
         setSScdTable(sscd_tb);
         setVisibleForBtn(true, true);
@@ -107,8 +107,14 @@ public class ChangingController implements Initializable {
     @FXML
     public void changeSScd(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage("", "Luu thay doi", "Xac nhan luu thay doi", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-            list.forEach(x->inventoryService.save(x));
-            TonkhoController.tk_stage.close();
+            try {
+                list.forEach(x-> {
+                    inventoryService.save(x);
+                });
+                TonkhoController.tk_stage.close();
+            }catch (Exception e){
+                DialogMessage.errorShowing(e.getMessage());
+            }
         }
     }
     @FXML
@@ -137,5 +143,11 @@ public class ChangingController implements Initializable {
         }
         tb.setItems(FXCollections.observableList(result));
         return result;
+    }
+    @FXML
+    public void nvdxClicked(MouseEvent mouseEvent) {
+    }
+    @FXML
+    public void sscdClicked(MouseEvent mouseEvent) {
     }
 }

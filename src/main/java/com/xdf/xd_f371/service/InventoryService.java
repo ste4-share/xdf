@@ -29,8 +29,11 @@ public class InventoryService {
     public List<Inventory> findByQuarter_id(int quarter_id){
         return inventoryRepo.findByQuarter_id(quarter_id);
     }
-    public List<Inventory> findByPetro_idAndQuarter_id(int petro_id, int quarter_id,String st){
-        return inventoryRepo.findByPetro_idAndQuarter_id(petro_id, quarter_id,st);
+    public List<Inventory> findByPetro_idAndQuarter_id(int petro_id, int quarter_id){
+        return inventoryRepo.findByPetro_idAndQuarter_id(petro_id, quarter_id);
+    }
+    public List<Inventory> findByPetro_idAndQuarter_id(int petro_id, int quarter_id,String status){
+        return inventoryRepo.findByPetro_idAndQuarter_idStatus(petro_id, quarter_id,status);
     }
     public Optional<Inventory> findByUniqueGroupby(int xdid, int qid){
         return inventoryRepo.findByUniqueGroupby(xdid, qid);
