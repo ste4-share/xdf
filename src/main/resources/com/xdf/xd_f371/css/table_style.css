@@ -12,7 +12,7 @@
     -fx-background-color: linear-gradient(to bottom, #eaeaea, #d5d5d5); /* Subtle gradient */
     -fx-text-fill: #333333; /* Dark gray text */
     -fx-font-family: "Cambria", serif; /* Elegant serif font for header */
-    -fx-font-size: 14px; /* Font size for header */
+    -fx-font-size: 11px; /* Font size for header */
     -fx-font-weight: bold; /* Bold text for headers */
     -fx-alignment: CENTER;
     -fx-padding: 9px; /* Padding for taller headers */

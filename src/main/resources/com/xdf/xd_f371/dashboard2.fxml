@@ -17,15 +17,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderpane_base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="823.0" prefWidth="1380.0" style="-fx-background-color: #f2f2f2;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.DashboardController">
+<BorderPane fx:id="borderpane_base" style="-fx-background-color: #f2f2f2;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.DashboardController">
    <left>
-      <AnchorPane fx:id="main_menu" prefHeight="10000.0" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="main_menu" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="772.0" prefWidth="244.0">
+            <VBox prefHeight="772.0" prefWidth="192.0">
                <children>
                   <AnchorPane prefHeight="215.0" prefWidth="244.0" style="-fx-border-radius: 20;">
                      <children>
-                        <ImageView fitHeight="120.0" fitWidth="149.0" layoutX="62.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true" rotate="6.5">
+                        <ImageView fitHeight="120.0" fitWidth="149.0" layoutX="36.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true" rotate="6.5">
                            <image>
                               <Image url="@img/oil-barrel_menu.png" />
                            </image>
@@ -35,7 +35,7 @@
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/inventory.png" />
+                              <Image url="@img/download_10626478.png" />
                            </image>
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="8.0" />
@@ -58,7 +58,7 @@
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/chart-down.png" />
+                              <Image url="@img/inventory_2897785.png" />
                            </image>
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="8.0" />
@@ -81,7 +81,7 @@
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/task.png" />
+                              <Image url="@img/task_2098402.png" />
                            </image>
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="8.0" />
@@ -104,7 +104,7 @@
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/chart-down.png" />
+                              <Image url="@img/meeting_12203654.png" />
                            </image>
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="8.0" />
@@ -127,7 +127,7 @@
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/chart-down.png" />
+                              <Image url="@img/list_15198181.png" />
                            </image>
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="8.0" />
@@ -150,7 +150,7 @@
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/chart-down.png" />
+                              <Image url="@img/report_11176291.png" />
                            </image>
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="8.0" />
@@ -173,7 +173,7 @@
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/chart-down.png" />
+                              <Image url="@img/setting_1186255.png" />
                            </image>
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="8.0" />
@@ -207,6 +207,14 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
+                  <Label fx:id="datetime_showing" alignment="CENTER_RIGHT" text="Ngày 31/08/2024 16:22 pm" textFill="WHITE">
+                     <font>
+                        <Font name="Cambria" size="16.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Label>
                </children>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -216,12 +224,12 @@
       </AnchorPane>
    </left>
    <center>
-      <VBox fx:id="nx_vbox" BorderPane.alignment="TOP_LEFT">
+      <VBox fx:id="nx_vbox" prefHeight="772.0" prefWidth="822.0" BorderPane.alignment="TOP_LEFT">
          <BorderPane.margin>
             <Insets left="10.0" />
          </BorderPane.margin>
          <children>
-            <HBox alignment="BOTTOM_LEFT" prefWidth="1126.0">
+            <HBox alignment="BOTTOM_LEFT">
                <children>
                   <Label prefHeight="28.0" prefWidth="99.0" text="Từ ngày:">
                      <font>
@@ -250,9 +258,9 @@
                <children>
                   <VBox>
                      <children>
-                        <HBox alignment="BOTTOM_LEFT">
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="60.0" prefWidth="836.0">
                            <children>
-                              <Button fx:id="importBtn" mnemonicParsing="false" onAction="#importActionClick" prefHeight="36.0" prefWidth="125.0" style="-fx-background-color: #040cb5; -fx-background-radius: 10;" text="Nhập" textFill="WHITE">
+                              <Button fx:id="importBtn" mnemonicParsing="false" onAction="#importActionClick" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #040cb5; -fx-background-radius: 10;" text="Nhập" textFill="WHITE">
                                  <font>
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
@@ -263,7 +271,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#exportBtnClick" prefHeight="36.0" prefWidth="125.0" style="-fx-background-color: #27b50e; -fx-background-radius: 10;" text="Xuất" textFill="WHITE">
+                              <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#exportBtnClick" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #27b50e; -fx-background-radius: 10;" text="Xuất" textFill="WHITE">
                                  <font>
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
@@ -282,7 +290,7 @@
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="cbb_loaiphieu_filter" onAction="#loc_phieu" prefHeight="40.0" prefWidth="203.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                              <ComboBox fx:id="cbb_loaiphieu_filter" onAction="#loc_phieu" prefHeight="40.0" prefWidth="116.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <HBox.margin>
                                     <Insets bottom="10.0" top="10.0" />
                                  </HBox.margin>
@@ -298,7 +306,7 @@
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="tf_search" onMouseClicked="#searchClicked" prefHeight="40.0" prefWidth="171.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                              <TextField fx:id="tf_search" onMouseClicked="#searchClicked" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <HBox.margin>
                                     <Insets bottom="10.0" top="10.0" />
                                  </HBox.margin>
@@ -331,7 +339,7 @@
                                 <columns>
                                     <TableColumn fx:id="nguoitao" prefWidth="105.0" text="Người nhập phiếu" />
                                   <TableColumn fx:id="so" prefWidth="60.0" text="Số" />
-                                  <TableColumn fx:id="loaiphieu" prefWidth="91.0" text="Loại phiếu" />
+                                  <TableColumn fx:id="loaiphieu" minWidth="20.0" prefWidth="91.0" text="Loại phiếu" />
                                     <TableColumn fx:id="dvi_nhan" prefWidth="122.0" text="Đ.vị Nhập" />
                                     <TableColumn fx:id="dvi_xuat" prefWidth="94.0" text="Đ.vị Xuất" />
                                     <TableColumn fx:id="nvu" prefWidth="91.0" text="Nhiệm vụ" />
@@ -373,25 +381,17 @@
       </VBox>
    </center>
    <top>
-      <HBox prefHeight="51.0" prefWidth="1380.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="58.0" prefWidth="1120.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="BOTTOM_LEFT" prefHeight="58.0" prefWidth="252.0" text="NXT XĂNG DẦU">
+            <Label prefHeight="58.0" prefWidth="252.0" text="NXT XĂNG DẦU">
                <font>
-                  <Font name="Cambria Bold" size="27.0" />
+                  <Font name="Cambria Bold" size="24.0" />
                </font>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <HBox.margin>
                   <Insets left="15.0" />
-               </HBox.margin>
-            </Label>
-            <Label fx:id="datetime_showing" alignment="CENTER_RIGHT" prefHeight="51.0" prefWidth="1049.0" text="Ngày 31/08/2024 16:22 pm" textFill="#1b00b3">
-               <font>
-                  <Font name="DejaVu Serif Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets right="10.0" />
                </HBox.margin>
             </Label>
          </children>
