@@ -108,6 +108,24 @@
                      <content>
                         <VBox>
                            <children>
+                              <HBox alignment="TOP_RIGHT" layoutX="20.0" layoutY="30.0" prefHeight="21.0" prefWidth="1188.0">
+                                 <children>
+                                    <Button fx:id="ctnv_convertBtn" mnemonicParsing="false" onAction="#ctvn_convertACtion" prefHeight="40.0" prefWidth="97.0" style="-fx-border-color: #a8a8a8; -fx-background-color: #ffffff; -fx-border-radius: 10;" text="Chuyển đổi">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font name="Cambria" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="20.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
                               <HBox>
                                  <children>
                                     <Label prefHeight="41.0" prefWidth="76.0" text="Đơn vị:">
@@ -118,7 +136,7 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                        <HBox.margin>
-                                          <Insets left="10.0" />
+                                          <Insets />
                                        </HBox.margin>
                                     </Label>
                                     <ComboBox fx:id="dvi_cbb" onAction="#dviSelected" prefHeight="40.0" prefWidth="377.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" stylesheets="@css/combobox.css">
@@ -128,7 +146,7 @@
                                     </ComboBox>
                                  </children>
                                  <VBox.margin>
-                                    <Insets bottom="20.0" left="10.0" top="20.0" />
+                                    <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
                               <TableView fx:id="ctnv_pt" onMouseClicked="#chitieunvSelected" style="-fx-background-color: #ffffff;" stylesheets="@css/table_style.css">
@@ -237,9 +255,36 @@
                      <content>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <HBox>
+                              <HBox alignment="TOP_RIGHT" prefHeight="27.0" prefWidth="1188.0">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" top="10.0" />
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Button fx:id="convertHmBtn" mnemonicParsing="false" onAction="#convertHmBtnAction" prefHeight="40.0" prefWidth="97.0" style="-fx-border-color: #a8a8a8; -fx-background-color: #ffffff; -fx-border-radius: 10;" text="Chuyển đổi">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font name="Cambria" size="12.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="20.0">
+                                 <children>
+                                    <Label prefHeight="40.0" prefWidth="94.0" text="Tìm kiếm:">
+                                       <font>
+                                          <Font name="Cambria Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField prefHeight="40.0" prefWidth="245.0" style="-fx-background-radius: 10;">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
                               <TableView fx:id="tieuthunhiemvu" onMouseClicked="#nhiemvu_selected" stylesheets="@css/table_style.css">

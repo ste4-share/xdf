@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Accounts;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.AccountService;
 import com.xdf.xd_f371.service.ConnectionService;
 import com.xdf.xd_f371.service.QuarterService;
@@ -11,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ public class ConnectLan implements Initializable {
     public static Stage primaryStage;
     public static Accounts pre_acc = new Accounts();
     public static String ip_pre;
+    public static String pre_path;
     public static String port_pre;
     private String zeroTo255 = "(\\d{1,2}|(0|1)\\d{2}|2[0-4]\\d|25[0-5])";
     private String regex
@@ -40,7 +43,7 @@ public class ConnectLan implements Initializable {
             + zeroTo255 + "\\."
             + zeroTo255;
     @FXML
-    private TextField username,ip,port;
+    private TextField username,ip,port,path_tf;
     @FXML
     private PasswordField passwd;
     @FXML
@@ -64,7 +67,7 @@ public class ConnectLan implements Initializable {
         ip_pre = "";
         port_pre = "0";
         // Load saved credentials if available
-        loadCredentials(username,ip,port, passwd, ck_save);
+        loadCredentials(username,ip,port, passwd,path_tf, ck_save);
         connect.requestFocus();
     }
     @FXML
@@ -74,14 +77,16 @@ public class ConnectLan implements Initializable {
             String p = passwd.getText().trim();
             String i = ip.getText().trim();
             String po = port.getText().trim();
-            if (isvalid(user,p,i,po)){
+            String path = path_tf.getText().trim();
+            if (isvalid(user,p,i,po,path)){
                 if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
-                    rememberme(user,p,i,po);
+                    rememberme(user,p,i,po,path);
                     Optional<Accounts> acc = accountService.login(user,p);
                     if (acc.isPresent()){
                         InitProgressBar.stage.close();
                         ip_pre = i;
-                        port_pre=po;
+                        port_pre = po;
+                        pre_path = path;
                         pre_acc = acc.get();
                         connectionService.maintainConnection();
                         primaryStage = new Stage();
@@ -114,35 +119,40 @@ public class ConnectLan implements Initializable {
         }
     }
 
-    private void rememberme(String user, String p,String i,String po){
+    private void rememberme(String user, String p,String i,String po,String path){
         boolean rememberMe = ck_save.isSelected();
         if (rememberMe) {
-            saveCredentials(user, p,i,po);
+            saveCredentials(user, p,i,po,path);
         } else {
             clearCredentials();
         }
     }
-    private boolean isvalid(String user, String p,String ip,String po){
-        if (!user.isEmpty()){
-            if (!p.isEmpty()){
-                if (ip.matches(regex) || ip.equals("localhost")){
-                    if (Common.isNumber(po.trim())){
-                        return true;
-                    }else {
-                        DialogMessage.message(null, "port khong dung dinh dang",
+    private boolean isvalid(String user, String p,String ip,String po,String path){
+        if (!path.isEmpty() && Common.isDirectory(path)){
+            if (!user.isEmpty()){
+                if (!p.isEmpty()){
+                    if (ip.matches(regex) || ip.equals("localhost")){
+                        if (Common.isNumber(po.trim())){
+                            return true;
+                        }else {
+                            DialogMessage.message(null, "port khong dung dinh dang",
+                                    null, Alert.AlertType.INFORMATION);
+                        }
+                    }else{
+                        DialogMessage.message(null, "Ip khong dung dinh dang",
                                 null, Alert.AlertType.INFORMATION);
                     }
                 }else{
-                    DialogMessage.message(null, "Ip khong dung dinh dang",
-                            null, Alert.AlertType.INFORMATION);
+                    DialogMessage.message(null, "Cần nhập mật khẩu.",
+                            "Chưa nhập mật khẩu", Alert.AlertType.INFORMATION);
                 }
-            }else{
-                DialogMessage.message(null, "Cần nhập mật khẩu.",
-                        "Chưa nhập mật khẩu", Alert.AlertType.INFORMATION);
+            }else {
+                DialogMessage.message(null, "Cần nhập tên tài khoản.",
+                        "Chưa nhập Tên tài khoản", Alert.AlertType.INFORMATION);
             }
-        }else {
-            DialogMessage.message(null, "Cần nhập tên tài khoản.",
-                    "Chưa nhập Tên tài khoản", Alert.AlertType.INFORMATION);
+        }else{
+            path_tf.setStyle(CommonFactory.styleErrorField);
+            DialogMessage.message(null, "Đường dẫn không chính xác",null, Alert.AlertType.INFORMATION);
         }
         return false;
     }
@@ -152,7 +162,7 @@ public class ConnectLan implements Initializable {
     }
     @FXML
     public void checkConnection(ActionEvent actionEvent) {
-        if (isvalid(username.getText(),passwd.getText(),ip.getText(),port.getText())){
+        if (isvalid(username.getText(),passwd.getText(),ip.getText(),port.getText(),path_tf.getText())){
             if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
                 DialogMessage.message("Thong bao", "Ket noi thanh cong", "Thanh cong", Alert.AlertType.CONFIRMATION);
                 conn_status.setText("OK");
@@ -162,21 +172,20 @@ public class ConnectLan implements Initializable {
             }
         }
     }
-
-    private void saveCredentials(String username, String password,String ip,String port) {
+    private void saveCredentials(String username, String password,String ip,String port,String path) {
         try (FileOutputStream out = new FileOutputStream(CREDENTIALS_FILE)) {
             Properties props = new Properties();
             props.setProperty("username", username);
             props.setProperty("password", password);
             props.setProperty("ip", ip);
             props.setProperty("port", port);
+            props.setProperty("path", path);
             props.store(out, "Saved Credentials");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    private void loadCredentials(TextField usernameField,TextField ip,TextField p, PasswordField passwordField, CheckBox rememberMeCheckBox) {
+    private void loadCredentials(TextField usernameField,TextField ip,TextField p, PasswordField passwordField,TextField path, CheckBox rememberMeCheckBox) {
         File file = new File(CREDENTIALS_FILE);
         if (file.exists()) {
             try (FileInputStream in = new FileInputStream(file)) {
@@ -184,6 +193,7 @@ public class ConnectLan implements Initializable {
                 props.load(in);
                 ip.setText(props.getProperty("ip", ""));
                 p.setText(props.getProperty("port", ""));
+                path.setText(props.getProperty("path", ""));
                 usernameField.setText(props.getProperty("username", ""));
                 passwordField.setText(props.getProperty("password", ""));
                 rememberMeCheckBox.setSelected(true);
@@ -197,8 +207,27 @@ public class ConnectLan implements Initializable {
         File file = new File(CREDENTIALS_FILE);
         if (file.exists()) {
             if (!file.delete()) {
-                System.out.println("Failed to delete credentials file.");
+                DialogMessage.errorShowing("Failed to delete credentials file.");
             }
         }
     }
+    @FXML
+    public void browserBtnACtion(ActionEvent actionEvent) {
+        setSelectDirectory(DashboardController.primaryStage);
+    }
+    private void setSelectDirectory(Stage primaryStage){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select a Directory");
+
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+
+        if (selectedDirectory != null) {
+            path_tf.setText(selectedDirectory.getAbsolutePath());
+            pre_path= selectedDirectory.getAbsolutePath();
+        } else {
+            pre_path = null;
+            DialogMessage.message(null, null,"No directory selected.", Alert.AlertType.WARNING);
+        }
+    }
+
 }

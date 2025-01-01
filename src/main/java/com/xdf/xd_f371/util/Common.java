@@ -30,7 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -65,7 +64,7 @@ public class Common {
     }
     public static void openDesktop(){
         try {
-            File directoryPath = new File(ConnectLan.pre_acc.getPath());
+            File directoryPath = new File(ConnectLan.pre_path);
             Desktop desktop = Desktop.getDesktop();
             desktop.open(directoryPath);
         } catch (IOException io) {

@@ -26,9 +26,10 @@ public class Quarter {
     private String year;
     @Column(name = "index")
     private String index;
-    @Column(insertable = false, updatable = false)
+
+    @Transient
     private String s;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String e;
 
     public Quarter(LocalDate start_date, LocalDate end_date, String year, String index) {
@@ -46,7 +47,7 @@ public class Quarter {
         this.end_date = end_date;
         this.year = year;
         this.index = index;
+        this.s = start_date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        this.e = end_date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
-    @OneToMany(mappedBy = "quarter",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NhiemvuTaubay> nhiemvuTaubays;
 }

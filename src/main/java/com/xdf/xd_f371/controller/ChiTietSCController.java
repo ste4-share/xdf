@@ -71,16 +71,16 @@ public class ChiTietSCController implements Initializable {
             String currentDir = System.getProperty("user.dir");
             String temp_file_name=currentDir+"\\xlsx_template\\phieu_mau.xlsx";
             String file_name_1 = "/phieu_nhap_xuat.xlsx";
-            if (Common.isDirectory(ConnectLan.pre_acc.getPath())){
+            if (Common.isDirectory(ConnectLan.pre_path)){
                     Platform.runLater(()->{
-                        Common.copyFileExcel(temp_file_name, ConnectLan.pre_acc.getPath()+"/"+file_name_1);
-                        StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_acc.getPath()).append("/").append(file_name_1);
+                        Common.copyFileExcel(temp_file_name, ConnectLan.pre_path+"/"+file_name_1);
+                        StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_path).append("/").append(file_name_1);
                         Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input.createSheet(getPhieu()),true),
                                 (input)->fillDataToPhieuNhap(input.getSheet(getPhieu()),false));
                         Common.openDesktop();
                     });
             }else {
-                DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_acc.getPath() + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
+                DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
                 DashboardController.ctStage.close();
             }
         }

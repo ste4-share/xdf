@@ -51,9 +51,6 @@ public class NhiemvuTaubay {
     @JoinColumn(name = "ctnv_id", referencedColumnName = "id", insertable = false, updatable = false)
     private ChitietNhiemVu chitietNhiemVu;
     @ManyToOne
-    @JoinColumn(name = "quy_id",referencedColumnName = "id", insertable = false,updatable = false)
-    private Quarter quarter;
-    @ManyToOne
     @JoinColumn(name = "pt_id",referencedColumnName = "id",insertable = false,updatable = false)
     private PhuongTien phuongTien;
     @ManyToOne

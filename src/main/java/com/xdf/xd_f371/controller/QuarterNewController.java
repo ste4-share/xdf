@@ -13,12 +13,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
+@Component
 public class QuarterNewController implements Initializable {
     private static List<Quarter> ls = new ArrayList<>();
     @FXML
@@ -67,8 +68,12 @@ public class QuarterNewController implements Initializable {
     @FXML
     public void add(ActionEvent actionEvent) {
         if (!q_name.getText().trim().isEmpty()) {
-            ls.add(new Quarter(sd.getValue(),ed.getValue(),String.valueOf(year_cbb.getSelectionModel().getSelectedItem()), q_name.getText()));
-            quy_tb.setItems(FXCollections.observableList(ls));
+            if (sd.getValue()!=null && ed.getValue()==null){
+                ls.add(new Quarter(sd.getValue(),ed.getValue(),String.valueOf(year_cbb.getSelectionModel().getSelectedItem()), q_name.getText()));
+                quy_tb.setItems(FXCollections.observableList(ls));
+            }else{
+                DialogMessage.errorShowing("ngay bat dau va ket thuc khong duoc de trong");
+            }
         }else{
             q_name.setStyle(CommonFactory.styleErrorField);
         }

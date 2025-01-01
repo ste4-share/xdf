@@ -16,46 +16,7 @@
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0" prefWidth="1097.0" style="-fx-background-color: #ffffff;">
          <children>
             <HBox layoutX="10.0" layoutY="10.0" />
-            <HBox alignment="BOTTOM_LEFT" layoutX="20.0" layoutY="20.0" prefHeight="50.0" prefWidth="1077.0">
-               <children>
-                  <Label prefHeight="47.0" prefWidth="338.0" text="Đường dẫn xuất file báo cáo:">
-                     <font>
-                        <Font name="Cambria Bold" size="17.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-            <HBox layoutX="20.0" layoutY="51.0">
-               <children>
-                  <Separator prefHeight="0.0" prefWidth="751.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="20.0" layoutY="85.0" prefHeight="39.0" prefWidth="777.0">
-               <children>
-                  <Button fx:id="browserBtn" mnemonicParsing="false" onAction="#pathChange" prefHeight="34.0" prefWidth="211.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Chọn đường dẫn">
-                     <font>
-                        <Font name="Cambria" size="14.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <TextField fx:id="path" prefHeight="37.0" prefWidth="500.0" style="-fx-background-radius: 10;">
-                     <HBox.margin>
-                        <Insets left="20.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font name="Cambria" size="14.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="TEXT" />
-                     </cursor>
-                  </TextField>
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
+            <HBox layoutX="20.0" layoutY="51.0" />
             <HBox alignment="BOTTOM_LEFT" layoutX="20.0" layoutY="281.0" prefHeight="50.0" prefWidth="1077.0">
                <children>
                   <Label prefHeight="47.0" prefWidth="338.0" text="Thông tin tài khoản:">

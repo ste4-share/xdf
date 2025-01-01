@@ -7,9 +7,12 @@ import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.NhiemvuTaubay;
 import com.xdf.xd_f371.repo.HanmucNhiemvu2Repository;
 import com.xdf.xd_f371.repo.HanmucNhiemvuTauBayRepo;
+import com.xdf.xd_f371.util.DialogMessage;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,5 +50,29 @@ public class HanmucNhiemvuService {
     }
     public Optional<HanmucNhiemvuTaubayDto> findHmUnique(int y,int pid,int nv_id,int dvi_id){
         return hanmucNhiemvuTauBayRepo.findHmUnique(y,pid,nv_id,dvi_id);
+    }
+    @Transactional
+    public void switchNhiemvuTauBay(){
+        List<NhiemvuTaubay> previousDm = findAllByYear((LocalDate.now().getYear()-1));
+        if (!previousDm.isEmpty()){
+            previousDm.forEach(x->{
+                hanmucNhiemvuTauBayRepo.save(new NhiemvuTaubay(x.getDviXuatId(),x.getPt_id(),x.getCtnv_id(),x.getTk(),x.getMd(),x.getNhienlieu()));
+            });
+            DialogMessage.successShowing("Chuyen doi thanh cong");
+        } else {
+            DialogMessage.errorShowing("Khong co du lieu Nhiem vu tau bay tu nam "+(LocalDate.now().getYear()-1));
+        }
+    }
+    @Transactional
+    public void switchHanmucNhiemvu(){
+        List<HanmucNhiemvu2> previousDm = findAllByYearHmnv((LocalDate.now().getYear()-1));
+        if (!previousDm.isEmpty()){
+            previousDm.forEach(x->{
+                hanmucNhiemvu2Repository.save(new HanmucNhiemvu2(x.getDvi_id(),x.getNhiemvu_id(),x.getDiezel(),x.getDaubay(),x.getXang()));
+            });
+            DialogMessage.successShowing("Chuyen doi thanh cong");
+        } else {
+            DialogMessage.errorShowing("Khong co du lieu Han muc nhiem vu tu nam "+(LocalDate.now().getYear()-1));
+        }
     }
 }

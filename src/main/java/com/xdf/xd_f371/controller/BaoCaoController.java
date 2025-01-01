@@ -57,7 +57,7 @@ public class BaoCaoController implements Initializable {
     Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        dest_file = ConnectLan.pre_acc.getPath()+"\\baocao.xlsx";
+        dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
         rvb.setPrefWidth(DashboardController.screenWidth-300);
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
         initdvcbb();

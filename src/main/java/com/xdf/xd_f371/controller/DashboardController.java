@@ -83,7 +83,7 @@ public class DashboardController implements Initializable {
     @FXML
     private TableColumn<MiniLedgerDto, String> nguoitao,so,ngaytao, loaiphieu,dvi_nhan,dvi_xuat,nvu, soluong,tong;
     @FXML
-    private HBox dvi_menu,nxt_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu,setting,report;
+    private HBox dvi_menu,nxt_menu, dinhmuc_menu,tonkho_menu, nhiemvu_menu,setting,report,user_menu;
     @FXML
     private AnchorPane main_menu;
 
@@ -109,7 +109,7 @@ public class DashboardController implements Initializable {
         setLedgersToTable(ttp_ls);
         setFactoryCell();
         setPagination_nxt(ttp_ls);
-        setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
+        setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report,user_menu);
         startUpdatingLedgerData();
     }
     private void startUpdatingLedgerData() {
@@ -146,44 +146,49 @@ public class DashboardController implements Initializable {
     }
     @FXML
     public void nxt_menu_action(MouseEvent event) {
-        setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report);
+        setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report,user_menu);
         borderpane_base.setCenter(nx_vbox);
         getCurrentQuarter();
     }
     @FXML
     public void tonkho_menu_action(MouseEvent event) {
-        setStyleForClickedMEnu(tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,nhiemvu_menu,setting,report);
+        setStyleForClickedMEnu(tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,nhiemvu_menu,setting,report,user_menu);
         openFxml("tonkho.fxml");
     }
     @FXML
     public void nhiemvu_menu_action(MouseEvent mouseEvent) {
-        setStyleForClickedMEnu(nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,setting,report);
+        setStyleForClickedMEnu(nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,setting,report,user_menu);
         openFxml("nhiemvu.fxml");
     }
     @FXML
     public void dinhmuc_menu_action(MouseEvent event) {
-        setStyleForClickedMEnu(dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,setting,report);
+        setStyleForClickedMEnu(dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,setting,report,user_menu);
         openFxml("norm_menu.fxml");
     }
     @FXML
     public void dvi_menu_action(MouseEvent event) {
-        setStyleForClickedMEnu(dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,setting,report);
+        setStyleForClickedMEnu(dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,setting,report,user_menu);
         openFxml("donvi_menu.fxml");
     }
     @FXML
     public void setting_menu_action(MouseEvent mouseEvent) {
-        setStyleForClickedMEnu(setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report);
+        setStyleForClickedMEnu(setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report,user_menu);
         openFxml("setting_menu.fxml");
     }
     @FXML
     public void report_menu_action(MouseEvent mouseEvent) {
-        setStyleForClickedMEnu(report,setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu);
+        setStyleForClickedMEnu(report,setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,user_menu);
         try {
             VBox vBox = (VBox) getNodeBySource("reporters.fxml");
             borderpane_base.setCenter(vBox);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    @FXML
+    public void account_menu_action(MouseEvent mouseEvent) {
+        setStyleForClickedMEnu(user_menu,nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,setting,report);
+        openFxmlVbox("accounts.fxml");
     }
     @FXML
     public void loc_phieu(ActionEvent actionEvent) {
@@ -224,7 +229,7 @@ public class DashboardController implements Initializable {
         } else {
             DialogMessage.message("Thông báo", "Vui lòng tạo quý cho nam: " + Year.now().getValue(),
                     "HẾt quý", Alert.AlertType.CONFIRMATION);
-            setStyleForClickedMEnu(setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report);
+            setStyleForClickedMEnu(setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report,user_menu);
             openFxml("setting_menu.fxml");
         }
     }
@@ -280,7 +285,7 @@ public class DashboardController implements Initializable {
         tbTTNX.setItems(FXCollections.observableArrayList(ttp_ls.subList(fromIndex, toIndex)));
         return tbTTNX;
     }
-    private void setStyleForClickedMEnu(HBox selected, HBox remainder1,HBox remainder2,HBox remainder3,HBox remainder4,HBox remainder5,HBox re6){
+    private void setStyleForClickedMEnu(HBox selected, HBox remainder1,HBox remainder2,HBox remainder3,HBox remainder4,HBox remainder5,HBox re6,HBox re7){
         selected.setStyle(setupLayout);
         selected.setDisable(true);
         remainder1.setStyle(resetLayout);
@@ -295,11 +300,21 @@ public class DashboardController implements Initializable {
         remainder5.setDisable(false);
         re6.setStyle(resetLayout);
         re6.setDisable(false);
+        re7.setStyle(resetLayout);
+        re7.setDisable(false);
     }
     private void openFxml(String fxml){
         try {
             HBox hBox = (HBox) getNodeBySource(fxml);
             borderpane_base.setCenter(hBox);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void openFxmlVbox(String fxml){
+        try {
+            VBox vBox = (VBox) getNodeBySource(fxml);
+            borderpane_base.setCenter(vBox);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

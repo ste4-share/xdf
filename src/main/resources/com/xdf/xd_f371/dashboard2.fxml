@@ -32,7 +32,7 @@
                            </image>
                         </ImageView>
                      </children></AnchorPane>
-                  <HBox fx:id="nxt_menu" onMouseClicked="#nxt_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="nxt-men" stylesheets="@css/menu.css">
+                  <HBox fx:id="nxt_menu" onMouseClicked="#nxt_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="nxt-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -55,7 +55,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox fx:id="tonkho_menu" onMouseClicked="#tonkho_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                  <HBox fx:id="tonkho_menu" onMouseClicked="#tonkho_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -78,7 +78,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox fx:id="dinhmuc_menu" onMouseClicked="#dinhmuc_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dinhmuc-men" stylesheets="@css/menu.css">
+                  <HBox fx:id="dinhmuc_menu" onMouseClicked="#dinhmuc_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="dinhmuc-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -101,7 +101,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox fx:id="dvi_menu" layoutX="10.0" layoutY="286.0" onMouseClicked="#dvi_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                  <HBox fx:id="dvi_menu" layoutX="10.0" layoutY="286.0" onMouseClicked="#dvi_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -124,7 +124,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox fx:id="nhiemvu_menu" layoutX="10.0" layoutY="530.0" onMouseClicked="#nhiemvu_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                  <HBox fx:id="nhiemvu_menu" layoutX="10.0" layoutY="530.0" onMouseClicked="#nhiemvu_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -147,7 +147,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox fx:id="report" layoutX="10.0" layoutY="591.0" onMouseClicked="#report_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                  <HBox fx:id="report" layoutX="10.0" layoutY="591.0" onMouseClicked="#report_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -170,7 +170,30 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox fx:id="setting" layoutX="10.0" layoutY="652.0" onMouseClicked="#setting_menu_action" prefHeight="61.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                  <HBox fx:id="user_menu" layoutX="10.0" layoutY="475.0" onMouseClicked="#account_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                     <children>
+                        <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/people_8532963.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="20.0" top="8.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Label prefHeight="50.0" prefWidth="120.0" text="Người dùng" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Cambria Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </HBox>
+                  <HBox fx:id="setting" layoutX="10.0" layoutY="652.0" onMouseClicked="#setting_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="dvi-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>

@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -69,54 +70,46 @@ public class NhiemvuController implements Initializable {
         setScreen();
         initDviTb();
         initNvTable();
+
         initYearCbb();
         initHanmucTb();
         inithanmucCellFactory();
         initNvCellFactory();
         initHanmucNhiemvuTaubayCellFactory();
     }
-
     private void initHanmucTb() {
         Integer y = year_cbb.getSelectionModel().getSelectedItem();
         if (y!=null){
             hmnv = hanmucNhiemvuService.getAllByYear(y);
             if (!hmnv.isEmpty()){
                 initNhiemvuTaubay(hmnv);
-            }else{
-                switchNvTb(y);
+            }else {
+                if (DialogMessage.callAlertWithMessage(null,null,"Chưa đặt Chỉ tiêu, Hạn mức cho Nhiệm vụ tàu bay năm " + LocalDate.now().getYear()+
+                                ". Bạn có muốn chuyển Chỉ tiêu, Hạn mức Nhiệm vụ Tàu bay năm "+(LocalDate.now().getYear()-1)+" để dùng cho năm "+(LocalDate.now().getYear())
+                        , Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                    hanmucNhiemvuService.switchNhiemvuTauBay();
+                    hmnv = hanmucNhiemvuService.getAllByYear(y);
+                    if (!hmnv.isEmpty()){
+                        initNhiemvuTaubay(hmnv);
+                    }
+                }
             }
             hm2_ls = hanmucNhiemvuService.findAllDto(y);
             if (!hm2_ls.isEmpty()){
                 initHanmuc(hm2_ls);
             }else{
-                switchHmnv(y);
+                if (DialogMessage.callAlertWithMessage(null,null,"Chưa đặt Chỉ tiêu, Hạn mức cho Nhiệm vụ năm " + LocalDate.now().getYear()+
+                                ". Bạn có muốn chuyển Chỉ tiêu, Hạn mức Nhiệm vụ năm "+(LocalDate.now().getYear()-1)+" để dùng cho năm "+(LocalDate.now().getYear())
+                        , Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                    hanmucNhiemvuService.switchHanmucNhiemvu();
+                    hm2_ls = hanmucNhiemvuService.findAllDto(y);
+                    if (!hm2_ls.isEmpty()){
+                        initHanmuc(hm2_ls);
+                    }
+                }
             }
         }
     }
-    private void switchHmnv(Integer y) {
-        List<HanmucNhiemvu2> hm = hanmucNhiemvuService.findAllByYearHmnv(y-1);
-        if (hm.isEmpty()){
-            DialogMessage.successShowing("Du lieu nam "+ (y-1)+" trong.!!!");
-        }else{
-            hm.forEach(x->{
-                x.setYears(y);
-                hanmucNhiemvuService.save(x);
-            });
-        }
-    }
-
-    private void switchNvTb(int y) {
-        List<NhiemvuTaubay> hm = hanmucNhiemvuService.findAllByYear(y-1);
-        if (hm.isEmpty()){
-            DialogMessage.successShowing("Du lieu nam "+ (y-1)+" trong.!!!");
-        }else{
-            hm.forEach(x->{
-                x.setYears(y);
-                hanmucNhiemvuService.save(x);
-            });
-        }
-    }
-
     private void initYearCbb() {
         year_cbb.setItems(FXCollections.observableList(quarterService.getAllYear()));
         year_cbb.getSelectionModel().selectFirst();
@@ -227,6 +220,7 @@ public class NhiemvuController implements Initializable {
         tieuthunhiemvu.setPrefWidth(DashboardController.screenWidth);
         tieuthunhiemvu.setPrefHeight(DashboardController.screenHeigh-350);
     }
+
     @FXML
     public void yearSelected(ActionEvent actionEvent) {
         Integer y = year_cbb.getSelectionModel().getSelectedItem();
@@ -236,5 +230,30 @@ public class NhiemvuController implements Initializable {
             hm2_ls = hanmucNhiemvuService.findAllDto(y);
             initHanmuc(hm2_ls);
         }
+    }
+    @FXML
+    public void ctvn_convertACtion(ActionEvent actionEvent) {
+        try {
+            if (DialogMessage.callAlertWithMessage(null,null,"Chưa đặt Chỉ tiêu, Hạn mức cho Nhiệm vụ tàu bay năm " + LocalDate.now().getYear()+
+                            ". Bạn có muốn chuyển Chỉ tiêu, Hạn mức Nhiệm vụ Tàu bay năm "+(LocalDate.now().getYear()-1)+" để dùng cho năm "+(LocalDate.now().getYear())
+                    , Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                hanmucNhiemvuService.switchNhiemvuTauBay();
+            }
+        }catch (Exception e){
+            DialogMessage.errorShowing("co loi xay ra");
+        }
+    }
+    @FXML
+    public void convertHmBtnAction(ActionEvent actionEvent) {
+        try {
+            if (DialogMessage.callAlertWithMessage(null,null,"Chưa đặt Chỉ tiêu, Hạn mức cho Nhiệm vụ năm " + LocalDate.now().getYear()+
+                            ". Bạn có muốn chuyển Chỉ tiêu, Hạn mức Nhiệm vụ năm "+(LocalDate.now().getYear()-1)+" để dùng cho năm "+(LocalDate.now().getYear())
+                    , Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                hanmucNhiemvuService.switchHanmucNhiemvu();
+            }
+        }catch (Exception e){
+            DialogMessage.errorShowing("co loi xay ra");
+        }
+
     }
 }
