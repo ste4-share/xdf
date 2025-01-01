@@ -1,20 +1,18 @@
 package com.xdf.xd_f371.entity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Entity
 @Table(name = "quarter")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Quarter {
+public class Quarter{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -26,28 +24,25 @@ public class Quarter {
     private String year;
     @Column(name = "index")
     private String index;
+    @Column(name = "status")
+    private String status;
 
-    @Transient
-    private String s;
-    @Transient
-    private String e;
-
-    public Quarter(LocalDate start_date, LocalDate end_date, String year, String index) {
-        this.start_date = start_date;
-        this.end_date = end_date;
+    public Quarter(LocalDate start_date, LocalDate end_date, String year, String index,String status) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.start_date = LocalDate.parse(start_date.toString(), formatter) ;
+        this.end_date = LocalDate.parse(end_date.toString(), formatter) ;;
         this.year = year;
         this.index = index;
-        this.s = start_date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        this.e = end_date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        this.status = status;
     }
 
-    public Quarter(int id, LocalDate start_date, LocalDate end_date, String year,String index) {
+    public Quarter(int id, LocalDate start_date, LocalDate end_date, String year,String index,String status) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         this.id = id;
-        this.start_date = start_date;
-        this.end_date = end_date;
+        this.start_date = LocalDate.parse(start_date.toString(), formatter) ;
+        this.end_date = LocalDate.parse(end_date.toString(), formatter) ;
         this.year = year;
         this.index = index;
-        this.s = start_date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        this.e = end_date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        this.status = status;
     }
 }

@@ -255,10 +255,23 @@
          <children>
             <HBox alignment="BOTTOM_LEFT">
                <children>
+                  <Label layoutX="10.0" layoutY="10.0" prefHeight="28.0" prefWidth="99.0" text="Quý:">
+                     <font>
+                        <Font name="Cambria" size="16.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="quycbb" onAction="#quycbbAction" prefHeight="40.0" prefWidth="116.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ComboBox>
                   <Label prefHeight="28.0" prefWidth="99.0" text="Từ ngày:">
                      <font>
                         <Font name="Cambria" size="16.0" />
-                     </font></Label>
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></Label>
                   <Label fx:id="lb_from" prefHeight="28.0" prefWidth="126.0" text="Từ ngày:">
                      <font>
                         <Font name="Cambria Bold Italic" size="16.0" />

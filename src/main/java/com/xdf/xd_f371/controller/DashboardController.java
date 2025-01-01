@@ -7,6 +7,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -42,6 +43,7 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
@@ -74,6 +76,8 @@ public class DashboardController implements Initializable {
     private Pagination pagination_tbnxt;
     @FXML
     public TableView<MiniLedgerDto> tbTTNX;
+    @FXML
+    private ComboBox<Quarter> quycbb;
     @FXML
     private TextField tf_search;
     @FXML
@@ -121,7 +125,6 @@ public class DashboardController implements Initializable {
         });
         service.start();
     }
-
     @FXML
     public void importActionClick(ActionEvent actionEvent) throws IOException{
         primaryStage = new Stage();
@@ -220,17 +223,25 @@ public class DashboardController implements Initializable {
         }
     }
     private void getCurrentQuarter(){
-        if (quarterService.findByCurrentTime(LocalDate.now()).isPresent()){
-            findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
-            lb_to.setTextFill(Color.rgb(33, 12, 162));
-            lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-            lb_from.setTextFill(Color.rgb(33, 12, 162));
-            lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+        Optional<Quarter> q = quarterService.findByStatus(StatusCons.RECORDING.getName());
+        if (q.isPresent()){
+            if (q.get().getEnd_date().isBefore(LocalDate.now())){
+                DialogMessage.message("Thông báo", "Vui lòng tạo quý cho nam: " + Year.now().getValue(),
+                        "HẾt quý", Alert.AlertType.CONFIRMATION);
+                primaryStage = new Stage();
+                Common.openNewStage("quarter.fxml", primaryStage,null, StageStyle.UTILITY);
+                updateData();
+            }else{
+                findByTime = q.get();
+                lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+                lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+            }
         } else {
             DialogMessage.message("Thông báo", "Vui lòng tạo quý cho nam: " + Year.now().getValue(),
                     "HẾt quý", Alert.AlertType.CONFIRMATION);
-            setStyleForClickedMEnu(setting,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report,user_menu);
-            openFxml("setting_menu.fxml");
+            primaryStage = new Stage();
+            Common.openNewStage("quarter.fxml", primaryStage,null, StageStyle.UTILITY);
+            updateData();
         }
     }
 
@@ -358,5 +369,8 @@ public class DashboardController implements Initializable {
         primaryStage = new Stage();
         Common.openNewStage("quarter.fxml", primaryStage,null, StageStyle.UTILITY);
         updateData();
+    }
+    @FXML
+    public void quycbbAction(ActionEvent actionEvent) {
     }
 }

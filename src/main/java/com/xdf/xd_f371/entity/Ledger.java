@@ -3,7 +3,6 @@ package com.xdf.xd_f371.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.*;
-import javafx.fxml.FXML;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -20,8 +19,6 @@ public class Ledger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "quarter_id")
-    private int quarter_id=0;
     @Column(name = "bill_id")
     @NotNull
     @Min(1)

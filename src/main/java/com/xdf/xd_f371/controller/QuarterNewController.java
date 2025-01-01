@@ -1,6 +1,6 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.dto.NhiemVuDto;
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.QuarterService;
@@ -29,6 +29,8 @@ public class QuarterNewController implements Initializable {
     @FXML
     private ComboBox<Integer> year_cbb;
     @FXML
+    private ComboBox<String> statusCbb;
+    @FXML
     private TableView<Quarter> quy_tb;
     @FXML
     private TableColumn<Quarter,String> stt,quy,s,e;
@@ -37,8 +39,13 @@ public class QuarterNewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initY();
+        initStatus();
         initQuarterTb();
         initFactory();
+    }
+
+    private void initStatus() {
+        statusCbb.setItems(FXCollections.observableList(List.of(StatusCons.RECORDING.getName(),StatusCons.DONE.getName())));
     }
 
     private void initQuarterTb() {
@@ -53,8 +60,8 @@ public class QuarterNewController implements Initializable {
         stt.setSortable(false);
         stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(quy_tb.getItems().indexOf(column.getValue())+1).asString());
         quy.setCellValueFactory(new PropertyValueFactory<Quarter, String>("index"));
-        s.setCellValueFactory(new PropertyValueFactory<Quarter, String>("s"));
-        e.setCellValueFactory(new PropertyValueFactory<Quarter, String>("e"));
+        s.setCellValueFactory(new PropertyValueFactory<Quarter, String>("start_date"));
+        e.setCellValueFactory(new PropertyValueFactory<Quarter, String>("end_date"));
     }
 
     private void initY() {
@@ -69,7 +76,7 @@ public class QuarterNewController implements Initializable {
     public void add(ActionEvent actionEvent) {
         if (!q_name.getText().trim().isEmpty()) {
             if (sd.getValue()!=null && ed.getValue()==null){
-                ls.add(new Quarter(sd.getValue(),ed.getValue(),String.valueOf(year_cbb.getSelectionModel().getSelectedItem()), q_name.getText()));
+                ls.add(new Quarter(sd.getValue(),ed.getValue(),String.valueOf(year_cbb.getSelectionModel().getSelectedItem()), q_name.getText(), StatusCons.RECORDING.getName()));
                 quy_tb.setItems(FXCollections.observableList(ls));
             }else{
                 DialogMessage.errorShowing("ngay bat dau va ket thuc khong duoc de trong");
@@ -95,5 +102,9 @@ public class QuarterNewController implements Initializable {
     @FXML
     public void yearAction(ActionEvent actionEvent) {
         initQuarterTb();
+    }
+    @FXML
+    public void statusCbbAction(ActionEvent actionEvent) {
+
     }
 }

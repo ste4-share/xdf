@@ -48,7 +48,7 @@ public class ChangingController implements Initializable {
         nvdx_ls_buf = new ArrayList<>();
         tonkho_selected = TonkhoController.pickTonKho;
         petro_name.setText(tonkho_selected.getTenxd());
-        list = inventoryService.findByPetro_idAndQuarter_id(tonkho_selected.getPetro_id(),DashboardController.findByTime.getId());
+        list = inventoryService.findByPetro_idAndDate(tonkho_selected.getPetro_id(),DashboardController.findByTime.getStart_date(),DashboardController.findByTime.getEnd_date());
         setNvdxTable(nvdx_tb);
         setSScdTable(sscd_tb);
         setVisibleForBtn(true, true);

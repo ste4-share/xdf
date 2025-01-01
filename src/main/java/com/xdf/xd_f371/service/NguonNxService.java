@@ -41,7 +41,7 @@ public class NguonNxService {
         try {
             nguonNxRepo.save(new NguonNx(n.getId(),n.getTen(),n.getStatus(),
                     n.getCode(),n.getTructhuoc_id()));
-            ledgersRepo.updateTrucThuocFromNxx(n.getId(),tt.getType(), DashboardController.findByTime.getId());
+            ledgersRepo.updateTrucThuocFromNxx(n.getId(),tt.getType(), DashboardController.findByTime.getStart_date(),DashboardController.findByTime.getEnd_date());
         }catch (Exception e){
             e.printStackTrace();
         }

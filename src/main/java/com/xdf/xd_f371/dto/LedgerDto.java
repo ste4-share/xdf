@@ -13,7 +13,6 @@ import java.time.LocalDate;
 public class LedgerDto {
     private int ledger_id;
     private int ledger_detail_id;
-    private int quarter_id;
     private int bill_id;
     private Long amount;
     private LocalDate from_date;
@@ -65,7 +64,7 @@ public class LedgerDto {
     private String dongia_str;
     private String thanhtien;
 
-    public LedgerDto(int ledger_id, int ledger_detail_id, int quarter_id, int bill_id,
+    public LedgerDto(int ledger_id, int ledger_detail_id, int bill_id,
                      Long amount, LocalDate from_date, LocalDate end_date, String status,
                      int so_km, String giohd_md, String giohd_tk,
                      int sl_tieuthu_md, int sl_tieuthu_tk, int dvi_nhan_id, int dvi_xuat_id,
@@ -75,7 +74,6 @@ public class LedgerDto {
                      int soluong, int thuc_nhap, int phai_nhap, int haohut_sl, String loainv, Long nl_gio, Long nl_km, Long soluong_px) {
         this.ledger_id = ledger_id;
         this.ledger_detail_id = ledger_detail_id;
-        this.quarter_id = quarter_id;
         this.bill_id = bill_id;
         this.amount = amount;
         this.from_date = from_date;

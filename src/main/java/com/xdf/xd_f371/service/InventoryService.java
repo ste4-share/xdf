@@ -11,9 +11,11 @@ import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,20 +28,17 @@ public class InventoryService {
     private final LoaiXangDauRepo loaiXangDauRepo;
     private final QuarterRepository quarterRepository;
 
-    public List<Inventory> findByQuarter_id(int quarter_id){
-        return inventoryRepo.findByQuarter_id(quarter_id);
+    public List<Inventory> findByPetro_idAndDate(int petro_id, LocalDate sd, LocalDate ed){
+        return inventoryRepo.findByPetro_idAndDate(petro_id, sd,ed);
     }
-    public List<Inventory> findByPetro_idAndQuarter_id(int petro_id, int quarter_id){
-        return inventoryRepo.findByPetro_idAndQuarter_id(petro_id, quarter_id);
+    public List<Inventory> findByPetro_idAndDateStatus(int petro_id,LocalDate sd, LocalDate ed,String status){
+        return inventoryRepo.findByPetro_idAndDateStatus(petro_id, sd,ed,status);
     }
-    public List<Inventory> findByPetro_idAndQuarter_id(int petro_id, int quarter_id,String status){
-        return inventoryRepo.findByPetro_idAndQuarter_idStatus(petro_id, quarter_id,status);
+    public Optional<Inventory> findByUniqueGroupby(int xdid, LocalDate sd, LocalDate ed){
+        return inventoryRepo.findByUniqueGroupby(xdid, sd,ed);
     }
-    public Optional<Inventory> findByUniqueGroupby(int xdid, int qid){
-        return inventoryRepo.findByUniqueGroupby(xdid, qid);
-    }
-    public Optional<Inventory> findByUnique(int petro_id, int quarter_id,int p){
-        return inventoryRepo.findByUnique(petro_id,quarter_id,p);
+    public Optional<Inventory> findByUnique(int petro_id, LocalDate sd, LocalDate ed,int p){
+        return inventoryRepo.findByUnique(petro_id,sd,ed,p);
     }
     public Inventory save(Inventory inventory){
         return inventoryRepo.save(inventory);
@@ -47,8 +46,8 @@ public class InventoryService {
     public Inventory findById(int id){
         return inventoryRepo.findById(id).orElse(null);
     }
-    public List<TonkhoDto> getAllTonkho(int quarter_id){
-        return mapToTonkhoDto(inventoryRepo.getAllTonkho(quarter_id));
+    public List<TonkhoDto> getAllTonkho(LocalDate sd, LocalDate ed){
+        return mapToTonkhoDto(inventoryRepo.getAllTonkho(sd,ed));
     }
     public List<TonkhoDto> mapToTonkhoDto(List<Object[]> results) {
         return results.stream()
@@ -60,20 +59,20 @@ public class InventoryService {
     public List<InvDto> mapToInvDto(List<Object[]> results) {
         return results.stream()
                 .map(row -> new InvDto((int) row[0],(String) row[1],(String) row[2],(int) row[3],(int) row[4],((BigDecimal) row[5]).intValue(),
-                        ((BigDecimal) row[6]).intValue(),((BigDecimal) row[7]).intValue(),((BigDecimal) row[8]).intValue()))
+                        ((BigDecimal) row[6]).intValue(),((BigDecimal) row[7]).intValue(),((BigDecimal) row[8]).intValue(), (LocalDate) row[9], (LocalDate) row[10]))
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void saveInvWhenSwitchQuarter(Quarter q, int pre_q_id){
+    public void saveInvWhenSwitchQuarter(Quarter q){
         List<InvDto> previous_invs = mapToInvDto(ledgersRepo.findAllInvByQuarter(q.getStart_date(),q.getEnd_date()));
         if (!previous_invs.isEmpty()){
             previous_invs.forEach(x->{
                 if (x.getNhap_nvdx()-x.getXuat_nvdx()<=0 && x.getNhap_sscd()-x.getXuat_sscd()<=0){
-                    inventoryRepo.save(new Inventory(x.getPetro_id(),pre_q_id,x.getNhap_nvdx()-x.getXuat_nvdx(),
-                            x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(), MucGiaEnum.OUT_STOCK_ALL.getStatus(), x.getDon_gia()));
+                    inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),
+                            x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(), MucGiaEnum.OUT_STOCK_ALL.getStatus(), x.getDon_gia(),x.getSd(),x.getEd()));
                 } else {
-                    inventoryRepo.save(new Inventory(x.getPetro_id(),pre_q_id,x.getNhap_nvdx()-x.getXuat_nvdx(),
-                            x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(), MucGiaEnum.IN_STOCK.getStatus(), x.getDon_gia()));
+                    inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),
+                            x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(), MucGiaEnum.IN_STOCK.getStatus(), x.getDon_gia(),x.getSd(),x.getEd()));
                 }
             });
         }

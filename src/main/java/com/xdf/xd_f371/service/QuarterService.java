@@ -3,6 +3,7 @@ package com.xdf.xd_f371.service;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,6 +27,9 @@ public class QuarterService {
     public List<Quarter> findAllByYear(String year){
         return quarterRepository.findByYear(year);
     }
+    public Optional<Quarter> findByStatus(String s){
+        return quarterRepository.findByStatus(s);
+    }
     public List<Quarter> findAll(){
         return quarterRepository.findAll();
     }
@@ -38,7 +42,7 @@ public class QuarterService {
     public Optional<Quarter> findByUnique(String year,String i){
         return quarterRepository.findByUnique(year,i);
     }
-    public List<Integer> getAllYear(){
+    public List<Integer> getAllYear() {
         return quarterRepository.getAllYear();
     }
 }

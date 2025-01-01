@@ -72,19 +72,19 @@ public class TonkhoController implements Initializable {
 
         pickTonKho = new TonkhoDto();
         findByTime = quarterService.findByCurrentTime(LocalDate.now()).get();
-        tkt = inventoryService.getAllTonkho(findByTime.getId());
+        tkt = inventoryService.getAllTonkho(findByTime.getStart_date(),findByTime.getEnd_date());
 
         setQuarterListToCbb();
         setTonkhoTongToCol();
-        fillDataToTableTonkho(findByTime.getId());
+        fillDataToTableTonkho(findByTime.getStart_date(),findByTime.getEnd_date());
         setLichsuTb();
-        fillDataToTableLichsu(findByTime.getId());
+        fillDataToTableLichsu(findByTime.getStart_date(),findByTime.getEnd_date());
 
         searching(tkt.stream().map(TonkhoDto::getTenxd).toList());
         searching_ls(histories.stream().map(LichsuXNK::getTen_xd).toList());
     }
-    private void fillDataToTableLichsu(int id) {
-        histories =lichsuService.findAllByQuyid(id);
+    private void fillDataToTableLichsu(LocalDate sd,LocalDate ed) {
+        histories =lichsuService.findAllByQuyid(sd,ed);
         tb_history.setItems(FXCollections.observableArrayList(histories));
     }
     private void mapLsTb(List<LichsuXNK> ls){
@@ -103,10 +103,11 @@ public class TonkhoController implements Initializable {
     }
     @FXML
     public void selectQuarter(ActionEvent actionEvent) {
-        fillDataToTableTonkho(getCurrentQuarter().getId());
+        Quarter quarter = getCurrentQuarter();
+        fillDataToTableTonkho(quarter.getStart_date(),quarter.getEnd_date());
     }
-    private void fillDataToTableTonkho(int quy_id){
-        tkt = inventoryService.getAllTonkho(quy_id);
+    private void fillDataToTableTonkho(LocalDate sd,LocalDate ed){
+        tkt = inventoryService.getAllTonkho(sd,ed);
         tb_tonkho.setItems( FXCollections.observableArrayList(tkt));
     }
     private void mapInvTb(List<TonkhoDto> ls){
@@ -164,7 +165,8 @@ public class TonkhoController implements Initializable {
     }
     @FXML
     public void changeTabTheoQuy(Event event) {
-        fillDataToTableTonkho(getCurrentQuarter().getId());
+        Quarter quarter = getCurrentQuarter();
+        fillDataToTableTonkho(quarter.getStart_date(), quarter.getEnd_date());
     }
     private Quarter getCurrentQuarter(){
         Quarter selected = cbb_quarter.getSelectionModel().getSelectedItem();
@@ -179,7 +181,7 @@ public class TonkhoController implements Initializable {
             pickTonKho = spotDto;
             tk_stage = new Stage();
             Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi", StageStyle.DECORATED);
-            fillDataToTableTonkho(findByTime.getId());
+            fillDataToTableTonkho(findByTime.getStart_date(),findByTime.getEnd_date());
         }
     }
     @FXML
@@ -237,6 +239,6 @@ public class TonkhoController implements Initializable {
     public void switchAction(ActionEvent actionEvent) {
         tk_stage = new Stage();
         Common.openNewStage("switch_quarter.fxml", tk_stage,null, StageStyle.UTILITY);
-        fillDataToTableTonkho(findByTime.getId());
+        fillDataToTableTonkho(findByTime.getStart_date(),findByTime.getEnd_date());
     }
 }

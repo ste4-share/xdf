@@ -46,8 +46,10 @@ public class LedgerService {
                 detail.setLedger_id(savedLedger.getId());
                 saveQuantity(detail,savedLedger);
                 ledgerDetailRepo.save(detail);
-                Inventory inventory = inventoryRepo.findByUnique(detail.getLoaixd_id(), ledger.getQuarter_id(), detail.getDon_gia()).orElse(null);
-                Inventory inventory_1 = inventoryRepo.findByUniqueGroupby(detail.getLoaixd_id(), ledger.getQuarter_id()).orElse(null);
+                Inventory inventory = inventoryRepo.findByUnique(detail.getLoaixd_id(), DashboardController.findByTime.getStart_date(),
+                        DashboardController.findByTime.getEnd_date(), detail.getDon_gia()).orElse(null);
+                Inventory inventory_1 = inventoryRepo.findByUniqueGroupby(detail.getLoaixd_id(), DashboardController.findByTime.getStart_date(),
+                        DashboardController.findByTime.getEnd_date()).orElse(null);
                 if (inventory==null) {
                     if (inventory_1!=null) {
                         createNewInv(ledger, detail,inventory_1);
@@ -67,11 +69,11 @@ public class LedgerService {
     private void saveHistory(Ledger l,LedgerDetails ld, int tontruoc){
         if (l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
             LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(), (tontruoc+ld.getSoluong()), ld.getDon_gia(),  ld.getSscd_nvdx(),
-                    l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
+                    l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getFrom_date());
             lichsuRepo.save(lichsuXNK);
         }else {
             LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc+ld.getSoluong(), ld.getSoluong(), tontruoc, ld.getDon_gia(),  ld.getSscd_nvdx(),
-                    l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getQuarter_id());
+                    l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getFrom_date());
             lichsuRepo.save(lichsuXNK);
         }
     }
@@ -110,22 +112,22 @@ public class LedgerService {
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
             inventory.setNhap_nvdx(detail.getSoluong());
             if (inventory.getNhap_nvdx()-inventory.getXuat_nvdx()>0){
-                inventoryRepo.save(new Inventory(detail.getLoaixd_id(),ledger.getQuarter_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
-                        inventory.getNhap_nvdx(),0, 0,0, MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()));
+                inventoryRepo.save(new Inventory(detail.getLoaixd_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
+                        inventory.getNhap_nvdx(),0, 0,0, MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia(),ledger.getFrom_date(),ledger.getEnd_date()));
             }else{
-                inventoryRepo.save(new Inventory(detail.getLoaixd_id(),ledger.getQuarter_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
-                        inventory.getNhap_nvdx(),0, 0,0, MucGiaEnum.OUT_STOCK_NVDX.getStatus(), detail.getDon_gia()));
+                inventoryRepo.save(new Inventory(detail.getLoaixd_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
+                        inventory.getNhap_nvdx(),0, 0,0, MucGiaEnum.OUT_STOCK_NVDX.getStatus(), detail.getDon_gia(),ledger.getFrom_date(),ledger.getEnd_date()));
             }
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
             inventory.setNhap_sscd(detail.getSoluong());
             if (inventory.getNhap_sscd()-inventory.getXuat_sscd()>0) {
-                inventoryRepo.save(new Inventory(detail.getLoaixd_id(), ledger.getQuarter_id(), inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
+                inventoryRepo.save(new Inventory(detail.getLoaixd_id(), inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
                         0, detail.getSoluong(), 0, 0,
-                        MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia()));
+                        MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia(),ledger.getFrom_date(),ledger.getEnd_date()));
             } else {
-                inventoryRepo.save(new Inventory(detail.getLoaixd_id(), ledger.getQuarter_id(), inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
+                inventoryRepo.save(new Inventory(detail.getLoaixd_id(), inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
                         0, detail.getSoluong(), 0, 0,
-                        MucGiaEnum.OUT_STOCK_SSCD.getStatus(), detail.getDon_gia()));
+                        MucGiaEnum.OUT_STOCK_SSCD.getStatus(), detail.getDon_gia(),ledger.getFrom_date(),ledger.getEnd_date()));
             }
         }
     }
@@ -135,6 +137,6 @@ public class LedgerService {
     }
     @Transactional
     public void inactiveLedger(int so, String loaiphieu) {
-        ledgersRepo.inactiveLedgers(so,loaiphieu,DashboardController.findByTime.getId());
+        ledgersRepo.inactiveLedgers(so,loaiphieu, DashboardController.findByTime.getStart_date(),DashboardController.findByTime.getEnd_date());
     }
 }

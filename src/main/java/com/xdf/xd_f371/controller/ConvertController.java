@@ -81,7 +81,7 @@ public class ConvertController implements Initializable {
         Quarter prv = prv_cbb.getSelectionModel().getSelectedItem();
         if (DialogMessage.callAlert()== ButtonType.OK){
             if (pre!=null && prv!=null){
-                inventoryService.saveInvWhenSwitchQuarter(prv,pre.getId());
+                inventoryService.saveInvWhenSwitchQuarter(prv);
                 DialogMessage.successShowing("Thanh cong");
                 TonkhoController.tk_stage.close();
             }

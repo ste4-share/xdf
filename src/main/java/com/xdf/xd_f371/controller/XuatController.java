@@ -87,7 +87,7 @@ public class XuatController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (lxd != null && gia != null) {
-            Optional<Inventory> in = inventoryService.findByUnique(lxd.getXd_id(),DashboardController.findByTime.getId(),gia);
+            Optional<Inventory> in = inventoryService.findByUnique(lxd.getXd_id(),DashboardController.findByTime.getStart_date(),DashboardController.findByTime.getStart_date(),gia);
             in.ifPresent(inventory -> setInv_lb(inventory.getNhap_nvdx() - inventory.getXuat_nvdx()));
         }
     }
@@ -286,9 +286,7 @@ public class XuatController extends CommonFactory implements Initializable {
         if(!so.getText().isEmpty()){
             validateToSettingStyle(so);
             if (isNumber(so.getText())){
-                if (current_ledger_list.stream().filter(i->i.getBill_id()==Integer.parseInt(so.getText())).findFirst().isPresent()){
-                    so.setStyle(styleErrorField);
-                }
+                so.setStyle(styleErrorField);
             }else{
                 so.setStyle(styleErrorField);
             }
@@ -463,7 +461,8 @@ public class XuatController extends CommonFactory implements Initializable {
         }
     }
     private void mapPrice(int xd_id){
-        List<Inventory> inventoryList = inventoryService.findByPetro_idAndQuarter_id(xd_id,DashboardController.findByTime.getId(),MucGiaEnum.IN_STOCK.getStatus());
+        List<Inventory> inventoryList = inventoryService.findByPetro_idAndDateStatus(xd_id,DashboardController.findByTime.getStart_date(),
+                DashboardController.findByTime.getEnd_date(),MucGiaEnum.IN_STOCK.getStatus());
         if (!inventoryList.isEmpty()){
             cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().map(Inventory::getPrice).toList()));
             cbb_dongia.getSelectionModel().selectFirst();
@@ -496,7 +495,6 @@ public class XuatController extends CommonFactory implements Initializable {
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
         ledger.setBill_id(Integer.parseInt(so.getText().isEmpty() ? "0" : so.getText()));
-        ledger.setQuarter_id(DashboardController.findByTime.getId());
         ledger.setAmount(ls_socai.stream().mapToLong(x-> ((long) x.getSoluong() *x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());

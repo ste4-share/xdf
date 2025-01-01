@@ -80,23 +80,35 @@ public class BaoCaoController implements Initializable {
         dvi_cbb.getSelectionModel().selectFirst();
     }
     private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){
-        int row_ind = createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(),SubQuery.nl_end_q1(),SubQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-        return createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(SubQuery.dmn_begin_q1(),SubQuery.dmn_end_q1(),SubQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+        Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
+        if (q!=null){
+            int row_ind = createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(),SubQuery.nl_end_q1(),SubQuery.nl_end(q.getStart_date(),q.getEnd_date())));
+            return createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(SubQuery.dmn_begin_q1(),SubQuery.dmn_end_q1(),SubQuery.dmn_end(q.getStart_date(),q.getEnd_date())));
+        }
+        return null;
     }
     private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
-        int row_ind= createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(),SubQuery.nl_end_q1(),SubQuery.nl_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
-        return createDataSheet(wb.getSheet(sheetName), row_ind,getCusQueryNl(SubQuery.dmn_begin_q1(),SubQuery.dmn_end_q1(),SubQuery.dmn_end(quy_cbb.getSelectionModel().getSelectedItem().getId())));
+        Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
+        if (q!=null) {
+            int row_ind = createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(), SubQuery.nl_end_q1(), SubQuery.nl_end(q.getStart_date(),q.getEnd_date())));
+            return createDataSheet(wb.getSheet(sheetName), row_ind, getCusQueryNl(SubQuery.dmn_begin_q1(), SubQuery.dmn_end_q1(), SubQuery.dmn_end(q.getStart_date(),q.getEnd_date())));
+        }
+        return null;
     }
     private Integer map_ttnlbtkh_create(XSSFWorkbook wb,String sheetName){
-        return mapDataToSheet(wb.createSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(quy_cbb.getSelectionModel().getSelectedItem().getId()),1);
+        Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
+        if (q!=null){
+            return mapDataToSheet(wb.createSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(q.getStart_date(),q.getEnd_date()),1);
+        }
+        return null;
     }
     private Integer map_ttnlbtkh_getting(XSSFWorkbook wb,String sheetName){
         Quarter q = quy_cbb.getSelectionModel().getSelectedItem();
         if (q!=null){
-            int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(q.getId()),1);
-            int row_index2 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,SubQuery.ttnlbtkh_for_all(q.getId()),1);
-            int row_index3 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,SubQuery.ttnlbtkh_for_dv(q.getId()),1);
-            return mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,SubQuery.ttnlbtkh_for_tongmaybay(q.getId()),1);
+            int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(q.getStart_date(),q.getEnd_date()),1);
+            int row_index2 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,SubQuery.ttnlbtkh_for_all(q.getStart_date(),q.getEnd_date()),1);
+            int row_index3 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,SubQuery.ttnlbtkh_for_dv(q.getStart_date(),q.getEnd_date()),1);
+            return mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,SubQuery.ttnlbtkh_for_tongmaybay(q.getStart_date(),q.getEnd_date()),1);
         }
         return 0;
     }
@@ -209,10 +221,10 @@ public class BaoCaoController implements Initializable {
             arr_tt.add(tt.getType());
             n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
             x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            n_case_1 = n_case_1.concat("max(case when tonkhonhap_xd2("+q.getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+nx.getId()+",'ACTIVE') " +
-                    "is null then 0 else tonkhonhap_xd2("+q.getId()+", '"+tt.getType()+"', lxd.id,'NHAP',"+nx.getId()+",'ACTIVE') end) as n"+tt.getType()+",");
-            x_case_2 = x_case_2.concat("max(case when tonkhoxuat_xd2("+q.getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+nx.getId()+",'ACTIVE') " +
-                    "is null then 0 else tonkhoxuat_xd2("+q.getId()+", '"+tt.getType()+"', lxd.id,'XUAT',"+nx.getId()+",'ACTIVE') end) as x"+tt.getType()+",");
+            n_case_1 = n_case_1.concat("max(case when invnhap_xd("+q.getStart_date()+","+q.getEnd_date()+", '"+tt.getType()+"', lxd.id,'NHAP',"+nx.getId()+",'ACTIVE') " +
+                    "is null then 0 else invnhap_xd("+q.getStart_date()+","+q.getEnd_date()+", '"+tt.getType()+"', lxd.id,'NHAP',"+nx.getId()+",'ACTIVE') end) as n"+tt.getType()+",");
+            x_case_2 = x_case_2.concat("max(case when invxuat_xd("+q.getStart_date()+","+q.getEnd_date()+", '"+tt.getType()+"', lxd.id,'XUAT',"+nx.getId()+",'ACTIVE') " +
+                    "is null then 0 else invxuat_xd("+q.getStart_date()+","+q.getEnd_date()+", '"+tt.getType()+"', lxd.id,'XUAT',"+nx.getId()+",'ACTIVE') end) as x"+tt.getType()+",");
         }
         return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
     }

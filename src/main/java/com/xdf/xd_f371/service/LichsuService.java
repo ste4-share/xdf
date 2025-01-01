@@ -5,6 +5,7 @@ import com.xdf.xd_f371.repo.LichsuRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -15,8 +16,8 @@ public class LichsuService {
     public List<LichsuXNK> findAll(){
         return lichsuRepo.findAll();
     }
-    public List<LichsuXNK> findAllByQuyid(int quyid){
-        return lichsuRepo.findAllByQuyid(quyid);
+    public List<LichsuXNK> findAllByQuyid(LocalDate sd,LocalDate ed){
+        return lichsuRepo.findAllByQuyid(sd,ed);
     }
     public LichsuXNK save(LichsuXNK lichsuXNK){
         return lichsuRepo.save(lichsuXNK);

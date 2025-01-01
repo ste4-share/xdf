@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.QuarterNewController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="509.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.QuarterNewController">
    <children>
       <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0" style="-fx-background-color: #005bc9;">
          <children>
@@ -80,9 +80,22 @@
             <Insets bottom="10.0" top="10.0" />
          </VBox.margin>
       </HBox>
+      <HBox alignment="BOTTOM_LEFT" layoutX="20.0" layoutY="76.0">
+         <children>
+            <Label prefHeight="35.0" prefWidth="150.0" text="Trạng thái:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="statusCbb" onAction="#statusCbbAction" prefHeight="40.0" prefWidth="139.0" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </HBox>
       <VBox prefHeight="127.0" prefWidth="580.0">
          <children>
-            <TableView fx:id="quy_tb" prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="quy_tb" prefHeight="200.0" prefWidth="200.0" stylesheets="@css/table_style.css">
               <columns>
                 <TableColumn fx:id="stt" prefWidth="75.0" text="STT" />
                 <TableColumn fx:id="quy" prefWidth="75.0" text="Quý" />

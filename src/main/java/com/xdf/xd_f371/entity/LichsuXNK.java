@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -44,6 +46,10 @@ public class LichsuXNK {
     private String chungloaixd;
     @Column(name = "quy_id")
     private int quyId;
+    @Column(name = "sd")
+    private LocalDate sd;
+
+
 
     @Column(insertable = false, updatable = false)
     private String tontruoc_str;
@@ -57,7 +63,7 @@ public class LichsuXNK {
     private String createtime_str;
 
     public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
-                     String dvn, String dvx, String chungloaixd,int quyId) {
+                     String dvn, String dvx, String chungloaixd, LocalDate sd) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;
         this.tontruoc = tontruoc;
@@ -69,14 +75,14 @@ public class LichsuXNK {
         this.dvn = dvn;
         this.dvx = dvx;
         this.chungloaixd = chungloaixd;
-        this.quyId = quyId;
+        this.sd = sd;
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
         this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
     }
     public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
-                     String dvn, String dvx, String chungloaixd, int quyId, LocalDateTime createTime) {
+                     String dvn, String dvx, String chungloaixd, LocalDateTime createTime, LocalDate sd) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;
         this.tontruoc = tontruoc;
@@ -88,7 +94,7 @@ public class LichsuXNK {
         this.dvn = dvn;
         this.dvx = dvx;
         this.chungloaixd = chungloaixd;
-        this.quyId = quyId;
+        this.sd = sd;
         this.createTime = createTime;
         this.createtime_str = (createTime == null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
         this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));

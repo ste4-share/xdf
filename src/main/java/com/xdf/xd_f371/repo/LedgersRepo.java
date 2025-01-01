@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
-    @Query(value = "select new com.xdf.xd_f371.dto.LedgerDto(ld.ledger_id,ld.id,l.quarter_id, l.bill_id,l.amount,l.from_date,l.end_date,l.status,l.so_km,l.giohd_md,l.giohd_tk," +
+    @Query(value = "select new com.xdf.xd_f371.dto.LedgerDto(ld.ledger_id,ld.id, l.bill_id,l.amount,l.from_date,l.end_date,l.status,l.so_km,l.giohd_md,l.giohd_tk," +
             "l.sl_tieuthu_md,l.sl_tieuthu_tk,l.dvi_nhan_id,l.dvi_xuat_id,l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.loaigiobay," +
             "l.nguoi_nhan,l.so_xe,l.lenh_so,l.nhiemvu,l.nhiemvu_id,l.tcn_id,ld.ma_xd,ld.ten_xd,ld.chung_loai,ld.chat_luong,ld.phai_xuat,ld.nhiet_do_tt,ld.ty_trong," +
             "ld.he_so_vcf,ld.don_gia,ld.loaixd_id,ld.phuongtien_id,ld.thuc_xuat, ld.thuc_xuat_tk,ld.soluong,ld.thuc_nhap," +
@@ -33,18 +33,18 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
             "case when nhap_nvdx is null then 0 else nhap_nvdx end as nhap_nvdx,\n" +
             "case when nhap_sscd is null then 0 else nhap_sscd end as nhap_sscd,\n" +
             "case when xuat_nvdx is null then 0 else xuat_nvdx end as xuat_nvdx,\n" +
-            "case when xuat_sscd is null then 0 else xuat_sscd end as xuat_sscd\n" +
+            "case when xuat_sscd is null then 0 else xuat_sscd end as xuat_sscd,from_date,end_date\n" +
             "from loaixd2 lxd left join (select loaixd_id, ma_xd,ten_xd,chung_loai,don_gia,sum(nhap_nvdx) as nhap_nvdx,\n" +
-            "sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd\n" +
+            "sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd, min(l.from_date) as from_date,max(l.end_date) as end_date \n" +
             "from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
             "where status like 'ACTIVE' and l.from_date between :sd and :ed \n" +
             "group by 1,2,3,4,5) a on lxd.id=a.loaixd_id",nativeQuery = true)
     List<Object[]> findAllInvByQuarter(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
     @Modifying
-    @Query(value = "update ledgers set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid) and quarter_id=:qid", nativeQuery = true)
-    void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code,@Param("qid") int qId);
+    @Query(value = "update ledgers set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid) and l.from_date between :sd and :ed", nativeQuery = true)
+    void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code,@Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
     @Modifying
-    @Query(value = "update ledgers set status='IN_ACTIVE' where bill_id=:so and loai_phieu like :lp and quarter_id=:qid", nativeQuery = true)
-    void inactiveLedgers(@Param("so") int so,@Param("lp") String lp,@Param("qid") int qId);
+    @Query(value = "update ledgers set status='IN_ACTIVE' where bill_id=:so and loai_phieu like :lp and l.from_date between :sd and :ed", nativeQuery = true)
+    void inactiveLedgers(@Param("so") int so,@Param("lp") String lp,@Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
 
 }

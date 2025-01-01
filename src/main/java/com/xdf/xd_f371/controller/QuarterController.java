@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.InventoryService;
@@ -60,7 +61,7 @@ public class QuarterController implements Initializable {
         if (DialogMessage.callAlert()== ButtonType.OK){
             if (isValid()) {
                 try {
-                    Quarter q = new Quarter(s_time.getValue(),e_time.getValue(),String.valueOf(e_time.getValue().getYear()),quy.getText());
+                    Quarter q = new Quarter(s_time.getValue(),e_time.getValue(),String.valueOf(e_time.getValue().getYear()),quy.getText(), StatusCons.RECORDING.getName());
                     inventoryService.firstTimeSetup(q);
                     quarterStage = new Stage();
                     quarterStage.setOnCloseRequest(event -> {

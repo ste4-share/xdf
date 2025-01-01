@@ -77,7 +77,8 @@ public class NhapController extends CommonFactory implements Initializable {
         setUpForSearchCompleteTion();
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
-            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getId()).orElse(null);
+            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getStart_date(),
+                    DashboardController.findByTime.getEnd_date()).orElseThrow();
             if (i!=null){
                 setTonKhoLabel(i.getNhap_nvdx()-i.getXuat_nvdx());
             }
@@ -222,7 +223,6 @@ public class NhapController extends CommonFactory implements Initializable {
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
         ledger.setBill_id(Integer.parseInt(soTf.getText().trim().isEmpty() ? "0" : soTf.getText()));
-        ledger.setQuarter_id(DashboardController.findByTime.getId());
         ledger.setAmount(ls_socai.stream().mapToLong(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
@@ -261,7 +261,8 @@ public class NhapController extends CommonFactory implements Initializable {
     public void changedItemLoaiXd(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
-            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getId()).orElseThrow();
+            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getStart_date(),
+                    DashboardController.findByTime.getEnd_date()).orElseThrow();
             int tk = i.getNhap_nvdx()-i.getXuat_nvdx();
             LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
             if (ld!=null){
@@ -294,9 +295,10 @@ public class NhapController extends CommonFactory implements Initializable {
     public void soValid(KeyEvent keyEvent) {
         if(!soTf.getText().isEmpty()){
             validateToSettingStyle(soTf);
-            if (current_ledger_list.stream().filter(i->i.getBill_id()==Integer.parseInt(soTf.getText())).findFirst().isPresent()){
+            if (Common.isNumber(soTf.getText())){
+                soTf.setStyle(null);
+            }else{
                 soTf.setStyle(styleErrorField);
-                notification.setText("Số đã được thêm vào sổ cái, vui lòng nhập số phiếu khác.");
             }
         }
     }
