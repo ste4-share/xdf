@@ -20,7 +20,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
     Optional<Inventory> findByUnique(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed,@Param("p") int p);
     @Query(value = "select max(id) as id,petro_id,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd," +
             "sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd, sum(xuat_nvdx) as xuat_nvdx," +
-            "sum(xuat_sscd) as xuat_sscd, max(status) as status,max(price) as price, max(create_at) as create_at " +
+            "sum(xuat_sscd) as xuat_sscd, max(status) as status,max(price) as price, max(create_at) as create_at,min(sd) as sd,max(ed) as ed " +
             "from inventory where petro_id=:p and sd >= :std and sd <= :en group by 2 order by price",nativeQuery = true)
     Optional<Inventory> findByUniqueGroupby(@Param("p") int petro_id,@Param("std") LocalDate sd, @Param("en") LocalDate ed);
     @Query(value = "select i.petro_id,maxd,tenxd,loai,max(i.tdk_nvdx) as tdk_nvdx,max(i.tdk_sscd),\n" +

@@ -59,7 +59,7 @@ public class Inventory {
         this.ed = ed;
     }
 
-    public Inventory(int petro_id, int quarter_id, String status) {
+    public Inventory(int petro_id, String status) {
         this.petro_id = petro_id;
         this.status = status;
     }

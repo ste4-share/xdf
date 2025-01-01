@@ -81,7 +81,7 @@ public class InventoryService {
     public void firstTimeSetup(Quarter q){
         Quarter quarter = quarterRepository.save(q);
         loaiXangDauRepo.findAll().forEach(x->{
-            inventoryRepo.save(new Inventory(x.getId(),quarter.getId(),MucGiaEnum.OUT_STOCK_ALL.getStatus()));
+            inventoryRepo.save(new Inventory(x.getId(),MucGiaEnum.OUT_STOCK_ALL.getStatus()));
         });
     }
 }

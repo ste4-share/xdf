@@ -78,7 +78,7 @@ public class NhapController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
             Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getStart_date(),
-                    DashboardController.findByTime.getEnd_date()).orElseThrow();
+                    DashboardController.findByTime.getEnd_date()).orElse(null);
             if (i!=null){
                 setTonKhoLabel(i.getNhap_nvdx()-i.getXuat_nvdx());
             }
@@ -262,15 +262,17 @@ public class NhapController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
             Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getStart_date(),
-                    DashboardController.findByTime.getEnd_date()).orElseThrow();
-            int tk = i.getNhap_nvdx()-i.getXuat_nvdx();
-            LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
-            if (ld!=null){
-                setTonKhoLabel(tk+ld.getSoluong());
-            }else{
-                setTonKhoLabel(tk);
+                    DashboardController.findByTime.getEnd_date()).orElse(null);
+            if (i!=null){
+                int tk = i.getNhap_nvdx()-i.getXuat_nvdx();
+                LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
+                if (ld!=null){
+                    setTonKhoLabel(tk+ld.getSoluong());
+                }else{
+                    setTonKhoLabel(tk);
+                }
+                chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
             }
-            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
         }
     }
     @FXML
