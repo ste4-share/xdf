@@ -263,7 +263,7 @@ public class NhapController extends CommonFactory implements Initializable {
     public void changedItemLoaiXd(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         Quarter q = DashboardController.findByTime;
-        if (lxd!=null && q!=null){
+        if (lxd!=null){
             if (q!=null){
                 Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), q.getStart_date(),q.getEnd_date()).orElse(null);
                 if (i!=null){

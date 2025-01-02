@@ -45,7 +45,7 @@ public interface LoaiXangDauRepo extends JpaRepository<LoaiXangDau, Integer> {
             "join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
             "left join (select ld.loaixd_id as xd_id,don_gia,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd, sum(xuat_nvdx) as xuat_nvdx,\n" +
             "sum(xuat_sscd) as xuat_sscd,min(l.from_date) as from_date,max(l.end_date) as end_date\n" +
-            "from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
+            "from ledgers l join ledger_details ld on l.id=ld.ledger_id where l.from_date < :sd \n" +
             "group by 1,2) a on lxd.id=a.xd_id",nativeQuery = true)
     List<Object[]> findAllByLedgerBefore(@Param("sd") LocalDate sd);
 
