@@ -1,17 +1,22 @@
 package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.MucGiaEnum;
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.InvDto;
+import com.xdf.xd_f371.dto.LoaiXangDauDto;
+import com.xdf.xd_f371.dto.LoaiXdLedgerDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
+import com.xdf.xd_f371.entity.Ledger;
+import com.xdf.xd_f371.entity.LoaiXangDau;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.repo.InventoryRepo;
 import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
+import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -63,7 +68,7 @@ public class InventoryService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void saveInvWhenSwitchQuarter(Quarter q){
+    public void saveInvWhenSwitchQuarter(Quarter q) {
         List<InvDto> previous_invs = mapToInvDto(ledgersRepo.findAllInvByQuarter(q.getStart_date(),q.getEnd_date()));
         if (!previous_invs.isEmpty()){
             previous_invs.forEach(x->{
@@ -83,5 +88,46 @@ public class InventoryService {
         loaiXangDauRepo.findAll().forEach(x->{
             inventoryRepo.save(new Inventory(x.getId(),MucGiaEnum.OUT_STOCK_ALL.getStatus()));
         });
+    }
+    public List<LoaiXdLedgerDto> mapLoaixdLedger(List<Object[]> results) {
+        return results.stream()
+                .map(row -> new LoaiXdLedgerDto((int) row[0],(String) row[1],
+                        ((BigDecimal) row[2]).longValue(),((BigDecimal) row[3]).longValue(),
+                        ((BigDecimal) row[4]).longValue(),((BigDecimal) row[5]).longValue(),
+                        ((BigDecimal) row[6]).longValue(), (LocalDate) row[9], (LocalDate) row[10]))
+                .collect(Collectors.toList());
+    }
+    public void changeRecordingRangeTime(Quarter q){
+        quarterRepository.updateStatus(StatusCons.DONE.getName());
+        quarterRepository.updateStatusById(q.getId(),StatusCons.RECORDING.getName());
+        List<Ledger> ledgers = ledgersRepo.findAllByInDateRange(q.getStart_date(),q.getEnd_date());
+        List<LoaiXdLedgerDto> beforeRangeLedger = mapLoaixdLedger(loaiXangDauRepo.findAllByLedgerBefore(q.getStart_date()));
+        Optional<Ledger> firstLedger = ledgersRepo.findFirstLedger();
+        if (beforeRangeLedger.isEmpty()){
+            List<LoaiXangDau> lxdList = loaiXangDauRepo.findAll();
+            if (!lxdList.isEmpty()){
+                lxdList.forEach(x->{
+                    inventoryRepo.save(new Inventory(x.getId(),0,0,0,0,0,0,MucGiaEnum.OUT_STOCK_ALL.getStatus(), 0,
+                            null,null));
+                });
+            }else{
+                DialogMessage.errorShowing("Danh sách Xăng dầu trống. Vui lòng nhập thêm tại mục tồn kho.");
+            }
+        }else{
+            beforeRangeLedger.forEach(x->{
+                long tdk_nvdx = x.getNhap_nvdx()-x.getXuat_nvdx();
+                long tdk_sscd = x.getNhap_sscd()-x.getXuat_sscd();
+                if (tdk_sscd==0 && tdk_nvdx==0) {
+                    inventoryRepo.save(new Inventory(x.getXd_id(), 0,0,
+                            0,0,0,0,
+                            MucGiaEnum.OUT_STOCK_ALL.getStatus(),Integer.parseInt(String.valueOf(x.getPrice())), x.getEd(),x.getEd()));
+                } else {
+                    inventoryRepo.save(new Inventory(x.getXd_id(), Integer.parseInt(String.valueOf(tdk_nvdx)),Integer.parseInt(String.valueOf(tdk_sscd)),
+                            0,0,0,0,
+                            MucGiaEnum.OUT_STOCK_ALL.getStatus(),Integer.parseInt(String.valueOf(x.getPrice())), x.getEd(),x.getEd()));
+                }
+
+            });
+        }
     }
 }

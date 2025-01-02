@@ -42,5 +42,4 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "group by 1,2,3,4,cl.priority_1,cl.priority_2,cl.priority_3\n" +
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkho(@Param("std") LocalDate sd, @Param("end") LocalDate ed);
-
 }

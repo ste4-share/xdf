@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
@@ -28,6 +29,12 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
     @Query(value = "select * from ledgers l where l.loai_phieu like :lp and l.from_date between :sd and :ed", nativeQuery = true)
     List<Ledger> findAllByQuarter(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed,@Param("lp") String lp);
+    @Query(value = "select * from ledgers l where l.from_date between :sd and :ed", nativeQuery = true)
+    List<Ledger> findAllByInDateRange(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
+    @Query(value = "select * from ledgers l where l.from_date < :sd", nativeQuery = true)
+    List<Ledger> findAllByBeforeDateRange(@Param("sd") LocalDate sd);
+    @Query(value = "select * from ledgers l where limit 1 order by l.from_date ASC", nativeQuery = true)
+    Optional<Ledger> findFirstLedger();
     @Query(value = "select lxd.id,maxd,tenxd,petroleum_type_id,\n" +
             "case when don_gia is null then 0 else don_gia end as don_gia,\n" +
             "case when nhap_nvdx is null then 0 else nhap_nvdx end as nhap_nvdx,\n" +
