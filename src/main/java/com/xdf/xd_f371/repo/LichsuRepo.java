@@ -13,8 +13,6 @@ import java.util.List;
 public interface LichsuRepo extends JpaRepository<LichsuXNK,Integer> {
     @Query(value = "Select * from lichsuxnk order by timestamp DESC", nativeQuery = true)
     List<LichsuXNK> findAll();
-    @Query(value = "Select new com.xdf.xd_f371.entity.LichsuXNK(ls.ten_xd, ls.loai_phieu,ls.tontruoc, ls.soluong, ls.tonsau, ls.gia, ls.type, " +
-            "ls.so, ls.dvn, ls.dvx, ls.chungloaixd,ls.createTime,ls.sd) " +
-            "from LichsuXNK ls where ls.sd between :sd and :ed order by ls.createTime DESC")
+    @Query(value = "Select * from LichsuXNK ls where ls.sd between :sd and :ed order by ls.timestamp DESC",nativeQuery = true)
     List<LichsuXNK> findAllByQuyid(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
 }

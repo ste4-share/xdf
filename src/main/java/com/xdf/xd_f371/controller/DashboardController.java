@@ -71,7 +71,7 @@ public class DashboardController implements Initializable {
     @FXML
     private ComboBox<String> cbb_loaiphieu_filter;
     @FXML
-    private Label lb_from, lb_to,datetime_showing,preUser;
+    private Label lb_from, lb_to,datetime_showing,preUser,errorlb;
     @FXML
     private Pagination pagination_tbnxt;
     @FXML
@@ -102,9 +102,8 @@ public class DashboardController implements Initializable {
         tbTTNX.setPrefHeight(screenHeigh-300);
         Common.hoverButton(importBtn ,"#040cb5");
         Common.hoverButton(exportBtn,"#27b50e");
-
+        isInitQuarter();
         preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
-        so_select=0L;
         getCurrentQuarter();
         ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime);
         getCurrentTiming();
@@ -116,6 +115,17 @@ public class DashboardController implements Initializable {
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report,user_menu);
         startUpdatingLedgerData();
     }
+
+    private void isInitQuarter() {
+        errorlb.setPrefWidth(300);
+        Optional<Quarter> q = quarterService.findByCurrentTime(LocalDate.now());
+        if (q.isPresent()){
+            errorlb.setText(null);
+        }else{
+            errorlb.setText("Chưa tạo quý cho hiện tại");
+        }
+    }
+
     private void startUpdatingLedgerData() {
         LedgerUpdateService service = new LedgerUpdateService();
         service.setOnSucceeded(event -> {
@@ -215,7 +225,7 @@ public class DashboardController implements Initializable {
         if (mouseEvent.getClickCount()==2){
             MiniLedgerDto m = tbTTNX.getSelectionModel().getSelectedItem();
             if (m!=null){
-                so_select = (long) m.getSo();
+                so_select = (long) m.getId();
                 lp = m.getLoai_phieu();
                 Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT",StageStyle.UTILITY);
                 updateData();
@@ -225,23 +235,9 @@ public class DashboardController implements Initializable {
     private void getCurrentQuarter(){
         Optional<Quarter> q = quarterService.findByStatus(StatusCons.RECORDING.getName());
         if (q.isPresent()){
-            if (q.get().getEnd_date().isBefore(LocalDate.now())){
-                DialogMessage.message("Thông báo", "Vui lòng tạo quý cho nam: " + Year.now().getValue(),
-                        "HẾt quý", Alert.AlertType.CONFIRMATION);
-                primaryStage = new Stage();
-                Common.openNewStage("quarter.fxml", primaryStage,null, StageStyle.UTILITY);
-                updateData();
-            }else{
-                findByTime = q.get();
-                lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-                lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-            }
-        } else {
-            DialogMessage.message("Thông báo", "Vui lòng tạo quý cho nam: " + Year.now().getValue(),
-                    "HẾt quý", Alert.AlertType.CONFIRMATION);
-            primaryStage = new Stage();
-            Common.openNewStage("quarter.fxml", primaryStage,null, StageStyle.UTILITY);
-            updateData();
+            findByTime = q.get();
+            lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+            lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         }
     }
 

@@ -7,7 +7,6 @@ import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.dto.LoaiXdLedgerDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
-import com.xdf.xd_f371.entity.Ledger;
 import com.xdf.xd_f371.entity.LoaiXangDau;
 import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.repo.InventoryRepo;
@@ -17,10 +16,13 @@ import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,8 +53,11 @@ public class InventoryService {
     public Inventory findById(int id){
         return inventoryRepo.findById(id).orElse(null);
     }
-    public List<TonkhoDto> getAllTonkho(LocalDate sd, LocalDate ed){
-        return mapToTonkhoDto(inventoryRepo.getAllTonkho(sd,ed));
+    public List<TonkhoDto> getAllTonkho(Quarter q){
+        if (q!=null){
+            return mapToTonkhoDto(inventoryRepo.getAllTonkho(q.getStart_date(),q.getEnd_date()));
+        }
+        return new ArrayList<>();
     }
     public List<TonkhoDto> mapToTonkhoDto(List<Object[]> results) {
         return results.stream()
@@ -90,19 +95,29 @@ public class InventoryService {
         });
     }
     public List<LoaiXdLedgerDto> mapLoaixdLedger(List<Object[]> results) {
-        return results.stream()
-                .map(row -> new LoaiXdLedgerDto((int) row[0],(String) row[1],
-                        ((BigDecimal) row[2]).longValue(),((BigDecimal) row[3]).longValue(),
-                        ((BigDecimal) row[4]).longValue(),((BigDecimal) row[5]).longValue(),
-                        ((BigDecimal) row[6]).longValue(), (LocalDate) row[9], (LocalDate) row[10]))
-                .collect(Collectors.toList());
+        List<LoaiXdLedgerDto> list = new ArrayList<>();
+
+        results.forEach(x->{
+            Date s = (Date) x[7];
+            Date e = (Date) x[8];
+            LocalDate seven = (s==null) ? LocalDate.now() : s.toLocalDate();
+            LocalDate eight = (e==null) ? LocalDate.now() : e.toLocalDate();
+            list.add(new LoaiXdLedgerDto((int) x[0],(String) x[1],
+                    ((BigDecimal) x[2]).longValue(),((BigDecimal) x[3]).longValue(),
+                    ((BigDecimal) x[4]).longValue(),((BigDecimal) x[5]).longValue(),
+                    (int) x[6], seven, eight));
+        });
+        return list;
     }
-    public void changeRecordingRangeTime(Quarter q){
+    @Transactional
+    public void changeRecordingRangeTime(Quarter q2){
+        Quarter q = quarterRepository.save(q2);
         quarterRepository.updateStatus(StatusCons.DONE.getName());
         quarterRepository.updateStatusById(q.getId(),StatusCons.RECORDING.getName());
-        List<Ledger> ledgers = ledgersRepo.findAllByInDateRange(q.getStart_date(),q.getEnd_date());
+//        List<Ledger> ledgers = ledgersRepo.findAllByInDateRange(q.getStart_date(),q.getEnd_date());
         List<LoaiXdLedgerDto> beforeRangeLedger = mapLoaixdLedger(loaiXangDauRepo.findAllByLedgerBefore(q.getStart_date()));
-        Optional<Ledger> firstLedger = ledgersRepo.findFirstLedger();
+//        Optional<Ledger> firstLedger = ledgersRepo.findFirstLedger();
+        inventoryRepo.deleteAll();
         if (beforeRangeLedger.isEmpty()){
             List<LoaiXangDau> lxdList = loaiXangDauRepo.findAll();
             if (!lxdList.isEmpty()){

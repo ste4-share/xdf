@@ -29,8 +29,8 @@ public class Quarter{
 
     public Quarter(LocalDate start_date, LocalDate end_date, String year, String index,String status) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        this.start_date = LocalDate.parse(start_date.toString(), formatter) ;
-        this.end_date = LocalDate.parse(end_date.toString(), formatter) ;;
+        this.start_date = start_date ;
+        this.end_date = end_date ;
         this.year = year;
         this.index = index;
         this.status = status;
@@ -39,8 +39,8 @@ public class Quarter{
     public Quarter(int id, LocalDate start_date, LocalDate end_date, String year,String index,String status) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         this.id = id;
-        this.start_date = LocalDate.parse(start_date.toString(), formatter) ;
-        this.end_date = LocalDate.parse(end_date.toString(), formatter) ;
+        this.start_date = start_date ;
+        this.end_date =end_date ;
         this.year = year;
         this.index = index;
         this.status = status;

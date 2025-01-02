@@ -19,14 +19,19 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
             "l.sl_tieuthu_md,l.sl_tieuthu_tk,l.dvi_nhan_id,l.dvi_xuat_id,l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.loaigiobay," +
             "l.nguoi_nhan,l.so_xe,l.lenh_so,l.nhiemvu,l.nhiemvu_id,l.tcn_id,ld.ma_xd,ld.ten_xd,ld.chung_loai,ld.chat_luong,ld.phai_xuat,ld.nhiet_do_tt,ld.ty_trong," +
             "ld.he_so_vcf,ld.don_gia,ld.loaixd_id,ld.phuongtien_id,ld.thuc_xuat, ld.thuc_xuat_tk,ld.soluong,ld.thuc_nhap," +
-            "ld.phai_nhap,ld.haohut_sl,l.loainv,ld.nl_gio,ld.nl_km,ld.soluong_px) from Ledger l join l.ledgerDetails ld where l.bill_id=:bId and l.loai_phieu like :lp and l.from_date between :sd and :ed ")
-    List<LedgerDto> findLedgerByBillIdAndQuarter_id(@Param("bId") Long billId,@Param("sd") LocalDate sd,@Param("ed") LocalDate ed,@Param("lp") String lp);
+            "ld.phai_nhap,ld.haohut_sl,l.loainv,ld.nl_gio,ld.nl_km,ld.soluong_px) from Ledger l join l.ledgerDetails ld where l.id=:i")
+    List<LedgerDto> findLedgerByID(@Param("i") Long billId);
 
-    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
+    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.id,l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
             "a.username, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join " +
             "l.ledgerDetails ld join l.accounts a where l.status like :s and l.from_date between :sd and :ed " +
-            "group by 1,2,3,4,5,6,7 order by l.timestamp desc")
+            "group by 1,2,3,4,5,6,7,8 order by l.timestamp desc")
     List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
+    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.id,l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
+            "a.username, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join " +
+            "l.ledgerDetails ld join l.accounts a where l.status like :s " +
+            "group by 1,2,3,4,5,6,7,8 order by l.timestamp desc")
+    List<MiniLedgerDto> findAllInterfaceLedger(@Param("s") String s);
     @Query(value = "select * from ledgers l where l.loai_phieu like :lp and l.from_date between :sd and :ed", nativeQuery = true)
     List<Ledger> findAllByQuarter(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed,@Param("lp") String lp);
     @Query(value = "select * from ledgers l where l.from_date between :sd and :ed", nativeQuery = true)

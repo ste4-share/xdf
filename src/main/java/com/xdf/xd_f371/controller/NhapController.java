@@ -78,9 +78,9 @@ public class NhapController extends CommonFactory implements Initializable {
 
         setUpForSearchCompleteTion();
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
-        if (lxd!=null){
-            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getStart_date(),
-                    DashboardController.findByTime.getEnd_date()).orElse(null);
+        Quarter q = DashboardController.findByTime;
+        if (lxd!=null && q!=null){
+            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(),q.getStart_date(),q.getEnd_date()).orElse(null);
             if (i!=null){
                 setTonKhoLabel(i.getNhap_nvdx()-i.getXuat_nvdx());
             }
@@ -262,19 +262,23 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     public void changedItemLoaiXd(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
-        if (lxd!=null){
-            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), DashboardController.findByTime.getStart_date(),
-                    DashboardController.findByTime.getEnd_date()).orElse(null);
-            if (i!=null){
-                int tk = i.getNhap_nvdx()-i.getXuat_nvdx();
-                LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
-                if (ld!=null){
-                    setTonKhoLabel(tk+ld.getSoluong());
-                }else{
-                    setTonKhoLabel(tk);
+        Quarter q = DashboardController.findByTime;
+        if (lxd!=null && q!=null){
+            if (q!=null){
+                Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), q.getStart_date(),q.getEnd_date()).orElse(null);
+                if (i!=null){
+                    int tk = i.getNhap_nvdx()-i.getXuat_nvdx();
+                    LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
+                    if (ld!=null){
+                        setTonKhoLabel(tk+ld.getSoluong());
+                    }else{
+                        setTonKhoLabel(tk);
+                    }
                 }
-                chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
+            }else{
+                setTonKhoLabel(0);
             }
+            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
         }
     }
     @FXML

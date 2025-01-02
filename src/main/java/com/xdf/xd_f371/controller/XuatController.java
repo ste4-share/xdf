@@ -461,16 +461,19 @@ public class XuatController extends CommonFactory implements Initializable {
         }
     }
     private void mapPrice(int xd_id){
-        List<Inventory> inventoryList = inventoryService.findByPetro_idAndDateStatus(xd_id,DashboardController.findByTime.getStart_date(),
-                DashboardController.findByTime.getEnd_date(),MucGiaEnum.IN_STOCK.getStatus());
-        if (!inventoryList.isEmpty()){
-            cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().map(Inventory::getPrice).toList()));
-            cbb_dongia.getSelectionModel().selectFirst();
-            Inventory i = inventoryList.stream().filter(x->x.getPrice()==cbb_dongia.getSelectionModel().getSelectedItem()).findFirst().orElse(null);
-            if (i != null){
-                setInv_lb(i.getNhap_nvdx()-i.getXuat_nvdx());
+        Quarter q = DashboardController.findByTime;
+        if (q!=null){
+            List<Inventory> inventoryList = inventoryService.findByPetro_idAndDateStatus(xd_id,q.getStart_date(),q.getEnd_date(),MucGiaEnum.IN_STOCK.getStatus());
+            if (!inventoryList.isEmpty()){
+                cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().map(Inventory::getPrice).toList()));
+                cbb_dongia.getSelectionModel().selectFirst();
+                Inventory i = inventoryList.stream().filter(x->x.getPrice()==cbb_dongia.getSelectionModel().getSelectedItem()).findFirst().orElse(null);
+                if (i != null){
+                    setInv_lb(i.getNhap_nvdx()-i.getXuat_nvdx());
+                }
             }
         }
+
     }
     private void setCellValueFactoryXuat(){
         setcellFactory("phaixuat_str","thucxuat_str");

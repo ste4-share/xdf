@@ -3,6 +3,7 @@ package com.xdf.xd_f371.repo;
 import com.xdf.xd_f371.entity.Quarter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,10 +22,10 @@ public interface QuarterRepository extends JpaRepository<Quarter, Integer> {
     List<Quarter> findByYear(@Param("y") String year);
     @Query(value = "select * from quarter where status like :y limit 1",nativeQuery = true)
     Optional<Quarter> findByStatus(@Param("y") String s);
-    @Qualifier
+    @Modifying
     @Query(value = "update quarter set status=:s",nativeQuery = true)
     void updateStatus(@Param("s") String s);
-    @Qualifier
+    @Modifying
     @Query(value = "update quarter set status=:s where id=:i",nativeQuery = true)
     void updateStatusById(@Param("i") int id,@Param("s") String s);
     @Query(value = "select * from quarter where year like :y and index like :i",nativeQuery = true)

@@ -40,6 +40,7 @@ public interface LoaiXangDauRepo extends JpaRepository<LoaiXangDau, Integer> {
             "case when nhap_sscd is null then 0 else nhap_sscd end,\n" +
             "case when xuat_nvdx is null then 0 else xuat_nvdx end,\n" +
             "case when xuat_sscd is null then 0 else xuat_sscd end,\n" +
+            "case when don_gia is null then 0 else don_gia end,\n" +
             "from_date,end_date from loaixd2 lxd \n" +
             "join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
             "left join (select ld.loaixd_id as xd_id,don_gia,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd, sum(xuat_nvdx) as xuat_nvdx,\n" +

@@ -12,16 +12,16 @@ import java.util.Optional;
 
 @Repository
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
-    @Query(value = "select * from inventory where petro_id=:petro_id and sd >= :std and sd <= :end order by price",nativeQuery = true)
+    @Query(value = "select * from inventory where petro_id=:petro_id and sd between :std and :end order by price",nativeQuery = true)
     List<Inventory> findByPetro_idAndDate(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed);
-    @Query(value = "select * from inventory where petro_id=:petro_id and sd >= :std and sd <= :end and status like :st order by price ",nativeQuery = true)
+    @Query(value = "select * from inventory where petro_id=:petro_id and sd between :std and :end and status like :st order by price ",nativeQuery = true)
     List<Inventory> findByPetro_idAndDateStatus(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed,@Param("st") String st);
-    @Query(value = "select * from inventory where petro_id=:petro_id and sd >= :std and sd <= :end and price=:p order by price",nativeQuery = true)
+    @Query(value = "select * from inventory where petro_id=:petro_id and sd between :std and :end and price=:p order by price limit 1",nativeQuery = true)
     Optional<Inventory> findByUnique(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed,@Param("p") int p);
     @Query(value = "select max(id) as id,petro_id,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd," +
             "sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd, sum(xuat_nvdx) as xuat_nvdx," +
             "sum(xuat_sscd) as xuat_sscd, max(status) as status,max(price) as price, max(create_at) as create_at,min(sd) as sd,max(ed) as ed " +
-            "from inventory where petro_id=:p and sd >= :std and sd <= :en group by 2 order by price",nativeQuery = true)
+            "from inventory where petro_id=:p and sd between :std and :en group by 2 order by price limit 1",nativeQuery = true)
     Optional<Inventory> findByUniqueGroupby(@Param("p") int petro_id,@Param("std") LocalDate sd, @Param("en") LocalDate ed);
     @Query(value = "select i.petro_id,maxd,tenxd,loai,max(i.tdk_nvdx) as tdk_nvdx,max(i.tdk_sscd),\n" +
             "case when max(a.nhap_nvdx) is null then 0 else max(a.nhap_nvdx) end as nhap_nvdx,\n" +
@@ -34,7 +34,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "from inventory i\n" +
             "left join (SELECT loaixd_id,ten_xd,chung_loai,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd \n" +
             "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-            "where status like 'ACTIVE' and l.from_date >= :std and l.from_date <= :end\n" +
+            "where status like 'ACTIVE' and l.from_date between :std and :end\n" +
             "group by 1,2,3) a on i.petro_id=a.loaixd_id\n" +
             "left join loaixd2 lxd on lxd.id=i.petro_id\n" +
             "left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +

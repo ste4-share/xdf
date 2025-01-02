@@ -291,6 +291,11 @@
                         <Font name="Cambria" size="12.0" />
                      </font>
                   </Hyperlink>
+                  <Label fx:id="errorlb" prefHeight="17.0" prefWidth="89.0" textFill="RED">
+                     <font>
+                        <Font name="Cambria Italic" size="12.0" />
+                     </font>
+                  </Label>
                </children>
                <VBox.margin>
                   <Insets left="10.0" />

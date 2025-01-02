@@ -44,22 +44,18 @@ public class LichsuXNK {
     private String dvx;
     @Column(name = "chungloaixd")
     private String chungloaixd;
-    @Column(name = "quy_id")
-    private int quyId;
     @Column(name = "sd")
     private LocalDate sd;
 
-
-
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String tontruoc_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String gia_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String soluong_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String tonsau_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String createtime_str;
 
     public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
@@ -101,5 +97,25 @@ public class LichsuXNK {
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
         this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
+    }
+    public LichsuXNK(LichsuXNK ls) {
+        this.ten_xd = ls.getTen_xd();
+        this.loai_phieu = ls.getLoai_phieu();
+        this.tontruoc = ls.getTontruoc();
+        this.soluong = ls.getSoluong();
+        this.tonsau = ls.getTonsau();
+        this.gia = ls.getGia();
+        this.type = ls.getType();
+        this.so = ls.getSo();
+        this.dvn = ls.getDvn();
+        this.dvx = ls.getDvx();
+        this.chungloaixd = ls.getChungloaixd();
+        this.sd = ls.getSd();
+        this.createTime = ls.getCreateTime();
+        this.createtime_str = (createTime == null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+        this.tontruoc_str = TextToNumber.textToNum(String.valueOf(ls.getTontruoc()));
+        this.tonsau_str = TextToNumber.textToNum(String.valueOf(ls.getTonsau()));
+        this.soluong_str = TextToNumber.textToNum(String.valueOf(ls.getSoluong()));
+        this.gia_str = TextToNumber.textToNum(String.valueOf(ls.getGia()));
     }
 }
