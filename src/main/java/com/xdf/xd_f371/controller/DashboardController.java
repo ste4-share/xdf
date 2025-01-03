@@ -51,7 +51,6 @@ public class DashboardController implements Initializable {
     public static Stage primaryStage;
     public static Stage xuatStage ;
     public static Stage ctStage;
-    public static Quarter findByTime;
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
     public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();

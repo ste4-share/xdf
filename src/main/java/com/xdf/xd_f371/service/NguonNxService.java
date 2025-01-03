@@ -1,10 +1,10 @@
 package com.xdf.xd_f371.service;
 
-import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +36,12 @@ public class NguonNxService {
     public NguonNx save(NguonNx nguonNx){
         return nguonNxRepo.save(nguonNx);
     }
-
+    @Transactional
     public void saveNnxAndLedger(NguonNx n, TrucThuoc tt){
         try {
             nguonNxRepo.save(new NguonNx(n.getId(),n.getTen(),n.getStatus(),
                     n.getCode(),n.getTructhuoc_id()));
-            ledgersRepo.updateTrucThuocFromNxx(n.getId(),tt.getType(), DashboardController.findByTime.getStart_date(),DashboardController.findByTime.getEnd_date());
+            ledgersRepo.updateTrucThuocFromNxx(n.getId(),tt.getType());
         }catch (Exception e){
             e.printStackTrace();
         }

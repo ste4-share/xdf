@@ -59,7 +59,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "from inventory i\n" +
             "left join (SELECT loaixd_id,ten_xd,chung_loai,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd \n" +
             "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-            "where status like 'ACTIVE' and l.from_date between :std and :end\n" +
+            "where status like 'ACTIVE'\n" +
             "group by 1,2,3) a on i.petro_id=a.loaixd_id\n" +
             "left join loaixd2 lxd on lxd.id=i.petro_id\n" +
             "left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +

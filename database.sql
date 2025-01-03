@@ -5,7 +5,7 @@
 -- Dumped from database version 14.13
 -- Dumped by pg_dump version 16.4
 
--- Started on 2025-01-03 14:33:48
+-- Started on 2025-01-03 17:45:18
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -373,7 +373,9 @@ CREATE TABLE public.accounts (
     passwd text,
     color character varying(10),
     status character varying(10),
-    create_at timestamp without time zone DEFAULT now()
+    create_at timestamp without time zone DEFAULT now(),
+    sd date,
+    ed date
 );
 
 
@@ -1551,9 +1553,9 @@ ALTER TABLE ONLY public.tructhuoc ALTER COLUMN id SET DEFAULT nextval('public.tr
 -- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.accounts (id, username, surname, roles, passwd, color, status, create_at) FROM stdin;
-1	user_1	chain	USER	7c4a8d09ca3762af61e59520943dc26494f8941b	#ffffff	ACTIVE	2024-12-22 00:00:00
-2	admin	tga	ADMIN	5dd4ebdac62609c834f7768f02286b798bd82a38	#ffffff	ACTIVE	2024-12-22 00:00:00
+COPY public.accounts (id, username, surname, roles, passwd, color, status, create_at, sd, ed) FROM stdin;
+1	user_1	chain	USER	7c4a8d09ca3762af61e59520943dc26494f8941b	#ffffff	ACTIVE	2024-12-22 00:00:00	\N	\N
+2	admin	tga	ADMIN	5dd4ebdac62609c834f7768f02286b798bd82a38	#ffffff	ACTIVE	2024-12-22 00:00:00	\N	\N
 \.
 
 
@@ -2216,7 +2218,6 @@ COPY public.phuongtien_nhiemvu (id, phuongtien_id, nvu_id) FROM stdin;
 --
 
 COPY public.quarter (id, start_date, end_date, year, index, status) FROM stdin;
-52	2024-12-29	2025-01-03	2025	aedfads	RECORDING
 \.
 
 
@@ -2315,7 +2316,7 @@ COPY public.tructhuoc_loaiphieu (id, tructhuoc_id, loaiphieu_id) FROM stdin;
 -- Name: Inventory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Inventory_id_seq"', 1994, true);
+SELECT pg_catalog.setval('public."Inventory_id_seq"', 2097, true);
 
 
 --
@@ -2324,7 +2325,7 @@ SELECT pg_catalog.setval('public."Inventory_id_seq"', 1994, true);
 -- Name: Ledgers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Ledgers_id_seq"', 655, true);
+SELECT pg_catalog.setval('public."Ledgers_id_seq"', 658, true);
 
 
 --
@@ -2450,7 +2451,7 @@ SELECT pg_catalog.setval('public.hanmuc_nhiemvu_taubay_id_seq', 80, true);
 -- Name: lichsuxnk_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.lichsuxnk_id_seq', 1175, true);
+SELECT pg_catalog.setval('public.lichsuxnk_id_seq', 1180, true);
 
 
 --
@@ -2540,7 +2541,7 @@ SELECT pg_catalog.setval('public.phuongtien_nhiemvu_id_seq', 3, true);
 -- Name: quarter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.quarter_id_seq', 52, true);
+SELECT pg_catalog.setval('public.quarter_id_seq', 55, true);
 
 
 --
@@ -2549,7 +2550,7 @@ SELECT pg_catalog.setval('public.quarter_id_seq', 52, true);
 -- Name: so_cai_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.so_cai_id_seq', 1424, true);
+SELECT pg_catalog.setval('public.so_cai_id_seq', 1429, true);
 
 
 --
@@ -3174,7 +3175,7 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2025-01-03 14:33:49
+-- Completed on 2025-01-03 17:45:19
 
 --
 -- PostgreSQL database dump complete

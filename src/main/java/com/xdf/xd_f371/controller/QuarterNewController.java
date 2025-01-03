@@ -42,4 +42,7 @@ public class QuarterNewController implements Initializable {
     public void exit(ActionEvent actionEvent) {
         TonkhoController.tk_stage.close();
     }
+    @FXML
+    public void edAction(ActionEvent actionEvent) {
+    }
 }
