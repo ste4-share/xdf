@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -146,14 +147,26 @@ public class AddNewHanMucNhiemvu implements Initializable {
     @FXML
     public void ctAction(ActionEvent actionEvent) {
         ChitietNhiemVu ct = ct_cbb.getSelectionModel().getSelectedItem();
-        if (ct!=null){
-            Optional<HanmucNhiemvu2> exitst = hanmucNhiemvuService.findByUnique(DashboardController.findByTime.getId(),ct.getId());
-            if (exitst.isPresent()){
-                setVal(exitst.get());
-            }else {
-                xang_tf.setText("0");
-                diezel_tf.setText("0");
-                daubay_tf.setText("0");
+        HanmucNhiemvu2Dto hm = NhiemvuController.hm2;
+        if (ct!=null ){
+            if (hm!=null){
+                Optional<HanmucNhiemvu2> exitst = hanmucNhiemvuService.findByUnique(hm.getYears(),ct.getId());
+                if (exitst.isPresent()){
+                    setVal(exitst.get());
+                }else {
+                    xang_tf.setText("0");
+                    diezel_tf.setText("0");
+                    daubay_tf.setText("0");
+                }
+            }else{
+                Optional<HanmucNhiemvu2> exitst = hanmucNhiemvuService.findByUnique(LocalDate.now().getYear(),ct.getId());
+                if (exitst.isPresent()){
+                    setVal(exitst.get());
+                }else {
+                    xang_tf.setText("0");
+                    diezel_tf.setText("0");
+                    daubay_tf.setText("0");
+                }
             }
         }
     }

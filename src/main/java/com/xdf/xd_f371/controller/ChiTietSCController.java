@@ -199,7 +199,7 @@ public class ChiTietSCController implements Initializable {
     @FXML
     public void delClicked(MouseEvent mouseEvent) {
         if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-            ledgerService.inactiveLedger(ls.get(0).getBill_id(), ls.get(0).getLoai_phieu());
+            ledgerService.inactiveLedger(ls.get(0).getLedger_id());
             DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
             DashboardController.ctStage.close();
         }

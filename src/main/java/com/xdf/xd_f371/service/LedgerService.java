@@ -2,6 +2,7 @@ package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.Purpose;
+import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.LedgerDto;
@@ -58,8 +59,8 @@ public class LedgerService {
                 detail.setLedger_id(savedLedger.getId());
                 saveQuantity(detail,savedLedger);
                 ledgerDetailRepo.save(detail);
-                Quarter q = DashboardController.findByTime;
-                if (q!=null) {
+                Accounts acc = ConnectLan.pre_acc;
+                if (acc.getSd()!=null && acc.getEd()!=null) {
                     InventoryDto inventory = inventoryService.getPreInv(detail.getLoaixd_id());
                     if (inventory==null) {
                         saveHistory(ledger,detail,0L);
@@ -107,7 +108,7 @@ public class LedgerService {
         return ledgersRepo.findAllByQuarter(q.getStart_date(),q.getEnd_date(),lp);
     }
     @Transactional
-    public void inactiveLedger(int so, String loaiphieu) {
-        ledgersRepo.inactiveLedgers(so,loaiphieu, DashboardController.findByTime.getStart_date(),DashboardController.findByTime.getEnd_date());
+    public void inactiveLedger(int id ) {
+        ledgersRepo.inactiveLedgers(id);
     }
 }

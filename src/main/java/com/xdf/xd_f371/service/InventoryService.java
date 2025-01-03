@@ -11,6 +11,7 @@ import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,11 +36,11 @@ public class InventoryService {
     public Inventory findById(int id){
         return inventoryRepo.findById(id).orElse(null);
     }
-    public List<TonkhoDto> getAllTonkho(Quarter q){
-        if (q!=null){
-            return mapToTonkhoDto(inventoryRepo.getAllTonkho(q.getStart_date(),q.getEnd_date()));
-        }
-        return new ArrayList<>();
+    public List<TonkhoDto> getAllTonkho(LocalDate s,LocalDate e){
+        return mapToTonkhoDto(inventoryRepo.getAllTonkho(s,e));
+    }
+    public List<TonkhoDto> getAllTonkhoNotCondition(){
+        return mapToTonkhoDto(inventoryRepo.getAllTonkhoNotCondition());
     }
     public List<TonkhoDto> mapToTonkhoDto(List<Object[]> results) {
         return results.stream()

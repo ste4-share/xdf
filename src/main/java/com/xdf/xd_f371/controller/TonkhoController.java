@@ -2,30 +2,29 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
-import com.xdf.xd_f371.util.ComponentUtil;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javafx.stage.StageStyle;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.Year;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 @Component
@@ -48,16 +47,9 @@ public class TonkhoController implements Initializable {
     public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,
             ls_tenxd, ls_cl, ls_tontruoc,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
     @FXML
-    private TextField ls_search, search_inventory,ls_search_so;
+    private TextField ls_search, search_inventory,ls_search_so,from_date,to_date;
     @FXML
     private DatePicker s_date, e_date;
-    @FXML
-    private ComboBox<Quarter> cbb_quarter;
-    @FXML
-    private Label lb_end_date,lb_start_date;
-
-    @Autowired
-    private QuarterService quarterService;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
@@ -70,22 +62,19 @@ public class TonkhoController implements Initializable {
         tb_history.setPrefHeight(DashboardController.screenHeigh-350);
 
         pickTonKho = new TonkhoDto();
-        tkt = inventoryService.getAllTonkho(DashboardController.findByTime);
-
-        setQuarterListToCbb();
+        tkt = inventoryService.getAllTonkhoNotCondition();
         setTonkhoTongToCol();
-
-        fillDataToTableTonkho(DashboardController.findByTime);
         setLichsuTb();
-        fillDataToTableLichsu(DashboardController.findByTime);
+        fillDataToTableLichsu();
 
         searching(tkt.stream().map(TonkhoDto::getTenxd).toList());
         searching_ls(histories.stream().map(LichsuXNK::getTen_xd).toList());
     }
-    private void fillDataToTableLichsu(Quarter q) {
+    private void fillDataToTableLichsu() {
         histories = new ArrayList<>();
-        if (q!=null){
-            List<LichsuXNK> ls = lichsuService.findAllByQuyid(q.getStart_date(),q.getEnd_date());
+        Accounts acc = ConnectLan.pre_acc;
+        if (acc.getSd()!=null && acc.getEd()!=null){
+            List<LichsuXNK> ls = lichsuService.findAllByQuyid(acc.getSd(),acc.getEd());
             ls.forEach(x->histories.add(new LichsuXNK(x)));
         }else{
             List<LichsuXNK> ls = lichsuService.findAll();
@@ -96,33 +85,9 @@ public class TonkhoController implements Initializable {
     private void mapLsTb(List<LichsuXNK> ls){
         tb_history.setItems(FXCollections.observableArrayList(ls));
     }
-    private void setQuarterListToCbb(){
-        ComponentUtil.setItemsToComboBox(cbb_quarter, quarterService.findAllByYear(String.valueOf(Year.now().getValue())), Quarter::getIndex, input -> quarterService.findByIndex(input).orElse(null));
-        cbb_quarter.getSelectionModel().select(findByTime);
-        setLabel();
-    }
-    private void setLabel(){
-        lb_start_date.setTextFill(Color.rgb(33, 12, 162));
-        lb_end_date.setTextFill(Color.rgb(33, 12, 162));
-        Quarter q = cbb_quarter.getValue();
-        if (q!=null){
-            lb_end_date.setText(q.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-            lb_start_date.setText(q.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        }else{
-            lb_end_date.setText("--/--/----");
-            lb_start_date.setText("--/--/----");
-        }
-    }
-    @FXML
-    public void selectQuarter(ActionEvent actionEvent) {
-        fillDataToTableTonkho(DashboardController.findByTime);
-    }
-    private void fillDataToTableTonkho(Quarter q){
-        if (q!=null){
-            tkt = inventoryService.getAllTonkho(q);
-        }else{
-            tkt = new ArrayList<>();
-        }
+
+    private void fillDataToTableTonkho(){
+        tkt = inventoryService.getAllTonkhoNotCondition();
         tb_tonkho.setItems( FXCollections.observableArrayList(tkt));
     }
     private void mapInvTb(List<TonkhoDto> ls){
@@ -179,23 +144,13 @@ public class TonkhoController implements Initializable {
         });
     }
     @FXML
-    public void changeTabTheoQuy(Event event) {
-        fillDataToTableTonkho(DashboardController.findByTime);
-    }
-    private Quarter getCurrentQuarter(){
-        Quarter selected = cbb_quarter.getSelectionModel().getSelectedItem();
-        lb_end_date.setText(selected.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        lb_start_date.setText(selected.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-        return selected;
-    }
-    @FXML
     public void setClickToTonTb(MouseEvent mouseEvent) {
         TonkhoDto spotDto = tb_tonkho.getSelectionModel().getSelectedItem();
         if (mouseEvent.getClickCount() == 2 && spotDto != null) {
             pickTonKho = spotDto;
             tk_stage = new Stage();
             Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi", StageStyle.DECORATED);
-            fillDataToTableTonkho(DashboardController.findByTime);
+            fillDataToTableTonkho();
         }
     }
     @FXML
@@ -233,7 +188,6 @@ public class TonkhoController implements Initializable {
     }
     @FXML
     public void sd_clicked(ActionEvent actionEvent) {
-        System.out.println("from date" + s_date.getValue().toString());
     }
     @FXML
     public void ls_search_so_clicked(MouseEvent mouseEvent) {
@@ -250,15 +204,16 @@ public class TonkhoController implements Initializable {
         }
     }
     @FXML
-    public void switchAction(ActionEvent actionEvent) {
-        tk_stage = new Stage();
-        Common.openNewStage("switch_quarter.fxml", tk_stage,null, StageStyle.UTILITY);
-        fillDataToTableTonkho(DashboardController.findByTime);
-    }
-    @FXML
     public void endQuarterAction(ActionEvent actionEvent) {
         tk_stage = new Stage();
         Common.openNewStage("quarter.fxml", tk_stage,null, StageStyle.UTILITY);
 //        updateData();
+    }
+    @FXML
+    public void from_dateAction(ActionEvent actionEvent) {
+
+    }
+    @FXML
+    public void to_dateAction(ActionEvent actionEvent) {
     }
 }

@@ -57,7 +57,7 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     @Query(value = "update ledgers l set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid) and l.from_date between :sd and :ed", nativeQuery = true)
     void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code,@Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
     @Modifying
-    @Query(value = "update ledgers l set status='IN_ACTIVE' where bill_id=:so and loai_phieu like :lp and l.from_date between :sd and :ed", nativeQuery = true)
-    void inactiveLedgers(@Param("so") int so,@Param("lp") String lp,@Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
+    @Query(value = "update ledgers l set status='IN_ACTIVE' where l.id=:i", nativeQuery = true)
+    void inactiveLedgers(@Param("i") int id);
 
 }

@@ -39,11 +39,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
@@ -103,7 +101,6 @@ public class DashboardController implements Initializable {
         Common.hoverButton(importBtn ,"#040cb5");
         Common.hoverButton(exportBtn,"#27b50e");
         preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
-        getCurrentQuarter();
         ttp_ls = ledgerService.findAllInterfaceLedger(StatusCons.ACTIVED.getName());
         getCurrentTiming();
         customStyleMenu();
@@ -147,7 +144,6 @@ public class DashboardController implements Initializable {
     public void nxt_menu_action(MouseEvent event) {
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report,user_menu);
         borderpane_base.setCenter(nx_vbox);
-        getCurrentQuarter();
     }
     @FXML
     public void tonkho_menu_action(MouseEvent event) {
@@ -216,12 +212,6 @@ public class DashboardController implements Initializable {
                 Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT",StageStyle.UTILITY);
                 updateData();
             }
-        }
-    }
-    private void getCurrentQuarter(){
-        Optional<Quarter> q = quarterService.findByStatus(StatusCons.RECORDING.getName());
-        if (q.isPresent()){
-            findByTime = q.get();
         }
     }
 

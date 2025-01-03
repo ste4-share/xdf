@@ -61,7 +61,6 @@ public class NhapController extends CommonFactory implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //        Locale vietnameseLocale = new Locale("vi", "VN");
-        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime,LoaiPhieuCons.PHIEU_NHAP.getName());
         ls_socai = new ArrayList<>();
         tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
@@ -79,8 +78,7 @@ public class NhapController extends CommonFactory implements Initializable {
 
         setUpForSearchCompleteTion();
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
-        Quarter q = DashboardController.findByTime;
-        if (lxd!=null && q!=null){
+        if (lxd!=null){
             InventoryDto i = inventoryService.getPreInv(lxd.getXd_id());
             if (i!=null){
                 setTonKhoLabel(i.getPre_nvdx());
@@ -263,19 +261,14 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     public void changedItemLoaiXd(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
-        Quarter q = DashboardController.findByTime;
         if (lxd!=null){
-            if (q!=null){
-                InventoryDto i = inventoryService.getPreInv(lxd.getXd_id());
-                if (i!=null){
-                    LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
-                    if (ld!=null){
-                        setTonKhoLabel(i.getPre_nvdx()+ld.getSoluong());
-                    }else{
-                        setTonKhoLabel(i.getPre_nvdx());
-                    }
+            InventoryDto i = inventoryService.getPreInv(lxd.getXd_id());
+            if (i!=null){
+                LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
+                if (ld!=null){
+                    setTonKhoLabel(i.getPre_nvdx()+ld.getSoluong());
                 }else{
-                    setTonKhoLabel(0L);
+                    setTonKhoLabel(i.getPre_nvdx());
                 }
             }else{
                 setTonKhoLabel(0L);
@@ -340,7 +333,6 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     public void so_clicked(MouseEvent mouseEvent) {
         cleanErrorField(soTf);
-        current_ledger_list = ledgerService.getAllByQuarter(DashboardController.findByTime, LoaiPhieuCons.PHIEU_NHAP.getName());
         notification.setText("");
     }
     @FXML

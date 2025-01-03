@@ -4,6 +4,7 @@ package com.xdf.xd_f371.util;
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -187,6 +189,28 @@ public class Common {
         } catch (RuntimeException e) {
             return false;
         }
+    }
+    public static boolean date_valid(DatePicker from, DatePicker to){
+        LocalDate sd = from.getValue();
+        LocalDate ed = to.getValue();
+        if (sd!=null){
+            if (ed!=null){
+                if (sd.isAfter(ed)){
+                    return true;
+                }else{
+                    from.setStyle(CommonFactory.styleErrorField);
+                    to.setStyle(CommonFactory.styleErrorField);
+                    DialogMessage.errorShowing("ngay bat dau dung truoc ngay ket thuc");
+                }
+            }else{
+                to.setStyle(CommonFactory.styleErrorField);
+                DialogMessage.errorShowing("Khong duoc de trong");
+            }
+        }else{
+            from.setStyle(CommonFactory.styleErrorField);
+            DialogMessage.errorShowing("Khong duoc de trong");
+        }
+        return false;
     }
     public static void copyFileExcel(String sour, String target){
         deleteExcel(target);
