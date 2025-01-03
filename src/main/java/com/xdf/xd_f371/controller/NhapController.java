@@ -4,6 +4,7 @@ import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.cons.StatusCons;
+import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
@@ -80,9 +81,9 @@ public class NhapController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         Quarter q = DashboardController.findByTime;
         if (lxd!=null && q!=null){
-            Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(),q.getStart_date(),q.getEnd_date()).orElse(null);
+            InventoryDto i = inventoryService.getPreInv(lxd.getXd_id());
             if (i!=null){
-                setTonKhoLabel(i.getNhap_nvdx()-i.getXuat_nvdx());
+                setTonKhoLabel(i.getPre_nvdx());
             }
         }
     }
@@ -255,7 +256,7 @@ public class NhapController extends CommonFactory implements Initializable {
         vcf.setText("0");
         tyTrong.setText("0");
     }
-    private void setTonKhoLabel(int i){
+    private void setTonKhoLabel(Long i){
         inventory_quantity = i;
         lb_tontheoxd.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(inventory_quantity)) +" (Lit)");
     }
@@ -265,18 +266,19 @@ public class NhapController extends CommonFactory implements Initializable {
         Quarter q = DashboardController.findByTime;
         if (lxd!=null){
             if (q!=null){
-                Inventory i = inventoryService.findByUniqueGroupby(lxd.getXd_id(), q.getStart_date(),q.getEnd_date()).orElse(null);
+                InventoryDto i = inventoryService.getPreInv(lxd.getXd_id());
                 if (i!=null){
-                    int tk = i.getNhap_nvdx()-i.getXuat_nvdx();
                     LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
                     if (ld!=null){
-                        setTonKhoLabel(tk+ld.getSoluong());
+                        setTonKhoLabel(i.getPre_nvdx()+ld.getSoluong());
                     }else{
-                        setTonKhoLabel(tk);
+                        setTonKhoLabel(i.getPre_nvdx());
                     }
+                }else{
+                    setTonKhoLabel(0L);
                 }
             }else{
-                setTonKhoLabel(0);
+                setTonKhoLabel(0L);
             }
             chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
         }

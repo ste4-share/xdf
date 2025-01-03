@@ -25,7 +25,7 @@ import java.util.Set;
 
 @Component
 public class CommonFactory {
-    protected static int inventory_quantity = 0;
+    protected static Long inventory_quantity = 0L;
     protected static List<LedgerDetails> ls_socai;
     protected static List<Tcn> tcnx_ls = new ArrayList<>();
     public static String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";

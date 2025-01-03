@@ -14,15 +14,20 @@ import java.util.Optional;
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
     @Query(value = "select * from inventory where petro_id=:petro_id and sd between :std and :end order by price",nativeQuery = true)
     List<Inventory> findByPetro_idAndDate(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed);
-    @Query(value = "select * from inventory where petro_id=:petro_id and sd between :std and :end and status like :st order by price ",nativeQuery = true)
-    List<Inventory> findByPetro_idAndDateStatus(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed,@Param("st") String st);
     @Query(value = "select * from inventory where petro_id=:petro_id and sd between :std and :end and price=:p order by price limit 1",nativeQuery = true)
     Optional<Inventory> findByUnique(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed,@Param("p") int p);
-    @Query(value = "select max(id) as id,petro_id,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd," +
-            "sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd, sum(xuat_nvdx) as xuat_nvdx," +
-            "sum(xuat_sscd) as xuat_sscd, max(status) as status,max(price) as price, max(create_at) as create_at,min(sd) as sd,max(ed) as ed " +
-            "from inventory where petro_id=:p and sd between :std and :en group by 2 order by price limit 1",nativeQuery = true)
-    Optional<Inventory> findByUniqueGroupby(@Param("p") int petro_id,@Param("std") LocalDate sd, @Param("en") LocalDate ed);
+    @Query(value = "SELECT loaixd_id,don_gia,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
+            "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and don_gia=:gia group by 1,2",nativeQuery = true)
+    List<Object[]> findPreInventoryPrice(@Param("lxd_id") int lxd_id,@Param("gia") int gia);
+    @Query(value = "SELECT loaixd_id,don_gia,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
+            "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1,2",nativeQuery = true)
+    List<Object[]> findPreInventoryAndPrice(@Param("lxd_id") int lxd_id);
+    @Query(value = "SELECT loaixd_id,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
+            "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1",nativeQuery = true)
+    List<Object[]> findPreInventory(@Param("lxd_id") int lxd_id);
     @Query(value = "select i.petro_id,maxd,tenxd,loai,max(i.tdk_nvdx) as tdk_nvdx,max(i.tdk_sscd),\n" +
             "case when max(a.nhap_nvdx) is null then 0 else max(a.nhap_nvdx) end as nhap_nvdx,\n" +
             "case when max(a.xuat_nvdx) is null then 0 else max(a.xuat_nvdx) end as xuat_nvdx,\n" +

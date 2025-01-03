@@ -3,7 +3,7 @@ package com.xdf.xd_f371.service;
 import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.InvDto;
-import com.xdf.xd_f371.dto.LoaiXangDauDto;
+import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.LoaiXdLedgerDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
@@ -14,9 +14,9 @@ import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.LoaiXangDauRepo;
 import com.xdf.xd_f371.repo.QuarterRepository;
 import com.xdf.xd_f371.util.DialogMessage;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,15 +34,8 @@ public class InventoryService {
     private final LedgersRepo ledgersRepo;
     private final LoaiXangDauRepo loaiXangDauRepo;
     private final QuarterRepository quarterRepository;
-
     public List<Inventory> findByPetro_idAndDate(int petro_id, LocalDate sd, LocalDate ed){
         return inventoryRepo.findByPetro_idAndDate(petro_id, sd,ed);
-    }
-    public List<Inventory> findByPetro_idAndDateStatus(int petro_id,LocalDate sd, LocalDate ed,String status){
-        return inventoryRepo.findByPetro_idAndDateStatus(petro_id, sd,ed,status);
-    }
-    public Optional<Inventory> findByUniqueGroupby(int xdid, LocalDate sd, LocalDate ed){
-        return inventoryRepo.findByUniqueGroupby(xdid, sd,ed);
     }
     public Optional<Inventory> findByUnique(int petro_id, LocalDate sd, LocalDate ed,int p){
         return inventoryRepo.findByUnique(petro_id,sd,ed,p);
@@ -72,6 +65,21 @@ public class InventoryService {
                         ((BigDecimal) row[6]).intValue(),((BigDecimal) row[7]).intValue(),((BigDecimal) row[8]).intValue(), (LocalDate) row[9], (LocalDate) row[10]))
                 .collect(Collectors.toList());
     }
+    public List<InventoryDto> mapPreInvWithPrice(List<Object[]> results) {
+        return results.stream()
+                .map(row -> new InventoryDto((int) row[0],(int) row[1],((BigDecimal) row[2]).longValue(),((BigDecimal) row[3]).longValue()))
+                .collect(Collectors.toList());
+    }
+    public InventoryDto mapPreInvenPrice(List<Object[]> results) {
+        return results.stream()
+                .map(row -> new InventoryDto((int) row[0],(int) row[1],((BigDecimal) row[2]).longValue(),((BigDecimal) row[3]).longValue()))
+                .toList().get(0);
+    }
+    public InventoryDto mapPreInven(List<Object[]> results) {
+        return results.stream()
+                .map(row -> new InventoryDto((int) row[0],((BigDecimal) row[1]).longValue(),((BigDecimal) row[2]).longValue()))
+                .toList().get(0);
+    }
     @Transactional
     public void saveInvWhenSwitchQuarter(Quarter q) {
         List<InvDto> previous_invs = mapToInvDto(ledgersRepo.findAllInvByQuarter(q.getStart_date(),q.getEnd_date()));
@@ -87,13 +95,7 @@ public class InventoryService {
             });
         }
     }
-    @Transactional
-    public void firstTimeSetup(Quarter q){
-        Quarter quarter = quarterRepository.save(q);
-        loaiXangDauRepo.findAll().forEach(x->{
-            inventoryRepo.save(new Inventory(x.getId(),MucGiaEnum.OUT_STOCK_ALL.getStatus()));
-        });
-    }
+
     public List<LoaiXdLedgerDto> mapLoaixdLedger(List<Object[]> results) {
         List<LoaiXdLedgerDto> list = new ArrayList<>();
 
@@ -144,5 +146,23 @@ public class InventoryService {
 
             });
         }
+    }
+    public InventoryDto getPreInv(int petro_id){
+        if (!inventoryRepo.findPreInventory(petro_id).isEmpty()){
+            return mapPreInven(inventoryRepo.findPreInventory(petro_id));
+        }
+        return null;
+    }
+    public InventoryDto getPreInvPrice(int petro_id,int dongia){
+        if (!inventoryRepo.findPreInventoryPrice(petro_id,dongia).isEmpty()){
+            return mapPreInvenPrice(inventoryRepo.findPreInventoryPrice(petro_id,dongia));
+        }
+        return null;
+    }
+    public List<InventoryDto> getPreInvPriceList(int petro_id){
+        if (!inventoryRepo.findPreInventoryAndPrice(petro_id).isEmpty()){
+            return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id));
+        }
+        return new ArrayList<>();
     }
 }

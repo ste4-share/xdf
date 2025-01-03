@@ -87,8 +87,12 @@ public class XuatController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (lxd != null && gia != null) {
-            Optional<Inventory> in = inventoryService.findByUnique(lxd.getXd_id(),DashboardController.findByTime.getStart_date(),DashboardController.findByTime.getStart_date(),gia);
-            in.ifPresent(inventory -> setInv_lb(inventory.getNhap_nvdx() - inventory.getXuat_nvdx()));
+            InventoryDto in = inventoryService.getPreInvPrice(lxd.getXd_id(),gia);
+            if (in!=null){
+                setInv_lb(in.getPre_nvdx());
+            }else {
+                setInv_lb(0);
+            }
         }
     }
     @FXML
@@ -286,7 +290,7 @@ public class XuatController extends CommonFactory implements Initializable {
         if(!so.getText().isEmpty()){
             validateToSettingStyle(so);
             if (isNumber(so.getText())){
-                so.setStyle(styleErrorField);
+                so.setStyle(null);
             }else{
                 so.setStyle(styleErrorField);
             }
@@ -463,17 +467,19 @@ public class XuatController extends CommonFactory implements Initializable {
     private void mapPrice(int xd_id){
         Quarter q = DashboardController.findByTime;
         if (q!=null){
-            List<Inventory> inventoryList = inventoryService.findByPetro_idAndDateStatus(xd_id,q.getStart_date(),q.getEnd_date(),MucGiaEnum.IN_STOCK.getStatus());
+            List<InventoryDto> inventoryList = inventoryService.getPreInvPriceList(xd_id);
             if (!inventoryList.isEmpty()){
-                cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().map(Inventory::getPrice).toList()));
+                cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().filter(x->x.getPre_nvdx()!=0).map(InventoryDto::getDon_gia).toList()));
                 cbb_dongia.getSelectionModel().selectFirst();
-                Inventory i = inventoryList.stream().filter(x->x.getPrice()==cbb_dongia.getSelectionModel().getSelectedItem()).findFirst().orElse(null);
+                InventoryDto i = inventoryList.stream().filter(x->x.getDon_gia()==cbb_dongia.getSelectionModel().getSelectedItem()).filter(a->a.getPre_nvdx()!=0).findFirst().orElse(null);
                 if (i != null){
-                    setInv_lb(i.getNhap_nvdx()-i.getXuat_nvdx());
+                    setInv_lb(i.getPre_nvdx());
                 }
+            } else {
+                cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
+                setInv_lb(0);
             }
         }
-
     }
     private void setCellValueFactoryXuat(){
         setcellFactory("phaixuat_str","thucxuat_str");
