@@ -3,6 +3,7 @@ package com.xdf.xd_f371.service;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.controller.DashboardController;
+import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
 import com.xdf.xd_f371.entity.*;
@@ -11,6 +12,7 @@ import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,8 +23,10 @@ import java.util.List;
 public class LedgerService {
     private final LedgersRepo ledgersRepo;
     private final LedgerDetailRepo ledgerDetailRepo;
-    private final InventoryRepo inventoryRepo;
     private final LichsuRepo lichsuRepo;
+    @Autowired
+    private InventoryService inventoryService;
+
     public List<LedgerDto> getLedgers() {
         return ledgersRepo.findLedgerByID(DashboardController.so_select);
     }
@@ -52,17 +56,14 @@ public class LedgerService {
                 ledgerDetailRepo.save(detail);
                 Quarter q = DashboardController.findByTime;
                 if (q!=null) {
-                    Inventory inventory = inventoryRepo.findByUnique(detail.getLoaixd_id(), q.getStart_date(), q.getEnd_date(), detail.getDon_gia()).orElse(null);
-//                    Inventory inventory_1 = inventoryRepo.findByUniqueGroupby(detail.getLoaixd_id(), q.getStart_date(), q.getEnd_date()).orElse(null);
+                    InventoryDto inventory = inventoryService.getPreInv(detail.getLoaixd_id());
                     if (inventory==null) {
-//                        createNewInv(ledger, detail,inventory_1);
-                        saveHistory(ledger,detail,0);
+                        saveHistory(ledger,detail,0L);
                     } else {
-//                        saveInv(ledger, detail, inventory);
-                        saveHistory(ledger,detail,inventory.getNhap_nvdx()-inventory.getXuat_nvdx());
+                        saveHistory(ledger,detail,inventory.getPre_nvdx());
                     }
                 } else {
-                    saveHistory(ledger,detail,0);
+                    saveHistory(ledger,detail,0L);
                 }
             }
         } catch (Exception e){
@@ -71,7 +72,7 @@ public class LedgerService {
         }
         return savedLedger;
     }
-    private void saveHistory(Ledger l,LedgerDetails ld, int tontruoc){
+    private void saveHistory(Ledger l,LedgerDetails ld, Long tontruoc){
         if (l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
             LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(),
                     (tontruoc+ld.getSoluong()), ld.getDon_gia(),  ld.getSscd_nvdx(),
@@ -95,50 +96,6 @@ public class LedgerService {
             detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
         }
     }
-    private void saveInv(Ledger ledger, LedgerDetails detail, Inventory inventory) {
-        if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
-            inventory.setNhap_nvdx(inventory.getNhap_nvdx()+detail.getSoluong());
-        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())){
-            inventory.setXuat_nvdx(inventory.getXuat_nvdx()+detail.getSoluong());
-        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            inventory.setNhap_sscd(inventory.getNhap_sscd()+detail.getSoluong());
-        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            inventory.setXuat_sscd(inventory.getXuat_sscd()+detail.getSoluong());
-        }
-        if (inventory.getNhap_nvdx()-inventory.getXuat_nvdx()<=0){
-            inventory.setStatus(MucGiaEnum.OUT_STOCK_NVDX.getStatus());
-        }if (inventory.getNhap_sscd()-inventory.getXuat_sscd()<=0){
-            inventory.setStatus(MucGiaEnum.OUT_STOCK_NVDX.getStatus());
-        }
-        if (inventory.getNhap_sscd()-inventory.getXuat_sscd()<=0 && inventory.getNhap_nvdx()-inventory.getXuat_nvdx()<=0){
-            inventory.setStatus(MucGiaEnum.OUT_STOCK_ALL.getStatus());
-        }
-        inventoryRepo.save(inventory);
-    }
-    private void createNewInv(Ledger ledger, LedgerDetails detail, Inventory inventory){
-        if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
-            inventory.setNhap_nvdx(detail.getSoluong());
-            if (inventory.getNhap_nvdx()-inventory.getXuat_nvdx()>0){
-                inventoryRepo.save(new Inventory(detail.getLoaixd_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
-                        inventory.getNhap_nvdx(),0, 0,0, MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia(),ledger.getFrom_date(),ledger.getEnd_date()));
-            }else{
-                inventoryRepo.save(new Inventory(detail.getLoaixd_id(),inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
-                        inventory.getNhap_nvdx(),0, 0,0, MucGiaEnum.OUT_STOCK_NVDX.getStatus(), detail.getDon_gia(),ledger.getFrom_date(),ledger.getEnd_date()));
-            }
-        }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            inventory.setNhap_sscd(detail.getSoluong());
-            if (inventory.getNhap_sscd()-inventory.getXuat_sscd()>0) {
-                inventoryRepo.save(new Inventory(detail.getLoaixd_id(), inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
-                        0, detail.getSoluong(), 0, 0,
-                        MucGiaEnum.IN_STOCK.getStatus(), detail.getDon_gia(),ledger.getFrom_date(),ledger.getEnd_date()));
-            } else {
-                inventoryRepo.save(new Inventory(detail.getLoaixd_id(), inventory.getTdk_nvdx(), inventory.getTdk_sscd(),
-                        0, detail.getSoluong(), 0, 0,
-                        MucGiaEnum.OUT_STOCK_SSCD.getStatus(), detail.getDon_gia(),ledger.getFrom_date(),ledger.getEnd_date()));
-            }
-        }
-    }
-
     public List<Ledger> getAllByQuarter(Quarter q, String lp){
         if (q==null){
             return new ArrayList<>();

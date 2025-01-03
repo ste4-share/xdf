@@ -5,7 +5,7 @@
 -- Dumped from database version 14.13
 -- Dumped by pg_dump version 16.4
 
--- Started on 2025-01-01 20:03:46
+-- Started on 2025-01-03 14:33:48
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -29,7 +29,7 @@ SET row_security = off;
 ALTER SCHEMA public OWNER TO postgres;
 
 --
--- TOC entry 3787 (class 0 OID 0)
+-- TOC entry 3761 (class 0 OID 0)
 -- Dependencies: 7
 -- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
 --
@@ -46,7 +46,7 @@ CREATE EXTENSION IF NOT EXISTS adminpack WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 3789 (class 0 OID 0)
+-- TOC entry 3763 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION adminpack; Type: COMMENT; Schema: -; Owner: 
 --
@@ -63,7 +63,7 @@ CREATE EXTENSION IF NOT EXISTS tablefunc WITH SCHEMA public;
 
 
 --
--- TOC entry 3790 (class 0 OID 0)
+-- TOC entry 3764 (class 0 OID 0)
 -- Dependencies: 3
 -- Name: EXTENSION tablefunc; Type: COMMENT; Schema: -; Owner: 
 --
@@ -72,7 +72,7 @@ COMMENT ON EXTENSION tablefunc IS 'functions that manipulate whole tables, inclu
 
 
 --
--- TOC entry 312 (class 1255 OID 18503)
+-- TOC entry 308 (class 1255 OID 18503)
 -- Name: invnhap_xd(date, date, text, integer, text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -94,7 +94,7 @@ $$;
 ALTER FUNCTION public.invnhap_xd(sd date, ed date, tt text, lxd_id integer, lp text, dvin_id integer) OWNER TO postgres;
 
 --
--- TOC entry 311 (class 1255 OID 18502)
+-- TOC entry 307 (class 1255 OID 18502)
 -- Name: invxuat_xd(date, date, text, integer, text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -116,7 +116,7 @@ $$;
 ALTER FUNCTION public.invxuat_xd(sd date, ed date, tt text, lxd_id integer, lp text, dvix_id integer) OWNER TO postgres;
 
 --
--- TOC entry 304 (class 1255 OID 17903)
+-- TOC entry 300 (class 1255 OID 17903)
 -- Name: tonkhonhap_xd2(integer, text, integer, text, integer, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -139,7 +139,7 @@ $$;
 ALTER FUNCTION public.tonkhonhap_xd2(q_id integer, tt text, lxd_id integer, lp text, dvin_id integer, st text) OWNER TO postgres;
 
 --
--- TOC entry 310 (class 1255 OID 17904)
+-- TOC entry 306 (class 1255 OID 17904)
 -- Name: tonkhoxuat_xd2(integer, text, integer, text, integer, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -163,7 +163,7 @@ $$;
 ALTER FUNCTION public.tonkhoxuat_xd2(q_id integer, tt text, lxd_id integer, lp text, dvix_id integer, st text) OWNER TO postgres;
 
 --
--- TOC entry 305 (class 1255 OID 17905)
+-- TOC entry 301 (class 1255 OID 17905)
 -- Name: totalloaixd(integer, integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -182,7 +182,7 @@ $$;
 ALTER FUNCTION public.totalloaixd(q_id integer, dvi_x integer, lxd_id integer) OWNER TO postgres;
 
 --
--- TOC entry 306 (class 1255 OID 17906)
+-- TOC entry 302 (class 1255 OID 17906)
 -- Name: totalloaixd2(integer, integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -201,7 +201,7 @@ $$;
 ALTER FUNCTION public.totalloaixd2(q_id integer, dvi_x integer, lxd_id integer) OWNER TO postgres;
 
 --
--- TOC entry 307 (class 1255 OID 17907)
+-- TOC entry 303 (class 1255 OID 17907)
 -- Name: totalloaixd2(integer, text, integer, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -220,7 +220,7 @@ $$;
 ALTER FUNCTION public.totalloaixd2(q_id integer, tt text, lxd_id integer, lp text) OWNER TO postgres;
 
 --
--- TOC entry 308 (class 1255 OID 17908)
+-- TOC entry 304 (class 1255 OID 17908)
 -- Name: totalrecords(integer, integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -239,7 +239,7 @@ $$;
 ALTER FUNCTION public.totalrecords(q_id integer, dvi_xuat integer, lxd_id integer) OWNER TO postgres;
 
 --
--- TOC entry 309 (class 1255 OID 17909)
+-- TOC entry 305 (class 1255 OID 17909)
 -- Name: totalttxd_xmt(integer, integer, integer, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -458,44 +458,7 @@ CREATE TABLE public.category_assignment (
 ALTER TABLE public.category_assignment OWNER TO postgres;
 
 --
--- TOC entry 224 (class 1259 OID 17966)
--- Name: nhiemvu_reporter; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.nhiemvu_reporter (
-    id integer NOT NULL,
-    title_1 text,
-    title_2 text,
-    title_3 text,
-    title_4 text,
-    soluong text,
-    nhiemvu_id integer,
-    phuongtien_id integer,
-    ten_nv_1 text,
-    ten_nv_2 text,
-    ten_nv_3 text
-);
-
-
-ALTER TABLE public.nhiemvu_reporter OWNER TO postgres;
-
---
--- TOC entry 225 (class 1259 OID 17971)
--- Name: category_assignment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE public.nhiemvu_reporter ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.category_assignment_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- TOC entry 226 (class 1259 OID 17972)
+-- TOC entry 224 (class 1259 OID 17972)
 -- Name: category_assignment_id_seq1; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -510,7 +473,7 @@ ALTER TABLE public.category_assignment ALTER COLUMN id ADD GENERATED ALWAYS AS I
 
 
 --
--- TOC entry 227 (class 1259 OID 17973)
+-- TOC entry 225 (class 1259 OID 17973)
 -- Name: category_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -525,7 +488,7 @@ ALTER TABLE public.category ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 228 (class 1259 OID 17974)
+-- TOC entry 226 (class 1259 OID 17974)
 -- Name: nhiemvu; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -543,7 +506,7 @@ CREATE TABLE public.nhiemvu (
 ALTER TABLE public.nhiemvu OWNER TO postgres;
 
 --
--- TOC entry 229 (class 1259 OID 17979)
+-- TOC entry 227 (class 1259 OID 17979)
 -- Name: chi_tiet_nhiemvu_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -559,8 +522,8 @@ CREATE SEQUENCE public.chi_tiet_nhiemvu_id_seq
 ALTER SEQUENCE public.chi_tiet_nhiemvu_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3791 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 3765 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: chi_tiet_nhiemvu_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -568,7 +531,7 @@ ALTER SEQUENCE public.chi_tiet_nhiemvu_id_seq OWNED BY public.nhiemvu.id;
 
 
 --
--- TOC entry 230 (class 1259 OID 17980)
+-- TOC entry 228 (class 1259 OID 17980)
 -- Name: chitiet_nhiemvu; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -582,7 +545,7 @@ CREATE TABLE public.chitiet_nhiemvu (
 ALTER TABLE public.chitiet_nhiemvu OWNER TO postgres;
 
 --
--- TOC entry 231 (class 1259 OID 17985)
+-- TOC entry 229 (class 1259 OID 17985)
 -- Name: chitiet_nhiemvu_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -598,8 +561,8 @@ CREATE SEQUENCE public.chitiet_nhiemvu_id_seq
 ALTER SEQUENCE public.chitiet_nhiemvu_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3792 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 3766 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: chitiet_nhiemvu_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -607,7 +570,7 @@ ALTER SEQUENCE public.chitiet_nhiemvu_id_seq OWNED BY public.chitiet_nhiemvu.id;
 
 
 --
--- TOC entry 232 (class 1259 OID 17986)
+-- TOC entry 230 (class 1259 OID 17986)
 -- Name: chitieu_pt; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -626,7 +589,7 @@ CREATE TABLE public.chitieu_pt (
 ALTER TABLE public.chitieu_pt OWNER TO postgres;
 
 --
--- TOC entry 233 (class 1259 OID 17994)
+-- TOC entry 231 (class 1259 OID 17994)
 -- Name: chitieu_pt_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -641,7 +604,7 @@ ALTER TABLE public.chitieu_pt ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 234 (class 1259 OID 17995)
+-- TOC entry 232 (class 1259 OID 17995)
 -- Name: chungloaixd; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -663,7 +626,7 @@ CREATE TABLE public.chungloaixd (
 ALTER TABLE public.chungloaixd OWNER TO postgres;
 
 --
--- TOC entry 235 (class 1259 OID 18004)
+-- TOC entry 233 (class 1259 OID 18004)
 -- Name: chungloaixd_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -678,7 +641,7 @@ ALTER TABLE public.chungloaixd ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY 
 
 
 --
--- TOC entry 281 (class 1259 OID 18459)
+-- TOC entry 277 (class 1259 OID 18459)
 -- Name: configuration; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -692,7 +655,7 @@ CREATE TABLE public.configuration (
 ALTER TABLE public.configuration OWNER TO postgres;
 
 --
--- TOC entry 280 (class 1259 OID 18458)
+-- TOC entry 276 (class 1259 OID 18458)
 -- Name: configuration_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -707,7 +670,7 @@ ALTER TABLE public.configuration ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTIT
 
 
 --
--- TOC entry 236 (class 1259 OID 18005)
+-- TOC entry 234 (class 1259 OID 18005)
 -- Name: dinhmuc; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -725,7 +688,7 @@ CREATE TABLE public.dinhmuc (
 ALTER TABLE public.dinhmuc OWNER TO postgres;
 
 --
--- TOC entry 237 (class 1259 OID 18008)
+-- TOC entry 235 (class 1259 OID 18008)
 -- Name: dinhmuc_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -740,7 +703,7 @@ ALTER TABLE public.dinhmuc ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 238 (class 1259 OID 18009)
+-- TOC entry 236 (class 1259 OID 18009)
 -- Name: donvi_tructhuoc; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -754,7 +717,7 @@ CREATE TABLE public.donvi_tructhuoc (
 ALTER TABLE public.donvi_tructhuoc OWNER TO postgres;
 
 --
--- TOC entry 239 (class 1259 OID 18012)
+-- TOC entry 237 (class 1259 OID 18012)
 -- Name: dvi_nv; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -769,7 +732,7 @@ CREATE TABLE public.dvi_nv (
 ALTER TABLE public.dvi_nv OWNER TO postgres;
 
 --
--- TOC entry 240 (class 1259 OID 18017)
+-- TOC entry 238 (class 1259 OID 18017)
 -- Name: dvi_nv_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -785,8 +748,8 @@ CREATE SEQUENCE public.dvi_nv_id_seq
 ALTER SEQUENCE public.dvi_nv_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3793 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 3767 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: dvi_nv_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -794,7 +757,7 @@ ALTER SEQUENCE public.dvi_nv_id_seq OWNED BY public.dvi_nv.id;
 
 
 --
--- TOC entry 241 (class 1259 OID 18030)
+-- TOC entry 239 (class 1259 OID 18030)
 -- Name: hanmuc_nhiemvu2; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -812,7 +775,7 @@ CREATE TABLE public.hanmuc_nhiemvu2 (
 ALTER TABLE public.hanmuc_nhiemvu2 OWNER TO postgres;
 
 --
--- TOC entry 242 (class 1259 OID 18038)
+-- TOC entry 240 (class 1259 OID 18038)
 -- Name: hanmuc_nhiemvu2_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -827,7 +790,7 @@ ALTER TABLE public.hanmuc_nhiemvu2 ALTER COLUMN id ADD GENERATED ALWAYS AS IDENT
 
 
 --
--- TOC entry 243 (class 1259 OID 18039)
+-- TOC entry 241 (class 1259 OID 18039)
 -- Name: hanmuc_nhiemvu_taubay; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -846,7 +809,7 @@ CREATE TABLE public.hanmuc_nhiemvu_taubay (
 ALTER TABLE public.hanmuc_nhiemvu_taubay OWNER TO postgres;
 
 --
--- TOC entry 244 (class 1259 OID 18047)
+-- TOC entry 242 (class 1259 OID 18047)
 -- Name: hanmuc_nhiemvu_taubay_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -861,7 +824,7 @@ ALTER TABLE public.hanmuc_nhiemvu_taubay ALTER COLUMN id ADD GENERATED ALWAYS AS
 
 
 --
--- TOC entry 245 (class 1259 OID 18058)
+-- TOC entry 243 (class 1259 OID 18058)
 -- Name: ledger_details; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -900,7 +863,7 @@ CREATE TABLE public.ledger_details (
 ALTER TABLE public.ledger_details OWNER TO postgres;
 
 --
--- TOC entry 246 (class 1259 OID 18078)
+-- TOC entry 244 (class 1259 OID 18078)
 -- Name: ledger_map; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -918,7 +881,7 @@ CREATE TABLE public.ledger_map (
 ALTER TABLE public.ledger_map OWNER TO postgres;
 
 --
--- TOC entry 247 (class 1259 OID 18083)
+-- TOC entry 245 (class 1259 OID 18083)
 -- Name: lichsuxnk; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -926,12 +889,12 @@ CREATE TABLE public.lichsuxnk (
     id integer NOT NULL,
     ten_xd text,
     loai_phieu text,
-    tontruoc integer DEFAULT 0,
+    tontruoc bigint DEFAULT 0,
     soluong integer DEFAULT 0,
-    tonsau integer DEFAULT 0,
+    tonsau bigint DEFAULT 0,
     "timestamp" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     type character varying(5) DEFAULT 'NVDX'::character varying,
-    so smallint DEFAULT 0,
+    so bigint DEFAULT 0,
     dvn text,
     dvx text,
     chungloaixd text,
@@ -943,7 +906,7 @@ CREATE TABLE public.lichsuxnk (
 ALTER TABLE public.lichsuxnk OWNER TO postgres;
 
 --
--- TOC entry 248 (class 1259 OID 18096)
+-- TOC entry 246 (class 1259 OID 18096)
 -- Name: lichsuxnk_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -959,8 +922,8 @@ CREATE SEQUENCE public.lichsuxnk_id_seq
 ALTER SEQUENCE public.lichsuxnk_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3794 (class 0 OID 0)
--- Dependencies: 248
+-- TOC entry 3768 (class 0 OID 0)
+-- Dependencies: 246
 -- Name: lichsuxnk_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -968,7 +931,7 @@ ALTER SEQUENCE public.lichsuxnk_id_seq OWNED BY public.lichsuxnk.id;
 
 
 --
--- TOC entry 249 (class 1259 OID 18097)
+-- TOC entry 247 (class 1259 OID 18097)
 -- Name: loai_nhiemvu; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -981,7 +944,7 @@ CREATE TABLE public.loai_nhiemvu (
 ALTER TABLE public.loai_nhiemvu OWNER TO postgres;
 
 --
--- TOC entry 250 (class 1259 OID 18102)
+-- TOC entry 248 (class 1259 OID 18102)
 -- Name: loai_nhiemvu_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -996,7 +959,7 @@ ALTER TABLE public.loai_nhiemvu ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY
 
 
 --
--- TOC entry 251 (class 1259 OID 18103)
+-- TOC entry 249 (class 1259 OID 18103)
 -- Name: tcn; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1010,7 +973,7 @@ CREATE TABLE public.tcn (
 ALTER TABLE public.tcn OWNER TO postgres;
 
 --
--- TOC entry 252 (class 1259 OID 18108)
+-- TOC entry 250 (class 1259 OID 18108)
 -- Name: loai_nx_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1026,8 +989,8 @@ CREATE SEQUENCE public.loai_nx_id_seq
 ALTER SEQUENCE public.loai_nx_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3795 (class 0 OID 0)
--- Dependencies: 252
+-- TOC entry 3769 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: loai_nx_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -1035,7 +998,7 @@ ALTER SEQUENCE public.loai_nx_id_seq OWNED BY public.tcn.id;
 
 
 --
--- TOC entry 253 (class 1259 OID 18115)
+-- TOC entry 251 (class 1259 OID 18115)
 -- Name: loai_phuongtien; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1049,7 +1012,7 @@ CREATE TABLE public.loai_phuongtien (
 ALTER TABLE public.loai_phuongtien OWNER TO postgres;
 
 --
--- TOC entry 254 (class 1259 OID 18120)
+-- TOC entry 252 (class 1259 OID 18120)
 -- Name: loai_phuongtien_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1064,7 +1027,7 @@ ALTER TABLE public.loai_phuongtien ALTER COLUMN id ADD GENERATED ALWAYS AS IDENT
 
 
 --
--- TOC entry 255 (class 1259 OID 18121)
+-- TOC entry 253 (class 1259 OID 18121)
 -- Name: loaixd2; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1081,7 +1044,7 @@ CREATE TABLE public.loaixd2 (
 ALTER TABLE public.loaixd2 OWNER TO postgres;
 
 --
--- TOC entry 256 (class 1259 OID 18127)
+-- TOC entry 254 (class 1259 OID 18127)
 -- Name: loaixd2_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1097,8 +1060,8 @@ CREATE SEQUENCE public.loaixd2_id_seq
 ALTER SEQUENCE public.loaixd2_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3796 (class 0 OID 0)
--- Dependencies: 256
+-- TOC entry 3770 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: loaixd2_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -1106,52 +1069,7 @@ ALTER SEQUENCE public.loaixd2_id_seq OWNED BY public.loaixd2.id;
 
 
 --
--- TOC entry 257 (class 1259 OID 18128)
--- Name: mucgia; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.mucgia (
-    id integer NOT NULL,
-    price integer DEFAULT 0 NOT NULL,
-    amount bigint DEFAULT 0 NOT NULL,
-    quarter_id integer NOT NULL,
-    item_id integer NOT NULL,
-    status text NOT NULL,
-    "timestamp" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    nvdx bigint DEFAULT 0,
-    sscd bigint DEFAULT 0
-);
-
-
-ALTER TABLE public.mucgia OWNER TO postgres;
-
---
--- TOC entry 258 (class 1259 OID 18138)
--- Name: mucgia_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.mucgia_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.mucgia_id_seq OWNER TO postgres;
-
---
--- TOC entry 3797 (class 0 OID 0)
--- Dependencies: 258
--- Name: mucgia_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.mucgia_id_seq OWNED BY public.mucgia.id;
-
-
---
--- TOC entry 259 (class 1259 OID 18139)
+-- TOC entry 255 (class 1259 OID 18139)
 -- Name: myseq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1166,7 +1084,7 @@ CREATE SEQUENCE public.myseq
 ALTER SEQUENCE public.myseq OWNER TO postgres;
 
 --
--- TOC entry 260 (class 1259 OID 18140)
+-- TOC entry 256 (class 1259 OID 18140)
 -- Name: nguon_nx; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1182,7 +1100,7 @@ CREATE TABLE public.nguon_nx (
 ALTER TABLE public.nguon_nx OWNER TO postgres;
 
 --
--- TOC entry 261 (class 1259 OID 18146)
+-- TOC entry 257 (class 1259 OID 18146)
 -- Name: tructhuoc_loaiphieu; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1196,7 +1114,7 @@ CREATE TABLE public.tructhuoc_loaiphieu (
 ALTER TABLE public.tructhuoc_loaiphieu OWNER TO postgres;
 
 --
--- TOC entry 262 (class 1259 OID 18149)
+-- TOC entry 258 (class 1259 OID 18149)
 -- Name: nguonnx_loaiphieu_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1211,7 +1129,7 @@ ALTER TABLE public.tructhuoc_loaiphieu ALTER COLUMN id ADD GENERATED ALWAYS AS I
 
 
 --
--- TOC entry 263 (class 1259 OID 18150)
+-- TOC entry 259 (class 1259 OID 18150)
 -- Name: nguonnx_pt; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1225,7 +1143,7 @@ CREATE TABLE public.nguonnx_pt (
 ALTER TABLE public.nguonnx_pt OWNER TO postgres;
 
 --
--- TOC entry 264 (class 1259 OID 18153)
+-- TOC entry 260 (class 1259 OID 18153)
 -- Name: nguonnx_pt_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1240,7 +1158,7 @@ ALTER TABLE public.nguonnx_pt ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 265 (class 1259 OID 18162)
+-- TOC entry 261 (class 1259 OID 18162)
 -- Name: nhiemvu_tcn; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1255,7 +1173,7 @@ CREATE TABLE public.nhiemvu_tcn (
 ALTER TABLE public.nhiemvu_tcn OWNER TO postgres;
 
 --
--- TOC entry 266 (class 1259 OID 18165)
+-- TOC entry 262 (class 1259 OID 18165)
 -- Name: nhiemvu_tcn_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1271,8 +1189,8 @@ CREATE SEQUENCE public.nhiemvu_tcn_id_seq
 ALTER SEQUENCE public.nhiemvu_tcn_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3798 (class 0 OID 0)
--- Dependencies: 266
+-- TOC entry 3771 (class 0 OID 0)
+-- Dependencies: 262
 -- Name: nhiemvu_tcn_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -1280,7 +1198,7 @@ ALTER SEQUENCE public.nhiemvu_tcn_id_seq OWNED BY public.nhiemvu_tcn.id;
 
 
 --
--- TOC entry 267 (class 1259 OID 18177)
+-- TOC entry 263 (class 1259 OID 18177)
 -- Name: phuongtien; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1298,7 +1216,7 @@ CREATE TABLE public.phuongtien (
 ALTER TABLE public.phuongtien OWNER TO postgres;
 
 --
--- TOC entry 268 (class 1259 OID 18183)
+-- TOC entry 264 (class 1259 OID 18183)
 -- Name: phuongtien_nhiemvu; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1312,7 +1230,7 @@ CREATE TABLE public.phuongtien_nhiemvu (
 ALTER TABLE public.phuongtien_nhiemvu OWNER TO postgres;
 
 --
--- TOC entry 269 (class 1259 OID 18186)
+-- TOC entry 265 (class 1259 OID 18186)
 -- Name: phuongtien_nhiemvu_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1328,8 +1246,8 @@ CREATE SEQUENCE public.phuongtien_nhiemvu_id_seq
 ALTER SEQUENCE public.phuongtien_nhiemvu_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3799 (class 0 OID 0)
--- Dependencies: 269
+-- TOC entry 3772 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: phuongtien_nhiemvu_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -1337,7 +1255,7 @@ ALTER SEQUENCE public.phuongtien_nhiemvu_id_seq OWNED BY public.phuongtien_nhiem
 
 
 --
--- TOC entry 270 (class 1259 OID 18193)
+-- TOC entry 266 (class 1259 OID 18193)
 -- Name: quarter; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1354,7 +1272,7 @@ CREATE TABLE public.quarter (
 ALTER TABLE public.quarter OWNER TO postgres;
 
 --
--- TOC entry 271 (class 1259 OID 18199)
+-- TOC entry 267 (class 1259 OID 18199)
 -- Name: quarter_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1370,8 +1288,8 @@ CREATE SEQUENCE public.quarter_id_seq
 ALTER SEQUENCE public.quarter_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3800 (class 0 OID 0)
--- Dependencies: 271
+-- TOC entry 3773 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: quarter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -1379,7 +1297,7 @@ ALTER SEQUENCE public.quarter_id_seq OWNED BY public.quarter.id;
 
 
 --
--- TOC entry 272 (class 1259 OID 18200)
+-- TOC entry 268 (class 1259 OID 18200)
 -- Name: so_cai_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1395,8 +1313,8 @@ CREATE SEQUENCE public.so_cai_id_seq
 ALTER SEQUENCE public.so_cai_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3801 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 3774 (class 0 OID 0)
+-- Dependencies: 268
 -- Name: so_cai_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -1404,7 +1322,7 @@ ALTER SEQUENCE public.so_cai_id_seq OWNED BY public.ledger_details.id;
 
 
 --
--- TOC entry 273 (class 1259 OID 18201)
+-- TOC entry 269 (class 1259 OID 18201)
 -- Name: splog_adfarm_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1419,7 +1337,7 @@ CREATE SEQUENCE public.splog_adfarm_seq
 ALTER SEQUENCE public.splog_adfarm_seq OWNER TO postgres;
 
 --
--- TOC entry 274 (class 1259 OID 18205)
+-- TOC entry 270 (class 1259 OID 18205)
 -- Name: team; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1435,7 +1353,7 @@ CREATE TABLE public.team (
 ALTER TABLE public.team OWNER TO postgres;
 
 --
--- TOC entry 275 (class 1259 OID 18210)
+-- TOC entry 271 (class 1259 OID 18210)
 -- Name: team_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1450,7 +1368,7 @@ ALTER TABLE public.team ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 276 (class 1259 OID 18217)
+-- TOC entry 272 (class 1259 OID 18217)
 -- Name: tructhuoc; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1467,7 +1385,7 @@ CREATE TABLE public.tructhuoc (
 ALTER TABLE public.tructhuoc OWNER TO postgres;
 
 --
--- TOC entry 277 (class 1259 OID 18223)
+-- TOC entry 273 (class 1259 OID 18223)
 -- Name: tructhuoc_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1483,8 +1401,8 @@ CREATE SEQUENCE public.tructhuoc_id_seq
 ALTER SEQUENCE public.tructhuoc_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3802 (class 0 OID 0)
--- Dependencies: 277
+-- TOC entry 3775 (class 0 OID 0)
+-- Dependencies: 273
 -- Name: tructhuoc_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -1492,7 +1410,7 @@ ALTER SEQUENCE public.tructhuoc_id_seq OWNED BY public.tructhuoc.id;
 
 
 --
--- TOC entry 278 (class 1259 OID 18224)
+-- TOC entry 274 (class 1259 OID 18224)
 -- Name: tructhuocf_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1507,7 +1425,7 @@ ALTER TABLE public.donvi_tructhuoc ALTER COLUMN id ADD GENERATED ALWAYS AS IDENT
 
 
 --
--- TOC entry 279 (class 1259 OID 18229)
+-- TOC entry 275 (class 1259 OID 18229)
 -- Name: vehicels_for_plan_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1523,8 +1441,8 @@ CREATE SEQUENCE public.vehicels_for_plan_id_seq
 ALTER SEQUENCE public.vehicels_for_plan_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3803 (class 0 OID 0)
--- Dependencies: 279
+-- TOC entry 3776 (class 0 OID 0)
+-- Dependencies: 275
 -- Name: vehicels_for_plan_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -1532,7 +1450,7 @@ ALTER SEQUENCE public.vehicels_for_plan_id_seq OWNED BY public.phuongtien.id;
 
 
 --
--- TOC entry 3388 (class 2604 OID 18230)
+-- TOC entry 3378 (class 2604 OID 18230)
 -- Name: chitiet_nhiemvu id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1540,7 +1458,7 @@ ALTER TABLE ONLY public.chitiet_nhiemvu ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- TOC entry 3399 (class 2604 OID 18231)
+-- TOC entry 3389 (class 2604 OID 18231)
 -- Name: dvi_nv id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1548,7 +1466,7 @@ ALTER TABLE ONLY public.dvi_nv ALTER COLUMN id SET DEFAULT nextval('public.dvi_n
 
 
 --
--- TOC entry 3413 (class 2604 OID 18232)
+-- TOC entry 3403 (class 2604 OID 18232)
 -- Name: ledger_details id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1556,7 +1474,7 @@ ALTER TABLE ONLY public.ledger_details ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 3431 (class 2604 OID 18233)
+-- TOC entry 3421 (class 2604 OID 18233)
 -- Name: lichsuxnk id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1564,7 +1482,7 @@ ALTER TABLE ONLY public.lichsuxnk ALTER COLUMN id SET DEFAULT nextval('public.li
 
 
 --
--- TOC entry 3440 (class 2604 OID 18234)
+-- TOC entry 3430 (class 2604 OID 18234)
 -- Name: loaixd2 id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1572,15 +1490,7 @@ ALTER TABLE ONLY public.loaixd2 ALTER COLUMN id SET DEFAULT nextval('public.loai
 
 
 --
--- TOC entry 3442 (class 2604 OID 18235)
--- Name: mucgia id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.mucgia ALTER COLUMN id SET DEFAULT nextval('public.mucgia_id_seq'::regclass);
-
-
---
--- TOC entry 3387 (class 2604 OID 18237)
+-- TOC entry 3377 (class 2604 OID 18237)
 -- Name: nhiemvu id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1588,7 +1498,7 @@ ALTER TABLE ONLY public.nhiemvu ALTER COLUMN id SET DEFAULT nextval('public.chi_
 
 
 --
--- TOC entry 3449 (class 2604 OID 18238)
+-- TOC entry 3433 (class 2604 OID 18238)
 -- Name: nhiemvu_tcn id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1596,7 +1506,7 @@ ALTER TABLE ONLY public.nhiemvu_tcn ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 3450 (class 2604 OID 18239)
+-- TOC entry 3434 (class 2604 OID 18239)
 -- Name: phuongtien id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1604,7 +1514,7 @@ ALTER TABLE ONLY public.phuongtien ALTER COLUMN id SET DEFAULT nextval('public.v
 
 
 --
--- TOC entry 3452 (class 2604 OID 18240)
+-- TOC entry 3436 (class 2604 OID 18240)
 -- Name: phuongtien_nhiemvu id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1612,7 +1522,7 @@ ALTER TABLE ONLY public.phuongtien_nhiemvu ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- TOC entry 3453 (class 2604 OID 18241)
+-- TOC entry 3437 (class 2604 OID 18241)
 -- Name: quarter id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1620,7 +1530,7 @@ ALTER TABLE ONLY public.quarter ALTER COLUMN id SET DEFAULT nextval('public.quar
 
 
 --
--- TOC entry 3439 (class 2604 OID 18242)
+-- TOC entry 3429 (class 2604 OID 18242)
 -- Name: tcn id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1628,7 +1538,7 @@ ALTER TABLE ONLY public.tcn ALTER COLUMN id SET DEFAULT nextval('public.loai_nx_
 
 
 --
--- TOC entry 3454 (class 2604 OID 18243)
+-- TOC entry 3438 (class 2604 OID 18243)
 -- Name: tructhuoc id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1636,7 +1546,7 @@ ALTER TABLE ONLY public.tructhuoc ALTER COLUMN id SET DEFAULT nextval('public.tr
 
 
 --
--- TOC entry 3718 (class 0 OID 17943)
+-- TOC entry 3696 (class 0 OID 17943)
 -- Dependencies: 218
 -- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1648,7 +1558,7 @@ COPY public.accounts (id, username, surname, roles, passwd, color, status, creat
 
 
 --
--- TOC entry 3720 (class 0 OID 17950)
+-- TOC entry 3698 (class 0 OID 17950)
 -- Dependencies: 220
 -- Data for Name: activated_active; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1661,7 +1571,7 @@ COPY public.activated_active (id, status_name) FROM stdin;
 
 
 --
--- TOC entry 3722 (class 0 OID 17956)
+-- TOC entry 3700 (class 0 OID 17956)
 -- Dependencies: 222
 -- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1685,7 +1595,7 @@ COPY public.category (id, header_lv1, header_lv2, header_lv3, type_title, tructh
 
 
 --
--- TOC entry 3723 (class 0 OID 17961)
+-- TOC entry 3701 (class 0 OID 17961)
 -- Dependencies: 223
 -- Data for Name: category_assignment; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1706,8 +1616,8 @@ Cộng	NLTT	\N	\N	11	NLTT_SUM
 
 
 --
--- TOC entry 3730 (class 0 OID 17980)
--- Dependencies: 230
+-- TOC entry 3706 (class 0 OID 17980)
+-- Dependencies: 228
 -- Data for Name: chitiet_nhiemvu; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1761,8 +1671,8 @@ COPY public.chitiet_nhiemvu (id, nhiemvu_id, nhiemvu) FROM stdin;
 
 
 --
--- TOC entry 3732 (class 0 OID 17986)
--- Dependencies: 232
+-- TOC entry 3708 (class 0 OID 17986)
+-- Dependencies: 230
 -- Data for Name: chitieu_pt; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1802,8 +1712,8 @@ COPY public.chitieu_pt (id, dvi_id, ctnv_id, quy_id, md, tk, nl, pt_id) FROM std
 
 
 --
--- TOC entry 3734 (class 0 OID 17995)
--- Dependencies: 234
+-- TOC entry 3710 (class 0 OID 17995)
+-- Dependencies: 232
 -- Data for Name: chungloaixd; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1825,8 +1735,8 @@ COPY public.chungloaixd (id, loai, chungloai, tinhchat, code, priority_1, priori
 
 
 --
--- TOC entry 3781 (class 0 OID 18459)
--- Dependencies: 281
+-- TOC entry 3755 (class 0 OID 18459)
+-- Dependencies: 277
 -- Data for Name: configuration; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1836,8 +1746,8 @@ COPY public.configuration (id, parameter, value) FROM stdin;
 
 
 --
--- TOC entry 3736 (class 0 OID 18005)
--- Dependencies: 236
+-- TOC entry 3712 (class 0 OID 18005)
+-- Dependencies: 234
 -- Data for Name: dinhmuc; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1875,8 +1785,8 @@ COPY public.dinhmuc (id, dm_tk_gio, dm_md_gio, dm_xm_km, dm_xm_gio, phuongtien_i
 
 
 --
--- TOC entry 3738 (class 0 OID 18009)
--- Dependencies: 238
+-- TOC entry 3714 (class 0 OID 18009)
+-- Dependencies: 236
 -- Data for Name: donvi_tructhuoc; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1894,8 +1804,8 @@ COPY public.donvi_tructhuoc (id, root_id, dvi_tructhuoc_id) FROM stdin;
 
 
 --
--- TOC entry 3739 (class 0 OID 18012)
--- Dependencies: 239
+-- TOC entry 3715 (class 0 OID 18012)
+-- Dependencies: 237
 -- Data for Name: dvi_nv; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1904,58 +1814,12 @@ COPY public.dvi_nv (id, dv_id, nv_id, createtime) FROM stdin;
 
 
 --
--- TOC entry 3741 (class 0 OID 18030)
--- Dependencies: 241
+-- TOC entry 3717 (class 0 OID 18030)
+-- Dependencies: 239
 -- Data for Name: hanmuc_nhiemvu2; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.hanmuc_nhiemvu2 (id, nhiemvu_id, dvi_id, diezel, daubay, xang, years) FROM stdin;
-4	16	54	200	0	600	2024
-5	17	54	181480	6350000	264236	2024
-10	25	54	2081	0	2618	2024
-11	26	54	752	0	753	2024
-12	27	54	10500	0	10000	2024
-13	28	54	19830	0	14000	2024
-18	35	54	7500	0	11870	2024
-19	36	54	19150	0	9850	2024
-21	38	54	1930	0	1370	2024
-22	39	54	21600	0	5200	2024
-23	40	54	15600	0	14000	2024
-24	41	54	4700	0	3450	2024
-25	42	54	1000	0	2000	2024
-26	43	54	400	0	200	2024
-27	44	54	120	0	200	2024
-28	45	54	1000	0	1300	2024
-29	46	54	11800	0	7975	2024
-30	47	54	46460	1180200	40650	2024
-31	49	54	1000	0	500	2024
-32	6	54	2440	29310	5340	2024
-33	7	54	244870	1302506	181345	2024
-35	31	54	6300	0	7450	2024
-37	37	54	1111	0	1100	2024
-3	11	54	244870	1302506	99999	2024
-8	15	54	22000	390000	22222	2024
-6	20	54	123	0	500	2024
-1	13	54	6000	0	3333	2024
-34	10	54	244870	1302506	154888	2024
-17	34	54	88888	0	36920	2024
-7	21	54	300	0	450	2024
-39	52	54	322	3333	1234	2024
-42	8	54	244870	1302506	181345	2024
-43	9	54	244870	1302506	181345	2024
-44	12	54	123456	123456	12345	2024
-9	23	54	555	0	555	2024
-45	22	54	12323	0	12323	2024
-40	24	54	244870	0	154888	2024
-46	29	54	12348	0	2315	2024
-47	30	54	2222	0	22222	2024
-48	48	54	2545	0	2545	2024
-49	3	54	2000	0	2000	2024
-50	5	54	0	545345	0	2024
-51	14	54	4555	0	5345	2024
-15	32	54	5555	0	5455	2024
-52	33	54	4444	0	54544	2024
-53	4	54	4444	0	4544	2024
 100	16	54	200	0	600	2025
 101	17	54	181480	6350000	264236	2025
 102	25	54	2081	0	2618	2025
@@ -2006,26 +1870,12 @@ COPY public.hanmuc_nhiemvu2 (id, nhiemvu_id, dvi_id, diezel, daubay, xang, years
 
 
 --
--- TOC entry 3743 (class 0 OID 18039)
--- Dependencies: 243
+-- TOC entry 3719 (class 0 OID 18039)
+-- Dependencies: 241
 -- Data for Name: hanmuc_nhiemvu_taubay; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.hanmuc_nhiemvu_taubay (id, dvi_xuat_id, pt_id, ctnv_id, tk, md, nhienlieu, years) FROM stdin;
-65	5	24	7	00:00	00:00	0	2024
-66	6	24	7	00:00	00:00	0	2024
-7	4	34	4	00:00	00:00	10100	2024
-19	4	36	3	00:00	00:00	142857	2024
-25	4	37	26	222:00	00:00	142857	2024
-33	5	24	26	132:00	00:00	142857	2024
-42	6	24	3	359:00	11:00	142857	2024
-53	28	0	4	00:00	00:00	1650	2024
-55	10	0	3	00:00	00:00	1190	2024
-57	9	0	4	00:00	00:00	1190	2024
-60	8	0	4	00:00	00:00	2850	2024
-62	54	0	4	00:00	00:00	2258	2024
-63	4	35	8	12:00	23:00	665858	2024
-64	3	25	9	222:00	324:00	315488	2024
 67	5	24	7	00:00	00:00	0	2025
 68	6	24	7	00:00	00:00	0	2025
 69	4	34	4	00:00	00:00	10100	2025
@@ -2044,7 +1894,7 @@ COPY public.hanmuc_nhiemvu_taubay (id, dvi_xuat_id, pt_id, ctnv_id, tk, md, nhie
 
 
 --
--- TOC entry 3714 (class 0 OID 17910)
+-- TOC entry 3692 (class 0 OID 17910)
 -- Dependencies: 214
 -- Data for Name: inventory; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -2054,20 +1904,18 @@ COPY public.inventory (id, tdk_sscd, tdk_nvdx, status, petro_id, nhap_nvdx, nhap
 
 
 --
--- TOC entry 3745 (class 0 OID 18058)
--- Dependencies: 245
+-- TOC entry 3721 (class 0 OID 18058)
+-- Dependencies: 243
 -- Data for Name: ledger_details; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.ledger_details (ma_xd, ten_xd, chung_loai, chat_luong, phai_xuat, thuc_xuat, don_gia, id, loaixd_id, phuongtien_id, ledger_id, thuc_xuat_tk, so_luong, thuc_nhap, phai_nhap, thanhtien, haohut_sl, nl_km, nl_gio, so_luong_px, sscd_nvdx, ty_trong, nhiet_do_tt, he_so_vcf, nhap_nvdx, nhap_sscd, xuat_nvdx, xuat_sscd) FROM stdin;
-A80	Xăng A80	Xăng	\N	0	0	23423	1406	21	0	639	0	234234	234234	324332	5486462982	0	\N	\N	324332	NVDX	0	0	0	234234	0	0	0
-A80	Xăng A80	Xăng	\N	1234	1234	23423	1407	21	0	640	0	1234	0	0	28903982	0	0	0	1234	NVDX	0	0	0	0	0	1234	0
 \.
 
 
 --
--- TOC entry 3746 (class 0 OID 18078)
--- Dependencies: 246
+-- TOC entry 3722 (class 0 OID 18078)
+-- Dependencies: 244
 -- Data for Name: ledger_map; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2076,32 +1924,28 @@ COPY public.ledger_map (id, loaixd_id, header_id, soluong, mucgia_id, quarter_id
 
 
 --
--- TOC entry 3716 (class 0 OID 17924)
+-- TOC entry 3694 (class 0 OID 17924)
 -- Dependencies: 216
 -- Data for Name: ledgers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.ledgers (id, bill_id, amount, from_date, end_date, status, sl_tieuthu_md, sl_tieuthu_tk, dvi_nhan_id, dvi_xuat_id, loai_phieu, dvi_nhan, dvi_xuat, loaigiobay, nguoi_nhan, so_xe, lenh_so, nhiemvu, nhiemvu_id, so_km, tcn_id, "timestamp", giohd_md, giohd_tk, loainv, tructhuoc, lpt, lpt_2, version, create_by, root_id, pt_id) FROM stdin;
-639	9349	1191495686	2024-12-31	\N	ACTIVE	0	0	54	22	NHAP	f Bộ	Trường SQKQ	\N				\N	0	0	1	2024-12-31 21:20:48.075662	\N	\N	\N	DVK	\N	\N	0	2	54	0
-640	2342	28903982	2024-12-31	\N	ACTIVE	0	0	90	54	XUAT	QK2	f Bộ						0	0	2	2024-12-31 21:21:15.980406	00:00:00	00:00:00	\N	QK2	\N	\N	0	2	54	0
 \.
 
 
 --
--- TOC entry 3747 (class 0 OID 18083)
--- Dependencies: 247
+-- TOC entry 3723 (class 0 OID 18083)
+-- Dependencies: 245
 -- Data for Name: lichsuxnk; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.lichsuxnk (id, ten_xd, loai_phieu, tontruoc, soluong, tonsau, "timestamp", type, so, dvn, dvx, chungloaixd, gia, sd) FROM stdin;
-1161	Xăng A80	NHAP	0	234234	234234	2024-12-31 21:20:48.098767	NVDX	9349	f Bộ	Trường SQKQ	Xăng	23423	\N
-1162	Xăng A80	XUAT	234234	1234	233000	2024-12-31 21:21:15.996847	NVDX	2342	QK2	f Bộ	Xăng	23423	\N
 \.
 
 
 --
--- TOC entry 3749 (class 0 OID 18097)
--- Dependencies: 249
+-- TOC entry 3725 (class 0 OID 18097)
+-- Dependencies: 247
 -- Data for Name: loai_nhiemvu; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2113,8 +1957,8 @@ COPY public.loai_nhiemvu (id, task_name) FROM stdin;
 
 
 --
--- TOC entry 3753 (class 0 OID 18115)
--- Dependencies: 253
+-- TOC entry 3729 (class 0 OID 18115)
+-- Dependencies: 251
 -- Data for Name: loai_phuongtien; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2129,8 +1973,8 @@ COPY public.loai_phuongtien (id, type_name, type) FROM stdin;
 
 
 --
--- TOC entry 3755 (class 0 OID 18121)
--- Dependencies: 255
+-- TOC entry 3731 (class 0 OID 18121)
+-- Dependencies: 253
 -- Data for Name: loaixd2; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2190,81 +2034,8 @@ COPY public.loaixd2 (id, maxd, tenxd, status, "timestamp", petroleum_type_id) FR
 
 
 --
--- TOC entry 3757 (class 0 OID 18128)
--- Dependencies: 257
--- Data for Name: mucgia; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.mucgia (id, price, amount, quarter_id, item_id, status, "timestamp", nvdx, sscd) FROM stdin;
-3543	142857	40000	20	45	IN_STOCK	2024-12-16 13:48:16.399881	20000	20000
-3544	142857	40000	20	46	IN_STOCK	2024-12-16 13:48:16.402984	20000	20000
-3545	142857	40000	20	47	IN_STOCK	2024-12-16 13:48:16.405965	20000	20000
-3546	142857	40000	20	48	IN_STOCK	2024-12-16 13:48:16.409112	20000	20000
-3547	142857	40000	20	51	IN_STOCK	2024-12-16 13:48:16.411349	20000	20000
-3548	142857	40000	20	52	IN_STOCK	2024-12-16 13:48:16.413634	20000	20000
-3549	142857	40000	20	53	IN_STOCK	2024-12-16 13:48:16.41713	20000	20000
-3550	142857	40000	20	54	IN_STOCK	2024-12-16 13:48:16.420169	20000	20000
-3551	142857	40000	20	43	IN_STOCK	2024-12-16 13:48:16.422421	20000	20000
-3552	142857	40000	20	44	IN_STOCK	2024-12-16 13:48:16.424659	20000	20000
-3553	142857	40000	20	23	IN_STOCK	2024-12-16 13:48:16.426896	20000	20000
-3554	142857	40000	20	24	IN_STOCK	2024-12-16 13:48:16.429948	20000	20000
-3556	142857	40000	20	37	IN_STOCK	2024-12-16 13:48:16.43618	20000	20000
-3561	142857	40000	20	35	IN_STOCK	2024-12-16 13:48:16.451107	20000	20000
-3562	142857	40000	20	39	IN_STOCK	2024-12-16 13:48:16.453416	20000	20000
-3563	142857	40000	20	40	IN_STOCK	2024-12-16 13:48:16.456462	20000	20000
-3564	142857	40000	20	41	IN_STOCK	2024-12-16 13:48:16.459565	20000	20000
-3565	142857	40000	20	42	IN_STOCK	2024-12-16 13:48:16.461994	20000	20000
-3566	142857	40000	20	25	IN_STOCK	2024-12-16 13:48:16.464285	20000	20000
-3567	142857	40000	20	26	IN_STOCK	2024-12-16 13:48:16.467251	20000	20000
-3568	142857	40000	20	27	IN_STOCK	2024-12-16 13:48:16.47038	20000	20000
-3570	142857	40000	20	29	IN_STOCK	2024-12-16 13:48:16.47655	20000	20000
-3571	142857	40000	20	30	IN_STOCK	2024-12-16 13:48:16.478981	20000	20000
-3572	142857	40000	20	31	IN_STOCK	2024-12-16 13:48:16.48127	20000	20000
-3559	142857	38768	20	20	IN_STOCK	2024-12-16 00:00:00	18768	20000
-3560	142857	33254	20	21	IN_STOCK	2024-12-16 00:00:00	13254	20000
-3557	142857	39996	20	38	IN_STOCK	2024-12-16 00:00:00	19996	20000
-3558	142857	39673	20	22	IN_STOCK	2024-12-16 00:00:00	19673	20000
-3569	142857	39996	20	28	IN_STOCK	2024-12-16 00:00:00	19996	20000
-3555	142857	34290	20	36	IN_STOCK	2024-12-16 00:00:00	14290	20000
-3573	142857	40000	20	32	IN_STOCK	2024-12-16 13:48:16.483511	20000	20000
-3574	142857	40000	20	49	IN_STOCK	2024-12-16 13:48:16.487722	20000	20000
-3575	142857	40000	20	50	IN_STOCK	2024-12-16 13:48:16.490705	20000	20000
-3576	142857	40000	20	33	IN_STOCK	2024-12-16 13:48:16.493669	20000	20000
-3577	142857	40000	20	34	IN_STOCK	2024-12-16 13:48:16.496851	20000	20000
-3578	142857	40000	20	55	IN_STOCK	2024-12-16 13:48:16.500148	20000	20000
-3579	142857	40000	20	70	IN_STOCK	2024-12-16 13:48:16.502386	20000	20000
-3580	142857	40000	20	56	IN_STOCK	2024-12-16 13:48:16.505443	20000	20000
-3581	142857	40000	20	57	IN_STOCK	2024-12-16 13:48:16.507681	20000	20000
-3582	142857	40000	20	58	IN_STOCK	2024-12-16 13:48:16.510654	20000	20000
-3583	142857	40000	20	59	IN_STOCK	2024-12-16 13:48:16.513676	20000	20000
-3584	142857	40000	20	60	IN_STOCK	2024-12-16 13:48:16.516929	20000	20000
-3585	142857	40000	20	61	IN_STOCK	2024-12-16 13:48:16.519166	20000	20000
-3586	142857	40000	20	62	IN_STOCK	2024-12-16 13:48:16.521402	20000	20000
-3587	142857	40000	20	63	IN_STOCK	2024-12-16 13:48:16.52438	20000	20000
-3588	142857	40000	20	64	IN_STOCK	2024-12-16 13:48:16.527403	20000	20000
-3589	142857	40000	20	65	IN_STOCK	2024-12-16 13:48:16.530421	20000	20000
-3590	142857	40000	20	66	IN_STOCK	2024-12-16 13:48:16.532655	20000	20000
-3591	142857	40000	20	67	IN_STOCK	2024-12-16 13:48:16.534892	20000	20000
-3592	142857	40000	20	68	IN_STOCK	2024-12-16 13:48:16.537871	20000	20000
-3593	142857	40000	20	69	IN_STOCK	2024-12-16 13:48:16.540124	20000	20000
-3594	12092	2000	20	51	IN_STOCK	2024-12-16 15:41:08.299626	2000	0
-3595	23948	32	20	52	IN_STOCK	2024-12-16 15:41:08.299626	32	0
-3596	23911	20	20	43	IN_STOCK	2024-12-16 15:46:02.421584	20	0
-3598	12399	1231	20	47	IN_STOCK	2024-12-16 16:14:18.004349	1231	0
-3599	12345	4578	20	21	IN_STOCK	2024-12-16 19:58:01.951754	4578	0
-3597	7723	18	20	45	IN_STOCK	2024-12-16 00:00:00	18	0
-3601	1242	233	20	20	IN_STOCK	2024-12-17 10:14:33.990719	233	0
-3602	543423	22	20	22	IN_STOCK	2024-12-17 10:14:33.990719	22	0
-3603	12312	2	20	21	IN_STOCK	2024-12-17 10:41:39.018219	2	0
-3604	2322	122	20	21	IN_STOCK	2024-12-17 10:42:07.901562	122	0
-3600	3548	4882	20	20	IN_STOCK	2024-12-16 00:00:00	4882	0
-3605	21248	20	20	25	IN_STOCK	2024-12-18 15:58:31.89579	20	0
-\.
-
-
---
--- TOC entry 3760 (class 0 OID 18140)
--- Dependencies: 260
+-- TOC entry 3734 (class 0 OID 18140)
+-- Dependencies: 256
 -- Data for Name: nguon_nx; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2308,8 +2079,8 @@ COPY public.nguon_nx (id, ten, status, tructhuoc_id, code) FROM stdin;
 
 
 --
--- TOC entry 3763 (class 0 OID 18150)
--- Dependencies: 263
+-- TOC entry 3737 (class 0 OID 18150)
+-- Dependencies: 259
 -- Data for Name: nguonnx_pt; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2327,8 +2098,8 @@ COPY public.nguonnx_pt (id, nguonnx_id, pt_id) FROM stdin;
 
 
 --
--- TOC entry 3728 (class 0 OID 17974)
--- Dependencies: 228
+-- TOC entry 3704 (class 0 OID 17974)
+-- Dependencies: 226
 -- Data for Name: nhiemvu; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2374,18 +2145,8 @@ COPY public.nhiemvu (id, ten_nv, status, team_id, assignment_type_id, priority, 
 
 
 --
--- TOC entry 3724 (class 0 OID 17966)
--- Dependencies: 224
--- Data for Name: nhiemvu_reporter; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.nhiemvu_reporter (id, title_1, title_2, title_3, title_4, soluong, nhiemvu_id, phuongtien_id, ten_nv_1, ten_nv_2, ten_nv_3) FROM stdin;
-\.
-
-
---
--- TOC entry 3765 (class 0 OID 18162)
--- Dependencies: 265
+-- TOC entry 3739 (class 0 OID 18162)
+-- Dependencies: 261
 -- Data for Name: nhiemvu_tcn; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2394,8 +2155,8 @@ COPY public.nhiemvu_tcn (id, nvu_id, tcn_id, phuongtien_id) FROM stdin;
 
 
 --
--- TOC entry 3767 (class 0 OID 18177)
--- Dependencies: 267
+-- TOC entry 3741 (class 0 OID 18177)
+-- Dependencies: 263
 -- Data for Name: phuongtien; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2439,8 +2200,8 @@ COPY public.phuongtien (id, name, quantity, status, "timestamp", nguonnx_id, loa
 
 
 --
--- TOC entry 3768 (class 0 OID 18183)
--- Dependencies: 268
+-- TOC entry 3742 (class 0 OID 18183)
+-- Dependencies: 264
 -- Data for Name: phuongtien_nhiemvu; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2449,20 +2210,19 @@ COPY public.phuongtien_nhiemvu (id, phuongtien_id, nvu_id) FROM stdin;
 
 
 --
--- TOC entry 3770 (class 0 OID 18193)
--- Dependencies: 270
+-- TOC entry 3744 (class 0 OID 18193)
+-- Dependencies: 266
 -- Data for Name: quarter; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.quarter (id, start_date, end_date, year, index, status) FROM stdin;
-20	2024-10-01	2024-12-29	2024	4	DONE
-34	2024-12-31	2025-01-02	2025	sets	RECORDING
+52	2024-12-29	2025-01-03	2025	aedfads	RECORDING
 \.
 
 
 --
--- TOC entry 3751 (class 0 OID 18103)
--- Dependencies: 251
+-- TOC entry 3727 (class 0 OID 18103)
+-- Dependencies: 249
 -- Data for Name: tcn; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2482,8 +2242,8 @@ COPY public.tcn (id, name, loaiphieu) FROM stdin;
 
 
 --
--- TOC entry 3774 (class 0 OID 18205)
--- Dependencies: 274
+-- TOC entry 3748 (class 0 OID 18205)
+-- Dependencies: 270
 -- Data for Name: team; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2497,8 +2257,8 @@ COPY public.team (id, name, team_code, tt, priority) FROM stdin;
 
 
 --
--- TOC entry 3776 (class 0 OID 18217)
--- Dependencies: 276
+-- TOC entry 3750 (class 0 OID 18217)
+-- Dependencies: 272
 -- Data for Name: tructhuoc; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2520,8 +2280,8 @@ COPY public.tructhuoc (id, name, type, "timestamp", nhom_tructhuoc, tennhom_truc
 
 
 --
--- TOC entry 3761 (class 0 OID 18146)
--- Dependencies: 261
+-- TOC entry 3735 (class 0 OID 18146)
+-- Dependencies: 257
 -- Data for Name: tructhuoc_loaiphieu; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2550,25 +2310,25 @@ COPY public.tructhuoc_loaiphieu (id, tructhuoc_id, loaiphieu_id) FROM stdin;
 
 
 --
--- TOC entry 3804 (class 0 OID 0)
+-- TOC entry 3777 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: Inventory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Inventory_id_seq"', 1772, true);
+SELECT pg_catalog.setval('public."Inventory_id_seq"', 1994, true);
 
 
 --
--- TOC entry 3805 (class 0 OID 0)
+-- TOC entry 3778 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: Ledgers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Ledgers_id_seq"', 640, true);
+SELECT pg_catalog.setval('public."Ledgers_id_seq"', 655, true);
 
 
 --
--- TOC entry 3806 (class 0 OID 0)
+-- TOC entry 3779 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: accounts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -2577,7 +2337,7 @@ SELECT pg_catalog.setval('public.accounts_id_seq', 2, true);
 
 
 --
--- TOC entry 3807 (class 0 OID 0)
+-- TOC entry 3780 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: activated_active_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -2586,17 +2346,8 @@ SELECT pg_catalog.setval('public.activated_active_id_seq', 3, true);
 
 
 --
--- TOC entry 3808 (class 0 OID 0)
--- Dependencies: 225
--- Name: category_assignment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.category_assignment_id_seq', 3209, true);
-
-
---
--- TOC entry 3809 (class 0 OID 0)
--- Dependencies: 226
+-- TOC entry 3781 (class 0 OID 0)
+-- Dependencies: 224
 -- Name: category_assignment_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2604,8 +2355,8 @@ SELECT pg_catalog.setval('public.category_assignment_id_seq1', 11, true);
 
 
 --
--- TOC entry 3810 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3782 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2613,8 +2364,8 @@ SELECT pg_catalog.setval('public.category_id_seq', 61, true);
 
 
 --
--- TOC entry 3811 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 3783 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: chi_tiet_nhiemvu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2622,8 +2373,8 @@ SELECT pg_catalog.setval('public.chi_tiet_nhiemvu_id_seq', 60, true);
 
 
 --
--- TOC entry 3812 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 3784 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: chitiet_nhiemvu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2631,8 +2382,8 @@ SELECT pg_catalog.setval('public.chitiet_nhiemvu_id_seq', 52, true);
 
 
 --
--- TOC entry 3813 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 3785 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: chitieu_pt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2640,8 +2391,8 @@ SELECT pg_catalog.setval('public.chitieu_pt_id_seq', 34, true);
 
 
 --
--- TOC entry 3814 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 3786 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: chungloaixd_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2649,8 +2400,8 @@ SELECT pg_catalog.setval('public.chungloaixd_id_seq', 13, true);
 
 
 --
--- TOC entry 3815 (class 0 OID 0)
--- Dependencies: 280
+-- TOC entry 3787 (class 0 OID 0)
+-- Dependencies: 276
 -- Name: configuration_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2658,8 +2409,8 @@ SELECT pg_catalog.setval('public.configuration_id_seq', 1, true);
 
 
 --
--- TOC entry 3816 (class 0 OID 0)
--- Dependencies: 237
+-- TOC entry 3788 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: dinhmuc_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2667,8 +2418,8 @@ SELECT pg_catalog.setval('public.dinhmuc_id_seq', 101, true);
 
 
 --
--- TOC entry 3817 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 3789 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: dvi_nv_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2676,8 +2427,8 @@ SELECT pg_catalog.setval('public.dvi_nv_id_seq', 127, true);
 
 
 --
--- TOC entry 3818 (class 0 OID 0)
--- Dependencies: 242
+-- TOC entry 3790 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: hanmuc_nhiemvu2_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2685,8 +2436,8 @@ SELECT pg_catalog.setval('public.hanmuc_nhiemvu2_id_seq', 145, true);
 
 
 --
--- TOC entry 3819 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 3791 (class 0 OID 0)
+-- Dependencies: 242
 -- Name: hanmuc_nhiemvu_taubay_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2694,17 +2445,17 @@ SELECT pg_catalog.setval('public.hanmuc_nhiemvu_taubay_id_seq', 80, true);
 
 
 --
--- TOC entry 3820 (class 0 OID 0)
--- Dependencies: 248
+-- TOC entry 3792 (class 0 OID 0)
+-- Dependencies: 246
 -- Name: lichsuxnk_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.lichsuxnk_id_seq', 1162, true);
+SELECT pg_catalog.setval('public.lichsuxnk_id_seq', 1175, true);
 
 
 --
--- TOC entry 3821 (class 0 OID 0)
--- Dependencies: 250
+-- TOC entry 3793 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: loai_nhiemvu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2712,8 +2463,8 @@ SELECT pg_catalog.setval('public.loai_nhiemvu_id_seq', 3, true);
 
 
 --
--- TOC entry 3822 (class 0 OID 0)
--- Dependencies: 252
+-- TOC entry 3794 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: loai_nx_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2721,8 +2472,8 @@ SELECT pg_catalog.setval('public.loai_nx_id_seq', 30, true);
 
 
 --
--- TOC entry 3823 (class 0 OID 0)
--- Dependencies: 254
+-- TOC entry 3795 (class 0 OID 0)
+-- Dependencies: 252
 -- Name: loai_phuongtien_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2730,8 +2481,8 @@ SELECT pg_catalog.setval('public.loai_phuongtien_id_seq', 7, true);
 
 
 --
--- TOC entry 3824 (class 0 OID 0)
--- Dependencies: 256
+-- TOC entry 3796 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: loaixd2_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2739,17 +2490,8 @@ SELECT pg_catalog.setval('public.loaixd2_id_seq', 71, true);
 
 
 --
--- TOC entry 3825 (class 0 OID 0)
--- Dependencies: 258
--- Name: mucgia_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.mucgia_id_seq', 3605, true);
-
-
---
--- TOC entry 3826 (class 0 OID 0)
--- Dependencies: 259
+-- TOC entry 3797 (class 0 OID 0)
+-- Dependencies: 255
 -- Name: myseq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2757,8 +2499,8 @@ SELECT pg_catalog.setval('public.myseq', 90, true);
 
 
 --
--- TOC entry 3827 (class 0 OID 0)
--- Dependencies: 262
+-- TOC entry 3798 (class 0 OID 0)
+-- Dependencies: 258
 -- Name: nguonnx_loaiphieu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2766,8 +2508,8 @@ SELECT pg_catalog.setval('public.nguonnx_loaiphieu_id_seq', 20, true);
 
 
 --
--- TOC entry 3828 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 3799 (class 0 OID 0)
+-- Dependencies: 260
 -- Name: nguonnx_pt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2775,8 +2517,8 @@ SELECT pg_catalog.setval('public.nguonnx_pt_id_seq', 9, true);
 
 
 --
--- TOC entry 3829 (class 0 OID 0)
--- Dependencies: 266
+-- TOC entry 3800 (class 0 OID 0)
+-- Dependencies: 262
 -- Name: nhiemvu_tcn_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2784,8 +2526,8 @@ SELECT pg_catalog.setval('public.nhiemvu_tcn_id_seq', 1, false);
 
 
 --
--- TOC entry 3830 (class 0 OID 0)
--- Dependencies: 269
+-- TOC entry 3801 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: phuongtien_nhiemvu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2793,26 +2535,26 @@ SELECT pg_catalog.setval('public.phuongtien_nhiemvu_id_seq', 3, true);
 
 
 --
--- TOC entry 3831 (class 0 OID 0)
--- Dependencies: 271
+-- TOC entry 3802 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: quarter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.quarter_id_seq', 34, true);
+SELECT pg_catalog.setval('public.quarter_id_seq', 52, true);
 
 
 --
--- TOC entry 3832 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 3803 (class 0 OID 0)
+-- Dependencies: 268
 -- Name: so_cai_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.so_cai_id_seq', 1407, true);
+SELECT pg_catalog.setval('public.so_cai_id_seq', 1424, true);
 
 
 --
--- TOC entry 3833 (class 0 OID 0)
--- Dependencies: 273
+-- TOC entry 3804 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: splog_adfarm_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2820,8 +2562,8 @@ SELECT pg_catalog.setval('public.splog_adfarm_seq', 1, false);
 
 
 --
--- TOC entry 3834 (class 0 OID 0)
--- Dependencies: 275
+-- TOC entry 3805 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: team_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2829,8 +2571,8 @@ SELECT pg_catalog.setval('public.team_id_seq', 5, true);
 
 
 --
--- TOC entry 3835 (class 0 OID 0)
--- Dependencies: 277
+-- TOC entry 3806 (class 0 OID 0)
+-- Dependencies: 273
 -- Name: tructhuoc_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2838,8 +2580,8 @@ SELECT pg_catalog.setval('public.tructhuoc_id_seq', 34, true);
 
 
 --
--- TOC entry 3836 (class 0 OID 0)
--- Dependencies: 278
+-- TOC entry 3807 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: tructhuocf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2847,8 +2589,8 @@ SELECT pg_catalog.setval('public.tructhuocf_id_seq', 9, true);
 
 
 --
--- TOC entry 3837 (class 0 OID 0)
--- Dependencies: 279
+-- TOC entry 3808 (class 0 OID 0)
+-- Dependencies: 275
 -- Name: vehicels_for_plan_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -2856,7 +2598,7 @@ SELECT pg_catalog.setval('public.vehicels_for_plan_id_seq', 38, true);
 
 
 --
--- TOC entry 3457 (class 2606 OID 18245)
+-- TOC entry 3441 (class 2606 OID 18245)
 -- Name: inventory Inventory_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2865,7 +2607,7 @@ ALTER TABLE ONLY public.inventory
 
 
 --
--- TOC entry 3459 (class 2606 OID 18247)
+-- TOC entry 3443 (class 2606 OID 18247)
 -- Name: ledgers Ledgers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2874,7 +2616,7 @@ ALTER TABLE ONLY public.ledgers
 
 
 --
--- TOC entry 3461 (class 2606 OID 18249)
+-- TOC entry 3445 (class 2606 OID 18249)
 -- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2883,7 +2625,7 @@ ALTER TABLE ONLY public.accounts
 
 
 --
--- TOC entry 3463 (class 2606 OID 18251)
+-- TOC entry 3447 (class 2606 OID 18251)
 -- Name: accounts accounts_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2892,7 +2634,7 @@ ALTER TABLE ONLY public.accounts
 
 
 --
--- TOC entry 3465 (class 2606 OID 18253)
+-- TOC entry 3449 (class 2606 OID 18253)
 -- Name: activated_active activated_active_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2901,7 +2643,7 @@ ALTER TABLE ONLY public.activated_active
 
 
 --
--- TOC entry 3471 (class 2606 OID 18255)
+-- TOC entry 3455 (class 2606 OID 18255)
 -- Name: category_assignment category_assignment_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2910,16 +2652,7 @@ ALTER TABLE ONLY public.category_assignment
 
 
 --
--- TOC entry 3475 (class 2606 OID 18257)
--- Name: nhiemvu_reporter category_assignment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.nhiemvu_reporter
-    ADD CONSTRAINT category_assignment_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 3473 (class 2606 OID 18259)
+-- TOC entry 3457 (class 2606 OID 18259)
 -- Name: category_assignment category_assignment_pkey1; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2928,7 +2661,7 @@ ALTER TABLE ONLY public.category_assignment
 
 
 --
--- TOC entry 3467 (class 2606 OID 18261)
+-- TOC entry 3451 (class 2606 OID 18261)
 -- Name: category category_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2937,7 +2670,7 @@ ALTER TABLE ONLY public.category
 
 
 --
--- TOC entry 3469 (class 2606 OID 18263)
+-- TOC entry 3453 (class 2606 OID 18263)
 -- Name: category category_type_title_tructhuoc_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2946,7 +2679,7 @@ ALTER TABLE ONLY public.category
 
 
 --
--- TOC entry 3477 (class 2606 OID 18265)
+-- TOC entry 3459 (class 2606 OID 18265)
 -- Name: nhiemvu chi_tiet_nhiemvu_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2955,7 +2688,7 @@ ALTER TABLE ONLY public.nhiemvu
 
 
 --
--- TOC entry 3479 (class 2606 OID 18267)
+-- TOC entry 3461 (class 2606 OID 18267)
 -- Name: chitiet_nhiemvu chitiet_nhiemvu_nhiemvu_id_nhiemvu_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2964,7 +2697,7 @@ ALTER TABLE ONLY public.chitiet_nhiemvu
 
 
 --
--- TOC entry 3481 (class 2606 OID 18269)
+-- TOC entry 3463 (class 2606 OID 18269)
 -- Name: chitiet_nhiemvu chitiet_nhiemvu_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2973,7 +2706,7 @@ ALTER TABLE ONLY public.chitiet_nhiemvu
 
 
 --
--- TOC entry 3483 (class 2606 OID 18271)
+-- TOC entry 3465 (class 2606 OID 18271)
 -- Name: chitieu_pt chitieu_pt_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2982,7 +2715,7 @@ ALTER TABLE ONLY public.chitieu_pt
 
 
 --
--- TOC entry 3485 (class 2606 OID 18273)
+-- TOC entry 3467 (class 2606 OID 18273)
 -- Name: chungloaixd chungloaixd_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2991,7 +2724,7 @@ ALTER TABLE ONLY public.chungloaixd
 
 
 --
--- TOC entry 3487 (class 2606 OID 18275)
+-- TOC entry 3469 (class 2606 OID 18275)
 -- Name: chungloaixd chungloaixd_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3000,7 +2733,7 @@ ALTER TABLE ONLY public.chungloaixd
 
 
 --
--- TOC entry 3559 (class 2606 OID 18467)
+-- TOC entry 3537 (class 2606 OID 18467)
 -- Name: configuration configuration_id_parameter_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3009,7 +2742,7 @@ ALTER TABLE ONLY public.configuration
 
 
 --
--- TOC entry 3561 (class 2606 OID 18465)
+-- TOC entry 3539 (class 2606 OID 18465)
 -- Name: configuration configuration_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3018,7 +2751,7 @@ ALTER TABLE ONLY public.configuration
 
 
 --
--- TOC entry 3489 (class 2606 OID 18279)
+-- TOC entry 3471 (class 2606 OID 18279)
 -- Name: dinhmuc dinhmuc_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3027,7 +2760,7 @@ ALTER TABLE ONLY public.dinhmuc
 
 
 --
--- TOC entry 3493 (class 2606 OID 18281)
+-- TOC entry 3475 (class 2606 OID 18281)
 -- Name: dvi_nv dvi_nv_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3036,7 +2769,7 @@ ALTER TABLE ONLY public.dvi_nv
 
 
 --
--- TOC entry 3495 (class 2606 OID 18285)
+-- TOC entry 3477 (class 2606 OID 18285)
 -- Name: hanmuc_nhiemvu2 hanmuc_nhiemvu2_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3045,7 +2778,7 @@ ALTER TABLE ONLY public.hanmuc_nhiemvu2
 
 
 --
--- TOC entry 3497 (class 2606 OID 18496)
+-- TOC entry 3479 (class 2606 OID 18496)
 -- Name: hanmuc_nhiemvu2 hanmuc_nhiemvu2_years_nhiemvu_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3054,7 +2787,7 @@ ALTER TABLE ONLY public.hanmuc_nhiemvu2
 
 
 --
--- TOC entry 3499 (class 2606 OID 18500)
+-- TOC entry 3481 (class 2606 OID 18500)
 -- Name: hanmuc_nhiemvu_taubay hanmuc_nhiemvu_taubay_dvi_xuat_id_pt_id_ctnv_id_years_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3063,7 +2796,7 @@ ALTER TABLE ONLY public.hanmuc_nhiemvu_taubay
 
 
 --
--- TOC entry 3501 (class 2606 OID 18289)
+-- TOC entry 3483 (class 2606 OID 18289)
 -- Name: hanmuc_nhiemvu_taubay hanmuc_nhiemvu_taubay_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3072,16 +2805,7 @@ ALTER TABLE ONLY public.hanmuc_nhiemvu_taubay
 
 
 --
--- TOC entry 3521 (class 2606 OID 18291)
--- Name: mucgia id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.mucgia
-    ADD CONSTRAINT id PRIMARY KEY (id);
-
-
---
--- TOC entry 3505 (class 2606 OID 18303)
+-- TOC entry 3487 (class 2606 OID 18303)
 -- Name: ledger_map ledger_map_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3090,7 +2814,7 @@ ALTER TABLE ONLY public.ledger_map
 
 
 --
--- TOC entry 3507 (class 2606 OID 18307)
+-- TOC entry 3489 (class 2606 OID 18307)
 -- Name: lichsuxnk lichsuxnk_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3099,7 +2823,7 @@ ALTER TABLE ONLY public.lichsuxnk
 
 
 --
--- TOC entry 3509 (class 2606 OID 18309)
+-- TOC entry 3491 (class 2606 OID 18309)
 -- Name: loai_nhiemvu loai_nhiemvu_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3108,7 +2832,7 @@ ALTER TABLE ONLY public.loai_nhiemvu
 
 
 --
--- TOC entry 3511 (class 2606 OID 18311)
+-- TOC entry 3493 (class 2606 OID 18311)
 -- Name: loai_nhiemvu loai_nhiemvu_task_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3117,7 +2841,7 @@ ALTER TABLE ONLY public.loai_nhiemvu
 
 
 --
--- TOC entry 3517 (class 2606 OID 18315)
+-- TOC entry 3499 (class 2606 OID 18315)
 -- Name: loai_phuongtien loai_phuongtien_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3126,7 +2850,7 @@ ALTER TABLE ONLY public.loai_phuongtien
 
 
 --
--- TOC entry 3519 (class 2606 OID 18317)
+-- TOC entry 3501 (class 2606 OID 18317)
 -- Name: loaixd2 loaixd2_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3135,16 +2859,7 @@ ALTER TABLE ONLY public.loaixd2
 
 
 --
--- TOC entry 3523 (class 2606 OID 18319)
--- Name: mucgia mucgia_price_quarter_id_item_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.mucgia
-    ADD CONSTRAINT mucgia_price_quarter_id_item_id_key UNIQUE (price, quarter_id, item_id);
-
-
---
--- TOC entry 3525 (class 2606 OID 18321)
+-- TOC entry 3503 (class 2606 OID 18321)
 -- Name: nguon_nx nguon_nx_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3153,7 +2868,7 @@ ALTER TABLE ONLY public.nguon_nx
 
 
 --
--- TOC entry 3527 (class 2606 OID 18323)
+-- TOC entry 3505 (class 2606 OID 18323)
 -- Name: nguon_nx nguon_nx_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3162,7 +2877,7 @@ ALTER TABLE ONLY public.nguon_nx
 
 
 --
--- TOC entry 3531 (class 2606 OID 18325)
+-- TOC entry 3509 (class 2606 OID 18325)
 -- Name: tructhuoc_loaiphieu nguonnx_loaiphieu_nguonnx_id_loaiphieu_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3171,7 +2886,7 @@ ALTER TABLE ONLY public.tructhuoc_loaiphieu
 
 
 --
--- TOC entry 3533 (class 2606 OID 18327)
+-- TOC entry 3511 (class 2606 OID 18327)
 -- Name: tructhuoc_loaiphieu nguonnx_loaiphieu_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3180,7 +2895,7 @@ ALTER TABLE ONLY public.tructhuoc_loaiphieu
 
 
 --
--- TOC entry 3535 (class 2606 OID 18329)
+-- TOC entry 3513 (class 2606 OID 18329)
 -- Name: nguonnx_pt nguonnx_pt_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3189,7 +2904,7 @@ ALTER TABLE ONLY public.nguonnx_pt
 
 
 --
--- TOC entry 3537 (class 2606 OID 18337)
+-- TOC entry 3515 (class 2606 OID 18337)
 -- Name: nhiemvu_tcn nhiemvu_tcn_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3198,7 +2913,7 @@ ALTER TABLE ONLY public.nhiemvu_tcn
 
 
 --
--- TOC entry 3539 (class 2606 OID 18343)
+-- TOC entry 3517 (class 2606 OID 18343)
 -- Name: phuongtien phuongtien_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3207,7 +2922,7 @@ ALTER TABLE ONLY public.phuongtien
 
 
 --
--- TOC entry 3543 (class 2606 OID 18345)
+-- TOC entry 3521 (class 2606 OID 18345)
 -- Name: phuongtien_nhiemvu phuongtien_nhiemvu_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3216,7 +2931,7 @@ ALTER TABLE ONLY public.phuongtien_nhiemvu
 
 
 --
--- TOC entry 3541 (class 2606 OID 18347)
+-- TOC entry 3519 (class 2606 OID 18347)
 -- Name: phuongtien phuongtien_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3225,7 +2940,7 @@ ALTER TABLE ONLY public.phuongtien
 
 
 --
--- TOC entry 3545 (class 2606 OID 18486)
+-- TOC entry 3523 (class 2606 OID 18486)
 -- Name: quarter quarter_index_year_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3234,7 +2949,7 @@ ALTER TABLE ONLY public.quarter
 
 
 --
--- TOC entry 3547 (class 2606 OID 18353)
+-- TOC entry 3525 (class 2606 OID 18353)
 -- Name: quarter quarter_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3243,7 +2958,7 @@ ALTER TABLE ONLY public.quarter
 
 
 --
--- TOC entry 3503 (class 2606 OID 18355)
+-- TOC entry 3485 (class 2606 OID 18355)
 -- Name: ledger_details so_cai_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3252,7 +2967,7 @@ ALTER TABLE ONLY public.ledger_details
 
 
 --
--- TOC entry 3513 (class 2606 OID 18357)
+-- TOC entry 3495 (class 2606 OID 18357)
 -- Name: tcn tcn_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3261,7 +2976,7 @@ ALTER TABLE ONLY public.tcn
 
 
 --
--- TOC entry 3515 (class 2606 OID 18359)
+-- TOC entry 3497 (class 2606 OID 18359)
 -- Name: tcn tcn_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3270,7 +2985,7 @@ ALTER TABLE ONLY public.tcn
 
 
 --
--- TOC entry 3549 (class 2606 OID 18361)
+-- TOC entry 3527 (class 2606 OID 18361)
 -- Name: team team_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3279,7 +2994,7 @@ ALTER TABLE ONLY public.team
 
 
 --
--- TOC entry 3551 (class 2606 OID 18363)
+-- TOC entry 3529 (class 2606 OID 18363)
 -- Name: team team_team_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3288,7 +3003,7 @@ ALTER TABLE ONLY public.team
 
 
 --
--- TOC entry 3529 (class 2606 OID 18365)
+-- TOC entry 3507 (class 2606 OID 18365)
 -- Name: nguon_nx ten_uni; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3297,7 +3012,7 @@ ALTER TABLE ONLY public.nguon_nx
 
 
 --
--- TOC entry 3553 (class 2606 OID 18369)
+-- TOC entry 3531 (class 2606 OID 18369)
 -- Name: tructhuoc tructhuoc_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3306,7 +3021,7 @@ ALTER TABLE ONLY public.tructhuoc
 
 
 --
--- TOC entry 3555 (class 2606 OID 18371)
+-- TOC entry 3533 (class 2606 OID 18371)
 -- Name: tructhuoc tructhuoc_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3315,7 +3030,7 @@ ALTER TABLE ONLY public.tructhuoc
 
 
 --
--- TOC entry 3557 (class 2606 OID 18373)
+-- TOC entry 3535 (class 2606 OID 18373)
 -- Name: tructhuoc tructhuoc_type_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3324,7 +3039,7 @@ ALTER TABLE ONLY public.tructhuoc
 
 
 --
--- TOC entry 3491 (class 2606 OID 18375)
+-- TOC entry 3473 (class 2606 OID 18375)
 -- Name: donvi_tructhuoc tructhuocf_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3333,7 +3048,7 @@ ALTER TABLE ONLY public.donvi_tructhuoc
 
 
 --
--- TOC entry 3565 (class 2606 OID 18376)
+-- TOC entry 3543 (class 2606 OID 18376)
 -- Name: dinhmuc dinhmuc_phuongtien_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3342,7 +3057,7 @@ ALTER TABLE ONLY public.dinhmuc
 
 
 --
--- TOC entry 3566 (class 2606 OID 18381)
+-- TOC entry 3544 (class 2606 OID 18381)
 -- Name: dvi_nv dvi_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3351,7 +3066,7 @@ ALTER TABLE ONLY public.dvi_nv
 
 
 --
--- TOC entry 3562 (class 2606 OID 18386)
+-- TOC entry 3540 (class 2606 OID 18386)
 -- Name: inventory inventory_petro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3360,7 +3075,7 @@ ALTER TABLE ONLY public.inventory
 
 
 --
--- TOC entry 3568 (class 2606 OID 18396)
+-- TOC entry 3546 (class 2606 OID 18396)
 -- Name: ledger_details ledger_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3369,7 +3084,7 @@ ALTER TABLE ONLY public.ledger_details
 
 
 --
--- TOC entry 3569 (class 2606 OID 18406)
+-- TOC entry 3547 (class 2606 OID 18406)
 -- Name: ledger_details loaixd_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3378,7 +3093,7 @@ ALTER TABLE ONLY public.ledger_details
 
 
 --
--- TOC entry 3572 (class 2606 OID 18411)
+-- TOC entry 3550 (class 2606 OID 18411)
 -- Name: phuongtien nguonnx_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3387,7 +3102,7 @@ ALTER TABLE ONLY public.phuongtien
 
 
 --
--- TOC entry 3570 (class 2606 OID 18421)
+-- TOC entry 3548 (class 2606 OID 18421)
 -- Name: nhiemvu_tcn nhiemvu_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3396,7 +3111,7 @@ ALTER TABLE ONLY public.nhiemvu_tcn
 
 
 --
--- TOC entry 3564 (class 2606 OID 18426)
+-- TOC entry 3542 (class 2606 OID 18426)
 -- Name: chitiet_nhiemvu nhiemvu_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3405,7 +3120,7 @@ ALTER TABLE ONLY public.chitiet_nhiemvu
 
 
 --
--- TOC entry 3573 (class 2606 OID 18431)
+-- TOC entry 3551 (class 2606 OID 18431)
 -- Name: phuongtien_nhiemvu nhiemvu_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3414,7 +3129,7 @@ ALTER TABLE ONLY public.phuongtien_nhiemvu
 
 
 --
--- TOC entry 3563 (class 2606 OID 18436)
+-- TOC entry 3541 (class 2606 OID 18436)
 -- Name: nhiemvu nhiemvu_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3423,7 +3138,7 @@ ALTER TABLE ONLY public.nhiemvu
 
 
 --
--- TOC entry 3567 (class 2606 OID 18441)
+-- TOC entry 3545 (class 2606 OID 18441)
 -- Name: dvi_nv nvu_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3432,7 +3147,7 @@ ALTER TABLE ONLY public.dvi_nv
 
 
 --
--- TOC entry 3574 (class 2606 OID 18446)
+-- TOC entry 3552 (class 2606 OID 18446)
 -- Name: phuongtien_nhiemvu phuongtien_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3441,7 +3156,7 @@ ALTER TABLE ONLY public.phuongtien_nhiemvu
 
 
 --
--- TOC entry 3571 (class 2606 OID 18451)
+-- TOC entry 3549 (class 2606 OID 18451)
 -- Name: nhiemvu_tcn tcn_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3450,7 +3165,7 @@ ALTER TABLE ONLY public.nhiemvu_tcn
 
 
 --
--- TOC entry 3788 (class 0 OID 0)
+-- TOC entry 3762 (class 0 OID 0)
 -- Dependencies: 7
 -- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -3459,7 +3174,7 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2025-01-01 20:03:46
+-- Completed on 2025-01-03 14:33:49
 
 --
 -- PostgreSQL database dump complete

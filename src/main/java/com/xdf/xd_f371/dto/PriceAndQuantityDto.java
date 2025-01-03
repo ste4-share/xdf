@@ -8,11 +8,11 @@ import lombok.Setter;
 @Setter
 public class PriceAndQuantityDto {
     private int price;
-    private int quantity;
+    private Long quantity;
     private String price_str;
     private String quantity_str;
 
-    public PriceAndQuantityDto(int price, int quantity) {
+    public PriceAndQuantityDto(int price, Long quantity) {
         this.price = price;
         this.quantity = quantity;
         this.price_str = TextToNumber.textToNum(String.valueOf(price));

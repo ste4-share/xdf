@@ -8,14 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
-    @Query(value = "select * from inventory where petro_id=:petro_id and sd between :std and :end order by price",nativeQuery = true)
-    List<Inventory> findByPetro_idAndDate(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed);
-    @Query(value = "select * from inventory where petro_id=:petro_id and sd between :std and :end and price=:p order by price limit 1",nativeQuery = true)
-    Optional<Inventory> findByUnique(@Param("petro_id") int petro_id, @Param("std") LocalDate sd, @Param("end") LocalDate ed,@Param("p") int p);
     @Query(value = "SELECT loaixd_id,don_gia,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
             "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and don_gia=:gia group by 1,2",nativeQuery = true)
@@ -24,9 +19,13 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
             "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1,2",nativeQuery = true)
     List<Object[]> findPreInventoryAndPrice(@Param("lxd_id") int lxd_id);
+    @Query(value = "SELECT loaixd_id,max(ld.id),don_gia,sum(nhap_nvdx),sum(xuat_nvdx),sum(nhap_sscd),sum(xuat_sscd)\n" +
+            "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id \n" +
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1,3",nativeQuery = true)
+    List<Object[]> findPreInventoryPetro(@Param("lxd_id") int lxd_id);
     @Query(value = "SELECT loaixd_id,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
-            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1",nativeQuery = true)
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1 limit 1",nativeQuery = true)
     List<Object[]> findPreInventory(@Param("lxd_id") int lxd_id);
     @Query(value = "select i.petro_id,maxd,tenxd,loai,max(i.tdk_nvdx) as tdk_nvdx,max(i.tdk_sscd),\n" +
             "case when max(a.nhap_nvdx) is null then 0 else max(a.nhap_nvdx) end as nhap_nvdx,\n" +

@@ -21,7 +21,8 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
             "ld.he_so_vcf,ld.don_gia,ld.loaixd_id,ld.phuongtien_id,ld.thuc_xuat, ld.thuc_xuat_tk,ld.soluong,ld.thuc_nhap," +
             "ld.phai_nhap,ld.haohut_sl,l.loainv,ld.nl_gio,ld.nl_km,ld.soluong_px) from Ledger l join l.ledgerDetails ld where l.id=:i")
     List<LedgerDto> findLedgerByID(@Param("i") Long billId);
-
+    @Query(value = "select * from ledgers l where l.id=:i",nativeQuery = true)
+    Optional<Ledger> findLedgerById(@Param("i") int id);
     @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.id,l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
             "a.username, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join " +
             "l.ledgerDetails ld join l.accounts a where l.status like :s and l.from_date between :sd and :ed " +

@@ -85,19 +85,18 @@ public class LedgerDetails {
     @Column(name = "xuat_sscd")
     private Long xuat_sscd = 0L;
 
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String thanhtien_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String thucxuat_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String phaixuat_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String dongia_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String thucnhap_str;
-    @Column(insertable = false, updatable = false)
+    @Transient
     private String phainhap_str;
-
 
     @ManyToOne
     @JoinColumn(name = "ledger_id", nullable = false,insertable = false,updatable = false)

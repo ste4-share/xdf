@@ -25,11 +25,11 @@ public class LichsuXNK {
     @Column(name = "loai_phieu")
     private String loai_phieu;
     @Column(name = "tontruoc")
-    private int tontruoc;
+    private Long tontruoc;
     @Column(name = "soluong")
     private int soluong;
     @Column(name = "tonsau")
-    private int tonsau;
+    private Long tonsau;
     @Column(name = "gia")
     private int gia;
     @Column(name = "timestamp",insertable = false,updatable = false)
@@ -58,7 +58,7 @@ public class LichsuXNK {
     @Transient
     private String createtime_str;
 
-    public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
+    public LichsuXNK(String ten_xd, String loai_phieu, Long tontruoc, int soluong, Long tonsau, int mucgia, String type, int so,
                      String dvn, String dvx, String chungloaixd, LocalDate sd) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;
@@ -77,7 +77,7 @@ public class LichsuXNK {
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
         this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
     }
-    public LichsuXNK(String ten_xd, String loai_phieu, int tontruoc, int soluong, int tonsau, int mucgia, String type, int so,
+    public LichsuXNK(String ten_xd, String loai_phieu, Long tontruoc, int soluong, Long tonsau, int mucgia, String type, int so,
                      String dvn, String dvx, String chungloaixd, LocalDateTime createTime, LocalDate sd) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;

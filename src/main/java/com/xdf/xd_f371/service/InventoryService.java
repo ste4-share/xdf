@@ -6,13 +6,8 @@ import com.xdf.xd_f371.dto.InvDto;
 import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.LoaiXdLedgerDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
-import com.xdf.xd_f371.entity.Inventory;
-import com.xdf.xd_f371.entity.LoaiXangDau;
-import com.xdf.xd_f371.entity.Quarter;
-import com.xdf.xd_f371.repo.InventoryRepo;
-import com.xdf.xd_f371.repo.LedgersRepo;
-import com.xdf.xd_f371.repo.LoaiXangDauRepo;
-import com.xdf.xd_f371.repo.QuarterRepository;
+import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
@@ -32,14 +27,9 @@ import java.util.stream.Collectors;
 public class InventoryService {
     private final InventoryRepo inventoryRepo;
     private final LedgersRepo ledgersRepo;
+    private final LedgerDetailRepo ledgerDetailRepo;
     private final LoaiXangDauRepo loaiXangDauRepo;
     private final QuarterRepository quarterRepository;
-    public List<Inventory> findByPetro_idAndDate(int petro_id, LocalDate sd, LocalDate ed){
-        return inventoryRepo.findByPetro_idAndDate(petro_id, sd,ed);
-    }
-    public Optional<Inventory> findByUnique(int petro_id, LocalDate sd, LocalDate ed,int p){
-        return inventoryRepo.findByUnique(petro_id,sd,ed,p);
-    }
     public Inventory save(Inventory inventory){
         return inventoryRepo.save(inventory);
     }
@@ -79,6 +69,12 @@ public class InventoryService {
         return results.stream()
                 .map(row -> new InventoryDto((int) row[0],((BigDecimal) row[1]).longValue(),((BigDecimal) row[2]).longValue()))
                 .toList().get(0);
+    }
+    public List<InventoryDto> mapPreInventoryPetro(List<Object[]> results) {
+        return results.stream()
+                .map(row -> new InventoryDto((int) row[0],(int) row[1],(int) row[2],((BigDecimal) row[3]).longValue(),
+                        ((BigDecimal) row[4]).longValue(),((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue()))
+                .toList();
     }
     @Transactional
     public void saveInvWhenSwitchQuarter(Quarter q) {
@@ -159,10 +155,31 @@ public class InventoryService {
         }
         return null;
     }
+    public List<InventoryDto> findPreInventoryPetro(int petro_id){
+        if (!inventoryRepo.findPreInventoryPetro(petro_id).isEmpty()){
+            return mapPreInventoryPetro(inventoryRepo.findPreInventoryPetro(petro_id));
+        }
+        return null;
+    }
     public List<InventoryDto> getPreInvPriceList(int petro_id){
         if (!inventoryRepo.findPreInventoryAndPrice(petro_id).isEmpty()){
             return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id));
         }
         return new ArrayList<>();
+    }
+    @Transactional
+    public void saveInventoryWithLedger(InventoryDto inv){
+        Optional<LedgerDetails> l = ledgerDetailRepo.findById(inv.getLedger_id());
+        if (l.isPresent()){
+            LedgerDetails l_pre = l.get();
+            l_pre.setNhap_nvdx(inv.getNhap_nvdx());
+            l_pre.setXuat_nvdx(inv.getXuat_nvdx());
+            l_pre.setNhap_sscd(inv.getNhap_sscd());
+            l_pre.setXuat_sscd(inv.getXuat_sscd());
+            ledgerDetailRepo.save(l_pre);
+        }else{
+            DialogMessage.errorShowing("Something went wrong!");
+            throw new RuntimeException("Something went wrong!");
+        }
     }
 }

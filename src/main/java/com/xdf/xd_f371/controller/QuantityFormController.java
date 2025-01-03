@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 @Component
 public class QuantityFormController implements Initializable {
-    private static int sl_ton;
+    private static Long sl_ton=0L;
     @FXML
     Label slton_lb,notion_lb;
     @FXML
@@ -39,7 +39,7 @@ public class QuantityFormController implements Initializable {
         if (notion_lb.getText()==null){
             ChangingController.quantity_convert = Integer.parseInt(quantity_tf.getText());
             ChangingController.addAff_stage.close();
-        }else {
+        } else {
             ChangingController.quantity_convert = Integer.parseInt(quantity_tf.getText());
             DialogMessage.message("Error", "An unexpected error occurred in ","An unexpected error has occurred", Alert.AlertType.WARNING);
         }
@@ -54,7 +54,7 @@ public class QuantityFormController implements Initializable {
         if (!q.trim().isEmpty()){
             if (Common.isNumber(q)) {
                 int qt = Integer.parseInt(q);
-                int cal = sl_ton - qt;
+                Long cal = sl_ton - qt;
                 if (cal >= 0) {
                     setErrorText(null,null);
                     slton_lb.setText(TextToNumber.textToNum(String.valueOf(cal)));

@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.PriceAndQuantityDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.Inventory;
@@ -27,12 +28,12 @@ import java.util.function.Function;
 public class ChangingController implements Initializable {
     public static Stage addAff_stage;
     public static int sum = 0;
-    public static int quantity =0;
+    public static Long quantity =0L;
     public static int quantity_convert =0;
     private static TonkhoDto tonkho_selected;
     private static List<PriceAndQuantityDto> sscd_ls_buf = new ArrayList<>();
     private static List<PriceAndQuantityDto> nvdx_ls_buf = new ArrayList<>();
-    public static List<Inventory> list = new ArrayList<>();
+    public static List<InventoryDto> list = new ArrayList<>();
     @FXML
     private TableView<PriceAndQuantityDto> nvdx_tb,sscd_tb;
     @FXML
@@ -48,7 +49,7 @@ public class ChangingController implements Initializable {
         nvdx_ls_buf = new ArrayList<>();
         tonkho_selected = TonkhoController.pickTonKho;
         petro_name.setText(tonkho_selected.getTenxd());
-        list = inventoryService.findByPetro_idAndDate(tonkho_selected.getPetro_id(),DashboardController.findByTime.getStart_date(),DashboardController.findByTime.getEnd_date());
+        list = inventoryService.findPreInventoryPetro(tonkho_selected.getPetro_id());
         setNvdxTable(nvdx_tb);
         setSScdTable(sscd_tb);
         setVisibleForBtn(true, true);
@@ -65,11 +66,11 @@ public class ChangingController implements Initializable {
         sscd_nvdx.setDisable(sscd);
     }
     private void setNvdxTable(TableView<PriceAndQuantityDto> tb) {
-        nvdx_ls_buf = setDataToTable(tb, list, Inventory::getNhap_nvdx, Inventory::getXuat_nvdx);
+        nvdx_ls_buf = setDataToTable(tb, list, InventoryDto::getNhap_nvdx, InventoryDto::getXuat_nvdx);
         setFieldFactoryTb(nvdx_price, nvdx_quantity);
     }
     private void setSScdTable(TableView<PriceAndQuantityDto> tb) {
-        sscd_ls_buf= setDataToTable(tb, list, Inventory::getNhap_sscd, Inventory::getXuat_sscd);
+        sscd_ls_buf= setDataToTable(tb, list, InventoryDto::getNhap_sscd, InventoryDto::getXuat_sscd);
         setFieldFactoryTb(sscd_price, sscd_quantity);
     }
     private void openChangeQuantityForm(){
@@ -89,10 +90,10 @@ public class ChangingController implements Initializable {
         }
     }
     private void updateTableView(PriceAndQuantityDto p){
-        list.stream().filter(x->x.getPrice()==p.getPrice()).findFirst()
+        list.stream().filter(x->x.getDon_gia()==p.getPrice()).findFirst()
                 .ifPresent(i -> {i.setNhap_nvdx(i.getNhap_nvdx()-quantity_convert);i.setNhap_sscd(i.getNhap_sscd()+quantity_convert);});
-        setDataToTable(nvdx_tb, list, Inventory::getNhap_nvdx, Inventory::getXuat_nvdx);
-        setDataToTable(sscd_tb, list, Inventory::getNhap_sscd, Inventory::getXuat_sscd);
+        setDataToTable(nvdx_tb, list, InventoryDto::getNhap_nvdx, InventoryDto::getXuat_nvdx);
+        setDataToTable(sscd_tb, list, InventoryDto::getNhap_sscd, InventoryDto::getXuat_sscd);
     }
     @FXML
     public void sscdToNvdxAction(ActionEvent actionEvent) {
@@ -109,10 +110,10 @@ public class ChangingController implements Initializable {
         if (DialogMessage.callAlertWithMessage("", "Luu thay doi", "Xac nhan luu thay doi", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
             try {
                 list.forEach(x-> {
-                    inventoryService.save(x);
+                    inventoryService.saveInventoryWithLedger(x);
                 });
                 TonkhoController.tk_stage.close();
-            }catch (Exception e){
+            } catch (Exception e){
                 DialogMessage.errorShowing(e.getMessage());
             }
         }
@@ -129,14 +130,14 @@ public class ChangingController implements Initializable {
         col1.setCellValueFactory(new PropertyValueFactory<PriceAndQuantityDto, String>("price_str"));
         col2.setCellValueFactory(new PropertyValueFactory<PriceAndQuantityDto, String>("quantity_str"));
     }
-    private List<PriceAndQuantityDto> setDataToTable(TableView<PriceAndQuantityDto> tb,List<Inventory> list,
-                                                     Function<Inventory,Integer> toStr1,Function<Inventory,Integer> toStr2){
+    private List<PriceAndQuantityDto> setDataToTable(TableView<PriceAndQuantityDto> tb,List<InventoryDto> list,
+                                                     Function<InventoryDto,Long> toStr1,Function<InventoryDto,Long> toStr2){
         List<PriceAndQuantityDto> result = new ArrayList<>();
-        if (!list.isEmpty()){
-            for (Inventory inventory : list){
-                int quantity = toStr1.apply(inventory)-toStr2.apply(inventory);
-                int pri = inventory.getPrice();
-                if (quantity>0){
+        if (!list.isEmpty()) {
+            for (InventoryDto inventory : list) {
+                Long quantity = toStr1.apply(inventory)-toStr2.apply(inventory);
+                int pri = inventory.getDon_gia();
+                if (quantity>0) {
                     result.add(new PriceAndQuantityDto(Integer.parseInt(String.valueOf(pri)),quantity));
                 }
             }
