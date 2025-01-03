@@ -9,7 +9,6 @@ import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -76,22 +75,24 @@ public class InventoryService {
                         ((BigDecimal) row[4]).longValue(),((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue()))
                 .toList();
     }
-    @Transactional
-    public void saveInvWhenSwitchQuarter(Quarter q) {
-        List<InvDto> previous_invs = mapToInvDto(ledgersRepo.findAllInvByQuarter(q.getStart_date(),q.getEnd_date()));
-        if (!previous_invs.isEmpty()){
-            previous_invs.forEach(x->{
-                if (x.getNhap_nvdx()-x.getXuat_nvdx()<=0 && x.getNhap_sscd()-x.getXuat_sscd()<=0){
-                    inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),
-                            x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(), MucGiaEnum.OUT_STOCK_ALL.getStatus(), x.getDon_gia(),x.getSd(),x.getEd()));
-                } else {
-                    inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),
-                            x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(), MucGiaEnum.IN_STOCK.getStatus(), x.getDon_gia(),x.getSd(),x.getEd()));
-                }
-            });
+    public InventoryDto getPreInvPrice(int petro_id,int dongia){
+        if (!inventoryRepo.findPreInventoryPrice(petro_id,dongia).isEmpty()){
+            return mapPreInvenPrice(inventoryRepo.findPreInventoryPrice(petro_id,dongia));
         }
+        return null;
     }
-
+    public List<InventoryDto> findPreInventoryPetro(int petro_id){
+        if (!inventoryRepo.findPreInventoryPetro(petro_id).isEmpty()){
+            return mapPreInventoryPetro(inventoryRepo.findPreInventoryPetro(petro_id));
+        }
+        return null;
+    }
+    public List<InventoryDto> getPreInvPriceList(int petro_id){
+        if (!inventoryRepo.findPreInventoryAndPrice(petro_id).isEmpty()){
+            return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id));
+        }
+        return new ArrayList<>();
+    }
     public List<LoaiXdLedgerDto> mapLoaixdLedger(List<Object[]> results) {
         List<LoaiXdLedgerDto> list = new ArrayList<>();
 
@@ -149,24 +150,7 @@ public class InventoryService {
         }
         return null;
     }
-    public InventoryDto getPreInvPrice(int petro_id,int dongia){
-        if (!inventoryRepo.findPreInventoryPrice(petro_id,dongia).isEmpty()){
-            return mapPreInvenPrice(inventoryRepo.findPreInventoryPrice(petro_id,dongia));
-        }
-        return null;
-    }
-    public List<InventoryDto> findPreInventoryPetro(int petro_id){
-        if (!inventoryRepo.findPreInventoryPetro(petro_id).isEmpty()){
-            return mapPreInventoryPetro(inventoryRepo.findPreInventoryPetro(petro_id));
-        }
-        return null;
-    }
-    public List<InventoryDto> getPreInvPriceList(int petro_id){
-        if (!inventoryRepo.findPreInventoryAndPrice(petro_id).isEmpty()){
-            return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id));
-        }
-        return new ArrayList<>();
-    }
+
     @Transactional
     public void saveInventoryWithLedger(InventoryDto inv){
         Optional<LedgerDetails> l = ledgerDetailRepo.findById(inv.getLedger_id());
@@ -180,6 +164,21 @@ public class InventoryService {
         }else{
             DialogMessage.errorShowing("Something went wrong!");
             throw new RuntimeException("Something went wrong!");
+        }
+    }
+    @Transactional
+    public void saveInvWhenSwitchQuarter(Quarter q) {
+        List<InvDto> previous_invs = mapToInvDto(ledgersRepo.findAllInvByQuarter(q.getStart_date(),q.getEnd_date()));
+        if (!previous_invs.isEmpty()){
+            previous_invs.forEach(x->{
+                if (x.getNhap_nvdx()-x.getXuat_nvdx()<=0 && x.getNhap_sscd()-x.getXuat_sscd()<=0){
+                    inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),
+                            x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(), MucGiaEnum.OUT_STOCK_ALL.getStatus(), x.getDon_gia(),x.getSd(),x.getEd()));
+                } else {
+                    inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),
+                            x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(), MucGiaEnum.IN_STOCK.getStatus(), x.getDon_gia(),x.getSd(),x.getEd()));
+                }
+            });
         }
     }
 }

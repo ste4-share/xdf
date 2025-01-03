@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -255,5 +254,11 @@ public class TonkhoController implements Initializable {
         tk_stage = new Stage();
         Common.openNewStage("switch_quarter.fxml", tk_stage,null, StageStyle.UTILITY);
         fillDataToTableTonkho(DashboardController.findByTime);
+    }
+    @FXML
+    public void endQuarterAction(ActionEvent actionEvent) {
+        tk_stage = new Stage();
+        Common.openNewStage("quarter.fxml", tk_stage,null, StageStyle.UTILITY);
+//        updateData();
     }
 }

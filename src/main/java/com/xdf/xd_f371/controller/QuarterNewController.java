@@ -85,15 +85,20 @@ public class QuarterNewController implements Initializable {
                 if (DialogMessage.callAlertWithMessage(null,"Them moi", "Xac nhan them moi.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
                     if (year_cbb.getSelectionModel().getSelectedItem()!=null){
                         if (recordChk.isSelected()){
-                            inventoryService.changeRecordingRangeTime(new Quarter(sd.getValue(),ed.getValue(),String.valueOf(year_cbb.getSelectionModel().getSelectedItem()),
-                                    q_name.getText(), StatusCons.RECORDING.getName()));
+                            try {
+                                inventoryService.changeRecordingRangeTime(new Quarter(sd.getValue(),ed.getValue(),String.valueOf(year_cbb.getSelectionModel().getSelectedItem()),
+                                        q_name.getText(), StatusCons.RECORDING.getName()));
+                            } catch (Exception ex) {
+                                DialogMessage.errorShowing("Something went wrong!");
+                                throw new RuntimeException(ex);
+                            }
                         }else{
                             quarterService.save(new Quarter(sd.getValue(),ed.getValue(),String.valueOf(year_cbb.getSelectionModel().getSelectedItem()),
                                     q_name.getText(), StatusCons.DONE.getName()));
                         }
                     }
                     DialogMessage.successShowing("Them thanh cong");
-                    DashboardController.primaryStage.close();
+                    TonkhoController.tk_stage.close();
                 }
             }else{
                 DialogMessage.errorShowing("ngay bat dau va ket thuc khong duoc de trong");
@@ -126,7 +131,7 @@ public class QuarterNewController implements Initializable {
     }
     @FXML
     public void exit(ActionEvent actionEvent) {
-        DashboardController.primaryStage.close();
+        TonkhoController.tk_stage.close();
     }
     @FXML
     public void yearAction(ActionEvent actionEvent) {

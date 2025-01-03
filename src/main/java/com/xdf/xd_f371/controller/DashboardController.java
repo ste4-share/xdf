@@ -71,13 +71,13 @@ public class DashboardController implements Initializable {
     @FXML
     private ComboBox<String> cbb_loaiphieu_filter;
     @FXML
-    private Label lb_from, lb_to,datetime_showing,preUser,errorlb;
+    private Label datetime_showing,preUser;
+    @FXML
+    private DatePicker from_date,to_date;
     @FXML
     private Pagination pagination_tbnxt;
     @FXML
     public TableView<MiniLedgerDto> tbTTNX;
-    @FXML
-    private ComboBox<Quarter> quycbb;
     @FXML
     private TextField tf_search;
     @FXML
@@ -102,36 +102,22 @@ public class DashboardController implements Initializable {
         tbTTNX.setPrefHeight(screenHeigh-300);
         Common.hoverButton(importBtn ,"#040cb5");
         Common.hoverButton(exportBtn,"#27b50e");
-        isInitQuarter();
         preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
         getCurrentQuarter();
-        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime);
+        ttp_ls = ledgerService.findAllInterfaceLedger(StatusCons.ACTIVED.getName());
         getCurrentTiming();
         customStyleMenu();
         setDataToPhieuCombobox();
-        setLedgersToTable(ttp_ls);
+        mapData(ttp_ls);
         setFactoryCell();
-        setPagination_nxt(ttp_ls);
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,setting,report,user_menu);
         startUpdatingLedgerData();
     }
-
-    private void isInitQuarter() {
-        errorlb.setPrefWidth(300);
-        Optional<Quarter> q = quarterService.findByCurrentTime(LocalDate.now());
-        if (q.isPresent()){
-            errorlb.setText(null);
-        }else{
-            errorlb.setText("Chưa tạo quý cho hiện tại");
-        }
-    }
-
     private void startUpdatingLedgerData() {
         LedgerUpdateService service = new LedgerUpdateService();
         service.setOnSucceeded(event -> {
             List<MiniLedgerDto> ls =service.getValue();
-            setLedgersToTable(ls);
-            setPagination_nxt(ls);
+            mapData(ls);
         });
         service.start();
     }
@@ -142,7 +128,7 @@ public class DashboardController implements Initializable {
         updateData();
     }
     private void updateData(){
-        ttp_ls = ledgerService.findInterfaceLedger(StatusCons.ACTIVED.getName(), findByTime);
+        ttp_ls = ledgerService.findAllInterfaceLedger(StatusCons.ACTIVED.getName());
         setLedgersToTable(ttp_ls);
         setPagination_nxt(ttp_ls);
     }
@@ -216,8 +202,8 @@ public class DashboardController implements Initializable {
         }
     }
     private void mapData(List<MiniLedgerDto> ls){
-        setLedgersToTable(ls);
         setPagination_nxt(ls);
+        setLedgersToTable(ls);
     }
     @FXML
     public void tb_selected(MouseEvent mouseEvent) {
@@ -236,8 +222,6 @@ public class DashboardController implements Initializable {
         Optional<Quarter> q = quarterService.findByStatus(StatusCons.RECORDING.getName());
         if (q.isPresent()){
             findByTime = q.get();
-            lb_to.setText(findByTime.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
-            lb_from.setText(findByTime.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
         }
     }
 
@@ -361,12 +345,35 @@ public class DashboardController implements Initializable {
         img_v.setStyle("-fx-opacity: 0.7;");
     }
     @FXML
-    public void quyAction(ActionEvent actionEvent) {
-        primaryStage = new Stage();
-        Common.openNewStage("quarter.fxml", primaryStage,null, StageStyle.UTILITY);
-        updateData();
+    public void from_dateACtion(ActionEvent actionEvent) {
+        LocalDate fromD = from_date.getValue();
+        if(fromD!=null) {
+            List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->x.getTimestamp().isAfter(fromD.atStartOfDay())).toList();
+            mapData(ls);
+        }else{
+            ttp_ls = ledgerService.findAllInterfaceLedger(StatusCons.ACTIVED.getName());
+            mapData(ttp_ls);
+        }
     }
     @FXML
-    public void quycbbAction(ActionEvent actionEvent) {
+    public void to_dateACtion(ActionEvent actionEvent) {
+        LocalDate toD = to_date.getValue();
+        LocalDate fromD = from_date.getValue();
+
+        if (toD!=null && fromD==null){
+            List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->x.getTimestamp().isBefore(toD.atStartOfDay())).toList();
+            mapData(ls);
+        } else if (toD==null && fromD!=null) {
+            List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->x.getTimestamp().isAfter(fromD.atStartOfDay())).toList();
+            mapData(ls);
+        } else if (toD!=null && fromD!=null) {
+            if (toD.isBefore(fromD)){
+                DialogMessage.errorShowing("Ngày kết thúc phải sau ngày bắt đầu");
+                to_date.setValue(LocalDate.now());
+            }else{
+                List<MiniLedgerDto> ls = ttp_ls.stream().filter(x->(x.getTimestamp().isAfter(fromD.atStartOfDay()) && x.getTimestamp().isBefore(toD.atStartOfDay()))).toList();
+                mapData(ls);
+            }
+        }
     }
 }

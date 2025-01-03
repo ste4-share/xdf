@@ -36,6 +36,10 @@ public class LedgerService {
         }
         return ledgersRepo.findInterfaceLedger(status, q.getStart_date(),q.getEnd_date());
     }
+    public List<MiniLedgerDto> findAllInterfaceLedger(String status){
+        return ledgersRepo.findAllInterfaceLedger(status);
+    }
+
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();
     }

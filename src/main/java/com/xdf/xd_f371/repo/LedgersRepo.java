@@ -23,12 +23,12 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     List<LedgerDto> findLedgerByID(@Param("i") Long billId);
     @Query(value = "select * from ledgers l where l.id=:i",nativeQuery = true)
     Optional<Ledger> findLedgerById(@Param("i") int id);
-    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.id,l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
+    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.id,l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.from_date,l.nhiemvu," +
             "a.username, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join " +
             "l.ledgerDetails ld join l.accounts a where l.status like :s and l.from_date between :sd and :ed " +
             "group by 1,2,3,4,5,6,7,8 order by l.timestamp desc")
     List<MiniLedgerDto> findInterfaceLedger(@Param("s") String s, @Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
-    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.id,l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
+    @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.id,l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.from_date,l.nhiemvu," +
             "a.username, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join " +
             "l.ledgerDetails ld join l.accounts a where l.status like :s " +
             "group by 1,2,3,4,5,6,7,8 order by l.timestamp desc")
@@ -54,10 +54,10 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
             "group by 1,2,3,4,5) a on lxd.id=a.loaixd_id",nativeQuery = true)
     List<Object[]> findAllInvByQuarter(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
     @Modifying
-    @Query(value = "update ledgers set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid) and l.from_date between :sd and :ed", nativeQuery = true)
+    @Query(value = "update ledgers l set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid) and l.from_date between :sd and :ed", nativeQuery = true)
     void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code,@Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
     @Modifying
-    @Query(value = "update ledgers set status='IN_ACTIVE' where bill_id=:so and loai_phieu like :lp and l.from_date between :sd and :ed", nativeQuery = true)
+    @Query(value = "update ledgers l set status='IN_ACTIVE' where bill_id=:so and loai_phieu like :lp and l.from_date between :sd and :ed", nativeQuery = true)
     void inactiveLedgers(@Param("so") int so,@Param("lp") String lp,@Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
 
 }

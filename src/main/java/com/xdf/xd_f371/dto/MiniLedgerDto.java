@@ -3,6 +3,8 @@ package com.xdf.xd_f371.dto;
 import com.xdf.xd_f371.util.TextToNumber;
 import lombok.*;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -26,15 +28,15 @@ public class MiniLedgerDto {
     private String nhiemvu;
     private String username;
 
-    public MiniLedgerDto(int id,int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDateTime timestamp, String nhiemvu, String username, Long count, Long tong) {
+    public MiniLedgerDto(int id, int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDate timestamp, String nhiemvu, String username, Long count, Long tong) {
         this.id = id;
         this.so = so;
         this.so_str = String.valueOf(so);
         this.loai_phieu = loai_phieu;
         this.dvi_nhap = dvi_nhap;
         this.dvi_xuat = dvi_xuat;
-        this.timestamp = timestamp;
-        this.timestamp_str = timestamp.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        this.timestamp = timestamp.atStartOfDay();
+        this.timestamp_str = timestamp.atStartOfDay().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         this.count = count;
         this.nhiemvu = nhiemvu;
         this.count_str = String.valueOf(count);
