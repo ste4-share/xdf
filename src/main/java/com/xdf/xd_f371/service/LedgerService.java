@@ -4,9 +4,7 @@ import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
-import com.xdf.xd_f371.dto.InventoryDto;
-import com.xdf.xd_f371.dto.LedgerDto;
-import com.xdf.xd_f371.dto.MiniLedgerDto;
+import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.repo.*;
@@ -14,10 +12,15 @@ import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -100,12 +103,6 @@ public class LedgerService {
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
             detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
         }
-    }
-    public List<Ledger> getAllByQuarter(Quarter q, String lp){
-        if (q==null){
-            return new ArrayList<>();
-        }
-        return ledgersRepo.findAllByQuarter(q.getStart_date(),q.getEnd_date(),lp);
     }
     @Transactional
     public void inactiveLedger(int id ) {

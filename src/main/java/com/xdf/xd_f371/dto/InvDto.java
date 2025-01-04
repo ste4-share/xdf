@@ -33,4 +33,15 @@ public class InvDto {
         this.sd = sd;
         this.ed = ed;
     }
+
+    public InvDto(int petro_id, int don_gia, int nhap_nvdx, int nhap_sscd, int xuat_nvdx, int xuat_sscd, LocalDate sd, LocalDate ed) {
+        this.petro_id = petro_id;
+        this.don_gia = don_gia;
+        this.nhap_nvdx = nhap_nvdx;
+        this.nhap_sscd = nhap_sscd;
+        this.xuat_nvdx = xuat_nvdx;
+        this.xuat_sscd = xuat_sscd;
+        this.sd = sd;
+        this.ed = ed;
+    }
 }

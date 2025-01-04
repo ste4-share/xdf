@@ -77,14 +77,6 @@ public class ConvertController implements Initializable {
     }
     @FXML
     public void convertAction(ActionEvent actionEvent) {
-        Quarter pre = pre_cbb.getSelectionModel().getSelectedItem();
-        Quarter prv = prv_cbb.getSelectionModel().getSelectedItem();
-        if (DialogMessage.callAlert()== ButtonType.OK){
-            if (pre!=null && prv!=null){
-                inventoryService.saveInvWhenSwitchQuarter(prv);
-                DialogMessage.successShowing("Thanh cong");
-                TonkhoController.tk_stage.close();
-            }
-        }
+
     }
 }

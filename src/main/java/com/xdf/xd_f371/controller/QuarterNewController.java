@@ -1,7 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Accounts;
-import com.xdf.xd_f371.service.AccountService;
+import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.event.ActionEvent;
@@ -18,7 +18,7 @@ public class QuarterNewController implements Initializable {
     @FXML
     private DatePicker ed,sd;
     @Autowired
-    private AccountService accountService;
+    private InventoryService inventoryService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -28,13 +28,11 @@ public class QuarterNewController implements Initializable {
     }
     @FXML
     public void save(ActionEvent actionEvent) {
-        if (Common.date_valid(sd,ed)){
+        if (Common.date_valid(ed,sd)){
             if (DialogMessage.callAlertWithMessage(null,"Luu", "Luu thay doi?", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                Accounts acc = ConnectLan.pre_acc;
-                acc.setSd(sd.getValue());
-                acc.setEd(ed.getValue());
-                accountService.save(acc);
+                inventoryService.saveInvWhenSwitchQuarter(sd,ed);
                 DialogMessage.successShowing("Luu thanh cong!!");
+                TonkhoController.tk_stage.close();
             }
         }
     }

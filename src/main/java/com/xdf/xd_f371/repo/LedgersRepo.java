@@ -37,9 +37,9 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     List<Ledger> findAllByQuarter(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed,@Param("lp") String lp);
     @Query(value = "select * from ledgers l where l.from_date between :sd and :ed", nativeQuery = true)
     List<Ledger> findAllByInDateRange(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
-    @Query(value = "select * from ledgers l where l.from_date < :sd", nativeQuery = true)
+    @Query(value = "select * from ledgers l where l.from_date < :sd and l.status like 'ACTIVE'", nativeQuery = true)
     List<Ledger> findAllByBeforeDateRange(@Param("sd") LocalDate sd);
-    @Query(value = "select * from ledgers l where limit 1 order by l.from_date ASC", nativeQuery = true)
+    @Query(value = "select * from ledgers l limit 1 order by l.from_date ASC", nativeQuery = true)
     Optional<Ledger> findFirstLedger();
     @Query(value = "select lxd.id,maxd,tenxd,petroleum_type_id,\n" +
             "case when don_gia is null then 0 else don_gia end as don_gia,\n" +
@@ -59,5 +59,17 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     @Modifying
     @Query(value = "update ledgers l set status='IN_ACTIVE' where l.id=:i", nativeQuery = true)
     void inactiveLedgers(@Param("i") int id);
-
+    @Query(value = "select lxd.id,\n" +
+            "case when don_gia is null then 0 else don_gia end,\n" +
+            "case when nhap_nvdx is null then 0 else nhap_nvdx end,\n" +
+            "case when nhap_sscd is null then 0 else nhap_sscd end,\n" +
+            "case when xuat_nvdx is null then 0 else xuat_nvdx end,\n" +
+            "case when xuat_sscd is null then 0 else xuat_sscd end,from_date,end_date \n" +
+            "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +
+            "left join (SELECT loaixd_id,don_gia,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd,\n" +
+            "sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd, min(from_date) as from_date,max(end_date) as end_date\n" +
+            "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
+            "where status like 'ACTIVE' and from_date < :sd\n" +
+            "group by 1,2) a on lxd.id=a.loaixd_id",nativeQuery = true)
+    List<Object[]> findAllInvByRangeBefore(@Param("sd") LocalDate sd);
 }

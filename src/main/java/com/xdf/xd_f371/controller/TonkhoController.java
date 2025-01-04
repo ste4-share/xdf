@@ -57,7 +57,6 @@ public class TonkhoController implements Initializable {
         tb_history.setPrefHeight(DashboardController.screenHeigh-350);
 
         pickTonKho = new TonkhoDto();
-        tkt = inventoryService.getAllTonkhoNotCondition();
         fillDataToTableTonkho();
         setTonkhoTongToCol();
         setLichsuTb();
@@ -83,7 +82,12 @@ public class TonkhoController implements Initializable {
     }
 
     private void fillDataToTableTonkho(){
-        tkt = inventoryService.getAllTonkhoNotCondition();
+        Accounts acc = ConnectLan.pre_acc;
+        if (acc.getSd()!=null && acc.getEd()!=null){
+            tkt = inventoryService.getAllTonkho(acc.getSd(),acc.getEd());
+        }else{
+            tkt = inventoryService.getAllTonkhoNotCondition();
+        }
         tb_tonkho.setItems(FXCollections.observableArrayList(tkt));
     }
     private void mapInvTb(List<TonkhoDto> ls){
@@ -203,7 +207,7 @@ public class TonkhoController implements Initializable {
     public void endQuarterAction(ActionEvent actionEvent) {
         tk_stage = new Stage();
         Common.openNewStage("quarter.fxml", tk_stage,null, StageStyle.UTILITY);
-//        updateData();
+        fillDataToTableTonkho();
     }
     @FXML
     public void from_dateAction(ActionEvent actionEvent) {
