@@ -5,7 +5,7 @@
 -- Dumped from database version 14.13
 -- Dumped by pg_dump version 16.4
 
--- Started on 2025-01-03 17:45:18
+-- Started on 2025-01-04 20:52:33
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1555,7 +1555,7 @@ ALTER TABLE ONLY public.tructhuoc ALTER COLUMN id SET DEFAULT nextval('public.tr
 
 COPY public.accounts (id, username, surname, roles, passwd, color, status, create_at, sd, ed) FROM stdin;
 1	user_1	chain	USER	7c4a8d09ca3762af61e59520943dc26494f8941b	#ffffff	ACTIVE	2024-12-22 00:00:00	\N	\N
-2	admin	tga	ADMIN	5dd4ebdac62609c834f7768f02286b798bd82a38	#ffffff	ACTIVE	2024-12-22 00:00:00	\N	\N
+2	admin	tga	ADMIN	5dd4ebdac62609c834f7768f02286b798bd82a38	#ffffff	ACTIVE	2024-12-22 00:00:00	2024-12-31	2025-01-05
 \.
 
 
@@ -1912,6 +1912,16 @@ COPY public.inventory (id, tdk_sscd, tdk_nvdx, status, petro_id, nhap_nvdx, nhap
 --
 
 COPY public.ledger_details (ma_xd, ten_xd, chung_loai, chat_luong, phai_xuat, thuc_xuat, don_gia, id, loaixd_id, phuongtien_id, ledger_id, thuc_xuat_tk, so_luong, thuc_nhap, phai_nhap, thanhtien, haohut_sl, nl_km, nl_gio, so_luong_px, sscd_nvdx, ty_trong, nhiet_do_tt, he_so_vcf, nhap_nvdx, nhap_sscd, xuat_nvdx, xuat_sscd) FROM stdin;
+E5-RON92	XANG E5 RON92	Xăng	\N	68	68	2000	1472	20	32	689	0	68	0	0	136000	0	0	0	68	NVDX	0	0	0	0	0	68	0
+E5-RON92	XANG E5 RON92	Xăng	\N	0	0	12315	1465	20	0	684	0	12121	12121	12121	149270115	0	\N	\N	12121	NVDX	0	0	0	12121	0	0	0
+A83	Xăng A83	Xăng	\N	0	0	11658	1466	72	0	684	0	50000	50000	50000	582900000	0	\N	\N	50000	NVDX	0	0	0	50000	0	0	0
+A80	Xăng A80	Xăng	\N	0	0	12351	1467	21	0	685	0	23423	23423	23422	289297473	0	\N	\N	23422	NVDX	0	0	0	23423	0	0	0
+DO 0,05% S	DO 0,05% S	Diezel	\N	0	0	11232	1468	22	0	685	0	23222	23222	23222	260829504	0	\N	\N	23222	NVDX	0	0	0	23222	0	0	0
+E5-RON92	XANG E5 RON92	Xăng	\N	0	0	65482	1469	20	0	686	0	2000	2000	2000	130964000	0	\N	\N	2000	NVDX	0	0	0	2000	0	0	0
+E5-RON92	XANG E5 RON92	Xăng	\N	0	0	2000	1470	20	0	687	0	2020	2020	2000	4040000	0	\N	\N	2000	NVDX	0	0	0	2020	0	0	0
+E5-RON92	XANG E5 RON92	Xăng	\N	0	0	5555	1471	20	0	688	0	5555	5555	5555	30858025	0	\N	\N	5555	NVDX	0	0	0	5555	0	0	0
+JETA-01	Dầu JETA-01	Dầu bay	\N	0	0	20000	1473	36	0	690	0	20002	20002	23200	400040000	0	\N	\N	23200	NVDX	0	0	0	20002	0	0	0
+JETA-01	Dầu JETA-01	Dầu bay	\N	1105	0	20000	1474	36	24	691	1105	1105	0	0	22100000	0	0	1105	1105	NVDX	0	0	0	0	0	1105	0
 \.
 
 
@@ -1932,6 +1942,14 @@ COPY public.ledger_map (id, loaixd_id, header_id, soluong, mucgia_id, quarter_id
 --
 
 COPY public.ledgers (id, bill_id, amount, from_date, end_date, status, sl_tieuthu_md, sl_tieuthu_tk, dvi_nhan_id, dvi_xuat_id, loai_phieu, dvi_nhan, dvi_xuat, loaigiobay, nguoi_nhan, so_xe, lenh_so, nhiemvu, nhiemvu_id, so_km, tcn_id, "timestamp", giohd_md, giohd_tk, loainv, tructhuoc, lpt, lpt_2, version, create_by, root_id, pt_id) FROM stdin;
+684	7748	732170115	2025-01-04	\N	ACTIVE	0	0	54	22	NHAP	f Bộ	Trường SQKQ	\N				\N	0	0	1	2025-01-04 20:00:24.432862	\N	\N	\N	DVK	\N	\N	0	2	54	0
+685	6548	550126977	2025-01-04	\N	ACTIVE	0	0	54	19	NHAP	f Bộ	Kho K14 cap	\N				\N	0	0	13	2025-01-04 20:02:35.335498	\N	\N	\N	QC	\N	\N	0	2	54	0
+686	2378	130964000	2025-01-04	\N	ACTIVE	0	0	54	25	NHAP	f Bộ	Công ty XDQD	\N				\N	0	0	1	2025-01-04 20:09:33.121637	\N	\N	\N	PC	\N	\N	0	2	54	0
+687	3241	4040000	2025-01-04	\N	ACTIVE	0	0	54	2	NHAP	f Bộ	Kho 661	\N				\N	0	0	1	2025-01-04 20:11:23.725781	\N	\N	\N	CXD	\N	\N	0	2	54	0
+688	78452	30858025	2025-01-04	\N	ACTIVE	0	0	54	22	NHAP	f Bộ	Trường SQKQ	\N				\N	0	0	1	2025-01-04 20:12:16.688147	\N	\N	\N	DVK	\N	\N	0	2	54	0
+689	1827	136000	2025-01-04	\N	ACTIVE	0	0	0	54	XUAT		f Bộ	MD				Khai thác thông tin	22	200	0	2025-01-04 20:46:32.738668	0:00:00	00:00:00	\N	TT_XM	XE_CHAY_XANG	XE	0	2	54	32
+690	2342	400040000	2025-01-04	\N	ACTIVE	0	0	54	22	NHAP	f Bộ	Trường SQKQ	\N				\N	0	0	1	2025-01-04 20:50:50.517564	\N	\N	\N	DVK	\N	\N	0	2	54	0
+691	12399	22100000	2025-01-04	\N	ACTIVE	0	0	0	6	XUAT		e927	TK				Nổ máy sscđ	9	0	0	2025-01-04 20:51:56.06761	00:00:00	00:12:00	\N	TT_XM	MB-CD	MAYBAY	0	2	54	24
 \.
 
 
@@ -1942,6 +1960,16 @@ COPY public.ledgers (id, bill_id, amount, from_date, end_date, status, sl_tieuth
 --
 
 COPY public.lichsuxnk (id, ten_xd, loai_phieu, tontruoc, soluong, tonsau, "timestamp", type, so, dvn, dvx, chungloaixd, gia, sd) FROM stdin;
+1216	XANG E5 RON92	NHAP	12121	12121	24242	2025-01-04 20:00:24.432862	NVDX	7748	f Bộ	Trường SQKQ	Xăng	12315	2025-01-04
+1217	Xăng A83	NHAP	50000	50000	100000	2025-01-04 20:00:24.432862	NVDX	7748	f Bộ	Trường SQKQ	Xăng	11658	2025-01-04
+1218	Xăng A80	NHAP	23423	23423	46846	2025-01-04 20:02:35.335498	NVDX	6548	f Bộ	Kho K14 cap	Xăng	12351	2025-01-04
+1219	DO 0,05% S	NHAP	23222	23222	46444	2025-01-04 20:02:35.335498	NVDX	6548	f Bộ	Kho K14 cap	Diezel	11232	2025-01-04
+1220	XANG E5 RON92	NHAP	14121	2000	16121	2025-01-04 20:09:33.121637	NVDX	2378	f Bộ	Công ty XDQD	Xăng	65482	2025-01-04
+1221	XANG E5 RON92	NHAP	16141	2020	18161	2025-01-04 20:11:23.725781	NVDX	3241	f Bộ	Kho 661	Xăng	2000	2025-01-04
+1222	XANG E5 RON92	NHAP	21696	5555	27251	2025-01-04 20:12:16.688147	NVDX	78452	f Bộ	Trường SQKQ	Xăng	5555	2025-01-04
+1223	XANG E5 RON92	XUAT	21696	68	21628	2025-01-04 20:46:32.738668	NVDX	1827		f Bộ	Xăng	2000	2025-01-04
+1224	Dầu JETA-01	NHAP	20002	20002	40004	2025-01-04 20:50:50.517564	NVDX	2342	f Bộ	Trường SQKQ	Dầu bay	20000	2025-01-04
+1225	Dầu JETA-01	XUAT	20002	1105	18897	2025-01-04 20:51:56.06761	NVDX	12399		e927	Dầu bay	20000	2025-01-04
 \.
 
 
@@ -2032,6 +2060,7 @@ COPY public.loaixd2 (id, maxd, tenxd, status, "timestamp", petroleum_type_id) FR
 67	Mỡ 221	Mỡ 221	ACTIVE	2024-09-19 11:19:55.079972	13
 68	Mỡ HK-50	Mỡ HK-50	ACTIVE	2024-09-19 11:19:55.085885	13
 69	Mỡ số 9	Mỡ số 9	ACTIVE	2024-09-19 11:19:55.09204	13
+72	A83	Xăng A83	ACTIVE	2025-01-04 08:50:20.805223	7
 \.
 
 
@@ -2316,7 +2345,7 @@ COPY public.tructhuoc_loaiphieu (id, tructhuoc_id, loaiphieu_id) FROM stdin;
 -- Name: Inventory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Inventory_id_seq"', 2097, true);
+SELECT pg_catalog.setval('public."Inventory_id_seq"', 2357, true);
 
 
 --
@@ -2325,7 +2354,7 @@ SELECT pg_catalog.setval('public."Inventory_id_seq"', 2097, true);
 -- Name: Ledgers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Ledgers_id_seq"', 658, true);
+SELECT pg_catalog.setval('public."Ledgers_id_seq"', 691, true);
 
 
 --
@@ -2451,7 +2480,7 @@ SELECT pg_catalog.setval('public.hanmuc_nhiemvu_taubay_id_seq', 80, true);
 -- Name: lichsuxnk_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.lichsuxnk_id_seq', 1180, true);
+SELECT pg_catalog.setval('public.lichsuxnk_id_seq', 1225, true);
 
 
 --
@@ -2487,7 +2516,7 @@ SELECT pg_catalog.setval('public.loai_phuongtien_id_seq', 7, true);
 -- Name: loaixd2_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.loaixd2_id_seq', 71, true);
+SELECT pg_catalog.setval('public.loaixd2_id_seq', 72, true);
 
 
 --
@@ -2550,7 +2579,7 @@ SELECT pg_catalog.setval('public.quarter_id_seq', 55, true);
 -- Name: so_cai_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.so_cai_id_seq', 1429, true);
+SELECT pg_catalog.setval('public.so_cai_id_seq', 1474, true);
 
 
 --
@@ -3175,7 +3204,7 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2025-01-03 17:45:19
+-- Completed on 2025-01-04 20:52:33
 
 --
 -- PostgreSQL database dump complete

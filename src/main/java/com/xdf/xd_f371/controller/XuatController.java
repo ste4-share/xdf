@@ -642,8 +642,8 @@ public class XuatController extends CommonFactory implements Initializable {
         String hour_str = sogio.getText().trim();
         String m_str = sophut.getText().trim();
 
-        int hour1 = getHourMinute(Integer.parseInt(m_str)).get(0);
-        int minute = getHourMinute(Integer.parseInt(m_str)).get(1);
+        int hour1 = getHourMinute(Integer.parseInt(m_str.trim().isEmpty() ? "0" : m_str)).get(0);
+        int minute = getHourMinute(Integer.parseInt(m_str.trim().isEmpty() ? "0" : m_str)).get(1);
         int sum_hour = Integer.parseInt(hour_str) + hour1;
 
         if (minute <10){

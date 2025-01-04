@@ -3,23 +3,14 @@ package com.xdf.xd_f371.cons;
 import java.time.LocalDate;
 
 public class SubQuery {
-    public static String nl_begin_q1(){
-        return "select max(stt_index) as stt,tinhchat,loai,CASE WHEN tenxd is null and grouping(tinhchat)=0 then loai else tenxd end,sum(tdk_sscd) as tdk_sscd,sum(tdk_nvdx) as tdk_nvdx,sum(cong) as cong,";
+    public static String begin_q1(){
+        return "select tinhchat,chungloai,loai,case when grouping(tenxd)=1 and grouping(loai)=0 then loai else tenxd end,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd,sum(cong_tdk) as cong_tdk,";
     }
-    public static String nl_end_q1(){
-        return "max(priority_3), grouping(tinhchat) as tc_gr,grouping(loai) as loai_gr,grouping(tenxd) as xd_gr, max(priority_3) as pr from (select stt_index,tinhchat,loai,tenxd,max(tdk_sscd) as tdk_sscd,max(tdk_nvdx) as tdk_nvdx,max(tdk_sscd+tdk_nvdx) as cong,max(priority_3) as priority_3,";
+    public static String end_q1(){
+        return "max(p1) as p1, max(p2) as p2, max(p3) as p3,grouping(tinhchat) as tc,grouping(loai) as l,grouping(tenxd) as xd from (select lxd.id,tinhchat,cl.chungloai,loai,maxd,tenxd,case when tdk_nvdx is null then 0 else tdk_nvdx end,case when tdk_sscd is null then 0 else tdk_sscd end,case when tdk_sscd+tdk_nvdx is null then 0 else tdk_sscd+tdk_nvdx end as cong_tdk,";
     }
-    public static String nl_end(LocalDate sd, LocalDate ed){
-        return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat like 'Nhiên liệu' and i.sd between '"+sd+"' and '"+ed+"' group by 1,2,3,4) s group by rollup(tinhchat,loai,tenxd) order by tc_gr desc,loai_gr desc,pr asc,xd_gr desc";
-    }
-    public static String dmn_begin_q1(){
-        return "select max(stt_index) as stt,chungloai,loai,CASE WHEN tenxd is null and grouping(chungloai)=0 then loai else tenxd end,sum(tdk_sscd) as tdk_sscd,sum(tdk_nvdx) as tdk_nvdx,sum(cong) as cong,";
-    }
-    public static String dmn_end_q1(){
-        return "max(priority_3),grouping(chungloai) as cl_gr,grouping(loai) as loai_gr,grouping(tenxd) as xd_gr, max(priority_3) as pr from (select stt_index,chungloai,loai,tenxd,max(tdk_sscd) as tdk_sscd,max(tdk_nvdx) as tdk_nvdx,max(tdk_sscd+tdk_nvdx) as cong,max(priority_3) as priority_3,";
-    }
-    public static String dmn_end(LocalDate sd, LocalDate ed){
-        return "'ss' from inventory i join loaixd2 lxd on i.petro_id=lxd.id join chungloaixd cl on lxd.petroleum_type_id=cl.id where tinhchat <> 'Nhiên liệu' and i.sd between '"+sd+"' and '"+ed+"' group by 1,2,3,4) s group by rollup(chungloai,loai,tenxd) order by chungloai desc,grouping(chungloai) desc,loai_gr desc,pr asc,xd_gr desc";
+    public static String end_q1_1(){
+        return "cl.priority_1 as p1,cl.priority_2 as p2,cl.priority_3 as p3 from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory group by 1) a on a.petro_id=lxd.id";
     }
     public static String ttxd_nv(int y,int dv_id){
         return "select max(tt) as tt,max(pri) as pri,n,\n" +
@@ -100,7 +91,7 @@ public class SubQuery {
                 "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
                 "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
-                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and "+sd+" <= l.from_date and l.from_date <= "+ed+" \n" +
+                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' \n" +
                 "group by 1) b on a.pt_id=b.phuongtien_id) c\n" +
                 "group by rollup(name_pt) order by ten_gr desc,name_pt desc";
     }
@@ -134,7 +125,7 @@ public class SubQuery {
                 "max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,\n" +
                 "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE' and "+sd+" <= l.from_date and l.from_date <= "+ed+" \n" +
+                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' \n" +
                 "group by 1,2) c on c.ctnv_id=rat2.ct_id) d\n" +
                 "group by rollup(ten_nv,nhiemvu)) z\n" +
                 "group by ten_nv, nhiemvu order by tennv_gr desc,pri,ten_nv, nv_gr desc,nhiemvu";
@@ -172,7 +163,7 @@ public class SubQuery {
                 "left join (SELECT dvi_xuat_id,l.nhiemvu_id as ctnv_id,max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,\n" +
                 "max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE' and "+sd+" <= l.from_date and l.from_date <= "+ed+" \n" +
+                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' \n" +
                 "group by 1,2) a on (a.dvi_xuat_id=rat.nnx and a.ctnv_id=rat.ct_id)\n" +
                 "group by rollup(ten,ten_nv,nhiemvu)) b\n" +
                 "group by pri,ten,ten_nv,nhiemvu\n" +
@@ -214,7 +205,7 @@ public class SubQuery {
                 "left join (SELECT phuongtien_id,l.nhiemvu_id as ctnv_id,max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,\n" +
                 "max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE' and "+sd+" <= l.from_date and l.from_date <= "+ed+" \n" +
+                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' \n" +
                 "group by 1,2) a on (a.phuongtien_id=rat.pt_id and a.ctnv_id=rat.ct_id)\n" +
                 "group by rollup(name_pt,ten_nv,nhiemvu)) b\n" +
                 "where name_pt is not null\n" +

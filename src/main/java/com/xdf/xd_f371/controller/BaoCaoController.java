@@ -45,8 +45,6 @@ public class BaoCaoController implements Initializable {
     private TructhuocService tructhuocService;
     @Autowired
     private NguonNxService nguonNxService;
-    @Autowired
-    private QuarterService quarterService;
     @FXML
     ComboBox<NguonNx> dvi_cbb;
     @FXML
@@ -70,16 +68,14 @@ public class BaoCaoController implements Initializable {
     }
     private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){
         if (q!=null){
-            int row_ind = createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(),SubQuery.nl_end_q1(),SubQuery.nl_end(q.getSd(),q.getEd())));
-            return createDataSheet(wb.createSheet(sheetName), row_ind,getCusQueryNl(SubQuery.dmn_begin_q1(),SubQuery.dmn_end_q1(),SubQuery.dmn_end(q.getSd(),q.getEd())));
+            return createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
         }
         return null;
     }
     private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
-        System.out.println("query: " + getCusQueryNl(SubQuery.nl_begin_q1(), SubQuery.nl_end_q1(), SubQuery.nl_end(q.getSd(),q.getEd())));
+        System.out.println("query: " + getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
         if (q!=null) {
-            int row_ind = createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.nl_begin_q1(), SubQuery.nl_end_q1(), SubQuery.nl_end(q.getSd(),q.getEd())));
-            return createDataSheet(wb.getSheet(sheetName), row_ind, getCusQueryNl(SubQuery.dmn_begin_q1(), SubQuery.dmn_end_q1(), SubQuery.dmn_end(q.getSd(),q.getEd())));
+            return createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
         }
         return null;
     }
@@ -90,6 +86,7 @@ public class BaoCaoController implements Initializable {
         return null;
     }
     private Integer map_ttnlbtkh_getting(XSSFWorkbook wb,String sheetName){
+        System.out.println("query: " + SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()));
         if (q!=null){
             int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,
                     SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()),1);
@@ -196,24 +193,27 @@ public class BaoCaoController implements Initializable {
     @FXML
     public void bc_ttxd_dientap(ActionEvent actionEvent) {
     }
-    private String getCusQueryNl(String begin_1,String end_q1, String end){
+    private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1){
         arr_tt.clear();
         String n_sum1="";
         String x_sum2="";
+        String sl1="";
+        String sl2="";
         String n_case_1="";
         String x_case_2="";
-        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
+//        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
         for (int i=0; i<tructhuocService.findAll().size(); i++) {
             TrucThuoc tt = tructhuocService.findAll().get(i);
             arr_tt.add(tt.getType());
             n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
             x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            n_case_1 = n_case_1.concat("max(case when invnhap_xd('"+q.getSd()+"','"+q.getEd()+"', '"+tt.getType()+"', lxd.id,'NHAP',"+nx.getId()+",'ACTIVE') " +
-                    "is null then 0 else invnhap_xd('"+q.getSd()+"','"+q.getEd()+"', '"+tt.getType()+"', lxd.id,'NHAP',"+nx.getId()+",'ACTIVE') end) as n"+tt.getType()+",");
-            x_case_2 = x_case_2.concat("max(case when invxuat_xd('"+q.getSd()+"','"+q.getEd()+"', '"+tt.getType()+"', lxd.id,'XUAT',"+nx.getId()+",'ACTIVE') " +
-                    "is null then 0 else invxuat_xd('"+q.getSd()+"','"+q.getEd()+"', '"+tt.getType()+"', lxd.id,'XUAT',"+nx.getId()+",'ACTIVE') end) as x"+tt.getType()+",");
+            sl1=sl1.concat("case when n"+tt.getType()+".soluong is null then 0 else n"+tt.getType()+".soluong end as n"+tt.getType()+",");
+            sl2=sl2.concat("case when x"+tt.getType()+".soluong is null then 0 else x"+tt.getType()+".soluong end as x"+tt.getType()+",");
+            n_case_1 = n_case_1.concat(" left join (select loaixd_id, so_luong as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE') n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
+            x_case_2 = x_case_2.concat(" left join (select loaixd_id, so_luong as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE') x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
         }
-        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(n_case_1).concat(x_case_2).concat(end);
+        String en = ") z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
+        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
     }
     private int mapDataToSheet(XSSFSheet sheet,  int begin_data_current,String query, int begin_col){
         ReportDAO reportDAO = new ReportDAO();
