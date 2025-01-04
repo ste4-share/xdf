@@ -46,9 +46,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "group by 1,2,3,4,cl.priority_1,cl.priority_2,cl.priority_3\n" +
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkho(@Param("std") LocalDate sd, @Param("end") LocalDate ed);
-    @Query(value = "select i.petro_id,maxd,tenxd,loai," +
-            "case when max(i.tdk_nvdx) is null then 0 else max(i.tdk_nvdx) end as tdk_nvdx," +
-            "case when max(i.tdk_sscd) is null then 0 else max(i.tdk_sscd) end as tdk_sscd,\n" +
+    @Query(value = "select lxd.id,maxd,tenxd,loai,cast(0 as bigint),cast(0 as bigint),\n" +
             "case when max(a.nhap_nvdx) is null then 0 else max(a.nhap_nvdx) end as nhap_nvdx,\n" +
             "case when max(a.xuat_nvdx) is null then 0 else max(a.xuat_nvdx) end as xuat_nvdx,\n" +
             "case when max(a.nhap_nvdx-a.xuat_nvdx) is null then 0 else max(a.nhap_nvdx-a.xuat_nvdx) end as nvdx,\n" +
@@ -56,13 +54,12 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "case when max(a.xuat_sscd) is null then 0 else max(a.xuat_sscd) end as xuat_sscd,\n" +
             "case when max(a.nhap_sscd-a.xuat_sscd) is null then 0 else max(a.nhap_sscd-a.xuat_sscd) end as sscd,\n" +
             "max(cl.priority_1),max(cl.priority_2),max(cl.priority_3)\n" +
-            "from inventory i\n" +
-            "left join (SELECT loaixd_id,ten_xd,chung_loai,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd \n" +
+            "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
+            "left join (SELECT loaixd_id,ten_xd,chung_loai,sum(nhap_nvdx) as nhap_nvdx,\n" +
+            "sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd \n" +
             "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
             "where status like 'ACTIVE'\n" +
-            "group by 1,2,3) a on i.petro_id=a.loaixd_id\n" +
-            "left join loaixd2 lxd on lxd.id=i.petro_id\n" +
-            "left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
+            "group by 1,2,3) a on lxd.id=a.loaixd_id\n" +
             "group by 1,2,3,4,cl.priority_1,cl.priority_2,cl.priority_3\n" +
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkhoNotCondition();

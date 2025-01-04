@@ -2,10 +2,8 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
-import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -20,11 +18,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 @Component
@@ -33,7 +29,6 @@ public class TonkhoController implements Initializable {
     public static Stage tk_stage;
     private static List<TonkhoDto> tkt = new ArrayList<>();
     private static List<LichsuXNK> histories = new ArrayList<>();
-    private static Quarter findByTime;
     public static TonkhoDto pickTonKho = new TonkhoDto();
     @FXML
     public TableView<TonkhoDto> tb_tonkho;
@@ -63,6 +58,7 @@ public class TonkhoController implements Initializable {
 
         pickTonKho = new TonkhoDto();
         tkt = inventoryService.getAllTonkhoNotCondition();
+        fillDataToTableTonkho();
         setTonkhoTongToCol();
         setLichsuTb();
         fillDataToTableLichsu();
@@ -88,7 +84,7 @@ public class TonkhoController implements Initializable {
 
     private void fillDataToTableTonkho(){
         tkt = inventoryService.getAllTonkhoNotCondition();
-        tb_tonkho.setItems( FXCollections.observableArrayList(tkt));
+        tb_tonkho.setItems(FXCollections.observableArrayList(tkt));
     }
     private void mapInvTb(List<TonkhoDto> ls){
         tb_tonkho.setItems( FXCollections.observableArrayList(ls));
