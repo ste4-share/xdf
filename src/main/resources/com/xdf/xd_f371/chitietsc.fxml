@@ -93,7 +93,7 @@
                               <Font name="Cambria" size="16.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="40.0" prefWidth="185.0" text="Tính chất nhập:">
+                        <Label prefHeight="40.0" prefWidth="185.0" text="Tính chất Nhập/Xuất:">
                            <font>
                               <Font name="Cambria Bold" size="16.0" />
                            </font>

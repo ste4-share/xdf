@@ -3,8 +3,6 @@ package com.xdf.xd_f371.cons;
 import java.time.LocalDate;
 
 public class SubQuery {
-    public SubQuery() {
-    }
     public static String nl_begin_q1(){
         return "select max(stt_index) as stt,tinhchat,loai,CASE WHEN tenxd is null and grouping(tinhchat)=0 then loai else tenxd end,sum(tdk_sscd) as tdk_sscd,sum(tdk_nvdx) as tdk_nvdx,sum(cong) as cong,";
     }

@@ -206,10 +206,15 @@ public class DashboardController implements Initializable {
         if (mouseEvent.getClickCount()==2){
             MiniLedgerDto m = tbTTNX.getSelectionModel().getSelectedItem();
             if (m!=null){
-                so_select = (long) m.getId();
-                lp = m.getLoai_phieu();
-                Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT",StageStyle.UTILITY);
-                updateData();
+                try {
+                    so_select = (long) m.getId();
+                    lp = m.getLoai_phieu();
+                    Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT",StageStyle.UTILITY);
+                    updateData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    DialogMessage.errorShowing(null);
+                }
             }
         }
     }

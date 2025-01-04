@@ -182,8 +182,13 @@ public class ChiTietSCController implements Initializable {
             lb_dvn.setText(ls.get(0).getDvi_nhan());
             lb_tcn.setText(tcnService.findById(ls.get(0).getTcn_id()).orElse(null).getName());
         } else {
-            lb_dvn.setText(phuongtienService.findById(ls.get(0).getPhuongtien_id()).orElse(null).getName());
-            lb_tcn.setText(chitietNhiemvuService.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu());
+            if (ls.get(0).getHaohut_sl()==0){
+                lb_dvn.setText(phuongtienService.findById(ls.get(0).getPhuongtien_id()).orElse(null).getName());
+                lb_tcn.setText(chitietNhiemvuService.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu());
+            }else{
+                lb_dvn.setText(ls.get(0).getDvi_nhan());
+                lb_tcn.setText(chitietNhiemvuService.findById(ls.get(0).getNhiemvu_id()).orElse(null).getNhiemvu());
+            }
         }
         lb_so.setText(String.valueOf(ls.get(0).getBill_id()));
         lb_nguoinhan.setText(ls.get(0).getNguoi_nhan());
