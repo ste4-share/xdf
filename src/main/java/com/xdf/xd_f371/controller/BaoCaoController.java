@@ -76,11 +76,11 @@ public class BaoCaoController implements Initializable {
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null){
-                return createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
+                return createDataSheet(wb.createSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
             }
         }else{
             if (q!=null){
-                return createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+                return createDataSheet(wb.createSheet(sheetName), getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
             }
         }
         return null;
@@ -89,11 +89,11 @@ public class BaoCaoController implements Initializable {
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null) {
-                return gettingDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
+                return createDataSheet(wb.getSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
             }
         }else{
             if (q!=null){
-                return gettingDataSheet(wb.getSheet(sheetName), 8, getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+                return createDataSheet(wb.getSheet(sheetName), getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
             }
         }
 
@@ -289,12 +289,12 @@ public class BaoCaoController implements Initializable {
         }
         return nxtls.size();
     }
-    private int createDataSheet(XSSFSheet sheet, int begin_data_current,String query) {
+    private int createDataSheet(XSSFSheet sheet,String query) {
         int sizett = arr_tt.size();
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(query);
-        XSSFRow row_header = sheet.createRow(begin_data_current-1);
-        XSSFRow row_header_1 = sheet.createRow(begin_data_current-2);
+        XSSFRow row_header = sheet.createRow(7);
+        XSSFRow row_header_1 = sheet.createRow(6);
 
         for (int i=0;i<arr_tt.size();i++){
             row_header_1.createCell(8+i).setCellValue("NHAP");
@@ -304,32 +304,9 @@ public class BaoCaoController implements Initializable {
         }
         for(int i =0; i< nxtls.size(); i++){
             Object[] rows_data = nxtls.get(i);
-            XSSFRow row = sheet.createRow(begin_data_current+i);
+            XSSFRow row = sheet.createRow(8+i);
             for (int j =0;j<rows_data.length;j++){
                 row.createCell(j+1).setCellValue(rows_data[j]==null ?"" : rows_data[j].toString());
-            }
-        }
-        arr_tt.clear();
-        return nxtls.size()+11;
-    }
-    private int gettingDataSheet(XSSFSheet sheet, int begin_data_current,String query) {
-        int sizett = arr_tt.size();
-        ReportDAO reportDAO = new ReportDAO();
-        List<Object[]> nxtls = reportDAO.findByWhatEver(query);
-        XSSFRow row_header = sheet.getRow(begin_data_current-1);
-        XSSFRow row_header_1 = sheet.getRow(begin_data_current-2);
-
-        for (int i=0;i<arr_tt.size();i++){
-            row_header_1.getCell(8+i).setCellValue("NHAP");
-            row_header_1.getCell(sizett+8+i).setCellValue("XUAT");
-            row_header.getCell(8+i).setCellValue(arr_tt.get(i));
-            row_header.getCell(sizett+8+i).setCellValue(arr_tt.get(i));
-        }
-        for(int i =0; i< nxtls.size(); i++){
-            Object[] rows_data = nxtls.get(i);
-            XSSFRow row = sheet.getRow(begin_data_current+i);
-            for (int j =0;j<rows_data.length;j++){
-                row.getCell(j+1).setCellValue(rows_data[j]==null ?"" : rows_data[j].toString());
             }
         }
         arr_tt.clear();
