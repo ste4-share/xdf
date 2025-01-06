@@ -4,11 +4,9 @@ import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.entity.NguonNx;
-import com.xdf.xd_f371.entity.Quarter;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.NguonNxService;
-import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
@@ -73,9 +71,9 @@ public class BaoCaoController implements Initializable {
         return null;
     }
     private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
-        System.out.println("query: " + getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+        System.out.println("query: "+getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
         if (q!=null) {
-            return createDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+            return gettingDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
         }
         return null;
     }
@@ -87,11 +85,11 @@ public class BaoCaoController implements Initializable {
     }
     private Integer map_ttnlbtkh_getting(XSSFWorkbook wb,String sheetName){
         System.out.println("query: " + SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()));
-        if (q!=null){
+        if (q!=null) {
             int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,
                     SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()),1);
-            int row_index2 = mapDataToSheet(wb.getSheet(sheetName),
-                    8+row_index1,SubQuery.ttnlbtkh_for_all(q.getSd(),q.getEd()),1);
+            int row_index2 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,
+                    SubQuery.ttnlbtkh_for_all(q.getSd(),q.getEd()),1);
             int row_index3 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,
                     SubQuery.ttnlbtkh_for_dv(q.getSd(),q.getEd()),1);
             return mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,
@@ -207,12 +205,12 @@ public class BaoCaoController implements Initializable {
             arr_tt.add(tt.getType());
             n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
             x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            sl1=sl1.concat("case when n"+tt.getType()+".soluong is null then 0 else n"+tt.getType()+".soluong end as n"+tt.getType()+",");
-            sl2=sl2.concat("case when x"+tt.getType()+".soluong is null then 0 else x"+tt.getType()+".soluong end as x"+tt.getType()+",");
-            n_case_1 = n_case_1.concat(" left join (select loaixd_id, so_luong as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE') n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
-            x_case_2 = x_case_2.concat(" left join (select loaixd_id, so_luong as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE') x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
+            sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
+            sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
+            n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
+            x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
         }
-        String en = ") z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
+        String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
         return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
     }
     private int mapDataToSheet(XSSFSheet sheet,  int begin_data_current,String query, int begin_col){
@@ -265,6 +263,29 @@ public class BaoCaoController implements Initializable {
             XSSFRow row = sheet.createRow(begin_data_current+i);
             for (int j =0;j<rows_data.length;j++){
                 row.createCell(j+1).setCellValue(rows_data[j]==null ?"" : rows_data[j].toString());
+            }
+        }
+        arr_tt.clear();
+        return nxtls.size()+11;
+    }
+    private int gettingDataSheet(XSSFSheet sheet, int begin_data_current,String query) {
+        int sizett = arr_tt.size();
+        ReportDAO reportDAO = new ReportDAO();
+        List<Object[]> nxtls = reportDAO.findByWhatEver(query);
+        XSSFRow row_header = sheet.getRow(begin_data_current-1);
+        XSSFRow row_header_1 = sheet.getRow(begin_data_current-2);
+
+        for (int i=0;i<arr_tt.size();i++){
+            row_header_1.getCell(8+i).setCellValue("NHAP");
+            row_header_1.getCell(sizett+8+i).setCellValue("XUAT");
+            row_header.getCell(8+i).setCellValue(arr_tt.get(i));
+            row_header.getCell(sizett+8+i).setCellValue(arr_tt.get(i));
+        }
+        for(int i =0; i< nxtls.size(); i++){
+            Object[] rows_data = nxtls.get(i);
+            XSSFRow row = sheet.getRow(begin_data_current+i);
+            for (int j =0;j<rows_data.length;j++){
+                row.getCell(j+1).setCellValue(rows_data[j]==null ?"" : rows_data[j].toString());
             }
         }
         arr_tt.clear();

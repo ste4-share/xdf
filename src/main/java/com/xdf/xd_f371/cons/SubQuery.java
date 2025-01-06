@@ -7,10 +7,10 @@ public class SubQuery {
         return "select tinhchat,chungloai,loai,case when grouping(tenxd)=1 and grouping(loai)=0 then loai else tenxd end,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd,sum(cong_tdk) as cong_tdk,";
     }
     public static String end_q1(){
-        return "max(p1) as p1, max(p2) as p2, max(p3) as p3,grouping(tinhchat) as tc,grouping(loai) as l,grouping(tenxd) as xd from (select lxd.id,tinhchat,cl.chungloai,loai,maxd,tenxd,case when tdk_nvdx is null then 0 else tdk_nvdx end,case when tdk_sscd is null then 0 else tdk_sscd end,case when tdk_sscd+tdk_nvdx is null then 0 else tdk_sscd+tdk_nvdx end as cong_tdk,";
+        return "max(p1) as p1, max(p2) as p2, max(p3) as p3,grouping(tinhchat) as tc,grouping(loai) as l,grouping(tenxd) as xd from (select lxd.id,tinhchat,cl.chungloai,loai,maxd,tenxd,case when max(tdk_nvdx) is null then 0 else max(tdk_nvdx) end as tdk_nvdx,case when max(tdk_sscd) is null then 0 else max(tdk_sscd) end as tdk_sscd,case when max(tdk_sscd)+max(tdk_nvdx) is null then 0 else max(tdk_sscd)+max(tdk_nvdx) end as cong_tdk,";
     }
     public static String end_q1_1(){
-        return "cl.priority_1 as p1,cl.priority_2 as p2,cl.priority_3 as p3 from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory group by 1) a on a.petro_id=lxd.id";
+        return "max(cl.priority_1) as p1,max(cl.priority_2) as p2,max(cl.priority_3) as p3 from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory group by 1) a on a.petro_id=lxd.id";
     }
     public static String ttxd_nv(int y,int dv_id){
         return "select max(tt) as tt,max(pri) as pri,n,\n" +
