@@ -108,7 +108,8 @@ public class DashboardController implements Initializable {
         LedgerUpdateService service = new LedgerUpdateService();
         service.setOnSucceeded(event -> {
             List<MiniLedgerDto> ls =service.getValue();
-            mapData(ls);
+            setLedgersToTable(ls);
+            setPagination_nxt(ls);
         });
         service.start();
     }
