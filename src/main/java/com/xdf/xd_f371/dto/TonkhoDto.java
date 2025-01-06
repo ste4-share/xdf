@@ -12,8 +12,8 @@ public class TonkhoDto {
     private String maxd;
     private String tenxd;
     private String loai;
-    private Long tdk_nvdx;
-    private Long tdk_sscd;
+    private long tdk_nvdx;
+    private long tdk_sscd;
     private Long nhap_nvdx;
     private Long xuat_nvdx;
     private Long nvdx;
@@ -38,7 +38,7 @@ public class TonkhoDto {
     private String sscd_str;
     private String total;
 
-    public TonkhoDto(int petro_id, String maxd, String tenxd, String loai, Long tdk_nvdx, Long tdk_sscd,
+    public TonkhoDto(int petro_id, String maxd, String tenxd, String loai, long tdk_nvdx, long tdk_sscd,
                      String nhap_nvdx, String xuat_nvdx, String nvdx, String nhap_sscd, String xuat_sscd, String sscd) {
         this.petro_id = petro_id;
         this.maxd = maxd;

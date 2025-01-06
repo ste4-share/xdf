@@ -20,4 +20,6 @@ public interface DinhMucRepo extends JpaRepository<DinhMuc, Integer> {
     Optional<DinhMuc> findDinhmucByPhuongtien(@Param("pt_id") int pt_id, @Param("y") int y);
     @Query(value = "select * from dinhmuc where years=:y",nativeQuery = true)
     List<DinhMuc> findAllByYear(int y);
+    @Query(value = "select years from dinhmuc group by 1",nativeQuery = true)
+    List<Integer> findAllByYear();
 }

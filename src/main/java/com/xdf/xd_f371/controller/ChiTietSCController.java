@@ -77,7 +77,9 @@ public class ChiTietSCController implements Initializable {
                         StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_path).append("/").append(file_name_1);
                         Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input.createSheet(getPhieu()),true),
                                 (input)->fillDataToPhieuNhap(input.getSheet(getPhieu()),false));
-                        Common.openDesktop();
+                        if (DialogMessage.callAlertWithMessage(null,"Thanh cong","Click OK để mở thư mục xuất phiếu." , Alert.AlertType.INFORMATION)==ButtonType.OK){
+                            Common.openDesktop();
+                        }
                     });
             }else {
                 DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);

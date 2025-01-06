@@ -7,7 +7,6 @@ import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.NguonNxService;
-import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -52,8 +51,6 @@ public class DinhMucPhuongTienController implements Initializable {
     private DinhmucService dinhmucService;
     @Autowired
     private NguonNxService nguonNxService;
-    @Autowired
-    private QuarterService quarterService;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pt_tb.setPrefWidth(DashboardController.screenWidth);
@@ -66,7 +63,7 @@ public class DinhMucPhuongTienController implements Initializable {
         Common.hoverButton(addBtn, "#ffffff");
     }
     private void initYearCbb() {
-        year_cbb.setItems(FXCollections.observableList(quarterService.getAllYear()));
+        year_cbb.setItems(FXCollections.observableList(dinhmucService.findAllYear()));
         year_cbb.getSelectionModel().selectFirst();
     }
     private void initNguonnxCbb() {

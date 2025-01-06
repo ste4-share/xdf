@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.NhiemvuController">
+<HBox style="-fx-background-color: #f2f2f2;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.NhiemvuController">
    <children>
       <VBox>
          <children>
@@ -38,7 +38,7 @@
                   <Insets bottom="10.0" top="10.0" />
                </VBox.margin>
             </HBox>
-            <TabPane fx:id="tab" style="-fx-background-color: #ffffff;" stylesheets="@css/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="tab" style="-fx-background-color: #f2f2f2;" stylesheets="@css/TabPane.css" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                  <Tab text="Nhiệm vụ">
                      <content>

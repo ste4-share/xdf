@@ -4,7 +4,6 @@ import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.AccountService;
 import com.xdf.xd_f371.service.ConnectionService;
-import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import javafx.application.Platform;
@@ -56,8 +55,6 @@ public class ConnectLan implements Initializable {
     private AccountService accountService;
     @Autowired
     private ConnectionService connectionService;
-    @Autowired
-    private QuarterService quarterService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Common.hoverButton(connect,"#009107");

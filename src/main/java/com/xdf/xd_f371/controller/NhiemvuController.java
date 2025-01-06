@@ -5,7 +5,6 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.HanmucNhiemvuService;
 import com.xdf.xd_f371.service.NguonNxService;
-import com.xdf.xd_f371.service.QuarterService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -35,8 +34,6 @@ public class NhiemvuController implements Initializable {
     public static HanmucNhiemvuTaubayDto hm = new HanmucNhiemvuTaubayDto();
     public static List<HanmucNhiemvu2Dto> hm2_ls = new ArrayList<>();
     public static HanmucNhiemvu2Dto hm2 = new HanmucNhiemvu2Dto();
-    @Autowired
-    private QuarterService quarterService;
     @Autowired
     private ChitietNhiemvuService chitietNhiemvuService;
     @Autowired

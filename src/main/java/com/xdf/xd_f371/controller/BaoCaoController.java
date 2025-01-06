@@ -18,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SortEvent;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -45,6 +47,8 @@ public class BaoCaoController implements Initializable {
     @Autowired
     private NguonNxService nguonNxService;
     @FXML
+    private TableView<Object> nltb_tb,lsb_tb,ptnnx_tb;
+    @FXML
     ComboBox<NguonNx> dvi_cbb;
     @FXML
     VBox rvb;
@@ -65,13 +69,18 @@ public class BaoCaoController implements Initializable {
             todate.setText("--/--/----");
         }
     }
-    @FXML
-    public void dvi_selected(ActionEvent actionEvent) {
-    }
+
     private void initdvcbb(){
         ComponentUtil.setItemsToComboBox(dvi_cbb, nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),NguonNx::getTen, input-> nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
+        nltb_tb.setPrefHeight(400);
+        nltb_tb.setPrefWidth(DashboardController.screenWidth-350);
+        ptnnx_tb.setPrefHeight(400);
+        ptnnx_tb.setPrefWidth(DashboardController.screenWidth-350);
+        lsb_tb.setPrefHeight(400);
+        lsb_tb.setPrefWidth(DashboardController.screenWidth-350);
     }
+
     private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
@@ -311,5 +320,14 @@ public class BaoCaoController implements Initializable {
         }
         arr_tt.clear();
         return nxtls.size()+11;
+    }
+    @FXML
+    public void mbAction(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void dvi_cbbACtion(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void ptnnx_tbAction(SortEvent<TableView<Object>> tableViewSortEvent) {
     }
 }

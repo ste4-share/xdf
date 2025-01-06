@@ -27,4 +27,7 @@ public class DinhmucService {
     public Optional<DinhMuc> findDinhmucByPhuongtien(int pt_id, int y){
         return dinhMucRepo.findDinhmucByPhuongtien(pt_id, y);
     }
+    public List<Integer> findAllYear(){
+        return dinhMucRepo.findAllByYear();
+    }
 }

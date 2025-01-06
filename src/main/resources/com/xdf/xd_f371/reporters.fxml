@@ -2,312 +2,614 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="rvb" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.BaoCaoController">
+<VBox xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.BaoCaoController">
    <children>
-      <HBox alignment="BOTTOM_LEFT" prefHeight="86.0" prefWidth="1004.0">
-         <children>
-            <Label prefHeight="37.0" prefWidth="55.0" text="đơn vị:">
-               <font>
-                  <Font name="Cambria Bold" size="12.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </Label>
-            <ComboBox fx:id="dvi_cbb" disable="true" onAction="#dvi_selected" prefHeight="38.0" prefWidth="185.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ComboBox>
-            <Label prefHeight="37.0" prefWidth="96.0" text="----Từ ngày:">
-               <font>
-                  <Font name="Cambria Bold" size="12.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </Label>
-            <Label fx:id="fromdate" prefHeight="37.0" prefWidth="154.0" text="Từ ngày:" textFill="RED">
-               <font>
-                  <Font name="Cambria Bold" size="16.0" />
-               </font>
-            </Label>
-            <Label prefHeight="37.0" prefWidth="96.0" text="----Đến ngày:">
-               <font>
-                  <Font name="Cambria Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="todate" prefHeight="37.0" prefWidth="135.0" text="Từ ngày:" textFill="RED">
-               <font>
-                  <Font name="Cambria Bold" size="16.0" />
-               </font>
-            </Label>
-         </children>
-      </HBox>
-      <HBox>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-         <children>
-            <Hyperlink onAction="#bc_nxt" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO NHẬP - XUẤT - TỒN">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label fx:id="nxt_lb" prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_ttnlbtkh" prefHeight="36.0" prefWidth="336.0" text="BÁO CÁO THANH TOÁN NHIÊN LIỆU BAY THEO KẾ HOẠCH">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label fx:id="ttnlbtkh_lb" prefHeight="36.0" prefWidth="73.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_ttxdtnv" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU THEO NHIỆM VỤ">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label fx:id="ttxdtnv_lb" prefHeight="36.0" prefWidth="79.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_ptnn" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO PHÂN TÍCH NGUỒN NHẬP">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="81.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_pttk" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO PHÂN TÍCH TỒN KHO">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="76.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_hm_va_thucnhan" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO CÂN ĐỐI GIỮA HẠN MỨC VÀ THỰC NHẬN XĂNG DẦU">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_ttxd_xmt" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU CỦA XE - MÁY - TÀU VÀ BQ, BD, SC">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_ttxd_dmtt" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU THEO ĐẦU MỐI TRỰC THUỘC">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_dtsscd" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO XĂNG DẦU DỰ TRỮ SẴN SÀNG CHIẾN ĐẤU">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_ttns" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO THANH TOÁN NGÂN SÁCH XĂNG DẦU">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_lcv" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO LUÂN CHUYỂN VỐN XĂNG DẦU">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_nxtxd_nvk" prefHeight="36.0" prefWidth="482.0" text="BÁO CÁO NHẬP XUẤT TỒN XĂNG DẦU CÁC NHIỆM VỤ NGÂN SÁCH KHÁC">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_nxt_hc" prefHeight="36.0" prefWidth="482.0" text="BÁO CÁO NHẬP - XUẤT - TỒN DẦU HẠ CẤP">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_dauthau" prefHeight="36.0" prefWidth="482.0" text="BÁO CÁO TỔNG HỢP KẾT QUẢ ĐẤU THẦU XĂNG DẦU">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Hyperlink onAction="#bc_ttxd_dientap" prefHeight="36.0" prefWidth="482.0" text="BÁO CÁO TÌNH HÌNH SỬ DỤNG XĂNG DẦU BẢO ĐẢM CHO DIỄN TẬP">
-               <font>
-                  <Font name="Cambria" size="12.0" />
-               </font>
-            </Hyperlink>
-            <Label prefHeight="36.0" prefWidth="57.0" text="status">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </HBox>
+      <TabPane>
+         <tabs>
+            <Tab closable="false" text="Xuất Báo cáo">
+               <content>
+                  <VBox fx:id="rvb" style="-fx-background-color: #f2f2f2;">
+                     <children>
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="86.0" prefWidth="1004.0">
+                           <children>
+                              <Label prefHeight="37.0" prefWidth="96.0" text="----Từ ngày:">
+                                 <font>
+                                    <Font name="Cambria Bold" size="12.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="100.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label fx:id="fromdate" prefHeight="37.0" prefWidth="154.0" text="Từ ngày:" textFill="RED">
+                                 <font>
+                                    <Font name="Cambria Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="37.0" prefWidth="96.0" text="----Đến ngày:">
+                                 <font>
+                                    <Font name="Cambria Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="todate" prefHeight="37.0" prefWidth="135.0" text="Từ ngày:" textFill="RED">
+                                 <font>
+                                    <Font name="Cambria Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                           <children>
+                              <Hyperlink onAction="#bc_nxt" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO NHẬP - XUẤT - TỒN">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label fx:id="nxt_lb" prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_ttnlbtkh" prefHeight="36.0" prefWidth="336.0" text="BÁO CÁO THANH TOÁN NHIÊN LIỆU BAY THEO KẾ HOẠCH">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label fx:id="ttnlbtkh_lb" prefHeight="36.0" prefWidth="73.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_ttxdtnv" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU THEO NHIỆM VỤ">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label fx:id="ttxdtnv_lb" prefHeight="36.0" prefWidth="79.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_ptnn" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO PHÂN TÍCH NGUỒN NHẬP">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="81.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_pttk" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO PHÂN TÍCH TỒN KHO">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="76.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_hm_va_thucnhan" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO CÂN ĐỐI GIỮA HẠN MỨC VÀ THỰC NHẬN XĂNG DẦU">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_ttxd_xmt" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU CỦA XE - MÁY - TÀU VÀ BQ, BD, SC">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_ttxd_dmtt" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU THEO ĐẦU MỐI TRỰC THUỘC">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_dtsscd" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO XĂNG DẦU DỰ TRỮ SẴN SÀNG CHIẾN ĐẤU">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_ttns" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO THANH TOÁN NGÂN SÁCH XĂNG DẦU">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_lcv" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO LUÂN CHUYỂN VỐN XĂNG DẦU">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_nxtxd_nvk" prefHeight="36.0" prefWidth="482.0" text="BÁO CÁO NHẬP XUẤT TỒN XĂNG DẦU CÁC NHIỆM VỤ NGÂN SÁCH KHÁC">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_nxt_hc" prefHeight="36.0" prefWidth="482.0" text="BÁO CÁO NHẬP - XUẤT - TỒN DẦU HẠ CẤP">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_dauthau" prefHeight="36.0" prefWidth="482.0" text="BÁO CÁO TỔNG HỢP KẾT QUẢ ĐẤU THẦU XĂNG DẦU">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Hyperlink onAction="#bc_ttxd_dientap" prefHeight="36.0" prefWidth="482.0" text="BÁO CÁO TÌNH HÌNH SỬ DỤNG XĂNG DẦU BẢO ĐẢM CHO DIỄN TẬP">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets right="50.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab closable="false" text="Phân tích nguồn nhập xuất">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="12.0" layoutY="14.0">
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="19.0" prefWidth="200.0" text="XĂNG">
+                                             <font>
+                                                <Font name="Cambria Bold Italic" size="16.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@img/icons8-gasoline-96.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="19.0" prefWidth="200.0" text="123" fx:id="x_lb">
+                                             <font>
+                                                <Font name="Cambria" size="16.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="19.0" prefWidth="200.0" text="DIEZEL">
+                                             <font>
+                                                <Font name="Cambria Bold Italic" size="16.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@img/icons8-diesel-96.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label fx:id="diezel_lb" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="19.0" prefWidth="200.0" text="123">
+                                             <font>
+                                                <Font name="Cambria" size="16.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox layoutX="210.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="32.0" prefWidth="150.0" text="DẦU BAY">
+                                             <font>
+                                                <Font name="Cambria Bold Italic" size="16.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@img/oil-barrel (1).png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label fx:id="db_lb" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="19.0" prefWidth="200.0" text="123">
+                                             <font>
+                                                <Font name="Cambria" size="16.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox layoutX="410.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="19.0" prefWidth="200.0" text="D.MỠ H.KHÔNG">
+                                             <font>
+                                                <Font name="Cambria Bold Italic" size="16.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@img/oil-barrel.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label fx:id="dmn_hk" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="19.0" prefWidth="200.0" text="123">
+                                             <font>
+                                                <Font name="Cambria" size="16.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox layoutX="610.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="19.0" prefWidth="200.0" text="D.MỠ M.ĐẤT">
+                                             <font>
+                                                <Font name="Cambria Bold Italic" size="16.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@img/oil-bottle.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label fx:id="dmn_md" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="19.0" prefWidth="200.0" text="123">
+                                             <font>
+                                                <Font name="Cambria" size="16.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <BarChart>
+                                      <xAxis>
+                                        <CategoryAxis side="BOTTOM" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                      </yAxis>
+                                    </BarChart>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="20.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="38.0" prefWidth="1030.0" />
+                              <HBox layoutX="10.0" layoutY="198.0" prefHeight="36.0" prefWidth="1030.0">
+                                 <children>
+                                    <Label prefHeight="36.0" prefWidth="156.0" text="Đơn vị:">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="dvi_cbb" onAction="#dvi_cbbACtion" prefHeight="40.0" prefWidth="187.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </ComboBox>
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="ptnnx_tb" onSort="#ptnnx_tbAction" prefHeight="200.0" prefWidth="200.0">
+                                <columns>
+                                  <TableColumn prefWidth="75.0" text="STT" />
+                                  <TableColumn prefWidth="149.0" text="TÊN XĂNG DẦU" />
+                                    <TableColumn prefWidth="109.0" text="LOẠI" />
+                                    <TableColumn prefWidth="109.0" text="ĐÃ NHẬP" />
+                                    <TableColumn prefWidth="109.0" text="ĐÃ XUẤT" />
+                                </columns>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab closable="false" text="Thống kê N.liệu Tàu bay">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="14.0" layoutY="14.0">
+                           <children>
+                              <HBox prefHeight="23.0" prefWidth="1025.0" />
+                              <HBox prefHeight="36.0" prefWidth="1030.0">
+                                 <children>
+                                    <Label prefHeight="36.0" prefWidth="202.0" text="Tàu bay:">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="mb_cbb" onAction="#mbAction" prefHeight="40.0" prefWidth="187.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </ComboBox>
+                                    <Label layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="92.0" text="Từ ngày:">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <DatePicker fx:id="from_date" prefHeight="37.0" prefWidth="156.0" />
+                                    <Label layoutX="409.0" layoutY="10.0" prefHeight="36.0" prefWidth="92.0" text="Đến ngày:">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <DatePicker fx:id="to_date" layoutX="501.0" layoutY="10.0" prefHeight="37.0" prefWidth="156.0" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="100.0">
+                                 <children>
+                                    <Label prefHeight="36.0" prefWidth="201.0" text="TỔNG GIỜ HĐ T.KHÔNG:">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="h_md" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="201.0" text="TỔNG GIỜ HĐ T.KHÔNG:">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="10.0">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <children>
+                                    <Label prefHeight="36.0" prefWidth="205.0" text="TỔNG GIỜ HĐ M.ĐẤT:">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="h_tk" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="193.0" text="GIỜ HĐ M.ĐẤT:">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="nltb_tb" prefHeight="200.0" prefWidth="200.0">
+                                <columns>
+                                  <TableColumn prefWidth="75.0" text="STT" />
+                                  <TableColumn prefWidth="124.0" text="TÊN XĂNG DẦU" />
+                                    <TableColumn prefWidth="124.0" text="CHỦNG LOẠI" />
+                                    <TableColumn prefWidth="116.0" text="NL TIÊU THỤ" />
+                                </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </TableView>
+                              <HBox layoutX="10.0" layoutY="105.0">
+                                 <children>
+                                    <Label prefHeight="36.0" prefWidth="205.0" text="Lịch sử bay">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="lsb_tb" layoutX="10.0" layoutY="141.0" prefHeight="285.0" prefWidth="1025.0">
+                                 <columns>
+                                    <TableColumn prefWidth="75.0" text="STT" />
+                                    <TableColumn prefWidth="124.0" text="NGÀY BẮT ĐẦU" />
+                                    <TableColumn prefWidth="124.0" text="NGÀY KẾT THÚC" />
+                                    <TableColumn prefWidth="116.0" text="LOẠI NHIÊN LIỆU" />
+                                    <TableColumn prefWidth="175.0" text="THỜI GIAN HOẠT ĐỘNG" />
+                                    <TableColumn prefWidth="143.0" text="LOẠI HĐ" />
+                                    <TableColumn prefWidth="143.0" text="NL TIÊU THỤ" />
+                                 </columns>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+         </tabs>
+      </TabPane>
    </children>
-   <padding>
-      <Insets right="50.0" />
-   </padding>
 </VBox>
