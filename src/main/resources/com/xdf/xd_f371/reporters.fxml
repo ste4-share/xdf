@@ -36,7 +36,7 @@
             </Label>
             <Label fx:id="fromdate" prefHeight="37.0" prefWidth="154.0" text="Từ ngày:" textFill="RED">
                <font>
-                  <Font name="Cambria Bold" size="18.0" />
+                  <Font name="Cambria Bold" size="16.0" />
                </font>
             </Label>
             <Label prefHeight="37.0" prefWidth="96.0" text="----Đến ngày:">
@@ -46,7 +46,7 @@
             </Label>
             <Label fx:id="todate" prefHeight="37.0" prefWidth="135.0" text="Từ ngày:" textFill="RED">
                <font>
-                  <Font name="Cambria Bold" size="18.0" />
+                  <Font name="Cambria Bold" size="16.0" />
                </font>
             </Label>
          </children>

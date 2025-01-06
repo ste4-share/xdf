@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
@@ -56,6 +57,13 @@ public class BaoCaoController implements Initializable {
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
         initdvcbb();
         q = ConnectLan.pre_acc;
+        if (q.getSd()!=null){
+            fromdate.setText(q.getSd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            todate.setText(q.getEd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        }else{
+            fromdate.setText("--/--/----");
+            todate.setText("--/--/----");
+        }
     }
     @FXML
     public void dvi_selected(ActionEvent actionEvent) {
@@ -65,16 +73,30 @@ public class BaoCaoController implements Initializable {
         dvi_cbb.getSelectionModel().selectFirst();
     }
     private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){
-        if (q!=null){
-            return createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+        Accounts a = ConnectLan.pre_acc;
+        if (a.getSd()!=null){
+            if (q!=null){
+                return createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
+            }
+        }else{
+            if (q!=null){
+                return createDataSheet(wb.createSheet(sheetName), 8, getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+            }
         }
         return null;
     }
     private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
-        System.out.println("query: "+getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
-        if (q!=null) {
-            return gettingDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+        Accounts a = ConnectLan.pre_acc;
+        if (a.getSd()!=null){
+            if (q!=null) {
+                return gettingDataSheet(wb.getSheet(sheetName), 8, getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
+            }
+        }else{
+            if (q!=null){
+                return gettingDataSheet(wb.getSheet(sheetName), 8, getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+            }
         }
+
         return null;
     }
     private Integer map_ttnlbtkh_create(XSSFWorkbook wb,String sheetName){
@@ -191,7 +213,29 @@ public class BaoCaoController implements Initializable {
     @FXML
     public void bc_ttxd_dientap(ActionEvent actionEvent) {
     }
-    private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1){
+    private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
+        arr_tt.clear();
+        String n_sum1="";
+        String x_sum2="";
+        String sl1="";
+        String sl2="";
+        String n_case_1="";
+        String x_case_2="";
+//        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
+        for (int i=0; i<tructhuocService.findAll().size(); i++) {
+            TrucThuoc tt = tructhuocService.findAll().get(i);
+            arr_tt.add(tt.getType());
+            n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
+            x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
+            sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
+            sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
+            n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
+            x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
+        }
+        String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
+        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
+    }
+    private String getCusQueryNlEmpty(String begin_1,String end_q1, String end_q1_1){
         arr_tt.clear();
         String n_sum1="";
         String x_sum2="";

@@ -1,11 +1,9 @@
 package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.MucGiaEnum;
-import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.dto.InvDto;
 import com.xdf.xd_f371.dto.InventoryDto;
-import com.xdf.xd_f371.dto.LoaiXdLedgerDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
@@ -13,8 +11,6 @@ import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
 import javafx.scene.control.DatePicker;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -148,6 +144,7 @@ public class InventoryService {
                 }
             });
         }else{
+            inventoryRepo.deleteAll();
             loaiXangDauRepo.findAll().forEach(x->{
                 inventoryRepo.save(new Inventory(x.getId(),0, 0,0, 0,0,0,
                         MucGiaEnum.OUT_STOCK_ALL.getStatus(), 0,null,null));
