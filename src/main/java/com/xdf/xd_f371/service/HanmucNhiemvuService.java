@@ -44,7 +44,9 @@ public class HanmucNhiemvuService {
     public List<NhiemvuTaubay> findAllByYear(int year){
         return hanmucNhiemvuTauBayRepo.findAllByYear(year);
     }
-
+    public List<Integer> findAllYearByYear(){
+        return hanmucNhiemvuTauBayRepo.findAllYearByYear();
+    }
     public List<NguonNx> getAllDviTructhuocByTaubay(int taubayId, int y){
         return hanmucNhiemvuTauBayRepo.getAllDviTructhuocByTaubay(taubayId,y);
     }

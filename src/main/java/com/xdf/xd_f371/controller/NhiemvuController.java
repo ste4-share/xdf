@@ -111,7 +111,7 @@ public class NhiemvuController implements Initializable {
         }
     }
     private void initYearCbb() {
-        year_cbb.setItems(FXCollections.observableList(quarterService.getAllYear()));
+        year_cbb.setItems(FXCollections.observableList(hanmucNhiemvuService.findAllYearByYear()));
         year_cbb.getSelectionModel().selectFirst();
     }
     private void initAddHm(){

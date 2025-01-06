@@ -143,12 +143,14 @@ public class XuatController extends CommonFactory implements Initializable {
             initValueForLoaiXuatCbb(str, phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()),
                     nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName()),false);
             px_hbox.setDisable(false);
+            sokm_hb.setDisable(true);
         } else if (lx.equals(LoaiXuat.HH.getName())) {
             List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.HAOHUT.getName());
             List<String> str = new ArrayList<>();
             ls.forEach(x->str.add(x.getTen_nv()  +" - "+ x.getChitiet()));
             initValueForLoaiXuatCbb(str, new ArrayList<>(),nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findAllOrderby(),true);
             dvi_nhan.setDisable(true);
+            sokm_hb.setDisable(true);
         }
     }
     @FXML
@@ -156,16 +158,19 @@ public class XuatController extends CommonFactory implements Initializable {
         setLoaiXangDauByRadio(LoaiPTEnum.MAYBAY.getNameVehicle(), true,LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName());
         setNhiemvuForField(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName()));
         px_hbox.setDisable(false);
+        sokm_hb.setDisable(true);
     }
     @FXML
     public void xeRadioSelec(ActionEvent actionEvent) {
         setLoaiXangDauByRadio(LoaiPTEnum.XE.getNameVehicle(), false,LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName());
         setNhiemvuForField(chitietNhiemvuService.findAllDtoBy(LoaiNVCons.NV_BAY.getName()));
+        sokm_hb.setDisable(false);
     }
     @FXML
     public void mayRadioSelec(ActionEvent actionEvent) {
         setLoaiXangDauByRadio(LoaiPTEnum.MAY.getNameVehicle(), false,LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName());
         setNhiemvuForField(chitietNhiemvuService.findAllDtoBy(LoaiNVCons.NV_BAY.getName()));
+        sokm_hb.setDisable(false);
     }
 
     private boolean isCbb(LoaiXangDauDto lxd,Integer gia){
@@ -466,10 +471,13 @@ public class XuatController extends CommonFactory implements Initializable {
         if (!inventoryList.isEmpty()){
             cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().filter(x->x.getPre_nvdx()!=0).map(InventoryDto::getDon_gia).toList()));
             cbb_dongia.getSelectionModel().selectFirst();
-            InventoryDto i = inventoryList.stream().filter(x->x.getDon_gia()==cbb_dongia.getSelectionModel().getSelectedItem())
-                    .filter(a->a.getPre_nvdx()!=0).findFirst().orElse(null);
-            if (i != null){
-                setInv_lb(i.getPre_nvdx());
+            Integer in = cbb_dongia.getSelectionModel().getSelectedItem();
+            if (in!=null){
+                InventoryDto i = inventoryList.stream().filter(x->x.getDon_gia()==in)
+                        .filter(a->a.getPre_nvdx()!=0).findFirst().orElse(null);
+                if (i != null){
+                    setInv_lb(i.getPre_nvdx());
+                }
             }
         } else {
             cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
