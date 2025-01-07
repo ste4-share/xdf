@@ -5,6 +5,7 @@ import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.fatory.CommonFactory;
+import com.zaxxer.hikari.HikariDataSource;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.sql.DataSource;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -239,5 +241,16 @@ public class Common {
             throw new RuntimeException(e);
         }
     }
-
+    public static DataSource createDataSource(String url, String username, String password) {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setMaximumPoolSize(20);
+        dataSource.setMinimumIdle(2);
+        dataSource.setConnectionTimeout(30000);
+        dataSource.setMaxLifetime(1800000);
+        dataSource.setIdleTimeout(600000);
+        return dataSource;
+    }
 }

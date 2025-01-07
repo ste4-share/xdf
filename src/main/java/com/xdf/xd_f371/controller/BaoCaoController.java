@@ -53,7 +53,7 @@ public class BaoCaoController implements Initializable {
     @FXML
     VBox rvb;
     @FXML
-    Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb;
+    Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb,lcv_lb;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
@@ -80,7 +80,19 @@ public class BaoCaoController implements Initializable {
         lsb_tb.setPrefHeight(400);
         lsb_tb.setPrefWidth(DashboardController.screenWidth-350);
     }
-
+    private Integer map_bc_lcv_create(XSSFWorkbook wb,String sheetName){
+        Accounts a = ConnectLan.pre_acc;
+        if (a.getSd()!=null){
+            if (q!=null){
+                return createDataSheet(wb.createSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
+            }
+        }else{
+            if (q!=null){
+                return createDataSheet(wb.createSheet(sheetName), getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+            }
+        }
+        return null;
+    }
     private Integer map_bc_nxt_create(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
@@ -96,6 +108,7 @@ public class BaoCaoController implements Initializable {
     }
     private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
+        System.out.println("query: " + getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
         if (a.getSd()!=null){
             if (q!=null) {
                 return createDataSheet(wb.getSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
@@ -115,7 +128,6 @@ public class BaoCaoController implements Initializable {
         return null;
     }
     private Integer map_ttnlbtkh_getting(XSSFWorkbook wb,String sheetName){
-        System.out.println("query: " + SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()));
         if (q!=null) {
             int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,
                     SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()),1);
@@ -153,7 +165,21 @@ public class BaoCaoController implements Initializable {
 
     }
     private void nxtmap() {
-        String sheetName = "bc_nxt";
+        String sheetName = "bc_nxt_data";
+        Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+        Common.copyFileExcel(file_name,dest_file);
+    }
+    @FXML
+    public void bc_lcv(ActionEvent actionEvent) {
+        Stage stage_1 = new Stage();
+        Common.getLoading(stage_1);
+        Platform.runLater(()-> {
+            Common.task(this::bc_lcv_map, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+            lcv_lb.setText("UPDATED");
+        });
+    }
+    private void bc_lcv_map() {
+        String sheetName = "luan_chuyenvon_data";
         Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
     }
@@ -167,7 +193,7 @@ public class BaoCaoController implements Initializable {
         });
     }
     private void ttnlbtkh(){
-        String sheetName = "bc_ttnl_theo_kh";
+        String sheetName = "bc_ttnl_theo_kh_data";
         Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
 
@@ -182,7 +208,7 @@ public class BaoCaoController implements Initializable {
         });
     }
     private void ttxdtnv(){
-        String sheetName = "t_thu_xd_theo_n_vu";
+        String sheetName = "t_thu_xd_theo_n_vu_data";
         Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
     }
@@ -207,20 +233,12 @@ public class BaoCaoController implements Initializable {
     @FXML
     public void bc_ttns(ActionEvent actionEvent) {
     }
-    @FXML
-    public void bc_lcv(ActionEvent actionEvent) {
-    }
+
     @FXML
     public void bc_nxtxd_nvk(ActionEvent actionEvent) {
     }
     @FXML
     public void bc_nxt_hc(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_dauthau(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_ttxd_dientap(ActionEvent actionEvent) {
     }
     private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
         arr_tt.clear();

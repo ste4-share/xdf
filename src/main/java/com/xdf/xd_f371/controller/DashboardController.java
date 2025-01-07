@@ -114,7 +114,7 @@ public class DashboardController implements Initializable {
         service.start();
     }
     @FXML
-    public void importActionClick(ActionEvent actionEvent) throws IOException{
+    public void importActionClick(ActionEvent actionEvent){
         primaryStage = new Stage();
         Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP", StageStyle.UTILITY);
         updateData();

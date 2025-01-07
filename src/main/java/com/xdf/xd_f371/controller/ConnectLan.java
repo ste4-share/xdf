@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.AccountService;
@@ -22,7 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
+
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -78,6 +79,7 @@ public class ConnectLan implements Initializable {
             if (isvalid(user,p,i,po,path)){
                 if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
                     rememberme(user,p,i,po,path);
+                    setContext(i,po);
                     Optional<Accounts> acc = accountService.login(user,p);
                     if (acc.isPresent()){
                         InitProgressBar.stage.close();
@@ -109,7 +111,11 @@ public class ConnectLan implements Initializable {
             e.printStackTrace();
         }
     }
-
+    private void setContext(String ip,String p){
+        String url = "jdbc:postgresql://"+ip+":"+p+"/postgres";
+        DataSourceManager dataSourceManager = MainApplicationApp.context.getBean(DataSourceManager.class);
+        dataSourceManager.configureDataSource(url, "postgres", "postgres");
+    }
     private void rememberme(String user, String p,String i,String po,String path){
         boolean rememberMe = ck_save.isSelected();
         if (rememberMe) {
