@@ -96,7 +96,7 @@ public class ConnectLan implements Initializable {
                             }
                             event.consume(); // Prevent the stage from closing
                         });
-                        Common.openNewStage("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
+                        Common.openNewStage2("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
                         ConnectLan.primaryStage.close();
                     } else {
                         DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",

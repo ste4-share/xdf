@@ -82,6 +82,7 @@ public class BaoCaoController implements Initializable {
     }
     private Integer map_bc_lcv_create(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
+        System.out.println("query: " + SubQuery.lcv_q(q.getSd(),q.getEd()));
         if (a.getSd()!=null){
             if (q!=null){
                 return mapDataToSheet(wb.getSheet(sheetName), 8,
@@ -107,7 +108,6 @@ public class BaoCaoController implements Initializable {
     }
     private Integer map_bc_nxt_getting(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
-        System.out.println("query: " + getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
         if (a.getSd()!=null){
             if (q!=null) {
                 return createDataSheet(wb.getSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
@@ -247,7 +247,6 @@ public class BaoCaoController implements Initializable {
         String sl2="";
         String n_case_1="";
         String x_case_2="";
-//        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
         for (int i=0; i<tructhuocService.findAll().size(); i++) {
             TrucThuoc tt = tructhuocService.findAll().get(i);
             arr_tt.add(tt.getType());

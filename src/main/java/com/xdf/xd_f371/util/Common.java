@@ -34,12 +34,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Common {
     public static void openNewStage(String fxml_url, Stage stage, String title, StageStyle s){
@@ -53,6 +51,20 @@ public class Common {
         stage.setScene(scene);
         stage.initStyle(s);
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle(title);
+        stage.showAndWait();
+    }
+    public static void openNewStage2(String fxml_url, Stage stage, String title, StageStyle s){
+        Parent root = null;
+        try {
+            root = (Parent) DashboardController.getNodeBySource(fxml_url);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.initStyle(s);
+        stage.initModality(Modality.NONE);
         stage.setTitle(title);
         stage.showAndWait();
     }
@@ -74,14 +86,6 @@ public class Common {
         } catch (IOException io) {
             throw new RuntimeException(io);
         }
-    }
-    public static void setHint(TextField textField, List<String> strls) {
-        TextFields.bindAutoCompletion(textField, t -> {
-            return strls.stream().filter(elem
-                    -> {
-                return elem.toLowerCase().contains(t.getUserText().toLowerCase().trim());
-            }).collect(Collectors.toList());
-        });
     }
     public static void getLoading(Stage primaryStage){
         ProgressIndicator progressIndicator = new ProgressIndicator();

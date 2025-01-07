@@ -4,54 +4,53 @@ import java.time.LocalDate;
 
 public class SubQuery {
     public static String lcv_q(LocalDate sd,LocalDate ed){
-        return "select max(ranks) as ranks,tinhchat,loai,tenxd,case when price is null then tenxd else '-' end as txd,\n" +
-                "case when price is null then 0 else price end,\n" +
-                "sum(soluong) as tdk_sl,sum(thanhtien) as tdk_thanhtien,sum(cxd) as cxd,sum(qc) as qc,sum(pc) as ps,sum(ndvk) as ndvk,sum(nk) as nk,\n" +
-                "(sum(cxd)+sum(qc)+sum(pc)+sum(ndvk)+sum(nk)) as sl_nhap,(sum(cxd)+sum(qc)+sum(pc)+sum(ndvk)+sum(nk))*(case when price is null then 0 else price end) as n_thanhtien,\n" +
-                "sum(tt_xm) as tt_xm,sum(bq) as bq,sum(hh) as hh,sum(xdvk) as xdvk,sum(tt) as tt,sum(xk) as xk,(sum(tt_xm)+sum(bq)+sum(hh)+sum(xdvk)+sum(tt)+sum(xk)) as sl_xuat,\n" +
-                "(sum(tt_xm)+sum(bq)+sum(hh)+sum(xdvk)+sum(tt)+sum(xk))*(case when price is null then 0 else price end) as x_thanhtien,\n" +
+        return "with shit as(\n" +
+                "SELECT loaixd_id,don_gia,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd \n" +
+                "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id where from_date < '"+sd+"' group by 1,2 UNION ALL \n" +
+                "SELECT loaixd_id,don_gia,0,0 FROM ledgers l join ledger_details ld on l.id=ld.ledger_id where from_date between '"+sd+"' and '"+ed+"' group by 1,2\n" +
+                ")\n" +
+                "select tinhchat,loai,case when tenxd is null then loai else tenxd end,case when price is null then 0 else price end,\n" +
+                "sum(soluong) as tdk_sl,sum(thanhtien) as tdk_thanhtien,sum(cxd) as cxd,sum(qc) as qc,sum(pc) as pc,sum(ndvk) as ndvk,sum(nfnb) as nfnb,sum(nk) as nk,\n" +
+                "(sum(cxd)+sum(qc)+sum(pc)+sum(ndvk)+sum(nk)) as sl_nhap,(sum(cxd)+sum(qc)+sum(pc)+sum(ndvk)+sum(nk))*price as n_thanhtien,\n" +
+                "sum(tt_xm) as tt_xm,sum(bq) as bq,sum(hh) as hh,sum(xdvk) as xdvk,sum(xfnb) as xfnb,sum(tt) as tt,sum(xk) as xk,(sum(tt_xm)+sum(bq)+sum(hh)+sum(xdvk)+sum(tt)+sum(xk)) as sl_xuat,\n" +
+                "(sum(tt_xm)+sum(bq)+sum(hh)+sum(xdvk)+sum(tt)+sum(xk))*price as x_thanhtien,\n" +
                 "(sum(soluong)+(sum(cxd)+sum(qc)+sum(pc)+sum(ndvk)+sum(nk))-(sum(tt_xm)+sum(bq)+sum(hh)+sum(xdvk)+sum(tt)+sum(xk))) as tck_sl,\n" +
-                "(sum(soluong)+(sum(cxd)+sum(qc)+sum(pc)+sum(ndvk)+sum(nk))-(sum(tt_xm)+sum(bq)+sum(hh)+sum(xdvk)+sum(tt)+sum(xk)))*(case when price is null then 0 else price end) as tck_thanhtien,\n" +
+                "(sum(soluong)+(sum(cxd)+sum(qc)+sum(pc)+sum(ndvk)+sum(nk))-(sum(tt_xm)+sum(bq)+sum(hh)+sum(xdvk)+sum(tt)+sum(xk)))*price as tck_thanhtien,\n" +
                 "grouping(tinhchat) as tc_gr,grouping(loai) as loai_gr,grouping(tenxd) as tenxd_gr,grouping(price) as price_gr\n" +
-                "from (select RANK() OVER (ORDER BY lxd.id ASC) AS ranks,lxd.id,tinhchat,cl.chungloai,loai,maxd,tenxd,a.don_gia as price,\n" +
-                "case when max(tdk_sscd)+max(tdk_nvdx) is null then 0 else max(tdk_sscd)+max(tdk_nvdx) end as soluong,a.don_gia*(max(tdk_sscd)+max(tdk_nvdx)) as thanhtien,\n" +
-                "case when max(nCXD.soluong) is null then 0 else max(nCXD.soluong) end as CXD,\n" +
-                "case when max(nQC.soluong) is null then 0 else max(nQC.soluong) end as QC,\n" +
-                "case when max(nPC.soluong) is null then 0 else max(nPC.soluong) end as PC,\n" +
-                "case when max(nDVK.soluong) is null then 0 else max(nDVK.soluong) end as nDVK,\n" +
-                "case when max(nK.soluong) is null then 0 else max(nK.soluong) end as nK,\n" +
-                "case when max(TT_XM.soluong) is null then 0 else max(TT_XM.soluong) end as TT_XM,\n" +
-                "case when max(BQ.soluong) is null then 0 else max(BQ.soluong) end as BQ,\n" +
-                "case when max(HH.soluong) is null then 0 else max(HH.soluong) end as HH,\n" +
-                "case when max(xDVK.soluong) is null then 0 else max(xDVK.soluong) end as xDVK,\n" +
-                "case when max(TT.soluong) is null then 0 else max(TT.soluong) end as TT,\n" +
-                "case when max(xK.soluong) is null then 0 else max(xK.soluong) end as xK\n" +
-                "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +
-                "left join (SELECT loaixd_id,don_gia,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd \n" +
-                "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id where from_date < '"+sd+"' group by 1,2) a on a.loaixd_id=lxd.id \n" +
+                "from (select lxd.id as lxd_id,tinhchat,cl.chungloai,loai,maxd,tenxd,case when s.don_gia is null then 0 else s.don_gia end as price,\n" +
+                "case when tdk_sscd+tdk_nvdx is null then 0 else tdk_sscd+tdk_nvdx end as soluong,\n" +
+                "s.don_gia*(tdk_sscd+tdk_nvdx) as thanhtien,\n" +
+                "nCXD.soluong as CXD,nQC.soluong as QC,nPC.soluong as PC,nDVK.soluong as nDVK,nFNB.soluong as nFNB,nK.soluong as nK,TT_XM.soluong as TT_XM,BQ.soluong as BQ,\n" +
+                "HH.soluong as HH,xDVK.soluong as xDVK,xFNB.soluong as xFNB,TT.soluong as TT,xK.soluong as xK\n" +
+                "from loaixd2 lxd \n" +
+                "left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +
+                "left join shit s on s.loaixd_id=lxd.id \n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'NHAP' and tructhuoc like 'CXD' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nCXD on (lxd.id=nCXD.loaixd_id and a.don_gia=nCXD.don_gia)\n" +
+                "where loai_phieu like 'NHAP' and tructhuoc like 'CXD' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nCXD on (lxd.id=nCXD.loaixd_id and nCXD.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'NHAP' and tructhuoc like 'QC' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nQC on (lxd.id=nQC.loaixd_id and a.don_gia=nQC.don_gia)\n" +
+                "where loai_phieu like 'NHAP' and tructhuoc like 'QC' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nQC on (lxd.id=nQC.loaixd_id and nQC.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'NHAP' and tructhuoc like 'PC' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nPC on (lxd.id=nPC.loaixd_id and a.don_gia=nPC.don_gia)\n" +
+                "where loai_phieu like 'NHAP' and tructhuoc like 'PC' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nPC on (lxd.id=nPC.loaixd_id and nPC.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'NHAP' and tructhuoc like 'DVK' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nDVK on (lxd.id=nDVK.loaixd_id and a.don_gia=nDVK.don_gia)\n" +
+                "where loai_phieu like 'NHAP' and tructhuoc like 'DVK' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nDVK on (lxd.id=nDVK.loaixd_id and nDVK.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'NHAP' and tructhuoc like 'K' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nK on (lxd.id=nK.loaixd_id and a.don_gia=nK.don_gia)\n" +
+                "where loai_phieu like 'NHAP' and tructhuoc like 'FNB' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nFNB on (lxd.id=nFNB.loaixd_id and nFNB.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'XUAT' and tructhuoc like 'TT_XM' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) TT_XM on (lxd.id=TT_XM.loaixd_id and a.don_gia=TT_XM.don_gia)\n" +
+                "where loai_phieu like 'NHAP' and tructhuoc like 'K' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) nK on (lxd.id=nK.loaixd_id and nK.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'XUAT' and tructhuoc like 'BQ' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) BQ on (lxd.id=BQ.loaixd_id and a.don_gia=BQ.don_gia)\n" +
+                "where loai_phieu like 'XUAT' and tructhuoc like 'TT_XM' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) TT_XM on (lxd.id=TT_XM.loaixd_id and TT_XM.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'XUAT' and tructhuoc like 'HH' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) HH on (lxd.id=HH.loaixd_id and a.don_gia=HH.don_gia)\n" +
+                "where loai_phieu like 'XUAT' and tructhuoc like 'BQ' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) BQ on (lxd.id=BQ.loaixd_id and BQ.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'XUAT' and tructhuoc like 'DVK' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) xDVK on (lxd.id=xDVK.loaixd_id and a.don_gia=xDVK.don_gia)\n" +
+                "where loai_phieu like 'XUAT' and tructhuoc like 'HH' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) HH on (lxd.id=HH.loaixd_id and HH.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'XUAT' and tructhuoc like 'TT' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) TT on  (lxd.id=TT.loaixd_id and a.don_gia=TT.don_gia)\n" +
+                "where loai_phieu like 'XUAT' and tructhuoc like 'DVK' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) xDVK on (lxd.id=xDVK.loaixd_id and xDVK.don_gia=s.don_gia)\n" +
                 "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
-                "where loai_phieu like 'XUAT' and tructhuoc like 'K' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) xK on (lxd.id=xK.loaixd_id and a.don_gia=xK.don_gia)\n" +
-                "group by 2,3,4,5,6,7,8) z\n" +
+                "where loai_phieu like 'XUAT' and tructhuoc like 'FNB' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) xFNB on (lxd.id=xFNB.loaixd_id and xFNB.don_gia=s.don_gia)\n" +
+                "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
+                "where loai_phieu like 'XUAT' and tructhuoc like 'TT' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) TT on  (lxd.id=TT.loaixd_id and TT.don_gia=s.don_gia)\n" +
+                "left join (select loaixd_id,don_gia, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id \n" +
+                "where loai_phieu like 'XUAT' and tructhuoc like 'K' and status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"' group by 1,2) xK on (lxd.id=xK.loaixd_id and xK.don_gia=s.don_gia)) z\n" +
                 "group by rollup(tinhchat,loai,tenxd,price)\n" +
                 "order by tc_gr desc,tinhchat desc,loai_gr desc,loai,tenxd_gr desc,tenxd,price_gr desc";
     }
