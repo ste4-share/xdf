@@ -84,12 +84,11 @@ public class BaoCaoController implements Initializable {
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null){
-                return createDataSheet(wb.createSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
+                return mapDataToSheet(wb.getSheet(sheetName), 8,
+                        SubQuery.lcv_q(q.getSd(),q.getEd()),1);
             }
         }else{
-            if (q!=null){
-                return createDataSheet(wb.createSheet(sheetName), getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
-            }
+            DialogMessage.errorShowing("Cần kết quý trước khi tạo báo cáo");
         }
         return null;
     }
@@ -180,7 +179,7 @@ public class BaoCaoController implements Initializable {
     }
     private void bc_lcv_map() {
         String sheetName = "luan_chuyenvon_data";
-        Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+        Common.mapExcelFile(file_name,input -> map_bc_lcv_create(input,sheetName),input -> map_bc_lcv_create(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
@@ -270,7 +269,6 @@ public class BaoCaoController implements Initializable {
         String sl2="";
         String n_case_1="";
         String x_case_2="";
-//        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
         for (int i=0; i<tructhuocService.findAll().size(); i++) {
             TrucThuoc tt = tructhuocService.findAll().get(i);
             arr_tt.add(tt.getType());
@@ -299,7 +297,7 @@ public class BaoCaoController implements Initializable {
                     if (val==null){
                         row.createCell(j+begin_col).setCellValue(val);
                     } else if (StringUtils.isNumeric(val)){
-                        row.createCell(j+begin_col).setCellValue(new BigDecimal(val).intValue());
+                        row.createCell(j+begin_col).setCellValue(new BigDecimal(val).longValue());
                     } else {
                         row.createCell(j+begin_col).setCellValue(val);
                     }
@@ -307,7 +305,7 @@ public class BaoCaoController implements Initializable {
                     if (val==null){
                         row.getCell(j+begin_col).setCellValue(val);
                     } else if (StringUtils.isNumeric(val)){
-                        row.getCell(j+begin_col).setCellValue(new BigDecimal(val).intValue());
+                        row.getCell(j+begin_col).setCellValue(new BigDecimal(val).longValue());
                     } else {
                         row.getCell(j+begin_col).setCellValue(val);
                     }
