@@ -13,20 +13,20 @@ import java.util.List;
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
     @Query(value = "SELECT loaixd_id,don_gia,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
-            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and don_gia=:gia group by 1,2",nativeQuery = true)
-    List<Object[]> findPreInventoryPrice(@Param("lxd_id") int lxd_id,@Param("gia") int gia);
-    @Query(value = "SELECT loaixd_id,don_gia,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
-            "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
-            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1,2",nativeQuery = true)
-    List<Object[]> findPreInventoryAndPrice(@Param("lxd_id") int lxd_id);
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and (dvi_nhan_id=:dvi_id or dvi_xuat_id=:dvi_id)  group by 1,2",nativeQuery = true)
+    List<Object[]> findPreInventoryAndPrice(@Param("lxd_id") int lxd_id,@Param("dvi_id") int dvi_id);
     @Query(value = "SELECT loaixd_id,max(ld.id),don_gia,sum(nhap_nvdx),sum(xuat_nvdx),sum(nhap_sscd),sum(xuat_sscd)\n" +
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id \n" +
             "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1,3",nativeQuery = true)
     List<Object[]> findPreInventoryPetro(@Param("lxd_id") int lxd_id);
     @Query(value = "SELECT loaixd_id,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
-            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1 limit 1",nativeQuery = true)
-    List<Object[]> findPreInventory(@Param("lxd_id") int lxd_id);
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and (dvi_nhan_id=:dvi_id or dvi_xuat_id=:dvi_id) group by 1 limit 1",nativeQuery = true)
+    List<Object[]> findPreInventoryFllowUnit(@Param("lxd_id") int lxd_id,@Param("dvi_id") int dvi_id);
+    @Query(value = "SELECT loaixd_id,don_gia,(sum(nhap_nvdx)-sum(xuat_nvdx)) as pre_nvdx,(sum(nhap_sscd)-sum(xuat_sscd)) as pre_sscd " +
+            "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id " +
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and don_gia=:gia and (dvi_nhan_id=:dvi_id or dvi_xuat_id=:dvi_id) group by 1,2",nativeQuery = true)
+    List<Object[]> findPreInventoryPriceAndUnit(@Param("lxd_id") int lxd_id,@Param("gia") int gia,@Param("dvi_id") int dvi_id);
     @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +
             "case when tdk_nvdx is null then 0 else tdk_nvdx end,\n" +
             "case when tdk_sscd is null then 0 else tdk_sscd end,\n" +

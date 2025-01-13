@@ -66,11 +66,20 @@ public class LedgerService {
                 ledgerDetailRepo.save(detail);
                 Accounts acc = ConnectLan.pre_acc;
                 if (acc.getSd()!=null && acc.getEd()!=null) {
-                    InventoryDto inventory = inventoryService.getPreInv(detail.getLoaixd_id());
-                    if (inventory==null) {
-                        saveHistory(ledger,detail,0L);
-                    } else {
-                        saveHistory(ledger,detail,inventory.getPre_nvdx());
+                    if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
+                        InventoryDto inventory = inventoryService.getPreInvWithDvi(detail.getLoaixd_id(),ledger.getDvi_nhan_id());
+                        if (inventory==null) {
+                            saveHistory(ledger,detail,0L);
+                        } else {
+                            saveHistory(ledger,detail,inventory.getPre_nvdx());
+                        }
+                    }else{
+                        InventoryDto inventory = inventoryService.getPreInvWithDvi(detail.getLoaixd_id(),ledger.getDvi_xuat_id());
+                        if (inventory==null) {
+                            saveHistory(ledger,detail,0L);
+                        } else {
+                            saveHistory(ledger,detail,inventory.getPre_nvdx());
+                        }
                     }
                 } else {
                     saveHistory(ledger,detail,0L);
@@ -99,21 +108,11 @@ public class LedgerService {
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
             detail.setNhap_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())){
-            if (XuatController.loainx.equals(LoaiXuat.X_K.getName())){
-                detail.setNhap_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
-                detail.setXuat_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
-            }else{
-                detail.setXuat_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
-            }
+            detail.setXuat_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
             detail.setNhap_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            if (XuatController.loainx.equals(LoaiXuat.X_K.getName())){
-                detail.setNhap_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
-                detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
-            }else{
-                detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
-            }
+            detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
         }
     }
     @Transactional

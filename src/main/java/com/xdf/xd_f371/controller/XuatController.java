@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.EnumerationUtils;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,12 +86,15 @@ public class XuatController extends CommonFactory implements Initializable {
     public void dongiaSelected(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
-        if (lxd != null && gia != null) {
-            InventoryDto in = inventoryService.getPreInvPrice(lxd.getXd_id(),gia);
-            if (in!=null){
-                setInv_lb(in.getPre_nvdx());
-            }else {
-                setInv_lb(0);
+        NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
+        if (dvx!=null){
+            if (lxd != null && gia != null) {
+                InventoryDto in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
+                if (in!=null){
+                    setInv_lb(in.getPre_nvdx());
+                }else {
+                    setInv_lb(0);
+                }
             }
         }
     }
@@ -133,7 +137,7 @@ public class XuatController extends CommonFactory implements Initializable {
         loainx = lx;
         if (lx.equals(LoaiXuat.X_K.getName())){
             initValueForLoaiXuatCbb(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()),
-                    new ArrayList<>(),nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),nguonNxService.findAll(),loaiXdService.findAllOrderby()
+                    new ArrayList<>(),nguonNxService.findByAllBy(),nguonNxService.findAll(),loaiXdService.findAllOrderby()
                     ,true);
             nl_km_hb.setDisable(true);
             nl_gio_hb.setDisable(true);
@@ -451,7 +455,7 @@ public class XuatController extends CommonFactory implements Initializable {
         loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.HH.getName())));
         loai_xuat_cbb.getSelectionModel().selectFirst();
         loainx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
-        mapItemsForDonvi(nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()), dvx_cbb);
+        mapItemsForDonvi(nguonNxService.findByAllBy(), dvx_cbb);
         mapItemsForDonvi(nguonNxService.findAll(),dvn_cbb);
         List<PhuongTien> pt= new ArrayList<>();
         mapItemsForXeMayTau(pt);
@@ -466,7 +470,6 @@ public class XuatController extends CommonFactory implements Initializable {
         });
 
     }
-
     private void mapXdForCombobox(){
         setXangDauCombobox(cbb_tenxd, loaiXdService);
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
@@ -476,19 +479,25 @@ public class XuatController extends CommonFactory implements Initializable {
         }
     }
     private void mapPrice(int xd_id){
-        List<InventoryDto> inventoryList = inventoryService.getPreInvPriceList(xd_id);
-        if (!inventoryList.isEmpty()){
-            cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().filter(x->x.getPre_nvdx()!=0).map(InventoryDto::getDon_gia).toList()));
-            cbb_dongia.getSelectionModel().selectFirst();
-            Integer in = cbb_dongia.getSelectionModel().getSelectedItem();
-            if (in!=null){
-                InventoryDto i = inventoryList.stream().filter(x->x.getDon_gia()==in)
-                        .filter(a->a.getPre_nvdx()!=0).findFirst().orElse(null);
-                if (i != null){
-                    setInv_lb(i.getPre_nvdx());
+        NguonNx n = dvx_cbb.getSelectionModel().getSelectedItem();
+        if (n!=null){
+            List<InventoryDto> inventoryList = inventoryService.getPreInvPriceList(xd_id,n.getId());
+            if (!inventoryList.isEmpty()){
+                cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().filter(x->x.getPre_nvdx()!=0).map(InventoryDto::getDon_gia).toList()));
+                cbb_dongia.getSelectionModel().selectFirst();
+                Integer in = cbb_dongia.getSelectionModel().getSelectedItem();
+                if (in!=null){
+                    InventoryDto i = inventoryList.stream().filter(x->x.getDon_gia()==in)
+                            .filter(a->a.getPre_nvdx()!=0).findFirst().orElse(null);
+                    if (i != null){
+                        setInv_lb(i.getPre_nvdx());
+                    }
                 }
+            } else {
+                cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
+                setInv_lb(0);
             }
-        } else {
+        }else{
             cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
             setInv_lb(0);
         }
@@ -696,7 +705,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     private void mapItemsForDonvi(List<NguonNx> by,ComboBox<NguonNx> cbb) {
         setNguonnxCombobox(cbb, by);
-        cbb.getSelectionModel().selectLast();
+        cbb.getSelectionModel().selectFirst();
     }
     private void disableFeature(boolean ex) {
         lgb_hb.setDisable(ex);
@@ -747,6 +756,23 @@ public class XuatController extends CommonFactory implements Initializable {
                     setInv_lb(inv_price+ld.getSoluong());
                     tbView.setItems(FXCollections.observableList(ls_socai));
                     tbView.refresh();
+                }
+            }
+        }
+    }
+    @FXML
+    public void dvxAction(ActionEvent actionEvent) {
+        cbb_tenxd.getSelectionModel().selectFirst();
+        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
+        NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
+        if (dvx!=null){
+            if (lxd != null && gia != null) {
+                InventoryDto in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
+                if (in!=null){
+                    setInv_lb(in.getPre_nvdx());
+                }else {
+                    setInv_lb(0);
                 }
             }
         }

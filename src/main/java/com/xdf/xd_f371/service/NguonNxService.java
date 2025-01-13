@@ -20,6 +20,9 @@ public class NguonNxService {
     public List<NguonNx> findByStatus(String status){
         return nguonNxRepo.findByStatus(status);
     }
+    public List<NguonNx> findByStatusUnlessTructhuoc(){
+        return nguonNxRepo.findByStatusUnlessTructhuoc();
+    }
     public Optional<NguonNx> findByTen(String ten){
         return nguonNxRepo.findByTen(ten);
     }

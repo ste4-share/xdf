@@ -75,11 +75,20 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvnCombobox();
 
         setUpForSearchCompleteTion();
+        setInvLabel();
+    }
+
+    private void setInvLabel(){
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
-            InventoryDto i = inventoryService.getPreInv(lxd.getXd_id());
-            if (i!=null){
-                setTonKhoLabel(i.getPre_nvdx());
+            NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
+            if (dvn!=null){
+                InventoryDto i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
+                if (i!=null){
+                    setTonKhoLabel(i.getPre_nvdx());
+                }else{
+                    setTonKhoLabel(0L);
+                }
             }
         }
     }
@@ -101,7 +110,7 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setDvvcCombobox(){
-        setNguonnxCombobox(cmb_dvvc, nguonNxService.findByStatus(StatusCons.NORMAL_STATUS.getName()));
+        setNguonnxCombobox(cmb_dvvc, nguonNxService.findByStatusUnlessTructhuoc());
         cmb_dvvc.getSelectionModel().selectFirst();
     }
 
@@ -260,19 +269,23 @@ public class NhapController extends CommonFactory implements Initializable {
     public void changedItemLoaiXd(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
-            InventoryDto i = inventoryService.getPreInv(lxd.getXd_id());
-            if (i!=null){
-                LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
-                if (ld!=null){
-                    setTonKhoLabel(i.getPre_nvdx()+ld.getSoluong());
-                }else{
+            NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
+            if (dvn!=null){
+                InventoryDto i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
+                if (i!=null){
                     setTonKhoLabel(i.getPre_nvdx());
+                    LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
+                    if (ld!=null){
+                        setTonKhoLabel(i.getPre_nvdx()+ld.getSoluong());
+                    }else{
+                        setTonKhoLabel(i.getPre_nvdx());
+                    }
+                }else{
+                    setTonKhoLabel(0L);
                 }
-            }else{
-                setTonKhoLabel(0L);
             }
-            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
         }
+        chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
     }
     @FXML
     public void select_item(MouseEvent mouseEvent) {
@@ -372,5 +385,10 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     public void tytrong_clicked(MouseEvent mouseEvent) {
         cleanErrorField(tyTrong);
+    }
+    @FXML
+    public void dvnAction(ActionEvent actionEvent) {
+        cmb_tenxd.getSelectionModel().selectFirst();
+        setInvLabel();
     }
 }

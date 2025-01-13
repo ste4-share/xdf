@@ -70,9 +70,9 @@ public class InventoryService {
                         ((BigDecimal) row[4]).longValue(),((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue()))
                 .toList();
     }
-    public InventoryDto getPreInvPrice(int petro_id,int dongia){
-        if (!inventoryRepo.findPreInventoryPrice(petro_id,dongia).isEmpty()){
-            return mapPreInvenPrice(inventoryRepo.findPreInventoryPrice(petro_id,dongia));
+    public InventoryDto getPreInvPriceAndUnit(int petro_id,int dongia,int unit_id){
+        if (!inventoryRepo.findPreInventoryPriceAndUnit(petro_id,dongia,unit_id).isEmpty()){
+            return mapPreInvenPrice(inventoryRepo.findPreInventoryPriceAndUnit(petro_id,dongia,unit_id));
         }
         return null;
     }
@@ -82,15 +82,15 @@ public class InventoryService {
         }
         return null;
     }
-    public List<InventoryDto> getPreInvPriceList(int petro_id){
-        if (!inventoryRepo.findPreInventoryAndPrice(petro_id).isEmpty()){
-            return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id));
+    public List<InventoryDto> getPreInvPriceList(int petro_id,int dvid){
+        if (!inventoryRepo.findPreInventoryAndPrice(petro_id,dvid).isEmpty()){
+            return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id,dvid));
         }
         return new ArrayList<>();
     }
-    public InventoryDto getPreInv(int petro_id){
-        if (!inventoryRepo.findPreInventory(petro_id).isEmpty()){
-            return mapPreInven(inventoryRepo.findPreInventory(petro_id));
+    public InventoryDto getPreInvWithDvi(int petro_id,int dvi_id){
+        if (!inventoryRepo.findPreInventoryFllowUnit(petro_id,dvi_id).isEmpty()){
+            return mapPreInven(inventoryRepo.findPreInventoryFllowUnit(petro_id,dvi_id));
         }
         return null;
     }
