@@ -147,7 +147,7 @@
                                     <Font name="Cambria" size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Label prefHeight="36.0" prefWidth="57.0" text="status">
+                              <Label fx:id="ttxd_xmt_lb" prefHeight="36.0" prefWidth="57.0" text="status">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>

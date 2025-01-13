@@ -53,7 +53,7 @@ public class BaoCaoController implements Initializable {
     @FXML
     VBox rvb;
     @FXML
-    Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb,lcv_lb;
+    Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb,lcv_lb,ttxd_xmt_lb;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
@@ -69,7 +69,6 @@ public class BaoCaoController implements Initializable {
             todate.setText("--/--/----");
         }
     }
-
     private void initdvcbb(){
         ComponentUtil.setItemsToComboBox(dvi_cbb, nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),NguonNx::getTen, input-> nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
@@ -82,9 +81,9 @@ public class BaoCaoController implements Initializable {
     }
     private Integer map_bc_lcv_create(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
-        System.out.println("query: " + SubQuery.lcv_q(q.getSd(),q.getEd()));
         if (a.getSd()!=null){
             if (q!=null){
+
                 return mapDataToSheet(wb.getSheet(sheetName), 8,
                         SubQuery.lcv_q(q.getSd(),q.getEd()),1);
             }
@@ -153,6 +152,18 @@ public class BaoCaoController implements Initializable {
         }
         return 0;
     }
+    private Integer map_ttxd_xmt_create(XSSFWorkbook wb,String sheetName){
+        if (q!=null) {
+            return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_ttxd_xmt_q(q.getSd(),q.getEd(),q.getSd().getYear()), 4);
+        }
+        return 0;
+    }
+    private Integer map_ttxd_xmt_get(XSSFWorkbook wb,String sheetName){
+        if (q!=null) {
+            return mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_ttxd_xmt_q(q.getSd(),q.getEd(),q.getSd().getYear()), 4);
+        }
+        return 0;
+    }
     @FXML
     public void bc_nxt(ActionEvent actionEvent) {
         Stage stage_1 = new Stage();
@@ -161,21 +172,26 @@ public class BaoCaoController implements Initializable {
             Common.task(this::nxtmap, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
             nxt_lb.setText("UPDATED");
         });
-
     }
     private void nxtmap() {
         String sheetName = "bc_nxt_data";
-        Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
-        Common.copyFileExcel(file_name,dest_file);
+
+            Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+            Common.copyFileExcel(file_name,dest_file);
+
     }
     @FXML
     public void bc_lcv(ActionEvent actionEvent) {
-        Stage stage_1 = new Stage();
-        Common.getLoading(stage_1);
-        Platform.runLater(()-> {
-            Common.task(this::bc_lcv_map, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-            lcv_lb.setText("UPDATED");
-        });
+        if (q.getSd()!=null){
+            Stage stage_1 = new Stage();
+            Common.getLoading(stage_1);
+            Platform.runLater(()-> {
+                Common.task(this::bc_lcv_map, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+                lcv_lb.setText("UPDATED");
+            });
+        }else{
+            DialogMessage.errorShowing("Cần kết quý trước khi In báo cáo!!");
+        }
     }
     private void bc_lcv_map() {
         String sheetName = "luan_chuyenvon_data";
@@ -184,12 +200,16 @@ public class BaoCaoController implements Initializable {
     }
     @FXML
     public void bc_ttnlbtkh(ActionEvent actionEvent) {
-        Stage stage_1 = new Stage();
-        Common.getLoading(stage_1);
-        Platform.runLater(()-> {
-            Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-            ttnlbtkh_lb.setText("UPDATED");
-        });
+        if (q.getSd()!=null){
+            Stage stage_1 = new Stage();
+            Common.getLoading(stage_1);
+            Platform.runLater(()-> {
+                Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+                ttnlbtkh_lb.setText("UPDATED");
+            });
+        }else{
+            DialogMessage.errorShowing("Cần kết quý trước khi In báo cáo!!");
+        }
     }
     private void ttnlbtkh(){
         String sheetName = "bc_ttnl_theo_kh_data";
@@ -199,16 +219,38 @@ public class BaoCaoController implements Initializable {
     }
     @FXML
     public void bc_ttxdtnv(ActionEvent actionEvent) {
-        Stage stage_1 = new Stage();
-        Common.getLoading(stage_1);
-        Platform.runLater(()-> {
-            Common.task(this::ttxdtnv,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
-            ttxdtnv_lb.setText("UPDATED");
-        });
+        if (q.getSd()!=null){
+            Stage stage_1 = new Stage();
+            Common.getLoading(stage_1);
+            Platform.runLater(()-> {
+                Common.task(this::ttxdtnv,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
+                ttxdtnv_lb.setText("UPDATED");
+            });
+        } else {
+            DialogMessage.errorShowing("Cần kết quý trước khi In báo cáo!!");
+        }
     }
     private void ttxdtnv(){
         String sheetName = "t_thu_xd_theo_n_vu_data";
         Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
+        Common.copyFileExcel(file_name,dest_file);
+    }
+    @FXML
+    public void bc_ttxd_xmt(ActionEvent actionEvent) {
+        if (q.getSd()!=null){
+            Stage stage_1 = new Stage();
+            Common.getLoading(stage_1);
+            Platform.runLater(()-> {
+                Common.task(this::ttxd_xmt,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
+                ttxd_xmt_lb.setText("UPDATED");
+            });
+        }else {
+            DialogMessage.errorShowing("Cần kết quý trước khi In báo cáo!!");
+        }
+    }
+    private void ttxd_xmt(){
+        String sheetName = "ttxd_xmt_data";
+        Common.mapExcelFile(file_name,input -> map_ttxd_xmt_create(input,sheetName),input -> map_ttxd_xmt_get(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
@@ -220,9 +262,7 @@ public class BaoCaoController implements Initializable {
     @FXML
     public void bc_hm_va_thucnhan(ActionEvent actionEvent) {
     }
-    @FXML
-    public void bc_ttxd_xmt(ActionEvent actionEvent) {
-    }
+
     @FXML
     public void bc_ttxd_dmtt(ActionEvent actionEvent) {
     }

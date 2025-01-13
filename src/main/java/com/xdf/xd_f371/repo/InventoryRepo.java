@@ -47,7 +47,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "group by 1) b on lxd.id=loaixd_id\n" +
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkho(@Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
-    @Query(value = "select lxd.id,maxd,tenxd,loai,cast(0 as bigint),cast(0 as bigint),\n" +
+    @Query(value = "select lxd.id,maxd,tenxd,loai,cast(0 as decimal),cast(0 as decimal),\n" +
             "case when max(a.nhap_nvdx) is null then 0 else max(a.nhap_nvdx) end as nhap_nvdx,\n" +
             "case when max(a.xuat_nvdx) is null then 0 else max(a.xuat_nvdx) end as xuat_nvdx,\n" +
             "case when max(a.nhap_nvdx-a.xuat_nvdx) is null then 0 else max(a.nhap_nvdx-a.xuat_nvdx) end as nvdx,\n" +

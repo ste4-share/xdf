@@ -155,19 +155,26 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void mbRadioSel(ActionEvent actionEvent) {
+        clearTb();
         setLoaiXangDauByRadio(LoaiPTEnum.MAYBAY.getNameVehicle(), true,LoaiXDCons.DAUBAY.getName(),LoaiXDCons.DAUHACAP.getName());
         setNhiemvuForField(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName()));
         px_hbox.setDisable(false);
         sokm_hb.setDisable(true);
     }
+    private void clearTb(){
+        ls_socai.clear();
+        setCellValueFactoryXuat();
+    }
     @FXML
     public void xeRadioSelec(ActionEvent actionEvent) {
+        clearTb();
         setLoaiXangDauByRadio(LoaiPTEnum.XE.getNameVehicle(), false,LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName());
         setNhiemvuForField(chitietNhiemvuService.findAllDtoBy(LoaiNVCons.NV_BAY.getName()));
         sokm_hb.setDisable(false);
     }
     @FXML
     public void mayRadioSelec(ActionEvent actionEvent) {
+        clearTb();
         setLoaiXangDauByRadio(LoaiPTEnum.MAY.getNameVehicle(), false,LoaiXDCons.XANG.getName(),LoaiXDCons.DIEZEL.getName());
         setNhiemvuForField(chitietNhiemvuService.findAllDtoBy(LoaiNVCons.NV_BAY.getName()));
         sokm_hb.setDisable(false);
@@ -640,11 +647,17 @@ public class XuatController extends CommonFactory implements Initializable {
         inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(inv)) + " (Lit)");
     }
     private ChitietNhiemVu identifyNhiemvu(){
-        String text = tcx.getText();
-        String nv = text.substring(0,text.indexOf("-")).trim();
-        String ct = text.substring(text.indexOf("-")+1).trim();
-        Optional<NhiemVu> n = chitietNhiemvuService.findByName(nv,StatusCons.ACTIVED.getName());
-        return n.flatMap(nhiemVu -> chitietNhiemvuService.findByNhiemvu(ct, nhiemVu.getId())).orElse(null);
+        try {
+            String text = tcx.getText();
+            String nv = text.substring(0,text.indexOf("-")).trim();
+            String ct = text.substring(text.indexOf("-")+1).trim();
+            Optional<NhiemVu> n = chitietNhiemvuService.findByName(nv,StatusCons.ACTIVED.getName());
+            return n.flatMap(nhiemVu -> chitietNhiemvuService.findByNhiemvu(ct, nhiemVu.getId())).orElse(null);
+        }catch (Exception e){
+            DialogMessage.errorShowing("Không tìm thấy nhiệm vụ. Vui lòng nhập như gợi ý ở phần tính chất xuất");
+            tcx.setStyle(CommonFactory.styleErrorField);
+            throw new RuntimeException(e);
+        }
     }
     private String getStrInterval(){
         String hour_str = sogio.getText().trim();

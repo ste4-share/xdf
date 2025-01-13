@@ -3,6 +3,32 @@ package com.xdf.xd_f371.cons;
 import java.time.LocalDate;
 
 public class SubQuery {
+    public static String bc_ttxd_xmt_q(LocalDate sd,LocalDate ed,int year){
+        return "select pt_id,loai,ranks,case when xemay is null then loai else xemay end as xemay,soluong_xe,dm_km,dm_gio,km,case when EXTRACT(epoch FROM gio) is null then 0 else EXTRACT(epoch FROM gio) end as gio,dinh_muc,thuc_chi,name_gr \n" +
+                "from (select RANK() OVER (ORDER BY name DESC) AS ranks,max(pt.id) as pt_id,max(type_name) as loai,name as xemay,sum(quantity) as soluong_xe,sum(dm_xm_km) as dm_km,sum(dm_xm_gio) as dm_gio,sum(so_km) as km, max(giohd_md::interval) as gio,sum(so_luong) as dinh_muc,sum(so_luong) as thuc_chi,GROUPING(name) as name_gr \n" +
+                "from phuongtien pt left join loai_phuongtien lpt on pt.loaiphuongtien_id=lpt.id left join dinhmuc dm on pt.id=dm.phuongtien_id\n" +
+                "left join (select * from ledgers l left join ledger_details ld on l.id=ld.ledger_id where l.status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"') xcx on pt.id=xcx.pt_id\n" +
+                "where type_name like 'XE_CHAY_XANG' and dm.years="+year+" group by rollup(4)) a\n" +
+                "union \n" +
+                "(select pt_id,loai,ranks,case when xemay is null then loai else xemay end as xemay,soluong_xe,dm_km,dm_gio,km,case when EXTRACT(epoch FROM gio) is null then 0 else EXTRACT(epoch FROM gio) end as gio,dinh_muc,thuc_chi,name_gr\n" +
+                "from (select RANK() OVER (ORDER BY name DESC) AS ranks,max(pt.id) as pt_id,max(type_name) as loai,name as xemay,sum(quantity) as soluong_xe,sum(dm_xm_km) as dm_km,sum(dm_xm_gio) as dm_gio,sum(so_km) as km, max(giohd_md::interval) as gio,sum(so_luong) as dinh_muc,sum(so_luong) as thuc_chi,GROUPING(name) as name_gr \n" +
+                "from phuongtien pt left join loai_phuongtien lpt on pt.loaiphuongtien_id=lpt.id left join dinhmuc dm on pt.id=dm.phuongtien_id\n" +
+                "left join (select * from ledgers l left join ledger_details ld on l.id=ld.ledger_id where l.status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"') xcx on pt.id=xcx.pt_id\n" +
+                "where type_name like 'MAY_CHAY_XANG' and dm.years="+year+" group by rollup(4)) b)\n" +
+                "union \n" +
+                "(select pt_id,loai,ranks,case when xemay is null then loai else xemay end as xemay,soluong_xe,dm_km,dm_gio,km,case when EXTRACT(epoch FROM gio) is null then 0 else EXTRACT(epoch FROM gio) end as gio,dinh_muc,thuc_chi,name_gr\n" +
+                "from (select RANK() OVER (ORDER BY name DESC) AS ranks,max(pt.id) as pt_id,max(type_name) as loai,name as xemay,sum(quantity) as soluong_xe,sum(dm_xm_km) as dm_km,sum(dm_xm_gio) as dm_gio,sum(so_km) as km, max(giohd_md::interval) as gio,sum(so_luong) as dinh_muc,sum(so_luong) as thuc_chi,GROUPING(name) as name_gr \n" +
+                "from phuongtien pt left join loai_phuongtien lpt on pt.loaiphuongtien_id=lpt.id left join dinhmuc dm on pt.id=dm.phuongtien_id\n" +
+                "left join (select * from ledgers l left join ledger_details ld on l.id=ld.ledger_id where l.status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"') xcx on pt.id=xcx.pt_id\n" +
+                "where type_name like 'XE_CHAY_DIEZEL' and dm.years="+year+" group by rollup(4)) d)\n" +
+                "union \n" +
+                "(select pt_id,loai,ranks,case when xemay is null then loai else xemay end as xemay,soluong_xe,dm_km,dm_gio,km,case when EXTRACT(epoch FROM gio) is null then 0 else EXTRACT(epoch FROM gio) end as gio,dinh_muc,thuc_chi,name_gr\n" +
+                "from (select RANK() OVER (ORDER BY name DESC) AS ranks,max(pt.id) as pt_id,max(type_name) as loai,name as xemay,sum(quantity) as soluong_xe,sum(dm_xm_km) as dm_km,sum(dm_xm_gio) as dm_gio,sum(so_km) as km, max(giohd_md::interval) as gio,sum(so_luong) as dinh_muc,sum(so_luong) as thuc_chi,GROUPING(name) as name_gr \n" +
+                "from phuongtien pt left join loai_phuongtien lpt on pt.loaiphuongtien_id=lpt.id left join dinhmuc dm on pt.id=dm.phuongtien_id\n" +
+                "left join (select * from ledgers l left join ledger_details ld on l.id=ld.ledger_id where l.status like 'ACTIVE' and from_date between '"+sd+"' and '"+ed+"') xcx on pt.id=xcx.pt_id\n" +
+                "where type_name like 'MAY_CHAY_DIEZEL' and dm.years="+year+" group by rollup(4)) e)\n" +
+                "order by loai,name_gr desc,ranks";
+    }
     public static String lcv_q(LocalDate sd,LocalDate ed){
         return "with shit as(\n" +
                 "SELECT loaixd_id,don_gia,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd \n" +
