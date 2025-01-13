@@ -31,6 +31,7 @@ public class XuatController extends CommonFactory implements Initializable {
     private static long inv_price;
     private static AutoCompletionBinding<String> acbLogin;
     private static DinhMuc dinhMuc;
+    public static String loainx;
 
     @FXML
     private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong,nl_gio,nl_km;
@@ -129,8 +130,8 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void loaixuatAction(ActionEvent actionEvent) {
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
+        loainx = lx;
         if (lx.equals(LoaiXuat.X_K.getName())){
-
             initValueForLoaiXuatCbb(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()),
                     new ArrayList<>(),nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),nguonNxService.findAll(),loaiXdService.findAllOrderby()
                     ,true);
@@ -449,6 +450,7 @@ public class XuatController extends CommonFactory implements Initializable {
     private void initLoaiXuatCbb() {
         loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.HH.getName())));
         loai_xuat_cbb.getSelectionModel().selectFirst();
+        loainx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
         mapItemsForDonvi(nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()), dvx_cbb);
         mapItemsForDonvi(nguonNxService.findAll(),dvn_cbb);
         List<PhuongTien> pt= new ArrayList<>();

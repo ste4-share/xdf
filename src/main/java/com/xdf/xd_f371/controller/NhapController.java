@@ -30,12 +30,10 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 @Component
 public class NhapController extends CommonFactory implements Initializable {
-    private static List<Ledger> current_ledger_list = new ArrayList<>();
     @FXML
     private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
             donGiaTf, thucNhap,phaiNhap,tThucTe, vcf,tyTrong;
@@ -108,7 +106,7 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setDvnCombobox() {
-        setNguonnxCombobox(cmb_dvn, nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()));
+        setNguonnxCombobox(cmb_dvn, nguonNxService.findByAllBy());
         cmb_dvn.getSelectionModel().selectFirst();
     }
 

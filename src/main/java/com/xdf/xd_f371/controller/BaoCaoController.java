@@ -53,7 +53,7 @@ public class BaoCaoController implements Initializable {
     @FXML
     VBox rvb;
     @FXML
-    Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb,lcv_lb,ttxd_xmt_lb;
+    Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb,lcv_lb,ttxd_xmt_lb,pttk_lb;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
@@ -253,32 +253,26 @@ public class BaoCaoController implements Initializable {
         Common.mapExcelFile(file_name,input -> map_ttxd_xmt_create(input,sheetName),input -> map_ttxd_xmt_get(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
     }
-    @FXML
-    public void bc_ptnn(ActionEvent actionEvent) {
-    }
+
     @FXML
     public void bc_pttk(ActionEvent actionEvent) {
+        if (q.getSd()!=null){
+            Stage stage_1 = new Stage();
+            Common.getLoading(stage_1);
+            Platform.runLater(()-> {
+                Common.task(this::pttk,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
+                pttk_lb.setText("UPDATED");
+            });
+        }else {
+            DialogMessage.errorShowing("Cần kết quý trước khi In báo cáo!!");
+        }
     }
-    @FXML
-    public void bc_hm_va_thucnhan(ActionEvent actionEvent) {
+    private void pttk(){
+        String sheetName = "pttk_data";
+        Common.mapExcelFile(file_name,input -> map_ttxd_xmt_create(input,sheetName),input -> map_ttxd_xmt_get(input,sheetName));
+        Common.copyFileExcel(file_name,dest_file);
     }
 
-    @FXML
-    public void bc_ttxd_dmtt(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_dtsscd(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_ttns(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    public void bc_nxtxd_nvk(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void bc_nxt_hc(ActionEvent actionEvent) {
-    }
     private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
         arr_tt.clear();
         String n_sum1="";

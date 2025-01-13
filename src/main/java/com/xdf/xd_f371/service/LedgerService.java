@@ -1,9 +1,11 @@
 package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
+import com.xdf.xd_f371.cons.LoaiXuat;
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
+import com.xdf.xd_f371.controller.XuatController;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.cons.MucGiaEnum;
@@ -97,11 +99,21 @@ public class LedgerService {
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
             detail.setNhap_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())){
-            detail.setXuat_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
+            if (XuatController.loainx.equals(LoaiXuat.X_K.getName())){
+                detail.setNhap_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
+                detail.setXuat_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
+            }else{
+                detail.setXuat_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
+            }
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
             detail.setNhap_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
+            if (XuatController.loainx.equals(LoaiXuat.X_K.getName())){
+                detail.setNhap_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
+                detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
+            }else{
+                detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
+            }
         }
     }
     @Transactional

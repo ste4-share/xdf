@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface NguonNxRepo extends JpaRepository<NguonNx,Integer> {
     Optional<NguonNx> findByTen(String ten);
     List<NguonNx> findByStatus(String status);
-    @Query("select n from NguonNx n join n.donViTrucThuocs dvtt")
+    @Query("select n from NguonNx n join n.donViTrucThuocs dvtt order by dvtt.pr")
     List<NguonNx> findByAllBy();
 }

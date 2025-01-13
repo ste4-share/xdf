@@ -18,6 +18,8 @@ public class DonViTrucThuoc {
     private int root_id;
     @Column(name = "dvi_tructhuoc_id")
     private int dvi_tructhuoc_id;
+    @Column(name = "pr")
+    private int pr;
 
     @ManyToOne
     @JoinColumn(name = "dvi_tructhuoc_id", referencedColumnName = "id", updatable = false, insertable = false)
