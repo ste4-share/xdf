@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 public class MiniLedgerDto {
-    private int id;
+    private Long id;
     private int so;
     private String so_str;
     private String loai_phieu;
@@ -28,7 +28,7 @@ public class MiniLedgerDto {
     private String nhiemvu;
     private String username;
 
-    public MiniLedgerDto(int id, int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDate timestamp, String nhiemvu, String username, Long count, Long tong) {
+    public MiniLedgerDto(Long id, int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDate timestamp, String nhiemvu, String username, Long count, Long tong) {
         this.id = id;
         this.so = so;
         this.so_str = String.valueOf(so);

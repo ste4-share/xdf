@@ -164,6 +164,18 @@ public class BaoCaoController implements Initializable {
         }
         return 0;
     }
+    private Integer map_pttk_create(XSSFWorkbook wb,String sheetName){
+        if (q!=null) {
+            return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_pttk_q(q.getSd(),q.getEd()), 4);
+        }
+        return 0;
+    }
+    private Integer map_pttk_get(XSSFWorkbook wb,String sheetName){
+        if (q!=null) {
+            return mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_pttk_q(q.getSd(),q.getEd()), 4);
+        }
+        return 0;
+    }
     @FXML
     public void bc_nxt(ActionEvent actionEvent) {
         Stage stage_1 = new Stage();
@@ -269,7 +281,7 @@ public class BaoCaoController implements Initializable {
     }
     private void pttk(){
         String sheetName = "pttk_data";
-        Common.mapExcelFile(file_name,input -> map_ttxd_xmt_create(input,sheetName),input -> map_ttxd_xmt_get(input,sheetName));
+        Common.mapExcelFile(file_name,input -> map_pttk_create(input,sheetName),input -> map_pttk_get(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
     }
 

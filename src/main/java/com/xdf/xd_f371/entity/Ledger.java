@@ -18,7 +18,7 @@ import java.util.List;
 public class Ledger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Column(name = "bill_id")
     @NotNull
     @Min(1)
@@ -90,4 +90,37 @@ public class Ledger {
     @ManyToOne
     @JoinColumn(name = "create_by",nullable = false,insertable = false,updatable = false)
     private Accounts accounts;
+
+    public Ledger(Ledger l) {
+        this.bill_id = l.bill_id;
+        this.amount = l.amount;
+        this.from_date = l.from_date;
+        this.end_date = l.end_date;
+        this.status = l.status;
+        this.so_km = l.so_km;
+        this.giohd_md = l.giohd_md;
+        this.giohd_tk = l.giohd_tk;
+        this.sl_tieuthu_md = l.sl_tieuthu_md;
+        this.sl_tieuthu_tk = l.sl_tieuthu_tk;
+        this.dvi_nhan_id = l.dvi_nhan_id;
+        this.dvi_xuat_id = l.dvi_xuat_id;
+        this.loai_phieu = l.loai_phieu;
+        this.dvi_nhan = l.dvi_nhan;
+        this.dvi_xuat = l.dvi_xuat;
+        this.loaigiobay = l.loaigiobay;
+        this.nguoi_nhan = l.nguoi_nhan;
+        this.so_xe = l.so_xe;
+        this.lenh_so = l.lenh_so;
+        this.nhiemvu = l.nhiemvu;
+        this.nhiemvu_id = l.nhiemvu_id;
+        this.tcn_id = l.tcn_id;
+        this.timestamp = l.timestamp;
+        this.loainv = l.loainv;
+        this.tructhuoc = l.tructhuoc;
+        this.lpt = l.lpt;
+        this.lpt_2 = l.lpt_2;
+        this.create_by = l.create_by;
+        this.root_id = l.root_id;
+        this.pt_id = l.pt_id;
+    }
 }

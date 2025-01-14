@@ -58,7 +58,7 @@ public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
     void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code);
     @Modifying
     @Query(value = "update ledgers l set status='IN_ACTIVE' where l.id=:i", nativeQuery = true)
-    void inactiveLedgers(@Param("i") int id);
+    void inactiveLedgers(@Param("i") Long id);
     @Query(value = "select lxd.id,\n" +
             "case when don_gia is null then 0 else don_gia end,\n" +
             "case when nhap_nvdx is null then 0 else nhap_nvdx end,\n" +

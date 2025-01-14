@@ -17,7 +17,7 @@ import lombok.Value;
 public class LedgerDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(name = "ma_xd")
     private String ma_xd;
     @Column(name = "ten_xd")
@@ -47,7 +47,7 @@ public class LedgerDetails {
     @Column(name = "phuongtien_id")
     private int phuongtien_id;
     @Column(name = "ledger_id")
-    private int ledger_id;
+    private Long ledger_id;
     @Column(name = "thuc_xuat")
     private int thuc_xuat;
     @Column(name = "thuc_xuat_tk")
@@ -101,4 +101,30 @@ public class LedgerDetails {
     @ManyToOne
     @JoinColumn(name = "ledger_id", nullable = false,insertable = false,updatable = false)
     private Ledger ledger;
+
+    public LedgerDetails(LedgerDetails ld) {
+        this.ma_xd = ld.ma_xd;
+        this.ten_xd = ld.ten_xd;
+        this.chung_loai = ld.chung_loai;
+        this.chat_luong = ld.chat_luong;
+        this.phai_xuat = ld.phai_xuat;
+        this.nhiet_do_tt = ld.nhiet_do_tt;
+        this.ty_trong = ld.ty_trong;
+        this.he_so_vcf = ld.he_so_vcf;
+        this.don_gia = ld.don_gia;
+        this.loaixd_id = ld.loaixd_id;
+        this.phuongtien_id = ld.phuongtien_id;
+        this.ledger_id = ld.ledger_id;
+        this.thuc_xuat = ld.thuc_xuat;
+        this.thuc_xuat_tk = ld.thuc_xuat_tk;
+        this.soluong = ld.soluong;
+        this.thuc_nhap = ld.thuc_nhap;
+        this.phai_nhap = ld.phai_nhap;
+        this.thanhtien = ld.thanhtien;
+        this.haohut_sl = ld.haohut_sl;
+        this.nl_gio = ld.nl_gio;
+        this.nl_km = ld.nl_km;
+        this.sscd_nvdx = ld.sscd_nvdx;
+        this.soluong_px = ld.soluong_px;
+    }
 }
