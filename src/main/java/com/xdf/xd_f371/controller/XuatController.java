@@ -32,7 +32,6 @@ public class XuatController extends CommonFactory implements Initializable {
     private static AutoCompletionBinding<String> acbLogin;
     private static DinhMuc dinhMuc;
     public static String loainx;
-
     @FXML
     private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong,nl_gio,nl_km;
     @FXML
@@ -772,7 +771,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 InventoryDto in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
                 if (in!=null){
                     setInv_lb(in.getPre_nvdx());
-                }else {
+                } else {
                     setInv_lb(0);
                 }
             }

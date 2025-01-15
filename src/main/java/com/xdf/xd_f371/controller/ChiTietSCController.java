@@ -58,7 +58,6 @@ public class ChiTietSCController implements Initializable {
         tbChiTiet.setItems(FXCollections.observableList(ls));
         fillDataToLabels();
     }
-
     @FXML
     public void printPhieu(ActionEvent actionEvent) {
         printBill();
@@ -94,7 +93,6 @@ public class ChiTietSCController implements Initializable {
         }
         return "phieu_xuat";
     }
-
 
     private int fillDataToPhieuNhap(XSSFSheet sheet,boolean isNew){
         setCEll(sheet, ls.get(0).getDvi_nhan(), 3,3,isNew);
