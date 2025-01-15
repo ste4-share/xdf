@@ -9,7 +9,6 @@ import com.xdf.xd_f371.repo.DinhMucRepo;
 import com.xdf.xd_f371.repo.LoaiPhuongTienRepo;
 import com.xdf.xd_f371.repo.PhuongtienRepo;
 import com.xdf.xd_f371.util.DialogMessage;
-import jakarta.transaction.Transactional;
 import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

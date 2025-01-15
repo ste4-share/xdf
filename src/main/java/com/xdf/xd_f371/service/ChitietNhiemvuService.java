@@ -1,7 +1,6 @@
 package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.StatusCons;
-import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.ChitietNhiemVuDto;
 import com.xdf.xd_f371.dto.NhiemVuDto;
 import com.xdf.xd_f371.dto.NhiemvuTeamDto;
@@ -41,9 +40,6 @@ public class ChitietNhiemvuService {
     public List<NhiemVuDto> findAllDtoById(String lnv){
         return chitietNhiemvuRepo.findAllDtoById(lnv);
     }
-    public Optional<NhiemVuDto> findAllByChitietNhiemvu(String nv, String chitiet){
-        return chitietNhiemvuRepo.findAllByChitietNhiemvu(nv,chitiet);
-    }
     public List<Team> findAllTeam(){
         return teamRepo.findAll();
     }
@@ -62,12 +58,6 @@ public class ChitietNhiemvuService {
     public List<ChitietNhiemVu> findAllCtnv(){
         return chitietNhiemvuRepo.findAll();
     }
-    public List<ChitietNhiemVuDto> findAllByLoaiNv(int loainv_id, int loainv_id1){
-        return chitietNhiemvuRepo.findAllByLoaiNv(loainv_id,loainv_id1);
-    }
-    public Optional<ChitietNhiemVuDto> findByTenNhiemvu(String tennv){
-        return chitietNhiemvuRepo.findByTenNhiemvu(tennv);
-    }
     public Optional<ChitietNhiemVu> findByNhiemvu(String tennv, int nvid){
         return chitietNhiemvuRepo.findByNhiemvu(tennv,nvid);
     }
@@ -81,12 +71,6 @@ public class ChitietNhiemvuService {
     }
     public Optional<NhiemVu> findByName(String n,String status){
         return nhiemvuRepository.findByName(n,status);
-    }
-    public Optional<NhiemVu> findByIdNhiemvu(int id){
-        return nhiemvuRepository.findById(id);
-    }
-    public List<NhiemvuTeamDto> findByTeam(){
-        return nhiemvuRepository.findByTeam();
     }
     public void saveNhiemvu(int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d){
         Optional<NhiemVu> n_v = nhiemvuRepository.findByName(nv,StatusCons.ACTIVED.getName());

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -107,10 +108,10 @@ public class ChiTietSCController implements Initializable {
         setCEll(sheet, ls.get(0).getLenh_so(), 6,3,isNew);
         setCEll(sheet, ls.get(0).getNguoi_nhan(), 7,3,isNew);
         setCEll(sheet, "ABC", 8,3,isNew);
-        setCEll(sheet, String.valueOf(ls.get(0).getEnd_date()), 3,10,isNew);
+        setCEll(sheet, ls.get(0).getEnd_date()==null? "" : ls.get(0).getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 3,10,isNew);
         setCEll(sheet, ls.get(0).getSo_xe(), 4,10,isNew);
         setCEll(sheet, String.valueOf(ls.get(0).getBill_id()), 3,7,isNew);
-        setCEll(sheet, String.valueOf(ls.get(0).getFrom_date()), 4,7,isNew);
+        setCEll(sheet, ls.get(0).getFrom_date()==null?  "": ls.get(0).getFrom_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 4,7,isNew);
         for (int i = 0; i< ls.size(); i++) {
             addNewRow(sheet);
         }
@@ -196,9 +197,9 @@ public class ChiTietSCController implements Initializable {
         lb_nguoinhan.setText(ls.get(0).getNguoi_nhan());
         lb_lenhkh.setText(ls.get(0).getLenh_so());
         lb_soxe.setText(ls.get(0).getSo_xe());
-        lb_tungay.setText(String.valueOf(ls.get(0).getFrom_date()));
+        lb_tungay.setText(ls.get(0).getFrom_date()==null ? "" : ls.get(0).getFrom_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         lb_loaiphieu.setText(ls.get(0).getLoai_phieu());
-        lb_denngay.setText(String.valueOf(ls.get(0).getEnd_date()));
+        lb_denngay.setText(ls.get(0).getEnd_date()==null ? "" : ls.get(0).getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         lb_giohd_md.setText(ls.get(0).getGiohd_md());
         lb_giohd_tk.setText(ls.get(0).getGiohd_tk());
         lb_sokm.setText(String.valueOf(ls.get(0).getSo_km()));

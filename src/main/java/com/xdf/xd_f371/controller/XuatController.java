@@ -15,7 +15,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.EnumerationUtils;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +70,8 @@ public class XuatController extends CommonFactory implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ls_socai = new ArrayList<>();
+        setVi_DatePicker(tungay);
+        setVi_DatePicker(denngay);
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         nvdx_rd.setSelected(true);
         tungay.setValue(LocalDate.now());

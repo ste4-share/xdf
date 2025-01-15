@@ -1,9 +1,11 @@
 package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.MucGiaEnum;
+import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.dto.InvDto;
 import com.xdf.xd_f371.dto.InventoryDto;
+import com.xdf.xd_f371.dto.PttkDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
@@ -68,6 +70,15 @@ public class InventoryService {
         return results.stream()
                 .map(row -> new InventoryDto((int) row[0],(int) row[1],(int) row[2],((BigDecimal) row[3]).longValue(),
                         ((BigDecimal) row[4]).longValue(),((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue()))
+                .toList();
+    }
+    public List<PttkDto> mapPttkPetro(LocalDate sd,LocalDate ed) {
+        ReportDAO reportDAO = new ReportDAO();
+        List<Object[]> pttk = reportDAO.findByWhatEver(SubQuery.bc_pttk_q(sd,ed));
+        return pttk.stream()
+                .map(row -> new PttkDto((String) row[1],(String) row[2],((BigDecimal) row[3]).longValue(),((BigDecimal) row[4]).longValue(),
+                        ((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue(),((BigDecimal) row[7]).longValue(),((BigDecimal) row[8]).longValue(),((BigDecimal) row[9]).longValue(),
+                        ((BigDecimal) row[10]).longValue(),((BigDecimal) row[11]).longValue()))
                 .toList();
     }
     public InventoryDto getPreInvPriceAndUnit(int petro_id,int dongia,int unit_id){

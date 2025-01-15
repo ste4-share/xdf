@@ -6,7 +6,6 @@ import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -16,7 +16,6 @@ import java.util.Optional;
 public class LoaiXdService {
     private final ChungLoaiXdRepo chungLoaiXdRepo;
     private final LoaiXangDauRepo loaiXangDauRepo;
-    private final InventoryService inventoryService;
 
     public List<LoaiXangDauDto> findAllBy(){
         return loaiXangDauRepo.findAllBy();

@@ -239,7 +239,10 @@
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin></Label>
-                  <DatePicker fx:id="from_date" onAction="#from_dateACtion" prefHeight="31.0" prefWidth="154.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
+                  <DatePicker fx:id="from_date" onAction="#from_dateACtion" prefHeight="31.0" prefWidth="120.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></DatePicker>
                   <Label layoutX="273.0" layoutY="13.0" prefHeight="28.0" prefWidth="62.0" text="----&gt;">
                      <font>
                         <Font name="Cambria" size="16.0" />
@@ -248,14 +251,17 @@
                         <Insets left="20.0" />
                      </padding>
                   </Label>
-                  <Label prefHeight="28.0" prefWidth="118.0" text="Đến ngày:">
+                  <Label prefHeight="28.0" prefWidth="100.0" text="Đến ngày:">
                      <font>
                         <Font name="Cambria" size="16.0" />
                      </font>
                      <padding>
                         <Insets left="20.0" />
                      </padding></Label>
-                  <DatePicker fx:id="to_date" layoutX="119.0" layoutY="10.0" onAction="#to_dateACtion" prefHeight="31.0" prefWidth="154.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
+                  <DatePicker fx:id="to_date" layoutX="119.0" layoutY="10.0" onAction="#to_dateACtion" prefHeight="31.0" prefWidth="120.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></DatePicker>
                </children>
                <VBox.margin>
                   <Insets left="10.0" />
@@ -267,7 +273,7 @@
                      <children>
                         <HBox alignment="BOTTOM_LEFT" prefHeight="60.0" prefWidth="836.0">
                            <children>
-                              <Button fx:id="importBtn" mnemonicParsing="false" onAction="#importActionClick" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #040cb5; -fx-background-radius: 10;" text="Nhập" textFill="WHITE">
+                              <Button fx:id="importBtn" mnemonicParsing="false" onAction="#importActionClick" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #040cb5; -fx-background-radius: 10;" text="Nhập" textFill="WHITE">
                                  <font>
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
@@ -278,7 +284,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#exportBtnClick" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #27b50e; -fx-background-radius: 10;" text="Xuất" textFill="WHITE">
+                              <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#exportBtnClick" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #27b50e; -fx-background-radius: 10;" text="Xuất" textFill="WHITE">
                                  <font>
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
@@ -297,7 +303,7 @@
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="cbb_loaiphieu_filter" onAction="#loc_phieu" prefHeight="40.0" prefWidth="116.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                              <ComboBox fx:id="cbb_loaiphieu_filter" onAction="#loc_phieu" prefHeight="30.0" prefWidth="116.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <HBox.margin>
                                     <Insets bottom="10.0" top="10.0" />
                                  </HBox.margin>
@@ -313,7 +319,7 @@
                                     <Font name="Cambria Bold" size="16.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="tf_search" onMouseClicked="#searchClicked" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                              <TextField fx:id="tf_search" onMouseClicked="#searchClicked" prefHeight="30.0" prefWidth="116.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <HBox.margin>
                                     <Insets bottom="10.0" top="10.0" />
                                  </HBox.margin>
@@ -321,10 +327,10 @@
                                     <Cursor fx:constant="TEXT" />
                                  </cursor>
                                  <font>
-                                    <Font name="Cambria" size="18.0" />
+                                    <Font name="Cambria" size="15.0" />
                                  </font>
                               </TextField>
-                              <ImageView fx:id="img_v" fitHeight="35.0" fitWidth="35.0" onMouseClicked="#seachAction" onMouseEntered="#search_enter" onMouseExited="#search_exit" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="img_v" fitHeight="30.0" fitWidth="35.0" onMouseClicked="#seachAction" onMouseEntered="#search_enter" onMouseExited="#search_exit" pickOnBounds="true" preserveRatio="true">
                                  <HBox.margin>
                                     <Insets bottom="10.0" left="10.0" />
                                  </HBox.margin>
@@ -335,6 +341,18 @@
                                     <Image url="@img/search.png" />
                                  </image>
                               </ImageView>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label prefHeight="9.0" prefWidth="217.0" text="--Sổ cái--">
+                                 <font>
+                                    <Font name="Cambria Italic" size="12.0" />
+                                 </font>
+                              </Label>
                            </children>
                            <VBox.margin>
                               <Insets left="10.0" right="10.0" />

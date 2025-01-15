@@ -164,7 +164,7 @@
                   </VBox>
                </content>
             </Tab>
-            <Tab closable="false" text="Phân tích nguồn nhập xuất">
+            <Tab closable="false" disable="true" text="Phân tích nguồn nhập xuất">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -337,7 +337,7 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab closable="false" text="Thống kê N.liệu Tàu bay">
+            <Tab closable="false" disable="true" text="Thống kê N.liệu Tàu bay">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

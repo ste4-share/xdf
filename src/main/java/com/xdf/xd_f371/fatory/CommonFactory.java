@@ -19,9 +19,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Component
 public class CommonFactory {
@@ -129,5 +129,22 @@ public class CommonFactory {
             }
         }
         return true;
+    }
+    public static void setVi_DatePicker(DatePicker datePicker){
+        Locale.setDefault(Locale.forLanguageTag("vi"));
+        datePicker.setPromptText("dd/MM/yyyy");
+        DateTimeFormatter vietnameseFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.forLanguageTag("vi"));
+        datePicker.setConverter(new javafx.util.StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                return date != null ? vietnameseFormatter.format(date) : "";
+            }
+            @Override
+            public LocalDate fromString(String string) {
+                return string != null && !string.isEmpty()
+                        ? LocalDate.parse(string, vietnameseFormatter)
+                        : null;
+            }
+        });
     }
 }

@@ -12,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -20,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.controlsfx.control.textfield.TextFields;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.sql.DataSource;
@@ -244,17 +242,5 @@ public class Common {
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
-    }
-    public static DataSource createDataSource(String url, String username, String password) {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        dataSource.setMaximumPoolSize(20);
-        dataSource.setMinimumIdle(2);
-        dataSource.setConnectionTimeout(30000);
-        dataSource.setMaxLifetime(1800000);
-        dataSource.setIdleTimeout(600000);
-        return dataSource;
     }
 }

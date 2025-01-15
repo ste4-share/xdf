@@ -32,9 +32,7 @@ public class ConnectionService {
             socket = new Socket(ConnectLan.ip_pre, Integer.parseInt(ConnectLan.port_pre));
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            // Start a heartbeat timer to maintain the connection
             startHeartbeat();
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -48,14 +46,14 @@ public class ConnectionService {
             @Override
             public void run() {
                 if (socket.isConnected()) {
-                    out.println("heartbeat"); // Send a heartbeat message to the server
+                    out.println("heartbeat");
                     System.out.println("Heartbeat sent to server.");
                 } else {
                     System.out.println("Connection lost. Attempting to reconnect...");
                     reconnect();
                 }
             }
-        }, 0, 7000); // Send heartbeat every 5 seconds
+        }, 0, 7000);
     }
 
     private void reconnect() {

@@ -46,15 +46,15 @@
             </HBox>
             <HBox layoutX="10.0" layoutY="10.0">
                <children>
-                  <Label prefHeight="41.0" prefWidth="106.0" text="Tìm kiếm:">
+                  <Label prefHeight="30.0" prefWidth="106.0" text="Tìm kiếm:">
                      <font>
                         <Font name="Cambria Bold" size="16.0" />
                      </font></Label>
-                  <TextField prefHeight="39.0" prefWidth="247.0" style="-fx-background-radius: 25;">
+                  <TextField fx:id="search_tf" onKeyReleased="#searchKr" onMouseClicked="#searchClicked" prefHeight="30.0" prefWidth="247.0" style="-fx-background-radius: 25;">
                      <font>
-                        <Font name="Cambria" size="18.0" />
+                        <Font name="Cambria" size="16.0" />
                      </font></TextField>
-                  <Label layoutX="10.0" layoutY="10.0" prefHeight="41.0" prefWidth="74.0" text="Đơn vị:">
+                  <Label layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="74.0" text="Đơn vị:">
                      <HBox.margin>
                         <Insets left="47.0" />
                      </HBox.margin>
@@ -62,19 +62,19 @@
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="units_cbb" editable="true" onAction="#selectUnit" prefHeight="39.0" prefWidth="195.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                  <ComboBox fx:id="units_cbb" editable="true" onAction="#selectUnit" prefHeight="30.0" prefWidth="124.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></ComboBox>
-                  <Label layoutX="410.0" layoutY="10.0" prefHeight="41.0" prefWidth="50.0" text="Năm:">
+                  <Label layoutX="410.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0" text="Năm:">
                      <font>
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="30.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="year_cbb" editable="true" layoutX="484.0" layoutY="10.0" onAction="#yearAction" prefHeight="39.0" prefWidth="124.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                  <ComboBox fx:id="year_cbb" editable="true" layoutX="484.0" layoutY="10.0" onAction="#yearAction" prefHeight="30.0" prefWidth="124.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -110,7 +110,7 @@
             </TableView>
             <HBox alignment="CENTER_RIGHT">
                <children>
-                  <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addNewPt" prefHeight="36.0" prefWidth="123.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" text="Thêm">
+                  <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addNewPt" prefHeight="30.0" prefWidth="123.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" text="Thêm">
                      <HBox.margin>
                         <Insets right="10.0" top="10.0" />
                      </HBox.margin>

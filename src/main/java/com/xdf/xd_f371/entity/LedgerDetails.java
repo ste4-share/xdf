@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Value;
 
 @Entity
 @Table(name = "ledger_details")

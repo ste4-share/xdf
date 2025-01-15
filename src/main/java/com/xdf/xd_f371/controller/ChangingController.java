@@ -3,8 +3,6 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.PriceAndQuantityDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
-import com.xdf.xd_f371.entity.Inventory;
-import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;

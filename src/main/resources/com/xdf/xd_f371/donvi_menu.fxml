@@ -9,7 +9,6 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -25,26 +24,6 @@
                         <VBox>
                            <children>
                               <HBox />
-                              <HBox layoutX="10.0" layoutY="46.0">
-                                 <children>
-                                    <Label prefHeight="36.0" prefWidth="98.0" text="Tìm kiếm:">
-                                       <font>
-                                          <Font name="Cambria Bold" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="searchBtnUnit" onAction="#searchButtonUnit" prefHeight="36.0" prefWidth="278.0" style="-fx-background-radius: 20; -fx-border-width: 5;">
-                                       <cursor>
-                                          <Cursor fx:constant="TEXT" />
-                                       </cursor>
-                                       <font>
-                                          <Font name="Cambria" size="18.0" />
-                                       </font>
-                                    </TextField>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" top="25.0" />
-                                 </VBox.margin>
-                              </HBox>
                            </children>
                         </VBox>
                         <TableView fx:id="tb_unit" onMouseReleased="#unit_clicked" stylesheets="@css/table_style.css">

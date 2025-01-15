@@ -19,16 +19,15 @@ public class ReportDAO {
         try {
             em.getTransaction().begin();
             Query q = em.createNativeQuery(qry);
-            // Perform operations
             em.getTransaction().commit();
             return q.getResultList();
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            throw e;  // Rethrow the exception or handle it
+            throw e;
         } finally {
-            em.close();  // Make sure the EntityManager is always closed
+            em.close();
         }
 
     }

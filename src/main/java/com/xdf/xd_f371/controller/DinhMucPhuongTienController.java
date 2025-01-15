@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -33,7 +35,7 @@ import java.util.ResourceBundle;
 public class DinhMucPhuongTienController implements Initializable {
     public static Stage norm_stage;
     public static DinhMucPhuongTienDto dinhMucPhuongTienDto = new DinhMucPhuongTienDto();
-
+    private static List<DinhMucPhuongTienDto> ls = new ArrayList<>();
     @FXML
     TableView<DinhMucPhuongTienDto> pt_tb;
     @FXML
@@ -44,6 +46,8 @@ public class DinhMucPhuongTienController implements Initializable {
     ComboBox<Integer> year_cbb;
     @FXML
     RadioButton xe_radio,may_radio,mb_radio;
+    @FXML
+    TextField search_tf;
     @FXML
     TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,km,h,md,tk,createtime,tructhuoc;
 
@@ -74,7 +78,7 @@ public class DinhMucPhuongTienController implements Initializable {
         NguonNx dvi = units_cbb.getSelectionModel().getSelectedItem();
         Integer y = year_cbb.getSelectionModel().getSelectedItem();
         if (dvi!=null && y!=null){
-            List<DinhMucPhuongTienDto> ls = dinhmucService.findAllBy(y, lpt);
+            ls = dinhmucService.findAllBy(y, lpt);
             if (!ls.isEmpty()){
                 pt_tb.setItems(FXCollections.observableList(ls));
             }else {
@@ -87,6 +91,10 @@ public class DinhMucPhuongTienController implements Initializable {
                 }
             }
         }
+    }
+    private void mapPtTb(List<DinhMucPhuongTienDto> ls){
+        pt_tb.setItems(FXCollections.observableList(ls));
+        pt_tb.refresh();
     }
     private void switchDinhmuc(){
         List<DinhMuc> previousDm = dinhmucService.findAllByYear((LocalDate.now().getYear()-1));
@@ -167,5 +175,18 @@ public class DinhMucPhuongTienController implements Initializable {
     public void yearAction(ActionEvent actionEvent) {
         xe_radio.setSelected(true);
         fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
+    }
+    @FXML
+    public void searchKr(KeyEvent keyEvent) {
+        String t = search_tf.getText().trim();
+        if (!t.isEmpty()){
+            mapPtTb(ls.stream().filter(x->x.getName_pt().toLowerCase().contains(t)).toList());
+        }else{
+            mapPtTb(ls);
+        }
+    }
+    @FXML
+    public void searchClicked(MouseEvent mouseEvent) {
+        search_tf.selectAll();
     }
 }

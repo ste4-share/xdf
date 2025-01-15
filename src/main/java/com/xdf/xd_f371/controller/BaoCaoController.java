@@ -187,10 +187,8 @@ public class BaoCaoController implements Initializable {
     }
     private void nxtmap() {
         String sheetName = "bc_nxt_data";
-
-            Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
-            Common.copyFileExcel(file_name,dest_file);
-
+        Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_lcv(ActionEvent actionEvent) {
@@ -275,8 +273,8 @@ public class BaoCaoController implements Initializable {
                 Common.task(this::pttk,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
                 pttk_lb.setText("UPDATED");
             });
-        }else {
-            DialogMessage.errorShowing("Cần kết quý trước khi In báo cáo!!");
+        } else {
+            DialogMessage.errorShowing("Cần Kết quý trước khi In báo cáo!!");
         }
     }
     private void pttk(){
@@ -284,7 +282,6 @@ public class BaoCaoController implements Initializable {
         Common.mapExcelFile(file_name,input -> map_pttk_create(input,sheetName),input -> map_pttk_get(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
     }
-
     private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
         arr_tt.clear();
         String n_sum1="";

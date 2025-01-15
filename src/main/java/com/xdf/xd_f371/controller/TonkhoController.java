@@ -1,7 +1,9 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.dto.PttkDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -21,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 @Component
@@ -30,10 +34,15 @@ public class TonkhoController implements Initializable {
     private static List<TonkhoDto> tkt = new ArrayList<>();
     private static List<LichsuXNK> histories = new ArrayList<>();
     public static TonkhoDto pickTonKho = new TonkhoDto();
+    private static List<PttkDto> pttkDtos = new ArrayList<>();
     @FXML
     public TableView<TonkhoDto> tb_tonkho;
     @FXML
     public TableView<LichsuXNK> tb_history;
+    @FXML
+    public TableView<PttkDto> pttk_tb;
+    @FXML
+    public TableColumn<PttkDto, String> pttk_stt,pttk_loaixd,pttk_tenxd,pttk_e916,pttk_e921,pttk_e923,pttk_e927,pttk_dnb,pttk_dka,pttk_dvi,pttk_dns,pttk_fbo,pttk_tdv;
     @FXML
     public TableColumn<TonkhoDto, String> col_stt_tk,col_tenxd_tk,col_cl,col_nvdx_tdk,col_sscd_tdk,
             col_cong_tdk, col_nhap_nvdx, col_xuat_nvdx,col_nvdx, col_nhap_sscd, col_xuat_sscd,col_sscd,
@@ -42,28 +51,45 @@ public class TonkhoController implements Initializable {
     public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,
             ls_tenxd, ls_cl, ls_tontruoc,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
     @FXML
-    private TextField ls_search, search_inventory,ls_search_so,from_date,to_date;
+    private TextField ls_search, search_inventory,ls_search_so,from_date,to_date,timkiem_pttk_tf;
     @FXML
-    private DatePicker s_date, e_date;
+    private DatePicker ls_s_date;
+    @FXML
+    private Label sd_lb, ed_lb;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
     private LichsuService lichsuService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         tb_tonkho.setPrefWidth(DashboardController.screenWidth);
         tb_tonkho.setPrefHeight(DashboardController.screenHeigh-350);
         tb_history.setPrefWidth(DashboardController.screenWidth);
         tb_history.setPrefHeight(DashboardController.screenHeigh-350);
-
+        pttk_tb.setPrefWidth(DashboardController.screenWidth);
+        pttk_tb.setPrefHeight(DashboardController.screenHeigh-350);
+        CommonFactory.setVi_DatePicker(ls_s_date);
+        setLb();
         pickTonKho = new TonkhoDto();
         fillDataToTableTonkho();
         setTonkhoTongToCol();
         setLichsuTb();
         fillDataToTableLichsu();
-
+        setCellFactoryPttk();
+        initPttkTb();
         searching(tkt.stream().map(TonkhoDto::getTenxd).toList());
         searching_ls(histories.stream().map(LichsuXNK::getTen_xd).toList());
+    }
+    private void setLb(){
+        Accounts acc = ConnectLan.pre_acc;
+        if (acc.getSd()!=null && acc.getEd()!=null){
+            sd_lb.setText(acc.getSd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            ed_lb.setText(acc.getEd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        }else{
+            sd_lb.setText(null);
+            ed_lb.setText(null);
+        }
     }
     private void fillDataToTableLichsu() {
         histories = new ArrayList<>();
@@ -92,6 +118,35 @@ public class TonkhoController implements Initializable {
     }
     private void mapInvTb(List<TonkhoDto> ls){
         tb_tonkho.setItems( FXCollections.observableArrayList(ls));
+    }
+    private void initPttkTb(){
+        Accounts q = ConnectLan.pre_acc;
+        if (q.getSd()!=null){
+            pttkDtos = inventoryService.mapPttkPetro(q.getSd(),q.getEd());
+            mapPttkTb(pttkDtos);
+        }else{
+            mapPttkTb(new ArrayList<>());
+        }
+    }
+    private void mapPttkTb(List<PttkDto> ls){
+        pttk_tb.setItems( FXCollections.observableArrayList(ls));
+        pttk_tb.refresh();
+    }
+    private void setCellFactoryPttk(){
+        pttk_stt.setSortable(false);
+        pttk_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(pttk_tb.getItems().indexOf(column.getValue())+1).asString());
+        pttk_tenxd.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("tenxd"));
+        pttk_loaixd.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("loai"));
+        pttk_e916.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("e916"));
+        pttk_e921.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("e921"));
+        pttk_e923.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("e923"));
+        pttk_e927.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("e927"));
+        pttk_dnb.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("dnb"));
+        pttk_dka.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("dka"));
+        pttk_dvi.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("dvi"));
+        pttk_dns.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("dns"));
+        pttk_fbo.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("fb"));
+        pttk_tdv.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("tdv"));
     }
     private void setTonkhoTongToCol(){
         col_stt_tk.setSortable(false);
@@ -188,6 +243,12 @@ public class TonkhoController implements Initializable {
     }
     @FXML
     public void sd_clicked(ActionEvent actionEvent) {
+        LocalDate sd = ls_s_date.getValue();
+        if (sd!=null){
+            mapLsTb(histories.stream().filter(x->x.getSd().isAfter(sd)).toList());
+        } else {
+            mapLsTb(histories);
+        }
     }
     @FXML
     public void ls_search_so_clicked(MouseEvent mouseEvent) {
@@ -209,11 +270,18 @@ public class TonkhoController implements Initializable {
         Common.openNewStage("quarter.fxml", tk_stage,null, StageStyle.UTILITY);
         fillDataToTableTonkho();
     }
-    @FXML
-    public void from_dateAction(ActionEvent actionEvent) {
 
+    @FXML
+    public void pttkClicked(MouseEvent mouseEvent) {
+        timkiem_pttk_tf.selectAll();
     }
     @FXML
-    public void to_dateAction(ActionEvent actionEvent) {
+    public void pttk_kr(KeyEvent keyEvent) {
+        String t = timkiem_pttk_tf.getText().trim();
+        if (!t.isEmpty()){
+            mapPttkTb(pttkDtos.stream().filter(x->x.getTenxd().toLowerCase().contains(t)).toList());
+        }else{
+            mapPttkTb(pttkDtos);
+        }
     }
 }

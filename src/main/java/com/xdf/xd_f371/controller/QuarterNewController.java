@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Accounts;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.InventoryService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -23,6 +24,8 @@ public class QuarterNewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Accounts acc = ConnectLan.pre_acc;
+        CommonFactory.setVi_DatePicker(sd);
+        CommonFactory.setVi_DatePicker(ed);
         sd.setValue(acc.getSd());
         ed.setValue(acc.getEd());
     }

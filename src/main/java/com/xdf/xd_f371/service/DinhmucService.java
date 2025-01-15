@@ -4,7 +4,6 @@ import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.repo.DinhMucRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

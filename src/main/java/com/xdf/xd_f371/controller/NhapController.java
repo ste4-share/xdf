@@ -58,7 +58,8 @@ public class NhapController extends CommonFactory implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        Locale vietnameseLocale = new Locale("vi", "VN");
+        setVi_DatePicker(tungay);
+        setVi_DatePicker(denngay);
         ls_socai = new ArrayList<>();
         tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());

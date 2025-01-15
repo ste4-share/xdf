@@ -30,12 +30,6 @@ public class LedgerService {
     public List<LedgerDto> getLedgers() {
         return ledgersRepo.findLedgerByID(DashboardController.so_select);
     }
-    public List<MiniLedgerDto> findInterfaceLedger(String status, Quarter q){
-        if (q==null){
-            return ledgersRepo.findAllInterfaceLedger(status);
-        }
-        return ledgersRepo.findInterfaceLedger(status, q.getStart_date(),q.getEnd_date());
-    }
     public List<MiniLedgerDto> findAllInterfaceLedger(String status){
         return ledgersRepo.findAllInterfaceLedger(status);
     }

@@ -8,7 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
@@ -30,13 +29,13 @@ public class InitProgressBar implements Initializable {
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                int total = 100;  // Total steps for the task
+                int total = 100;
                 for (int i = 0; i <= total; i+=5) {
                     if (isCancelled()) {
-                        break; // Stop task if it's cancelled
+                        break;
                     }
-                    updateProgress(i, total);  // Update the progress bar
-                    Thread.sleep(50);  // Simulate a long-running task
+                    updateProgress(i, total);
+                    Thread.sleep(100);
                 }
                 return null;
             }
@@ -51,16 +50,13 @@ public class InitProgressBar implements Initializable {
                 }
             }
         };
-        // Bind the progress of the ProgressBar to the task's progress
         pbar.progressProperty().bind(task.progressProperty());
-        // Bind the percentage label to the task's progress
         task.progressProperty().addListener((obs, oldProgress, newProgress) -> {
             double percent = newProgress.doubleValue() * 100;
-            percens_lb.setText(String.format("%.0f%%", percent)); // Format as whole number
+            percens_lb.setText(String.format("%.0f%%", percent));
         });
-        // Create a new Thread to run the task
         Thread taskThread = new Thread(task);
-        taskThread.setDaemon(true);  // Set the thread to daemon, so it stops when the app closes
+        taskThread.setDaemon(true);
         taskThread.start();
     }
 }
