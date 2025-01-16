@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -52,6 +53,8 @@ public class NhiemvuController implements Initializable {
     TableColumn<HanmucNhiemvuTaubayDto, String> stt_2,dvi_x,t2_pt,t2_nv_2,ct_nv_2,t2_tk_2,t2_md_2,t2_nl_2;
     @FXML
     TableColumn<HanmucNhiemvu2Dto, String> nv,ct,xang,diezel,daubay,stt_3,cong;
+    @FXML
+    private TextField mb_search;
 
     @FXML
     ComboBox<NguonNx> dvi_cbb;
@@ -159,7 +162,7 @@ public class NhiemvuController implements Initializable {
     }
     private void openAddChitieuForm(){
         nvStage = new Stage();
-        nvStage.initStyle(StageStyle.UTILITY);
+        nvStage.initStyle(StageStyle.TRANSPARENT);
         Common.openNewStage("add_chitieunv.fxml", nvStage,null, StageStyle.DECORATED);
         Integer y = year_cbb.getSelectionModel().getSelectedItem();
         if (y!=null){
@@ -172,6 +175,7 @@ public class NhiemvuController implements Initializable {
     }
     private void initNhiemvuTaubay(List<HanmucNhiemvuTaubayDto> hmnv){
         ctnv_pt.setItems(FXCollections.observableList(hmnv));
+        ctnv_pt.refresh();
     }
     private void initHanmuc(List<HanmucNhiemvu2Dto> ls){
         tieuthunhiemvu.setItems(FXCollections.observableList(ls));
@@ -252,5 +256,18 @@ public class NhiemvuController implements Initializable {
             DialogMessage.errorShowing("co loi xay ra");
         }
 
+    }
+
+    public void mb_searchClicked(MouseEvent mouseEvent) {
+        mb_search.selectAll();
+    }
+
+    public void mb_search_kr(KeyEvent keyEvent) {
+        String t = mb_search.getText();
+        if (t!=null && !t.isEmpty()){
+            initNhiemvuTaubay(hmnv.stream().filter(x->x.getTenpt().toLowerCase().contains(t)).toList());
+        }else{
+            initNhiemvuTaubay(hmnv);
+        }
     }
 }

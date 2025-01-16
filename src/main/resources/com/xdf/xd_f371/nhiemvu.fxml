@@ -10,6 +10,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -128,7 +130,7 @@
                               </HBox>
                               <HBox>
                                  <children>
-                                    <Label prefHeight="41.0" prefWidth="76.0" text="Đơn vị:">
+                                    <Label prefHeight="30.0" prefWidth="76.0" text="Đơn vị:">
                                        <font>
                                           <Font name="Cambria Bold" size="13.0" />
                                        </font>
@@ -139,11 +141,35 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <ComboBox fx:id="dvi_cbb" onAction="#dviSelected" prefHeight="40.0" prefWidth="377.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" stylesheets="@css/combobox.css">
+                                    <ComboBox fx:id="dvi_cbb" onAction="#dviSelected" prefHeight="30.0" prefWidth="121.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" stylesheets="@css/combobox.css">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </ComboBox>
+                                    <Label layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="109.0" text="Máy bay:">
+                                       <font>
+                                          <Font name="Cambria Bold" size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                    </Label>
+                                    <TextField fx:id="mb_search" onKeyReleased="#mb_search_kr" onMouseClicked="#mb_searchClicked" prefHeight="30.0" prefWidth="121.0" promptText="Su 30MK2" style="-fx-background-radius: 10;">
+                                       <font>
+                                          <Font name="Cambria" size="16.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="TEXT" />
+                                       </cursor>
+                                    </TextField>
+                                    <ImageView fitHeight="35.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@img/search.png" />
+                                       </image>
+                                    </ImageView>
                                  </children>
                                  <VBox.margin>
                                     <Insets bottom="10.0" />

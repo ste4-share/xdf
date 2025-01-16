@@ -108,7 +108,6 @@ public class AddNewChitieuNvForm implements Initializable {
             if (unique.isPresent()){
                 hanmucNhiemvuService.save(new NhiemvuTaubay(unique.get().getNvtb_id(),n.getId(),p.getId(),ct.getCtnv_id(),
                         tk.getText(),md.getText(),Long.parseLong(nl.getText())));
-                DialogMessage.successShowing("Luu thanh cong");
             }else{
                 if (hm==null){
                     hanmucNhiemvuService.save(new NhiemvuTaubay(n.getId(),p.getId(),ct.getCtnv_id(),tk.getText(),md.getText(),Long.parseLong(nl.getText())));
@@ -116,11 +115,9 @@ public class AddNewChitieuNvForm implements Initializable {
                 }else{
                     hanmucNhiemvuService.save(new NhiemvuTaubay(hm.getNvtb_id(),n.getId(),p.getId(),ct.getCtnv_id(),tk.getText(),md.getText(),Long.parseLong(nl.getText())));
                 }
-                DialogMessage.successShowing("Luu thanh cong");
             }
+            DialogMessage.successShowing("Luu thanh cong");
             NhiemvuController.nvStage.close();
-        } else {
-            DialogMessage.errorShowing(null);
         }
     }
     @FXML
