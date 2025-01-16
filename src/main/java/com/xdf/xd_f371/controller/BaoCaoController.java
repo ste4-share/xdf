@@ -165,16 +165,10 @@ public class BaoCaoController implements Initializable {
         return 0;
     }
     private Integer map_pttk_create(XSSFWorkbook wb,String sheetName){
-        if (q!=null) {
-            return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_pttk_q(q.getSd(),q.getEd()), 4);
-        }
-        return 0;
+        return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_pttk_q(), 4);
     }
     private Integer map_pttk_get(XSSFWorkbook wb,String sheetName){
-        if (q!=null) {
-            return mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_pttk_q(q.getSd(),q.getEd()), 4);
-        }
-        return 0;
+        return mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_pttk_q(), 4);
     }
     @FXML
     public void bc_nxt(ActionEvent actionEvent) {

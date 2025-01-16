@@ -72,9 +72,9 @@ public class InventoryService {
                         ((BigDecimal) row[4]).longValue(),((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue()))
                 .toList();
     }
-    public List<PttkDto> mapPttkPetro(LocalDate sd,LocalDate ed) {
+    public List<PttkDto> mapPttkPetro() {
         ReportDAO reportDAO = new ReportDAO();
-        List<Object[]> pttk = reportDAO.findByWhatEver(SubQuery.bc_pttk_q(sd,ed));
+        List<Object[]> pttk = reportDAO.findByWhatEver(SubQuery.bc_pttk_q());
         return pttk.stream()
                 .map(row -> new PttkDto((String) row[1],(String) row[2],((BigDecimal) row[3]).longValue(),((BigDecimal) row[4]).longValue(),
                         ((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue(),((BigDecimal) row[7]).longValue(),((BigDecimal) row[8]).longValue(),((BigDecimal) row[9]).longValue(),

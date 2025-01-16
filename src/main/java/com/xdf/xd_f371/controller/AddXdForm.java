@@ -67,6 +67,7 @@ public class AddXdForm implements Initializable {
                     loaiXdService.save(new LoaiXangDau(mxd.getText(),txd.getText(),
                             cl_cbb.getSelectionModel().getSelectedItem().getId(),StatusCons.ACTIVED.getName()));
                     DialogMessage.message("THANH CONG","Thêm mới thành công","Thành công", Alert.AlertType.INFORMATION);
+                    TonkhoController.tk_stage.close();
                 }else {
                     mxd.setStyle(CommonFactory.styleErrorField);
                     DialogMessage.message("Lỗi","Mã loại xăng dầu đã tồn tại. Vui lòng thử lại sau","Lỗi", Alert.AlertType.WARNING);

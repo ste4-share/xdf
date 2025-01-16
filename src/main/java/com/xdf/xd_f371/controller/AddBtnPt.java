@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 
 @Component
 public class AddBtnPt implements Initializable {
-
     @FXML
     TextField pt_name, quantity,h,km,md,tk;
     @FXML
@@ -52,7 +51,11 @@ public class AddBtnPt implements Initializable {
     }
     private void initLpt() {
         ComponentUtil.setItemsToComboBox(cbb_loai,phuongtienService.findAllLpt(),LoaiPhuongTien::getTypeName,input->phuongtienService.findLptByName(input));
-        cbb_loai.getSelectionModel().selectFirst();
+        if (Common.loaipt!=null){
+            cbb_loai.getSelectionModel().select(Common.loaipt);
+        }else{
+            cbb_loai.getSelectionModel().selectFirst();
+        }
     }
     private void initField() {
         DinhMucPhuongTienDto dm = DinhMucPhuongTienController.dinhMucPhuongTienDto;
@@ -79,24 +82,32 @@ public class AddBtnPt implements Initializable {
             error_lb.setText("---Sai định dạng---");
         }
     }
-    private void savePtDm(DinhMucPhuongTienDto dm){
-        dm.setName_pt(pt_name.getText());
-        dm.setQuantity(Integer.parseInt(quantity.getText()));
-        dm.setDm_xm_gio(Integer.parseInt(h.getText()));
-        dm.setDm_xm_km(Integer.parseInt(km.getText()));
-        dm.setDm_md_gio(Integer.parseInt(md.getText()));
-        dm.setDm_tk_gio(Integer.parseInt(tk.getText()));
-        dm.setLoaiphuongtien_id(cbb_loai.getSelectionModel().getSelectedItem().getId());
-        phuongtienService.savePt_DM(dm,dvi_cbb.getSelectionModel().getSelectedItem().getId());
+    private boolean savePtDm(DinhMucPhuongTienDto dm){
+        try {
+            dm.setName_pt(pt_name.getText());
+            dm.setQuantity(Integer.parseInt(quantity.getText()));
+            dm.setDm_xm_gio(Integer.parseInt(h.getText()));
+            dm.setDm_xm_km(Integer.parseInt(km.getText()));
+            dm.setDm_md_gio(Integer.parseInt(md.getText()));
+            dm.setDm_tk_gio(Integer.parseInt(tk.getText()));
+            dm.setLoaiphuongtien_id(cbb_loai.getSelectionModel().getSelectedItem().getId());
+            phuongtienService.savePt_DM(dm,dvi_cbb.getSelectionModel().getSelectedItem().getId());
+            return true;
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
     @FXML
     public void addBtn(ActionEvent actionEvent) {
         DinhMucPhuongTienDto dm = DinhMucPhuongTienController.dinhMucPhuongTienDto;
         if(DialogMessage.callAlert()== ButtonType.OK){
             if (error_lb.getText()==null){
-                savePtDm(dm);
-                DialogMessage.callAlertWithMessage(null, "Thông báo", "Thêm phương tiện thành công", Alert.AlertType.CONFIRMATION);
-                DinhMucPhuongTienController.norm_stage.close();
+                if (savePtDm(dm)) {
+                    DialogMessage.callAlertWithMessage(null, "Thông báo", "Thêm phương tiện thành công", Alert.AlertType.CONFIRMATION);
+                    DinhMucPhuongTienController.norm_stage.close();
+                } else {
+                    DialogMessage.callAlertWithMessage(null, null, "Có lỗi xảy ra.", Alert.AlertType.WARNING);
+                }
             }else{
                 DialogMessage.callAlertWithMessage(null, null, "Something stills wrong!", Alert.AlertType.WARNING);
             }
@@ -151,5 +162,27 @@ public class AddBtnPt implements Initializable {
     @FXML
     public void kr_tk(KeyEvent keyEvent) {
         isValid(tk);
+    }
+    @FXML
+    public void tenpt_kr(KeyEvent keyEvent) {
+        String t = pt_name.getText();
+        if (t!=null){
+            if (!t.isEmpty()){
+                if (DinhMucPhuongTienController.ls.stream().anyMatch(x->x.getName_pt().toLowerCase().equals(t.toLowerCase()))){
+                    pt_name.setStyle(CommonFactory.styleErrorField);
+                    error_lb.setText("Tên phương tiện đã tồn tại.");
+                }else{
+                    pt_name.setStyle(null);
+                    error_lb.setText(null);
+                }
+            }
+        }
+    }
+    @FXML
+    public void cbb_loaiAction(ActionEvent actionEvent) {
+         LoaiPhuongTien lpt = cbb_loai.getSelectionModel().getSelectedItem();
+         if (lpt!=null){
+             Common.loaipt = lpt;
+         }
     }
 }

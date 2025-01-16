@@ -69,6 +69,7 @@ public class TonkhoController implements Initializable {
         tb_history.setPrefHeight(DashboardController.screenHeigh-350);
         pttk_tb.setPrefWidth(DashboardController.screenWidth);
         pttk_tb.setPrefHeight(DashboardController.screenHeigh-350);
+
         CommonFactory.setVi_DatePicker(ls_s_date);
         setLb();
         pickTonKho = new TonkhoDto();
@@ -115,6 +116,7 @@ public class TonkhoController implements Initializable {
             tkt = inventoryService.getAllTonkhoNotCondition();
         }
         tb_tonkho.setItems(FXCollections.observableArrayList(tkt));
+        tb_tonkho.refresh();
     }
     private void mapInvTb(List<TonkhoDto> ls){
         tb_tonkho.setItems( FXCollections.observableArrayList(ls));
@@ -122,7 +124,7 @@ public class TonkhoController implements Initializable {
     private void initPttkTb(){
         Accounts q = ConnectLan.pre_acc;
         if (q.getSd()!=null){
-            pttkDtos = inventoryService.mapPttkPetro(q.getSd(),q.getEd());
+            pttkDtos = inventoryService.mapPttkPetro();
             mapPttkTb(pttkDtos);
         }else{
             mapPttkTb(new ArrayList<>());
@@ -212,6 +214,7 @@ public class TonkhoController implements Initializable {
     public void addnew_petro(ActionEvent actionEvent) {
         tk_stage = new Stage();
         Common.openNewStage("add_inv_form.fxml", tk_stage,"THEM MOI", StageStyle.DECORATED);
+        fillDataToTableTonkho();
     }
     @FXML
     public void timkiem_tk_clicked(MouseEvent mouseEvent) {

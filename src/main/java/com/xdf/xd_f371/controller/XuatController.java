@@ -764,16 +764,20 @@ public class XuatController extends CommonFactory implements Initializable {
     public void dvxAction(ActionEvent actionEvent) {
         cbb_tenxd.getSelectionModel().selectFirst();
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        mapPrice(lxd.getXd_id());
+        cbb_dongia.getSelectionModel().selectFirst();
         Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
         NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
         if (dvx!=null){
-            if (lxd != null && gia != null) {
-                InventoryDto in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
-                if (in!=null){
-                    setInv_lb(in.getPre_nvdx());
-                } else {
-                    setInv_lb(0);
-                }
+            if (gia != null){
+                    InventoryDto in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
+                    if (in!=null){
+                        setInv_lb(in.getPre_nvdx());
+                    } else {
+                        setInv_lb(0);
+                    }
+            }else{
+                setInv_lb(0);
             }
         }
     }

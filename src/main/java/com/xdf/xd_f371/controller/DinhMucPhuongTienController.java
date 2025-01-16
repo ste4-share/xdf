@@ -35,7 +35,7 @@ import java.util.ResourceBundle;
 public class DinhMucPhuongTienController implements Initializable {
     public static Stage norm_stage;
     public static DinhMucPhuongTienDto dinhMucPhuongTienDto = new DinhMucPhuongTienDto();
-    private static List<DinhMucPhuongTienDto> ls = new ArrayList<>();
+    public static List<DinhMucPhuongTienDto> ls = new ArrayList<>();
     @FXML
     TableView<DinhMucPhuongTienDto> pt_tb;
     @FXML
@@ -140,6 +140,14 @@ public class DinhMucPhuongTienController implements Initializable {
         dinhMucPhuongTienDto.setPhuongtien_id(0);
         dinhMucPhuongTienDto.setQuantity(0);
         dinhMucPhuongTienDto.setNnx_id(units_cbb.getSelectionModel().getSelectedItem().getId());
+        Integer y = year_cbb.getSelectionModel().getSelectedItem();
+        if (xe_radio.isSelected()){
+            ls = dinhmucService.findAllBy(y,LoaiPTEnum.XE.getNameVehicle());
+        }else if (may_radio.isSelected()){
+            ls = dinhmucService.findAllBy(y,LoaiPTEnum.MAY.getNameVehicle());
+        }else if (mb_radio.isSelected()){
+            ls = dinhmucService.findAllBy(y,LoaiPTEnum.MAYBAY.getNameVehicle());
+        }
         openAddScreen();
         fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
         xe_radio.setSelected(true);

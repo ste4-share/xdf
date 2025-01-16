@@ -4,6 +4,7 @@ package com.xdf.xd_f371.util;
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
+import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import javafx.concurrent.Task;
@@ -38,6 +39,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class Common {
+    public static LoaiPhuongTien loaipt;
+
     public static void openNewStage(String fxml_url, Stage stage, String title, StageStyle s){
         Parent root = null;
         try {
