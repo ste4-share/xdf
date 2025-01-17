@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LedgersRepo extends JpaRepository<Ledger, Integer> {
+public interface LedgersRepo extends JpaRepository<Ledger, Long> {
     @Query(value = "select new com.xdf.xd_f371.dto.LedgerDto(ld.ledger_id,ld.id, l.bill_id,l.amount,l.from_date,l.end_date,l.status,l.so_km,l.giohd_md,l.giohd_tk," +
             "l.sl_tieuthu_md,l.sl_tieuthu_tk,l.dvi_nhan_id,l.dvi_xuat_id,l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.loaigiobay," +
             "l.nguoi_nhan,l.so_xe,l.lenh_so,l.nhiemvu,l.nhiemvu_id,l.tcn_id,ld.ma_xd,ld.ten_xd,ld.chung_loai,ld.chat_luong,ld.phai_xuat,ld.nhiet_do_tt,ld.ty_trong," +

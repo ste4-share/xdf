@@ -171,12 +171,12 @@ public class BaoCaoController implements Initializable {
     }
     @FXML
     public void bc_nxt(ActionEvent actionEvent) {
-        Stage stage_1 = new Stage();
-        Common.getLoading(stage_1);
-        Platform.runLater(()-> {
-            Common.task(this::nxtmap, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-            nxt_lb.setText("UPDATED");
-        });
+            Stage stage_1 = new Stage();
+            Common.getLoading(stage_1);
+            Platform.runLater(()-> {
+                Common.task(this::nxtmap, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+                nxt_lb.setText("UPDATED");
+            });
     }
     private void nxtmap() {
         String sheetName = "bc_nxt_data";
@@ -218,7 +218,6 @@ public class BaoCaoController implements Initializable {
         String sheetName = "bc_ttnl_theo_kh_data";
         Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
         Common.copyFileExcel(file_name,dest_file);
-
     }
     @FXML
     public void bc_ttxdtnv(ActionEvent actionEvent) {

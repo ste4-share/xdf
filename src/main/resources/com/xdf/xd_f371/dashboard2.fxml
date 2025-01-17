@@ -22,7 +22,7 @@
    <left>
       <AnchorPane fx:id="main_menu" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="772.0" prefWidth="212.0">
+            <VBox prefHeight="772.0" prefWidth="225.0">
                <children>
                   <AnchorPane prefHeight="215.0" prefWidth="244.0" style="-fx-border-radius: 20;">
                      <children>

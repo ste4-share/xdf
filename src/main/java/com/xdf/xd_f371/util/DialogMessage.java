@@ -37,7 +37,7 @@ public class DialogMessage {
         return result.orElse(null);
     }
     public static void errorShowing(String m){
-        DialogMessage.message(null, null, "Something stills wrong! \n"+m, Alert.AlertType.WARNING);
+        DialogMessage.message(null, null, m, Alert.AlertType.WARNING);
     }
     public static void successShowing(String message){
         DialogMessage.message(null, message,null , Alert.AlertType.INFORMATION);

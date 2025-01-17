@@ -182,15 +182,23 @@ public class NhapController extends CommonFactory implements Initializable {
     private void btnImport(ActionEvent actionEvent) {
         if (!ls_socai.isEmpty()){
             if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
-                Ledger l = getLedger();
-                if (validateField(l).isEmpty()) {
-                    Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                    DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong.. so: "+ res.getBill_id(),
-                            "Thanh cong", Alert.AlertType.INFORMATION);
-                    DashboardController.primaryStage.close();
-                }else{
-                    DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
-                            "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                try {
+                    Ledger l = getLedger();
+                    if (validateField(l).isEmpty()) {
+                        Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                        DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
+                                "Thanh cong", Alert.AlertType.INFORMATION);
+                        DashboardController.primaryStage.close();
+                    } else {
+                        DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
+                                "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                    }
+                }catch (NumberFormatException e){
+                    DialogMessage.errorShowing("Số sai định dạng, vui lòng thử lại");
+                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    DialogMessage.errorShowing("có lỗi xảy ra, vui lòng thử lại sau.");
+                    throw new RuntimeException(e);
                 }
             }
         }else{

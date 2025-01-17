@@ -28,10 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -137,7 +134,7 @@ public class Common {
             Throwable exception = loadingTask.getException();
             if (exception != null) {
                 success.run();
-                DialogMessage.errorShowing(exception.getMessage());
+                DialogMessage.errorShowing("Không thể cập nhật báo cáo trong khi đang mở file excel. Vui lòng đóng file excel hiện tại rồi thử lại.");
             }
         });
         Thread thread = new Thread(loadingTask);
@@ -223,16 +220,12 @@ public class Common {
         deleteExcel(target);
         File source = new File(sour);
         if (source.exists()){
-            long start = System.nanoTime();
             try {
                 Files.copy(Paths.get(sour), Paths.get(target), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
-            System.out.println("Time taken by Java7 Files Copy = "+(System.nanoTime()-start));
-        }else {
-            System.out.println("source file doesn't exists");
         }
     }
     private static boolean deleteExcel(String file_name){

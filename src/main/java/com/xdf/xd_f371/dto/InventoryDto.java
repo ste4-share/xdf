@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class InventoryDto {
     private int petro_id;
-    private int ledger_id;
+    private Long ledger_id;
     private int don_gia;
     private Long pre_nvdx;
     private Long nhap_nvdx;
@@ -27,7 +27,7 @@ public class InventoryDto {
         this.pre_sscd = pre_sscd;
     }
 
-    public InventoryDto(int petro_id, int ledger_id, int don_gia, Long nhap_nvdx, Long xuat_nvdx, Long nhap_sscd, Long xuat_sscd) {
+    public InventoryDto(int petro_id, Long ledger_id, int don_gia, Long nhap_nvdx, Long xuat_nvdx, Long nhap_sscd, Long xuat_sscd) {
         this.petro_id = petro_id;
         this.ledger_id = ledger_id;
         this.don_gia = don_gia;
