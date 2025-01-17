@@ -59,7 +59,6 @@ public class BaoCaoController implements Initializable {
         dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
         rvb.setPrefWidth(DashboardController.screenWidth-300);
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
-        initdvcbb();
         q = ConnectLan.pre_acc;
         if (q.getSd()!=null){
             fromdate.setText(q.getSd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
@@ -355,8 +354,13 @@ public class BaoCaoController implements Initializable {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(query);
         XSSFRow row_header = sheet.createRow(7);
+        if (row_header==null){
+            row_header = sheet.createRow(7);
+        }
         XSSFRow row_header_1 = sheet.createRow(6);
-
+        if (row_header_1==null){
+            row_header_1 = sheet.createRow(6);
+        }
         for (int i=0;i<arr_tt.size();i++){
             row_header_1.createCell(8+i).setCellValue("NHAP");
             row_header_1.createCell(sizett+8+i).setCellValue("XUAT");
@@ -367,7 +371,25 @@ public class BaoCaoController implements Initializable {
             Object[] rows_data = nxtls.get(i);
             XSSFRow row = sheet.createRow(8+i);
             for (int j =0;j<rows_data.length;j++){
-                row.createCell(j+1).setCellValue(rows_data[j]==null ?"" : rows_data[j].toString());
+//                row.createCell(j+1).setCellValue(rows_data[j]==null ?"" : rows_data[j].toString());
+                String val = rows_data[j]==null ?"" : rows_data[j].toString();
+                if (row.getCell(j+1)==null){
+                    if (val==null){
+                        row.createCell(j+1).setCellValue(val);
+                    } else if (StringUtils.isNumeric(val)){
+                        row.createCell(j+1).setCellValue(new BigDecimal(val).longValue());
+                    } else {
+                        row.createCell(j+1).setCellValue(val);
+                    }
+                }else{
+                    if (val==null){
+                        row.getCell(j+1).setCellValue(val);
+                    } else if (StringUtils.isNumeric(val)){
+                        row.getCell(j+1).setCellValue(new BigDecimal(val).longValue());
+                    } else {
+                        row.getCell(j+1).setCellValue(val);
+                    }
+                }
             }
         }
         arr_tt.clear();

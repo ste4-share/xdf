@@ -49,7 +49,7 @@ public class DinhMucPhuongTienController implements Initializable {
     @FXML
     TextField search_tf;
     @FXML
-    TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,km,h,md,tk,createtime,tructhuoc;
+    TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,km,h,md,tk,tructhuoc;
 
     @Autowired
     private DinhmucService dinhmucService;

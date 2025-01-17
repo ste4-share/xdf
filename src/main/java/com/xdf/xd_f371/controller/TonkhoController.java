@@ -1,11 +1,13 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.PttkDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -206,8 +208,13 @@ public class TonkhoController implements Initializable {
         if (mouseEvent.getClickCount() == 2 && spotDto != null) {
             pickTonKho = spotDto;
             tk_stage = new Stage();
-            Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi", StageStyle.DECORATED);
-            fillDataToTableTonkho();
+            List<InventoryDto> list = inventoryService.findPreInventoryPetro(spotDto.getPetro_id());
+            if (list==null){
+                DialogMessage.successShowing(spotDto.getTenxd() + " đã hết hàng!! Vui lòng nhập thêm");
+            }else{
+                Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi", StageStyle.DECORATED);
+                fillDataToTableTonkho();
+            }
         }
     }
     @FXML

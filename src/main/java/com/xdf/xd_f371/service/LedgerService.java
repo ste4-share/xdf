@@ -50,29 +50,9 @@ public class LedgerService {
             for (LedgerDetails detail : details) {
                 detail.setLedger(savedLedger);
                 detail.setLedger_id(savedLedger.getId());
+                inv(savedLedger,detail);
                 saveQuantity(detail,savedLedger);
                 ledgerDetailRepo.save(detail);
-
-                Accounts acc = ConnectLan.pre_acc;
-                if (acc.getSd()!=null && acc.getEd()!=null) {
-                    if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-                        InventoryDto inventory = inventoryService.getPreInvWithDvi(detail.getLoaixd_id(),ledger.getDvi_nhan_id());
-                        if (inventory==null) {
-                            saveHistory(ledger,detail,0L);
-                        } else {
-                            saveHistory(ledger,detail,inventory.getPre_nvdx());
-                        }
-                    }else{
-                        InventoryDto inventory = inventoryService.getPreInvWithDvi(detail.getLoaixd_id(),ledger.getDvi_xuat_id());
-                        if (inventory==null) {
-                            saveHistory(ledger,detail,0L);
-                        } else {
-                            saveHistory(ledger,detail,inventory.getPre_nvdx());
-                        }
-                    }
-                } else {
-                    saveHistory(ledger,detail,0L);
-                }
             }
             if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
                 Optional<NguonNx> dvx = nguonNxService.findAllByNguonnxId(ledger.getDvi_xuat_id());
@@ -90,27 +70,6 @@ public class LedgerService {
                         details1.setLedger_id(l1.getId());
                         saveQuantity(details1,l1);
                         ledgerDetailRepo.save(details1);
-
-                        Accounts acc = ConnectLan.pre_acc;
-                        if (acc.getSd()!=null && acc.getEd()!=null) {
-                            if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-                                InventoryDto inventory = inventoryService.getPreInvWithDvi(details1.getLoaixd_id(),ledger.getDvi_nhan_id());
-                                if (inventory==null) {
-                                    saveHistory(ledger,details1,0L);
-                                } else {
-                                    saveHistory(ledger,details1,inventory.getPre_nvdx());
-                                }
-                            }else{
-                                InventoryDto inventory = inventoryService.getPreInvWithDvi(details1.getLoaixd_id(),ledger.getDvi_xuat_id());
-                                if (inventory==null) {
-                                    saveHistory(ledger,details1,0L);
-                                } else {
-                                    saveHistory(ledger,details1,inventory.getPre_nvdx());
-                                }
-                            }
-                        } else {
-                            saveHistory(ledger,details1,0L);
-                        }
                     }
                 }
             }else{
@@ -127,29 +86,9 @@ public class LedgerService {
                         LedgerDetails details1 = new LedgerDetails(detail);
                         details1.setLedger(l1);
                         details1.setLedger_id(l1.getId());
+                        inv(l1,details1);
                         saveQuantity(details1,l1);
                         ledgerDetailRepo.save(details1);
-
-                        Accounts acc = ConnectLan.pre_acc;
-                        if (acc.getSd()!=null && acc.getEd()!=null) {
-                            if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-                                InventoryDto inventory = inventoryService.getPreInvWithDvi(details1.getLoaixd_id(),ledger.getDvi_nhan_id());
-                                if (inventory==null) {
-                                    saveHistory(ledger,details1,0L);
-                                } else {
-                                    saveHistory(ledger,details1,inventory.getPre_nvdx());
-                                }
-                            }else{
-                                InventoryDto inventory = inventoryService.getPreInvWithDvi(details1.getLoaixd_id(),ledger.getDvi_xuat_id());
-                                if (inventory==null) {
-                                    saveHistory(ledger,details1,0L);
-                                } else {
-                                    saveHistory(ledger,details1,inventory.getPre_nvdx());
-                                }
-                            }
-                        } else {
-                            saveHistory(ledger,details1,0L);
-                        }
                     }
                 }
             }
@@ -160,14 +99,36 @@ public class LedgerService {
         }
         return savedLedger;
     }
-    private void saveHistory(Ledger l,LedgerDetails ld, Long tontruoc){
+    private void inv(Ledger ledger,LedgerDetails details1){
+        Accounts acc = ConnectLan.pre_acc;
+        if (acc.getSd()!=null && acc.getEd()!=null) {
+            if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
+                InvDto2 inventory = inventoryService.getPreInvWithDvi(details1.getLoaixd_id(),ledger.getDvi_nhan_id());
+                if (inventory==null) {
+                    saveHistory(ledger,details1,0L);
+                } else {
+                    saveHistory(ledger,details1,inventory.getSl_ton());
+                }
+            }else{
+                InvDto2 inventory = inventoryService.getPreInvWithDvi(details1.getLoaixd_id(),ledger.getDvi_xuat_id());
+                if (inventory==null) {
+                    saveHistory(ledger,details1,0L);
+                } else {
+                    saveHistory(ledger,details1,inventory.getSl_ton());
+                }
+            }
+        } else {
+            saveHistory(ledger,details1,0L);
+        }
+    }
+    private void saveHistory(Ledger l,LedgerDetails ld,Long tontruoc){
         if (l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-            LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc, ld.getSoluong(),
-                    (tontruoc+ld.getSoluong()), ld.getDon_gia(),  ld.getSscd_nvdx(),
+            LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), ld.getSoluong(),
+                    tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
                     l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getFrom_date());
             lichsuRepo.save(lichsuXNK);
         }else {
-            LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), tontruoc+ld.getSoluong(),
+            LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(),
                     ld.getSoluong(), tontruoc, ld.getDon_gia(),  ld.getSscd_nvdx(),
                     l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getFrom_date());
             lichsuRepo.save(lichsuXNK);

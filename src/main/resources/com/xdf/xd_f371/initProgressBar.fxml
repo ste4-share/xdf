@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="87.0" prefWidth="693.0" style="-fx-background-color: transparent;;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.InitProgressBar">
+<AnchorPane prefHeight="68.0" prefWidth="693.0" style="-fx-background-color: transparent;;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.InitProgressBar">
    <children>
-      <ProgressBar fx:id="pbar" layoutX="14.0" layoutY="22.0" prefHeight="35.0" prefWidth="666.0" progress="0.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-background-radius: 10;" />
+      <ProgressBar fx:id="pbar" layoutX="14.0" layoutY="38.0" prefHeight="19.0" prefWidth="666.0" progress="0.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-background-radius: 10;" />
       <Label fx:id="percens_lb" alignment="CENTER" layoutX="155.0" layoutY="69.0" prefHeight="17.0" prefWidth="384.0" text="123" textFill="#1800f7">
          <font>
             <Font name="Cambria Bold" size="16.0" />

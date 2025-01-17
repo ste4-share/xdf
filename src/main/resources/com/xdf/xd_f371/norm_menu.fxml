@@ -99,7 +99,6 @@
                         <TableColumn fx:id="tk" prefWidth="100.0" text="TK (Lit/1 giờ)" />
                      </columns>
                   </TableColumn>
-                  <TableColumn fx:id="createtime" prefWidth="123.0" text="Thời gian" />
               </columns>
                <VBox.margin>
                   <Insets right="10.0" top="15.0" />

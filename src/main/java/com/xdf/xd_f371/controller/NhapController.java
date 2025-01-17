@@ -4,7 +4,7 @@ import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.cons.StatusCons;
-import com.xdf.xd_f371.dto.InventoryDto;
+import com.xdf.xd_f371.dto.InvDto2;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
@@ -84,9 +84,9 @@ public class NhapController extends CommonFactory implements Initializable {
         if (lxd!=null){
             NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
             if (dvn!=null){
-                InventoryDto i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
+                InvDto2 i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
                 if (i!=null){
-                    setTonKhoLabel(i.getPre_nvdx());
+                    setTonKhoLabel(i.getSl_ton());
                 }else{
                     setTonKhoLabel(0L);
                 }
@@ -272,21 +272,23 @@ public class NhapController extends CommonFactory implements Initializable {
         if (lxd!=null){
             NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
             if (dvn!=null){
-                InventoryDto i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
+                InvDto2 i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
                 if (i!=null){
-                    setTonKhoLabel(i.getPre_nvdx());
+                    setTonKhoLabel(i.getSl_ton());
                     LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
                     if (ld!=null){
-                        setTonKhoLabel(i.getPre_nvdx()+ld.getSoluong());
+                        setTonKhoLabel(i.getSl_ton()+ld.getSoluong());
                     }else{
-                        setTonKhoLabel(i.getPre_nvdx());
+                        setTonKhoLabel(i.getSl_ton());
                     }
                 }else{
                     setTonKhoLabel(0L);
                 }
             }
+            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
+        }else{
+            chungloai_lb.setText("Chủng loại: ---");
         }
-        chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
     }
     @FXML
     public void select_item(MouseEvent mouseEvent) {

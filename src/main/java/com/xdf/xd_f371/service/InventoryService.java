@@ -3,10 +3,7 @@ package com.xdf.xd_f371.service;
 import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.controller.ConnectLan;
-import com.xdf.xd_f371.dto.InvDto;
-import com.xdf.xd_f371.dto.InventoryDto;
-import com.xdf.xd_f371.dto.PttkDto;
-import com.xdf.xd_f371.dto.TonkhoDto;
+import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -61,9 +58,9 @@ public class InventoryService {
                 .map(row -> new InventoryDto((int) row[0],(int) row[1],((BigDecimal) row[2]).longValue(),((BigDecimal) row[3]).longValue()))
                 .toList().get(0);
     }
-    public InventoryDto mapPreInven(List<Object[]> results) {
+    public InvDto2 mapPreInven(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InventoryDto((int) row[0],((BigDecimal) row[1]).longValue(),((BigDecimal) row[2]).longValue()))
+                .map(row -> new InvDto2((int) row[0],(String) row[1],(String) row[2],((BigDecimal) row[3]).longValue()))
                 .toList().get(0);
     }
     public List<InventoryDto> mapPreInventoryPetro(List<Object[]> results) {
@@ -99,7 +96,7 @@ public class InventoryService {
         }
         return new ArrayList<>();
     }
-    public InventoryDto getPreInvWithDvi(int petro_id,int dvi_id){
+    public InvDto2 getPreInvWithDvi(int petro_id, int dvi_id){
         if (!inventoryRepo.findPreInventoryFllowUnit(petro_id,dvi_id).isEmpty()){
             return mapPreInven(inventoryRepo.findPreInventoryFllowUnit(petro_id,dvi_id));
         }

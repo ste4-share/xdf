@@ -23,8 +23,6 @@ public class LichsuXNK {
     private String ten_xd;
     @Column(name = "loai_phieu")
     private String loai_phieu;
-    @Column(name = "tontruoc")
-    private Long tontruoc;
     @Column(name = "soluong")
     private int soluong;
     @Column(name = "tonsau")
@@ -57,11 +55,10 @@ public class LichsuXNK {
     @Transient
     private String createtime_str;
 
-    public LichsuXNK(String ten_xd, String loai_phieu, Long tontruoc, int soluong, Long tonsau, int mucgia, String type, int so,
+    public LichsuXNK(String ten_xd, String loai_phieu, int soluong, Long tonsau, int mucgia, String type, int so,
                      String dvn, String dvx, String chungloaixd, LocalDate sd) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;
-        this.tontruoc = tontruoc;
         this.soluong = soluong;
         this.tonsau = tonsau;
         this.gia = mucgia;
@@ -71,7 +68,7 @@ public class LichsuXNK {
         this.dvx = dvx;
         this.chungloaixd = chungloaixd;
         this.sd = sd;
-        this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tontruoc));
+        this.tontruoc_str = TextToNumber.textToNum(String.valueOf(tonsau-soluong));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
         this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
@@ -80,7 +77,6 @@ public class LichsuXNK {
                      String dvn, String dvx, String chungloaixd, LocalDateTime createTime, LocalDate sd) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;
-        this.tontruoc = tontruoc;
         this.soluong = soluong;
         this.tonsau = tonsau;
         this.gia = mucgia;
@@ -100,7 +96,6 @@ public class LichsuXNK {
     public LichsuXNK(LichsuXNK ls) {
         this.ten_xd = ls.getTen_xd();
         this.loai_phieu = ls.getLoai_phieu();
-        this.tontruoc = ls.getTontruoc();
         this.soluong = ls.getSoluong();
         this.tonsau = ls.getTonsau();
         this.gia = ls.getGia();
@@ -112,7 +107,7 @@ public class LichsuXNK {
         this.sd = ls.getSd();
         this.createTime = ls.getCreateTime();
         this.createtime_str = (createTime == null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
-        this.tontruoc_str = TextToNumber.textToNum(String.valueOf(ls.getTontruoc()));
+        this.tontruoc_str = TextToNumber.textToNum(String.valueOf(ls.getTonsau()-ls.getSoluong()));
         this.tonsau_str = TextToNumber.textToNum(String.valueOf(ls.getTonsau()));
         this.soluong_str = TextToNumber.textToNum(String.valueOf(ls.getSoluong()));
         this.gia_str = TextToNumber.textToNum(String.valueOf(ls.getGia()));

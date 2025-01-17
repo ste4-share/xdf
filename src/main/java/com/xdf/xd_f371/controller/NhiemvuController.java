@@ -255,7 +255,6 @@ public class NhiemvuController implements Initializable {
         }catch (Exception e){
             DialogMessage.errorShowing("co loi xay ra");
         }
-
     }
 
     public void mb_searchClicked(MouseEvent mouseEvent) {
