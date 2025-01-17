@@ -12,6 +12,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -24,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -64,7 +69,6 @@ public class ConnectLan implements Initializable {
         conn_status.setText("-----");
         ip_pre = "";
         port_pre = "0";
-        // Load saved credentials if available
         loadCredentials(username,ip,port, passwd,path_tf, ck_save);
         connect.requestFocus();
     }
@@ -91,10 +95,10 @@ public class ConnectLan implements Initializable {
                         primaryStage = new Stage();
                         primaryStage.setOnCloseRequest(event -> {
                             if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                                Platform.exit(); // Cleanly stop the JavaFX thread
-                                System.exit(0);  // Ensure JVM termination
+                                Platform.exit();
+                                System.exit(0);
                             }
-                            event.consume(); // Prevent the stage from closing
+                            event.consume();
                         });
                         Common.openNewStage2("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
                         ConnectLan.primaryStage.close();

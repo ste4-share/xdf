@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -39,6 +40,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Component
@@ -90,6 +92,7 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ConnectLan.primaryStage.getIcons().add(new Image(Objects.requireNonNull(MainApplicationApp.class.getResourceAsStream("img/icon_app4.png"))));
         tbTTNX.setPrefWidth(screenWidth);
         tbTTNX.setPrefHeight(screenHeigh-300);
         Common.hoverButton(importBtn ,"#040cb5");
@@ -160,7 +163,6 @@ public class DashboardController implements Initializable {
         setStyleForClickedMEnu(dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu,report);
         openFxml("donvi_menu.fxml");
     }
-
     @FXML
     public void report_menu_action(MouseEvent mouseEvent) {
         setStyleForClickedMEnu(report,dvi_menu,dinhmuc_menu,nhiemvu_menu,tonkho_menu,nxt_menu);
@@ -279,14 +281,6 @@ public class DashboardController implements Initializable {
         try {
             HBox hBox = (HBox) getNodeBySource(fxml);
             borderpane_base.setCenter(hBox);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private void openFxmlVbox(String fxml){
-        try {
-            VBox vBox = (VBox) getNodeBySource(fxml);
-            borderpane_base.setCenter(vBox);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

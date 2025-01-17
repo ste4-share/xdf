@@ -2,10 +2,13 @@ package com.xdf.xd_f371;
 
 import com.xdf.xd_f371.util.Common;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import java.util.Objects;
 
 public class MainApplicationApp extends Application {
     public static ConfigurableApplicationContext context;
@@ -24,6 +27,7 @@ public class MainApplicationApp extends Application {
         });
         rootStage = stage;
         rootStage.initStyle(StageStyle.TRANSPARENT);
+        rootStage.getIcons().add(new Image(Objects.requireNonNull(MainApplicationApp.class.getResourceAsStream("img/icon_app4.png"))));
         Common.openNewStage_show("initProgressBar.fxml", rootStage,null,context);
     }
     @Override
