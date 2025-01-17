@@ -134,6 +134,7 @@ public class Common {
             Throwable exception = loadingTask.getException();
             if (exception != null) {
                 success.run();
+                exception.printStackTrace();
                 DialogMessage.errorShowing("Không thể cập nhật báo cáo trong khi đang mở file excel. Vui lòng đóng file excel hiện tại rồi thử lại.");
             }
         });

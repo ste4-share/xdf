@@ -68,6 +68,7 @@ public class LedgerService {
                         LedgerDetails details1 = new LedgerDetails(detail);
                         details1.setLedger(l1);
                         details1.setLedger_id(l1.getId());
+                        inv(l1,details1);
                         saveQuantity(details1,l1);
                         ledgerDetailRepo.save(details1);
                     }
@@ -129,7 +130,7 @@ public class LedgerService {
             lichsuRepo.save(lichsuXNK);
         }else {
             LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(),
-                    ld.getSoluong(), tontruoc, ld.getDon_gia(),  ld.getSscd_nvdx(),
+                    ld.getSoluong(), tontruoc - ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
                     l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getFrom_date());
             lichsuRepo.save(lichsuXNK);
         }

@@ -86,12 +86,12 @@ public class XuatController extends CommonFactory implements Initializable {
     public void dongiaSelected(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
-        NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
+        NguonNx dvx = dvx_cbb.getValue();
         if (dvx!=null){
             if (lxd != null && gia != null) {
-                InventoryDto in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
+                InvDto2 in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
                 if (in!=null){
-                    setInv_lb(in.getPre_nvdx());
+                    setInv_lb(in.getSl_ton());
                 }else {
                     setInv_lb(0);
                 }
@@ -149,6 +149,8 @@ public class XuatController extends CommonFactory implements Initializable {
                     nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName()),false);
             px_hbox.setDisable(false);
             sokm_hb.setDisable(true);
+            LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+            mapPrice(lxd.getXd_id());
         } else if (lx.equals(LoaiXuat.HH.getName())) {
             List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.HAOHUT.getName());
             List<String> str = new ArrayList<>();
@@ -489,17 +491,23 @@ public class XuatController extends CommonFactory implements Initializable {
     private void mapPrice(int xd_id){
         NguonNx n = dvx_cbb.getSelectionModel().getSelectedItem();
         if (n!=null){
-            List<InventoryDto> inventoryList = inventoryService.getPreInvPriceList(xd_id,n.getId());
+            List<InvDto2> inventoryList = inventoryService.getPreInvPriceList(xd_id,n.getId());
             if (!inventoryList.isEmpty()){
-                cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().filter(x->x.getPre_nvdx()!=0).map(InventoryDto::getDon_gia).toList()));
+                cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().filter(x->x.getSl_ton()!=0).map(InvDto2::getGia).toList()));
                 cbb_dongia.getSelectionModel().selectFirst();
                 Integer in = cbb_dongia.getSelectionModel().getSelectedItem();
                 if (in!=null){
-                    InventoryDto i = inventoryList.stream().filter(x->x.getDon_gia()==in)
-                            .filter(a->a.getPre_nvdx()!=0).findFirst().orElse(null);
-                    if (i != null){
-                        setInv_lb(i.getPre_nvdx());
+                    cbb_dongia.setStyle(null);
+                    if (inventoryList.stream().anyMatch(x->x.getGia()==in)){
+                        InvDto2 i = inventoryList.stream().filter(x->x.getGia()==in).findFirst().orElse(null);
+                        if (i!=null){
+                            setInv_lb(i.getSl_ton());
+                        }else{
+                            setInv_lb(0);
+                        }
                     }
+                }else{
+                    setInv_lb(0);
                 }
             } else {
                 cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
@@ -654,7 +662,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledgerDetails.setThuc_xuat(txuat);
             }
         }
-        ledgerDetails.setThanhtien((long) ((long) ledgerDetails.getSoluong() * ledgerDetails.getDon_gia()));
+        ledgerDetails.setThanhtien((long) ledgerDetails.getSoluong() * ledgerDetails.getDon_gia());
         ledgerDetails.setThanhtien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanhtien())));
         ledgerDetails.setThucxuat_str(TextToNumber.textToNum(String.valueOf(txuat)));
         ledgerDetails.setPhaixuat_str(TextToNumber.textToNum(String.valueOf(pxuat)));
@@ -770,23 +778,10 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void dvxAction(ActionEvent actionEvent) {
-        cbb_tenxd.getSelectionModel().selectFirst();
+        mapPrice2();
+    }
+    private void mapPrice2(){
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         mapPrice(lxd.getXd_id());
-        cbb_dongia.getSelectionModel().selectFirst();
-        Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
-        NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
-        if (dvx!=null){
-            if (gia != null){
-                    InventoryDto in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
-                    if (in!=null){
-                        setInv_lb(in.getPre_nvdx());
-                    } else {
-                        setInv_lb(0);
-                    }
-            }else{
-                setInv_lb(0);
-            }
-        }
     }
 }

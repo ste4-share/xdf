@@ -51,7 +51,7 @@ public class TonkhoController implements Initializable {
             col_nvdx_tck,col_sscd_tck,col_cong_tck;
     @FXML
     public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,
-            ls_tenxd, ls_cl, ls_tontruoc,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
+            ls_tenxd, ls_cl,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
     @FXML
     private TextField ls_search, search_inventory,ls_search_so,from_date,to_date,timkiem_pttk_tf;
     @FXML
@@ -179,7 +179,6 @@ public class TonkhoController implements Initializable {
         ls_dvx.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("dvx"));
         ls_tenxd.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("ten_xd"));
         ls_cl.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("chungloaixd"));
-        ls_tontruoc.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tontruoc_str"));
         ls_soluong.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("soluong_str"));
         ls_tonsau.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tonsau_str"));
         ls_create_at.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("createtime_str"));

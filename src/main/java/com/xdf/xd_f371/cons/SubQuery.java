@@ -139,7 +139,7 @@ public class SubQuery {
     public static String end_q1_1(){
         return "max(cl.priority_1) as p1,max(cl.priority_2) as p2,max(cl.priority_3) as p3 from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory group by 1) a on a.petro_id=lxd.id";
     }
-    public static String ttxd_nv(int y,int dv_id){
+    public static String ttxd_nv(int y){
         return "select max(tt) as tt,max(pri) as pri,n,\n" +
                 "case when grouping(n)=0 and grouping(ten_nv)=1 then n else ten_nv end as ten_nv, \n" +
                 "case when grouping(n)=0 and grouping(ten_nv)=1 then n when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end as nhiemvu,\n" +
@@ -190,7 +190,7 @@ public class SubQuery {
                 "left join (select nhiemvu_id,root_id, sum(so_luong) as nlpl from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
                 "where l.lpt_2 like 'MAYBAY' and (ld.chung_loai like 'Dầu bay' or ld.chung_loai like 'Dầu Hạ cấp') and l.status like 'ACTIVE' group by 1,2) h \n" +
                 "on (ct.id=h.nhiemvu_id and hm2.dvi_id=h.root_id) \n" +
-                "where years="+y+" and dvi_id="+dv_id+") zz\n" +
+                "where years="+y+") zz\n" +
                 "group by n,ten_nv,nhiemvu) aaa\n" +
                 "group by rollup(n,ten_nv,nhiemvu)\n" +
                 "order by name_gr desc,tt,tennv_gr desc,pri,ten_nv,nv_gr desc\n" +

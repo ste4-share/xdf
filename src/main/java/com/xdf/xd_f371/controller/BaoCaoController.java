@@ -49,8 +49,6 @@ public class BaoCaoController implements Initializable {
     @FXML
     private TableView<Object> nltb_tb,lsb_tb,ptnnx_tb;
     @FXML
-    ComboBox<NguonNx> dvi_cbb;
-    @FXML
     VBox rvb;
     @FXML
     Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb,lcv_lb,ttxd_xmt_lb,pttk_lb;
@@ -67,16 +65,6 @@ public class BaoCaoController implements Initializable {
             fromdate.setText("--/--/----");
             todate.setText("--/--/----");
         }
-    }
-    private void initdvcbb(){
-        ComponentUtil.setItemsToComboBox(dvi_cbb, nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),NguonNx::getTen, input-> nguonNxService.findByTen(input).orElse(null));
-        dvi_cbb.getSelectionModel().selectFirst();
-        nltb_tb.setPrefHeight(400);
-        nltb_tb.setPrefWidth(DashboardController.screenWidth-350);
-        ptnnx_tb.setPrefHeight(400);
-        ptnnx_tb.setPrefWidth(DashboardController.screenWidth-350);
-        lsb_tb.setPrefHeight(400);
-        lsb_tb.setPrefWidth(DashboardController.screenWidth-350);
     }
     private Integer map_bc_lcv_create(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
@@ -138,16 +126,14 @@ public class BaoCaoController implements Initializable {
         return 0;
     }
     private Integer map_ttxdtnv_create(XSSFWorkbook wb,String sheetName){
-        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
-        if (q!=null && nx!=null) {
-            return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.ttxd_nv(LocalDate.now().getYear(), nx.getId()), 4);
+        if (q!=null) {
+            return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.ttxd_nv(LocalDate.now().getYear()), 4);
         }
         return 0;
     }
     private Integer map_ttxdtnv_getting(XSSFWorkbook wb,String sheetName){
-        NguonNx nx = dvi_cbb.getSelectionModel().getSelectedItem();
-        if (q!=null && nx!=null){
-            return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(LocalDate.now().getYear(), nx.getId()),4);
+        if (q!=null){
+            return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(LocalDate.now().getYear()),4);
         }
         return 0;
     }

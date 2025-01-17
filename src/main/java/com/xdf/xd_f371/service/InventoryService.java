@@ -48,14 +48,14 @@ public class InventoryService {
                          row[7].toString(), row[8].toString(), row[9].toString(), row[10].toString(), row[11].toString()))
                 .collect(Collectors.toList());
     }
-    public List<InventoryDto> mapPreInvWithPrice(List<Object[]> results) {
+    public List<InvDto2> mapPreInvWithPrice(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InventoryDto((int) row[0],(int) row[1],((BigDecimal) row[2]).longValue(),((BigDecimal) row[3]).longValue()))
+                .map(row -> new InvDto2((int) row[0],(int) row[2],(String) row[1],((BigDecimal) row[3]).longValue()))
                 .collect(Collectors.toList());
     }
-    public InventoryDto mapPreInvenPrice(List<Object[]> results) {
+    public InvDto2 mapPreInvenPrice(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InventoryDto((int) row[0],(int) row[1],((BigDecimal) row[2]).longValue(),((BigDecimal) row[3]).longValue()))
+                .map(row -> new InvDto2((int) row[0],(int) row[2],(String) row[1],((BigDecimal) row[3]).longValue()))
                 .toList().get(0);
     }
     public InvDto2 mapPreInven(List<Object[]> results) {
@@ -78,7 +78,7 @@ public class InventoryService {
                         ((BigDecimal) row[10]).longValue(),((BigDecimal) row[11]).longValue()))
                 .toList();
     }
-    public InventoryDto getPreInvPriceAndUnit(int petro_id,int dongia,int unit_id){
+    public InvDto2 getPreInvPriceAndUnit(int petro_id,int dongia,int unit_id){
         if (!inventoryRepo.findPreInventoryPriceAndUnit(petro_id,dongia,unit_id).isEmpty()){
             return mapPreInvenPrice(inventoryRepo.findPreInventoryPriceAndUnit(petro_id,dongia,unit_id));
         }
@@ -90,7 +90,7 @@ public class InventoryService {
         }
         return null;
     }
-    public List<InventoryDto> getPreInvPriceList(int petro_id,int dvid){
+    public List<InvDto2> getPreInvPriceList(int petro_id,int dvid){
         if (!inventoryRepo.findPreInventoryAndPrice(petro_id,dvid).isEmpty()){
             return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id,dvid));
         }
