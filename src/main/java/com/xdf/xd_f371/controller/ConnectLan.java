@@ -113,6 +113,7 @@ public class ConnectLan implements Initializable {
             }
         }catch (Exception e){
             e.printStackTrace();
+            DialogMessage.errorShowing("Co loi xay ra :" + e.getMessage());
         }
     }
     private void setContext(String ip,String p){
