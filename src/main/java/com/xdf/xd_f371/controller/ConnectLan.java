@@ -82,39 +82,42 @@ public class ConnectLan implements Initializable {
             String path = path_tf.getText().trim();
             if (isvalid(user,p,i,po,path)){
                 if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
-                    rememberme(user,p,i,po,path);
-                    setContext(i,po);
-                    Optional<Accounts> acc = accountService.login(user,p);
-                    if (acc.isPresent()){
-                        InitProgressBar.stage.close();
-                        ip_pre = i;
-                        port_pre = po;
-                        pre_path = path;
-                        pre_acc = acc.get();
-                        connectionService.maintainConnection();
-                        primaryStage = new Stage();
-                        primaryStage.setOnCloseRequest(event -> {
-                            if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                                Platform.exit();
-                                System.exit(0);
-                            }
-                            event.consume();
-                        });
-                        Common.openNewStage2("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
-                        ConnectLan.primaryStage.close();
-                    } else {
-                        DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
-                                "Đăng nhập không thành công", Alert.AlertType.INFORMATION);
-                    }
-                }else{
-                    DialogMessage.message(null, "Vui long kiem tra lai ip va port", "That bai", Alert.AlertType.CONFIRMATION);
-                    conn_status.setText("FAIL");
-                }
+                rememberme(user,p,i,po,path);
+                setContext(i,po);
+                log_in(user,p,i,po,path);
+            }else{
+                DialogMessage.message(null, "Vui long kiem tra lai ip va port", "That bai", Alert.AlertType.CONFIRMATION);
+                conn_status.setText("FAIL");
             }
+        }
         }catch (Exception e){
             e.printStackTrace();
             DialogMessage.errorShowing("Co loi xay ra :" + e.getMessage());
         }
+    }
+    private void log_in(String user,String p,String i,String po,String path){
+                Optional<Accounts> acc = accountService.login(user,p);
+                if (acc.isPresent()){
+                    InitProgressBar.stage.close();
+                    ip_pre = i;
+                    port_pre = po;
+                    pre_path = path;
+                    pre_acc = acc.get();
+                    connectionService.maintainConnection();
+                    primaryStage = new Stage();
+                    primaryStage.setOnCloseRequest(event -> {
+                        if (DialogMessage.callAlertWithMessage(null,"Thoát","Xác nhận thoát ứng dụng.", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                            Platform.exit();
+                            System.exit(0);
+                        }
+                        event.consume();
+                    });
+                    Common.openNewStage2("dashboard2.fxml", primaryStage,"XĂNG DẦU F371", StageStyle.DECORATED);
+                    ConnectLan.primaryStage.close();
+                } else {
+                    DialogMessage.message(null, "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại.",
+                            "Đăng nhập không thành công", Alert.AlertType.INFORMATION);
+                }
     }
     private void setContext(String ip,String p){
         String url = "jdbc:postgresql://"+ip+":"+p+"/postgres";

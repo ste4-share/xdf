@@ -138,7 +138,8 @@ public class Common {
             if (exception != null) {
                 success.run();
                 exception.printStackTrace();
-                DialogMessage.errorShowing("Không thể cập nhật báo cáo trong khi đang mở file excel. Vui lòng đóng file excel hiện tại rồi thử lại.");
+//                DialogMessage.errorShowing("Không thể cập nhật báo cáo trong khi đang mở file excel. Vui lòng đóng file excel hiện tại rồi thử lại.");
+                DialogMessage.errorShowing("Có lỗi xảy ra, vui lòng thử lại sau.");
             }
         });
         Thread thread = new Thread(loadingTask);
