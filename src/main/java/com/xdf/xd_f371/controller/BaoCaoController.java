@@ -1,22 +1,18 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.entity.Accounts;
-import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.Common;
-import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SortEvent;
 import javafx.scene.control.TableView;

@@ -18,9 +18,6 @@ public class AccountService {
     public Optional<Accounts> findAccountByUsername(String username) {
         return accountRepo.findByUsername(username);
     }
-    public Optional<Accounts> findAccById(int id) {
-        return accountRepo.findById(id);
-    }
     public List<Accounts> findAll() {
         return accountRepo.findAll();
     }

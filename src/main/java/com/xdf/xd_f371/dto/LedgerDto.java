@@ -122,6 +122,6 @@ public class LedgerDto {
         soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
         dongia_str = TextToNumber.textToNum(String.valueOf(don_gia));
         amount_str = TextToNumber.textToNum(String.valueOf(amount));
-        thanhtien = TextToNumber.textToNum(String.valueOf(soluong*don_gia));
+        thanhtien = TextToNumber.textToNum(String.valueOf(((long) soluong*don_gia)));
     }
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
 public class DialogMessage {
     public static void message(String title, String content, String header, Alert.AlertType alertType){
         Alert a = new Alert(alertType);
-        a.initModality(Modality.WINDOW_MODAL); //will block input to its owner window
+        a.initModality(Modality.WINDOW_MODAL);
         a.setTitle(title);
         a.setContentText(content);
         a.setHeaderText(header);
@@ -23,7 +23,6 @@ public class DialogMessage {
         alert.setContentText("Xác nhận thêm mới");
 
         Optional<ButtonType> result = alert.showAndWait();
-        //Button.Ok
         return result.get();
     }
 

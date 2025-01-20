@@ -6,7 +6,6 @@ import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.zaxxer.hikari.HikariDataSource;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +22,6 @@ import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.sql.DataSource;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;

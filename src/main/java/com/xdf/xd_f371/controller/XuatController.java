@@ -170,6 +170,7 @@ public class XuatController extends CommonFactory implements Initializable {
         setNhiemvuForField(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName()));
         px_hbox.setDisable(false);
         sokm_hb.setDisable(true);
+        tk_rd.setSelected(true);
     }
     private void clearTb(){
         ls_socai.clear();
@@ -587,11 +588,13 @@ public class XuatController extends CommonFactory implements Initializable {
             if (tk_rd.isSelected()){
                 ledger.setSo_km(0);
                 ledger.setGiohd_tk(getStrInterval());
+                System.out.println("gio_tk: "+  getStrInterval());
                 ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
             } else if (md_rd.isSelected()) {
                 ledger.setSo_km(Integer.parseInt(sokm.getText().isEmpty() ? "0" : sokm.getText()));
                 ledger.setGiohd_tk(DefaultVarCons.GIO_HD.getName());
                 ledger.setGiohd_md(getStrInterval());
+                System.out.println("gio_md: "+  getStrInterval());
             }
             ledger.setTcn_id(0);
         } else if (lx.equals(LoaiXuat.HH.getName())){
