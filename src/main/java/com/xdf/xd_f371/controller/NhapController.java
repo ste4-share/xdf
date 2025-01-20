@@ -175,7 +175,6 @@ public class NhapController extends CommonFactory implements Initializable {
             DialogMessage.message("Lỗi", "...",
                     "Ten xang dau khong xac dinh.", Alert.AlertType.ERROR);
         }
-
     }
 
     @FXML
@@ -183,15 +182,27 @@ public class NhapController extends CommonFactory implements Initializable {
         if (!ls_socai.isEmpty()){
             if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
                 try {
-                    Ledger l = getLedger();
-                    if (validateField(l).isEmpty()) {
-                        Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                        DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
-                                "Thanh cong", Alert.AlertType.INFORMATION);
-                        DashboardController.primaryStage.close();
-                    } else {
-                        DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
-                                "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                    NguonNx dvx = cmb_dvvc.getSelectionModel().getSelectedItem();
+                    if (dvx!=null){
+                        NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
+                        if (dvn!=null) {
+                            Ledger l = getLedger();
+                            if (validateField(l).isEmpty()) {
+                                Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                                DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
+                                        "Thanh cong", Alert.AlertType.INFORMATION);
+                                DashboardController.primaryStage.close();
+                            } else {
+                                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
+                                        "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                            }
+                        }else{
+                            cmb_dvn.setStyle(styleErrorField);
+                            DialogMessage.errorShowing("Không tìm thấy nguồn nhập xuất, vui lòng thử lại.");
+                        }
+                    }else{
+                        cmb_dvvc.setStyle(styleErrorField);
+                        DialogMessage.errorShowing("Không tìm thấy nguồn nhập xuất, vui lòng thử lại.");
                     }
                 }catch (NumberFormatException e){
                     DialogMessage.errorShowing("Số sai định dạng, vui lòng thử lại");
@@ -206,6 +217,7 @@ public class NhapController extends CommonFactory implements Initializable {
                     null, Alert.AlertType.WARNING);
         }
     }
+
     private String changeStyleTextFieldByValidation(Object o){
         List<String> ls = validateField(o);
         if (!ls.isEmpty()){
@@ -399,7 +411,12 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     @FXML
     public void dvnAction(ActionEvent actionEvent) {
+        cmb_dvn.setStyle(null);
         cmb_tenxd.getSelectionModel().selectFirst();
         setInvLabel();
+    }
+    @FXML
+    public void cmb_dvvcAction(ActionEvent actionEvent) {
+        cmb_dvvc.setStyle(null);
     }
 }

@@ -32,7 +32,7 @@
                                     <Font name="Cambria Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="cmb_dvvc" editable="true" prefHeight="38.0" prefWidth="344.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                              <ComboBox fx:id="cmb_dvvc" editable="true" onAction="#cmb_dvvcAction" prefHeight="38.0" prefWidth="344.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor></ComboBox>

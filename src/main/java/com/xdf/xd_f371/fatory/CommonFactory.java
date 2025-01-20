@@ -86,6 +86,14 @@ public class CommonFactory {
         FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTenxd().toLowerCase().contains(typedText.toLowerCase()));
         cbb.getSelectionModel().selectFirst();
     }
+    private boolean isvalidNguonnx(String n,ComboBox<NguonNx> cbb){
+        if (nguonNxService.findByTen(n).isPresent()){
+            cbb.setStyle(null);
+            return true;
+        }
+        cbb.setStyle(styleErrorField);
+        return false;
+    }
     protected void setNguonnxCombobox(ComboBox<NguonNx> cbb, List<NguonNx> nguonNxList){
         ComponentUtil.setItemsToComboBox(cbb,nguonNxList,NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));

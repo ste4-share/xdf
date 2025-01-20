@@ -136,12 +136,14 @@ public class XuatController extends CommonFactory implements Initializable {
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
         loainx = lx;
         if (lx.equals(LoaiXuat.X_K.getName())){
+            tcx.setText(null);
             initValueForLoaiXuatCbb(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()),
                     new ArrayList<>(),nguonNxService.findByAllBy(),nguonNxService.findAll(),loaiXdService.findAllOrderby()
                     ,true);
             nl_km_hb.setDisable(true);
             nl_gio_hb.setDisable(true);
         } else if (lx.equals(LoaiXuat.NV.getName())) {
+            tcx.setText(null);
             List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName());
             List<String> str = new ArrayList<>();
             ls.forEach(x->str.add(x.getTen_nv()  +" - "+ x.getChitiet()));
@@ -152,6 +154,7 @@ public class XuatController extends CommonFactory implements Initializable {
             LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
             mapPrice(lxd.getXd_id());
         } else if (lx.equals(LoaiXuat.HH.getName())) {
+            tcx.setText(null);
             List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.HAOHUT.getName());
             List<String> str = new ArrayList<>();
             ls.forEach(x->str.add(x.getTen_nv()  +" - "+ x.getChitiet()));
@@ -231,15 +234,21 @@ public class XuatController extends CommonFactory implements Initializable {
         if (!ls_socai.isEmpty()) {
             if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 try {
-                    Ledger l = getLedger();
-                    if (validateField(l).isEmpty()) {
-                        Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                        DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
-                                "Thanh cong", Alert.AlertType.INFORMATION);
-                        DashboardController.xuatStage.close();
-                    } else {
-                        DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
-                                "Nhập sai định dạng.", Alert.AlertType.ERROR);
+                    NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
+                    if (dvx!=null) {
+                        Ledger l = getLedger();
+                        if (validateField(l).isEmpty()) {
+                            Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                            DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
+                                    "Thanh cong", Alert.AlertType.INFORMATION);
+                            DashboardController.xuatStage.close();
+                        } else {
+                            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
+                                    "Nhập sai định dạng.", Alert.AlertType.ERROR);
+                        }
+                    }else{
+                        dvx_cbb.setStyle(styleErrorField);
+                        DialogMessage.errorShowing("Không tìm thấy nguồn nhập xuất, vui lòng thử lại.");
                     }
                 }catch (NumberFormatException e){
                     DialogMessage.errorShowing("Số sai định dạng, vui lòng thử lại");
@@ -778,6 +787,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void dvxAction(ActionEvent actionEvent) {
+        dvx_cbb.setStyle(null);
         mapPrice2();
     }
     private void mapPrice2(){

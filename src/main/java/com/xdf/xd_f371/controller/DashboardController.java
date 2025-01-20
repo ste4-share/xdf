@@ -173,11 +173,6 @@ public class DashboardController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-//    @FXML
-//    public void account_menu_action(MouseEvent mouseEvent) {
-//        setStyleForClickedMEnu(user_menu,nhiemvu_menu,tonkho_menu,nxt_menu,dvi_menu,dinhmuc_menu,report);
-//        openFxmlVbox("accounts.fxml");
-//    }
     @FXML
     public void loc_phieu(ActionEvent actionEvent) {
         String lp = cbb_loaiphieu_filter.getSelectionModel().getSelectedItem();
@@ -350,5 +345,11 @@ public class DashboardController implements Initializable {
                 mapData(ls);
             }
         }
+    }
+    @FXML
+    public void refreshAction(ActionEvent actionEvent) {
+        ttp_ls = ledgerService.findAllInterfaceLedger(StatusCons.ACTIVED.getName());
+        setPagination_nxt(ttp_ls);
+        setLedgersToTable(ttp_ls);
     }
 }
