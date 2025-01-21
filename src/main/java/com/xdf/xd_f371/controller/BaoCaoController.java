@@ -140,7 +140,6 @@ public class BaoCaoController implements Initializable {
         return 0;
     }
     private Integer map_ttxd_xmt_get(XSSFWorkbook wb,String sheetName){
-        System.out.println("query: "+ SubQuery.bc_ttxd_xmt_q(q.getSd(),q.getEd(),q.getSd().getYear()));
         if (q!=null) {
             return mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_ttxd_xmt_q(q.getSd(),q.getEd(),q.getSd().getYear()), 4);
         }
