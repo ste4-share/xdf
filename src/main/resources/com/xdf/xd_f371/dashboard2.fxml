@@ -84,6 +84,29 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
+                  <HBox fx:id="ledger_menu" layoutX="10.0" layoutY="225.0" onMouseClicked="#ledger_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="nxt-men" stylesheets="@css/menu.css">
+                     <children>
+                        <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/ledger.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="20.0" top="8.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Label prefHeight="50.0" prefWidth="120.0" text="Sổ cái" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Cambria Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </HBox>
                   <HBox fx:id="dinhmuc_menu" onMouseClicked="#dinhmuc_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="dinhmuc-men" stylesheets="@css/menu.css">
                      <children>
                         <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
