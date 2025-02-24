@@ -194,6 +194,19 @@
                                                 <Font name="Cambria" size="16.0" />
                                              </font>
                                           </TextField>
+                                          <Label alignment="CENTER" layoutX="711.0" layoutY="10.0" prefHeight="30.0" prefWidth="102.0" text="Tên đơn vị:">
+                                             <font>
+                                                <Font name="Cambria Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="ls_search_tendv" layoutX="813.0" layoutY="10.0" onKeyReleased="#ls_tendv_kr" onMouseClicked="#ls_search_tendv_clicked" prefHeight="30.0" prefWidth="143.0" promptText="e916.." style="-fx-background-radius: 10;">
+                                             <cursor>
+                                                <Cursor fx:constant="TEXT" />
+                                             </cursor>
+                                             <font>
+                                                <Font name="Cambria" size="16.0" />
+                                             </font>
+                                          </TextField>
                                        </children>
                                        <VBox.margin>
                                           <Insets bottom="10.0" top="10.0" />

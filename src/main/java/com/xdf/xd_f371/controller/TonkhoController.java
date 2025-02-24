@@ -53,7 +53,7 @@ public class TonkhoController implements Initializable {
     public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,
             ls_tenxd, ls_cl,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
     @FXML
-    private TextField ls_search, search_inventory,ls_search_so,from_date,to_date,timkiem_pttk_tf;
+    private TextField ls_search, search_inventory,ls_search_so,from_date,to_date,timkiem_pttk_tf, ls_search_tendv;
     @FXML
     private DatePicker ls_s_date;
     @FXML
@@ -291,6 +291,19 @@ public class TonkhoController implements Initializable {
             mapPttkTb(pttkDtos.stream().filter(x->x.getTenxd().toLowerCase().contains(t)).toList());
         }else{
             mapPttkTb(pttkDtos);
+        }
+    }
+    @FXML
+    public void ls_search_tendv_clicked(MouseEvent mouseEvent) {
+        ls_search_tendv.selectAll();
+    }
+    @FXML
+    public void ls_tendv_kr(KeyEvent keyEvent) {
+        String t = ls_search_tendv.getText().trim();
+        if (!t.isEmpty()){
+            mapLsTb(histories.stream().filter(x->x.getDvn().toLowerCase().contains(t)).toList());
+        }else{
+            mapLsTb(histories);
         }
     }
 }

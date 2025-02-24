@@ -12,6 +12,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -28,10 +29,13 @@
                <children>
                   <AnchorPane prefHeight="215.0" prefWidth="244.0" style="-fx-border-radius: 20;">
                      <children>
-                        <ImageView fitHeight="132.0" fitWidth="155.0" layoutX="37.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true" rotate="6.5">
+                        <ImageView fitHeight="98.0" fitWidth="166.0" layoutX="24.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/oil-barr.png" />
+                              <Image url="@img/icon_dashboard.jpg" />
                            </image>
+                           <effect>
+                              <Glow />
+                           </effect>
                         </ImageView>
                      </children></AnchorPane>
                   <HBox fx:id="nxt_menu" onMouseClicked="#nxt_menu_action" prefHeight="50.0" prefWidth="100.0" styleClass="nxt-men" stylesheets="@css/menu.css">

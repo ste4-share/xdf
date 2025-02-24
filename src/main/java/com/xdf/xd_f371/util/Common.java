@@ -2,6 +2,7 @@ package com.xdf.xd_f371.util;
 
 
 import com.xdf.xd_f371.MainApplicationApp;
+import com.xdf.xd_f371.cons.SheetNameCons;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
@@ -19,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -154,7 +156,7 @@ public class Common {
             scheduler.shutdown();
         }, timeout, unit);
     }
-    public static void mapExcelFile(String file_name,Function<XSSFWorkbook,Integer> mapData_createNew,Function<XSSFWorkbook,Integer> mapData_get){
+    public static void mapExcelFile(String file_name,Function<XSSFWorkbook,Integer> mapData_createNew,Function<XSSFWorkbook,Integer> mapData_get,String sheetName){
         try{
             File file = new File(file_name);
             if (!file.exists()){
@@ -185,6 +187,7 @@ public class Common {
             throw new RuntimeException(e);
         }
     }
+
     public static boolean isDirectory(String path){
         try {
             Path paths = Paths.get(path);

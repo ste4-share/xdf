@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.MessageCons;
+import com.xdf.xd_f371.cons.SheetNameCons;
 import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.LedgerService;
@@ -19,11 +20,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -72,15 +79,20 @@ public class ChiTietSCController implements Initializable {
             String temp_file_name=currentDir+"\\xlsx_template\\phieu_mau.xlsx";
             String file_name_1 = "/phieu_nhap_xuat.xlsx";
             if (Common.isDirectory(ConnectLan.pre_path)){
+                try {
                     Platform.runLater(()->{
                         Common.copyFileExcel(temp_file_name, ConnectLan.pre_path+"/"+file_name_1);
                         StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_path).append("/").append(file_name_1);
                         Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input.createSheet(getPhieu()),true),
-                                (input)->fillDataToPhieuNhap(input.getSheet(getPhieu()),false));
+                                (input)->fillDataToPhieuNhap(input.getSheet(getPhieu()),false),getPhieu());
                         if (DialogMessage.callAlertWithMessage(null,"Thanh cong","Click OK để mở thư mục xuất phiếu." , Alert.AlertType.INFORMATION)==ButtonType.OK){
                             Common.openDesktop();
                         }
                     });
+                } catch (Exception e) {
+                    DialogMessage.errorShowing("Có lỗi xảy ra, vui lòng đóng file phieu_nhap_xuat trước khi tạo file mới.");
+                    throw new RuntimeException(e);
+                }
             }else {
                 DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
                 DashboardController.ctStage.close();
@@ -89,11 +101,10 @@ public class ChiTietSCController implements Initializable {
     }
     private String getPhieu(){
         if (ls.get(0).getLoai_phieu().equals("NHAP")){
-            return "phieu_nhap";
+            return SheetNameCons.PHIEU_NHAP.getName();
         }
-        return "phieu_xuat";
+        return SheetNameCons.PHIEU_XUAT.getName();
     }
-
     private int fillDataToPhieuNhap(XSSFSheet sheet,boolean isNew){
         setCEll(sheet, ls.get(0).getDvi_nhan(), 3,3,isNew);
         setCEll(sheet, ls.get(0).getDvi_xuat(), 4,3,isNew);

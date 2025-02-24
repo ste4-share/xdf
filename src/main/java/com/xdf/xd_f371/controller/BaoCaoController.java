@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.SheetNameCons;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.entity.TrucThuoc;
@@ -162,7 +163,7 @@ public class BaoCaoController implements Initializable {
     }
     private void nxtmap() {
         String sheetName = "bc_nxt_data";
-        Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName));
+        Common.mapExcelFile(file_name,input -> map_bc_nxt_create(input,sheetName),input -> map_bc_nxt_getting(input,sheetName), SheetNameCons.NXT.getName());
         Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
@@ -180,7 +181,7 @@ public class BaoCaoController implements Initializable {
     }
     private void bc_lcv_map() {
         String sheetName = "luan_chuyenvon_data";
-        Common.mapExcelFile(file_name,input -> map_bc_lcv_create(input,sheetName),input -> map_bc_lcv_create(input,sheetName));
+        Common.mapExcelFile(file_name,input -> map_bc_lcv_create(input,sheetName),input -> map_bc_lcv_create(input,sheetName),SheetNameCons.LCV.getName());
         Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
@@ -198,7 +199,7 @@ public class BaoCaoController implements Initializable {
     }
     private void ttnlbtkh(){
         String sheetName = "bc_ttnl_theo_kh_data";
-        Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName));
+        Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName),SheetNameCons.NL_BAY_THEO_KH.getName());
         Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
@@ -216,7 +217,7 @@ public class BaoCaoController implements Initializable {
     }
     private void ttxdtnv(){
         String sheetName = "t_thu_xd_theo_n_vu_data";
-        Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName));
+        Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName),SheetNameCons.TTXD.getName());
         Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
@@ -234,7 +235,7 @@ public class BaoCaoController implements Initializable {
     }
     private void ttxd_xmt(){
         String sheetName = "ttxd_xmt_data";
-        Common.mapExcelFile(file_name,input -> map_ttxd_xmt_create(input,sheetName),input -> map_ttxd_xmt_get(input,sheetName));
+        Common.mapExcelFile(file_name,input -> map_ttxd_xmt_create(input,sheetName),input -> map_ttxd_xmt_get(input,sheetName),SheetNameCons.TTXD_XMT.getName());
         Common.copyFileExcel(file_name,dest_file);
     }
 
@@ -253,7 +254,7 @@ public class BaoCaoController implements Initializable {
     }
     private void pttk(){
         String sheetName = "pttk_data";
-        Common.mapExcelFile(file_name,input -> map_pttk_create(input,sheetName),input -> map_pttk_get(input,sheetName));
+        Common.mapExcelFile(file_name,input -> map_pttk_create(input,sheetName),input -> map_pttk_get(input,sheetName),SheetNameCons.PT_TONKHO.getName());
         Common.copyFileExcel(file_name,dest_file);
     }
     private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
