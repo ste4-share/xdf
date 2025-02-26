@@ -34,7 +34,7 @@
               <content>
                 <AnchorPane>
                      <children>
-                        <VBox layoutX="14.0" layoutY="14.0">
+                        <VBox layoutX="14.0" layoutY="14.0" onMouseClicked="#outClick">
                            <children>
                               <HBox>
                                  <children>
@@ -72,6 +72,14 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </StackPane>
+                                    <Label layoutX="259.0" layoutY="10.0" prefHeight="30.0" prefWidth="99.0" text="Lọc ngày">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font name="Cambria" size="12.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                               </HBox>
                               <HBox layoutX="10.0" layoutY="10.0">
@@ -152,6 +160,7 @@
                               </HBox>
                               <TableView fx:id="ledgers_table" onMouseClicked="#select_ledger_table" prefHeight="208.0" prefWidth="1294.0" stylesheets="@css/table_style.css">
                                 <columns>
+                                    <TableColumn fx:id="ledgers_col_stt" maxWidth="50.0" minWidth="20.0" prefWidth="45.0" text="stt" />
                                   <TableColumn fx:id="ledgers_col_id" prefWidth="75.0" text="ID" />
                                   <TableColumn fx:id="ledgers_col_so" prefWidth="75.0" text="Số" />
                                     <TableColumn fx:id="ledgers_col_stdate" prefWidth="114.0" text="Ngày bắt đầu" />
@@ -200,6 +209,7 @@
                            <children>
                               <TableView fx:id="doichieu_table_1" onMouseClicked="#doichieu_table_1Clicked" prefHeight="134.0" prefWidth="646.0" stylesheets="@css/table_style.css" GridPane.rowIndex="2">
                                  <columns>
+                                    <TableColumn fx:id="root_col_stt" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="stt" />
                                     <TableColumn fx:id="root_col_id" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="ID" />
                                     <TableColumn fx:id="root_col_so" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="Số" />
                                     <TableColumn fx:id="root_col_lenh" maxWidth="100.0" minWidth="30.0" text="Lệnh KH số" />
@@ -289,6 +299,7 @@
                               </HBox>
                               <TableView fx:id="doichieu_table_2" layoutX="20.0" layoutY="103.0" onMouseClicked="#doichieu_table_2Click" prefHeight="134.0" prefWidth="646.0" stylesheets="@css/table_style.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                  <columns>
+                                    <TableColumn fx:id="ref_col_stt" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="stt" />
                                     <TableColumn fx:id="ref_col_id" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="ID" />
                                     <TableColumn fx:id="ref_col_so" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="Số" />
                                     <TableColumn fx:id="ref_col_lenhkh" maxWidth="100.0" minWidth="30.0" text="Lệnh KH số" />
@@ -387,6 +398,7 @@
                               </HBox>
                               <TableView fx:id="tonkho_tb" prefHeight="140.0" prefWidth="1393.0" stylesheets="@css/table_style.css">
                                  <columns>
+                                    <TableColumn fx:id="inv_stt" maxWidth="150.0" prefWidth="75.0" text="stt" />
                                     <TableColumn fx:id="inv_id" maxWidth="150.0" prefWidth="75.0" text="ID" />
                                     <TableColumn fx:id="inv_tenxd" maxWidth="300.0" minWidth="60.0" prefWidth="250.0" text="Tên Xăng dầu" />
                                     <TableColumn fx:id="inv_loaixd" maxWidth="220.0" prefWidth="114.0" text="Loại XD" />

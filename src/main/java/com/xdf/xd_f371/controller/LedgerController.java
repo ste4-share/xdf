@@ -13,11 +13,13 @@ import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.FxUtilTest;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.layout.HBox;
@@ -46,6 +48,11 @@ public class LedgerController implements Initializable {
     @FXML
     private TableView<LedgerDto2> ledgers_table,doichieu_table_1,doichieu_table_2;
     @FXML
+    private TableColumn<LedgerDto2,String> ledgers_col_stt,ledgers_col_id,ledgers_col_so,ledgers_col_stdate,ledgers_col_edate,ledgers_col_lenhkh,ledgers_col_loainx,
+            ledgers_col_dvn,ledgers_col_dvx,ledgers_col_xmt,ledgers_col_nv,ledgers_col_note,ledgers_col_createtime,
+            root_col_stt,root_col_id,root_col_so,root_col_lenh,root_col_loainx,root_col_dvnhap,root_col_dvx,root_col_xmt,root_col_nv,root_col_note,
+            ref_col_stt,ref_col_id,ref_col_so,ref_col_lenhkh,ref_col_loainx,ref_col_dvn,ref_col_dvx,ref_col_xmt,ref_col_nv,ref_col_note;
+    @FXML
     private TableView<InvDto3> tonkho_tb;
     @FXML
     private Label tab1_dvi_label,root_unit_lable,unitClickedLable;
@@ -73,9 +80,41 @@ public class LedgerController implements Initializable {
         initNnxCombobox();
         initStartDate();
         initLocalDateList();
+        setCellFactoryForLeger_table();
+        initLedgerList();
     }
 
+    private void initLedgerList() {
+        LocalDate st = st_time.getValue();
+        LocalDate et = lst_time.getValue();
+        if (validDate(st,et)){
+            setItemToTableView(ledgerService.findAllLedgerDto(st,et));
+        }
+    }
+    private void setItemToTableView(List<LedgerDto2> ls){
+        ledgers_table.setItems(FXCollections.observableList(ls));
+        ledgers_table.refresh();
+    }
+    private void setCellFactoryForLeger_table(){
+        ledgers_col_stt.setSortable(false);
+        ledgers_col_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ledgers_table.getItems().indexOf(column.getValue())+1).asString());
+        ledgers_col_id.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("ledger_id"));
+        ledgers_col_so.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("so"));
+        ledgers_col_stdate.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("from_date"));
+        ledgers_col_edate.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("end_date"));
+        ledgers_col_lenhkh.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("lenh_so"));
+        ledgers_col_loainx.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("phieu"));
+        ledgers_col_dvn.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("dvn"));
+        ledgers_col_dvx.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("dvx"));
+        ledgers_col_xmt.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("xmt"));
+        ledgers_col_nv.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("chitiet_nhiemvu"));
+        ledgers_col_note.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("ghichu"));
+        ledgers_col_createtime.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("thoigiannhap"));
+    }
     private void initLocalDateList() {
+        dateLoading();
+    }
+    private void setLocalDateList(){
         date_ls.setItems(FXCollections.observableList(selectedDateLs));
     }
 
@@ -165,11 +204,15 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void dateLoadingClick(MouseEvent mouseEvent) {
+        dateLoading();
+    }
+
+    private void dateLoading() {
         LocalDate st = st_time.getValue();
         LocalDate et = lst_time.getValue();
         listDate(st,et);
-        initLocalDateList();
     }
+
     private void listDate(LocalDate st,LocalDate et){
         if (validDate(st,et)){
             List<LocalDate> localDateList = st.datesUntil(et)
@@ -177,6 +220,7 @@ public class LedgerController implements Initializable {
             localDateList.forEach(x->{
                 selectedDateLs.add(x.format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName())));
             });
+            setLocalDateList();
         }else{
             DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
         }
@@ -202,5 +246,10 @@ public class LedgerController implements Initializable {
     private LocalDate stringToDate(String date){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName());
         return LocalDate.parse(date,dtf);
+    }
+    @FXML
+    public void outClick(MouseEvent mouseEvent) {
+        System.out.println("refresh");
+        date_ls.refresh();
     }
 }
