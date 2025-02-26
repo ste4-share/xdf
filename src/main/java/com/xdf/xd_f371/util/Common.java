@@ -176,6 +176,8 @@ public class Common {
                 fis.close();
                 FileOutputStream fileOutputStream = new FileOutputStream(file_name);
                 XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
+                wb.setActiveSheet(wb.getSheetIndex(sheetName));
+                wb.setSelectedTab(wb.getSheetIndex(sheetName));
                 wb.write(fileOutputStream);
                 fileOutputStream.close();
                 wb.close();

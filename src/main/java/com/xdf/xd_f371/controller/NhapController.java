@@ -87,7 +87,7 @@ public class NhapController extends CommonFactory implements Initializable {
                 InvDto2 i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
                 if (i!=null){
                     setTonKhoLabel(i.getSl_ton());
-                }else{
+                } else {
                     setTonKhoLabel(0L);
                 }
             }
