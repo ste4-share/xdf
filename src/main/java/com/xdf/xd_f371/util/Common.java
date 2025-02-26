@@ -2,7 +2,6 @@ package com.xdf.xd_f371.util;
 
 
 import com.xdf.xd_f371.MainApplicationApp;
-import com.xdf.xd_f371.cons.SheetNameCons;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
@@ -20,7 +19,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -138,7 +136,6 @@ public class Common {
             if (exception != null) {
                 success.run();
                 exception.printStackTrace();
-//                DialogMessage.errorShowing("Không thể cập nhật báo cáo trong khi đang mở file excel. Vui lòng đóng file excel hiện tại rồi thử lại.");
                 DialogMessage.errorShowing("Có lỗi xảy ra, vui lòng thử lại sau.");
             }
         });
