@@ -3,20 +3,21 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.cons.SheetNameCons;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.entity.Accounts;
+import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
 
+import com.xdf.xd_f371.util.FxUtilTest;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.SortEvent;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -46,6 +47,10 @@ public class BaoCaoController implements Initializable {
     @FXML
     private TableView<Object> nltb_tb,lsb_tb,ptnnx_tb;
     @FXML
+    private ComboBox<NguonNx> dvi_cbb;
+    @FXML
+    private CheckBox tdvCk;
+    @FXML
     VBox rvb;
     @FXML
     Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb,lcv_lb,ttxd_xmt_lb,pttk_lb;
@@ -54,6 +59,7 @@ public class BaoCaoController implements Initializable {
         dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
         rvb.setPrefWidth(DashboardController.screenWidth-300);
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
+        initDviCbb();
         q = ConnectLan.pre_acc;
         if (q.getSd()!=null){
             fromdate.setText(q.getSd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
@@ -63,11 +69,17 @@ public class BaoCaoController implements Initializable {
             todate.setText("--/--/----");
         }
     }
+
+    private void initDviCbb() {
+        ComponentUtil.setItemsToComboBox(dvi_cbb,nguonNxService.findByAllBy(),NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(dvi_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
+        dvi_cbb.getSelectionModel().selectFirst();
+    }
+
     private Integer map_bc_lcv_create(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null){
-
                 return mapDataToSheet(wb.getSheet(sheetName), 8,
                         SubQuery.lcv_q(q.getSd(),q.getEd()),1);
             }
@@ -93,6 +105,7 @@ public class BaoCaoController implements Initializable {
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null) {
+                System.out.println("query: "+ getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
                 return createDataSheet(wb.getSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
             }
         }else{
@@ -258,25 +271,47 @@ public class BaoCaoController implements Initializable {
         Common.copyFileExcel(file_name,dest_file);
     }
     private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
-        arr_tt.clear();
-        String n_sum1="";
-        String x_sum2="";
-        String sl1="";
-        String sl2="";
-        String n_case_1="";
-        String x_case_2="";
-        for (int i=0; i<tructhuocService.findAll().size(); i++) {
-            TrucThuoc tt = tructhuocService.findAll().get(i);
-            arr_tt.add(tt.getType());
-            n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
-            x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
-            sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
-            n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
-            x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
+        if (tdvCk.isSelected()){
+            arr_tt.clear();
+            String n_sum1="";
+            String x_sum2="";
+            String sl1="";
+            String sl2="";
+            String n_case_1="";
+            String x_case_2="";
+            for (int i=0; i<tructhuocService.findAll().size(); i++) {
+                TrucThuoc tt = tructhuocService.findAll().get(i);
+                arr_tt.add(tt.getType());
+                n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
+                x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
+                sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
+                sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
+                n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
+                x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
+            }
+            String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
+            return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
+        }else{
+            arr_tt.clear();
+            String n_sum1="";
+            String x_sum2="";
+            String sl1="";
+            String sl2="";
+            String n_case_1="";
+            String x_case_2="";
+            for (int i=0; i<tructhuocService.findAll().size(); i++) {
+                TrucThuoc tt = tructhuocService.findAll().get(i);
+                arr_tt.add(tt.getType());
+                n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
+                x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
+                sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
+                sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
+                n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and l.dvi_nhan_id="+dvi_cbb.getSelectionModel().getSelectedItem().getId()+" group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
+                x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and l.dvi_xuat_id="+dvi_cbb.getSelectionModel().getSelectedItem().getId()+" group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
+            }
+            String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
+            return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }
-        String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
-        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
     }
     private String getCusQueryNlEmpty(String begin_1,String end_q1, String end_q1_1){
         arr_tt.clear();
@@ -378,12 +413,9 @@ public class BaoCaoController implements Initializable {
         return nxtls.size()+11;
     }
     @FXML
-    public void mbAction(ActionEvent actionEvent) {
+    public void dvi_cbbAction(ActionEvent actionEvent) {
     }
     @FXML
-    public void dvi_cbbACtion(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void ptnnx_tbAction(SortEvent<TableView<Object>> tableViewSortEvent) {
+    public void toandonvickAction(ActionEvent actionEvent) {
     }
 }

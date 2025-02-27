@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
@@ -17,31 +20,64 @@
                <content>
                   <VBox fx:id="rvb" style="-fx-background-color: #f2f2f2;">
                      <children>
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="86.0" prefWidth="1004.0">
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="63.0" prefWidth="1004.0">
                            <children>
-                              <Label prefHeight="37.0" prefWidth="96.0" text="----Từ ngày:">
+                              <Label prefHeight="37.0" prefWidth="58.0" text="Từ ngày:">
                                  <font>
-                                    <Font name="Cambria Bold" size="12.0" />
+                                    <Font name="Cambria" size="12.0" />
                                  </font>
                                  <HBox.margin>
                                     <Insets left="100.0" />
                                  </HBox.margin>
                               </Label>
-                              <Label fx:id="fromdate" prefHeight="37.0" prefWidth="154.0" text="Từ ngày:" textFill="RED">
+                              <Label fx:id="fromdate" prefHeight="37.0" prefWidth="76.0" text="Từ ngày:">
                                  <font>
-                                    <Font name="Cambria Bold" size="16.0" />
+                                    <Font name="Cambria Bold Italic" size="12.0" />
                                  </font>
                               </Label>
-                              <Label prefHeight="37.0" prefWidth="96.0" text="----Đến ngày:">
+                              <Label layoutX="360.0" layoutY="59.0" prefHeight="37.0" prefWidth="39.0" text="===&gt;">
                                  <font>
-                                    <Font name="Cambria Bold" size="12.0" />
+                                    <Font name="Cambria" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="todate" prefHeight="37.0" prefWidth="135.0" text="Từ ngày:" textFill="RED">
+                              <Label prefHeight="37.0" prefWidth="65.0" text="Đến ngày:">
                                  <font>
-                                    <Font name="Cambria Bold" size="16.0" />
+                                    <Font name="Cambria" size="12.0" />
                                  </font>
                               </Label>
+                              <Label fx:id="todate" prefHeight="37.0" prefWidth="135.0" text="Từ ngày:">
+                                 <font>
+                                    <Font name="Cambria Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label prefHeight="30.0" prefWidth="58.0" text="Đơn vị:">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="100.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="dvi_cbb" onAction="#dvi_cbbAction" prefHeight="30.0" prefWidth="150.0" promptText="e916..." style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ComboBox>
+                              <CheckBox fx:id="tdvCk" mnemonicParsing="false" onAction="#toandonvickAction" prefHeight="30.0" prefWidth="97.0" text="Toàn đơn vị">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Cambria Italic" size="12.0" />
+                                 </font>
+                              </CheckBox>
                            </children>
                         </HBox>
                         <HBox>
@@ -49,7 +85,7 @@
                               <Insets left="100.0" />
                            </VBox.margin>
                            <children>
-                              <Hyperlink onAction="#bc_nxt" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO NHẬP - XUẤT - TỒN">
+                              <Hyperlink onAction="#bc_nxt" prefHeight="36.0" prefWidth="266.0" text="IN BÁO CÁO NHẬP - XUẤT - TỒN">
                                  <font>
                                     <Font name="Cambria" size="12.0" />
                                  </font>
@@ -63,7 +99,7 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Hyperlink onAction="#bc_ttnlbtkh" prefHeight="36.0" prefWidth="336.0" text="BÁO CÁO THANH TOÁN NHIÊN LIỆU BAY THEO KẾ HOẠCH">
+                              <Hyperlink onAction="#bc_ttnlbtkh" prefHeight="36.0" prefWidth="336.0" text="IN BÁO CÁO THANH TOÁN NHIÊN LIỆU BAY THEO KẾ HOẠCH">
                                  <font>
                                     <Font name="Cambria" size="12.0" />
                                  </font>
@@ -80,7 +116,7 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Hyperlink onAction="#bc_ttxdtnv" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU THEO NHIỆM VỤ">
+                              <Hyperlink onAction="#bc_ttxdtnv" prefHeight="36.0" prefWidth="327.0" text="IN BÁO CÁO TIÊU THỤ XĂNG DẦU THEO NHIỆM VỤ">
                                  <font>
                                     <Font name="Cambria" size="12.0" />
                                  </font>
@@ -97,7 +133,7 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Hyperlink onAction="#bc_lcv" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO LUÂN CHUYỂN VỐN XĂNG DẦU">
+                              <Hyperlink onAction="#bc_lcv" prefHeight="36.0" prefWidth="361.0" text="IN BÁO CÁO LUÂN CHUYỂN VỐN XĂNG DẦU">
                                  <font>
                                     <Font name="Cambria" size="12.0" />
                                  </font>
@@ -114,7 +150,7 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Hyperlink onAction="#bc_ttxd_xmt" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU CỦA XE - MÁY - TÀU VÀ BQ, BD, SC">
+                              <Hyperlink onAction="#bc_ttxd_xmt" prefHeight="36.0" prefWidth="397.0" text="IN BÁO CÁO TIÊU THỤ XĂNG DẦU CỦA XE - MÁY - TÀU VÀ BQ, BD, SC">
                                  <font>
                                     <Font name="Cambria" size="12.0" />
                                  </font>
@@ -131,7 +167,7 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Hyperlink onAction="#bc_pttk" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO PHÂN TÍCH TỒN KHO">
+                              <Hyperlink onAction="#bc_pttk" prefHeight="36.0" prefWidth="266.0" text="IN BÁO CÁO PHÂN TÍCH TỒN KHO">
                                  <font>
                                     <Font name="Cambria" size="12.0" />
                                  </font>

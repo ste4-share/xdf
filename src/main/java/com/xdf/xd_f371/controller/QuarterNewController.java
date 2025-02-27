@@ -1,10 +1,14 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.entity.Accounts;
+import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.InventoryService;
+import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
+import com.xdf.xd_f371.util.FxUtilTest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,9 +22,15 @@ import java.util.ResourceBundle;
 public class QuarterNewController implements Initializable {
     @FXML
     private DatePicker ed,sd;
+    @FXML
+    private ComboBox<NguonNx> dviCbb;
+    @FXML
+    private CheckBox tdv;
+
     @Autowired
     private InventoryService inventoryService;
-
+    @Autowired
+    private NguonNxService nguonNxService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Accounts acc = ConnectLan.pre_acc;
@@ -28,12 +38,18 @@ public class QuarterNewController implements Initializable {
         CommonFactory.setVi_DatePicker(ed);
         sd.setValue(acc.getSd());
         ed.setValue(acc.getEd());
+        initDviCbb();
+    }
+    private void initDviCbb() {
+        ComponentUtil.setItemsToComboBox(dviCbb,nguonNxService.findByAllBy(), NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(dviCbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
+        dviCbb.getSelectionModel().selectFirst();
     }
     @FXML
     public void save(ActionEvent actionEvent) {
         if (Common.date_valid(ed,sd)){
             if (DialogMessage.callAlertWithMessage(null,"Luu", "Luu thay doi?", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                inventoryService.saveInvWhenSwitchQuarter(sd,ed);
+                inventoryService.saveInvWhenSwitchQuarter(sd,ed,dviCbb.getSelectionModel().getSelectedItem(),tdv.isSelected());
                 DialogMessage.successShowing("Luu thanh cong!!");
                 TonkhoController.tk_stage.close();
             }
@@ -45,5 +61,12 @@ public class QuarterNewController implements Initializable {
     }
     @FXML
     public void edAction(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void dviCbbAction(ActionEvent actionEvent) {
+
+    }
+    @FXML
+    public void tdvAction(ActionEvent actionEvent) {
     }
 }

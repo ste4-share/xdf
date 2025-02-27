@@ -27,6 +27,8 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
     List<MiniLedgerDto> findAllInterfaceLedger(@Param("s") String s);
     @Query(value = "select * from ledgers l where l.from_date < :sd and l.status like 'ACTIVE'", nativeQuery = true)
     List<Ledger> findAllByBeforeDateRange(@Param("sd") LocalDate sd);
+    @Query(value = "select * from ledgers l where (l.from_date < :sd and l.status like 'ACTIVE') and (dvi_nhan_id=:dvid or dvi_xuat_id=dvid)", nativeQuery = true)
+    List<Ledger> findAllByBeforeDateRange2(@Param("sd") LocalDate sd,@Param("dvid") int dvnid);
     @Modifying
     @Query(value = "update ledgers l set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid)", nativeQuery = true)
     void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code);
