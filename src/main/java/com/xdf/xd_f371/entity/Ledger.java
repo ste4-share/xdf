@@ -82,6 +82,8 @@ public class Ledger {
     private int root_id;
     @Column(name = "pt_id")
     private int pt_id;
+    @Column(name = "note")
+    private String note;
     @Version
     private int version;
 
@@ -122,5 +124,6 @@ public class Ledger {
         this.create_by = l.create_by;
         this.root_id = l.root_id;
         this.pt_id = l.pt_id;
+        this.note = l.note;
     }
 }

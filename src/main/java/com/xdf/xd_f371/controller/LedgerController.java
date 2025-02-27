@@ -5,7 +5,7 @@ import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.InvDto3;
-import com.xdf.xd_f371.dto.LedgerDto2;
+import com.xdf.xd_f371.entity.Ledger;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.LedgerService;
@@ -24,6 +24,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,9 +38,12 @@ import java.util.ResourceBundle;
 
 @Component
 public class LedgerController implements Initializable {
-    private static List<LedgerDto2> ledgerSelectList = new ArrayList<>();
+    private static List<Ledger> ledgerSelectList = new ArrayList<>();
     private static List<String> selectedDateLs = new ArrayList<>();
     private LocalDate currentDateSelected;
+    public static Stage primaryStage;
+    public static Ledger ledger_id = new Ledger();
+
     @Autowired
     private LedgerService ledgerService;
     @Autowired
@@ -47,9 +52,9 @@ public class LedgerController implements Initializable {
     @FXML
     private Button ref_to_root;
     @FXML
-    private TableView<LedgerDto2> ledgers_table,doichieu_table_1,doichieu_table_2;
+    private TableView<Ledger> ledgers_table,doichieu_table_1,doichieu_table_2;
     @FXML
-    private TableColumn<LedgerDto2,String> ledgers_col_stt,ledgers_col_id,ledgers_col_so,ledgers_col_stdate,ledgers_col_edate,ledgers_col_lenhkh,ledgers_col_loainx,
+    private TableColumn<Ledger,String> ledgers_col_stt,ledgers_col_id,ledgers_col_so,ledgers_col_stdate,ledgers_col_edate,ledgers_col_lenhkh,ledgers_col_loainx,
             ledgers_col_dvn,ledgers_col_dvx,ledgers_col_xmt,ledgers_col_nv,ledgers_col_note,ledgers_col_createtime,
             root_col_stt,root_col_id,root_col_so,root_col_lenh,root_col_loainx,root_col_dvnhap,root_col_dvx,root_col_xmt,root_col_nv,root_col_note,
             ref_col_stt,ref_col_id,ref_col_so,ref_col_lenhkh,ref_col_loainx,ref_col_dvn,ref_col_dvx,ref_col_xmt,ref_col_nv,ref_col_note;
@@ -69,6 +74,8 @@ public class LedgerController implements Initializable {
     private TextField search_by_name_tf;
     @FXML
     private ComboBox<NguonNx> dvi_ref_cbb;
+    @FXML
+    private CheckBox hideCkb;
     @FXML
     private HBox importBtn;
     @Override
@@ -96,31 +103,31 @@ public class LedgerController implements Initializable {
     private void getLedgerByDate(LocalDate d){
         setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(d)).toList());
     }
-    private void setItemToTableView(List<LedgerDto2> ls){
+    private void setItemToTableView(List<Ledger> ls){
         ledgers_table.setItems(FXCollections.observableList(ls));
         ledgers_table.refresh();
     }
     private void setCellFactoryForLeger_table(){
         ledgers_col_stt.setSortable(false);
         ledgers_col_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ledgers_table.getItems().indexOf(column.getValue())+1).asString());
-        ledgers_col_id.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("ledger_id"));
-        ledgers_col_so.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("so"));
-        ledgers_col_stdate.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("from_date"));
-        ledgers_col_edate.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("end_date"));
-        ledgers_col_lenhkh.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("lenh_so"));
-        ledgers_col_loainx.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("phieu"));
-        ledgers_col_dvn.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("dvn"));
-        ledgers_col_dvx.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("dvx"));
-        ledgers_col_xmt.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("xmt"));
-        ledgers_col_nv.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("chitiet_nhiemvu"));
-        ledgers_col_note.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("ghichu"));
-        ledgers_col_createtime.setCellValueFactory(new PropertyValueFactory<LedgerDto2, String>("thoigiannhap"));
+        ledgers_col_id.setCellValueFactory(new PropertyValueFactory<Ledger, String>("id"));
+        ledgers_col_so.setCellValueFactory(new PropertyValueFactory<Ledger, String>("bill_id"));
+        ledgers_col_stdate.setCellValueFactory(new PropertyValueFactory<Ledger, String>("from_date"));
+        ledgers_col_edate.setCellValueFactory(new PropertyValueFactory<Ledger, String>("end_date"));
+        ledgers_col_lenhkh.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lenh_so"));
+        ledgers_col_loainx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("loai_phieu"));
+        ledgers_col_dvn.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_nhan"));
+        ledgers_col_dvx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_xuat"));
+        ledgers_col_xmt.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lpt"));
+        ledgers_col_nv.setCellValueFactory(new PropertyValueFactory<Ledger, String>("nhiemvu"));
+        ledgers_col_note.setCellValueFactory(new PropertyValueFactory<Ledger, String>("note"));
+        ledgers_col_createtime.setCellValueFactory(new PropertyValueFactory<Ledger, String>("timestamp"));
     }
     private void initLocalDateList() {
         dateLoading();
     }
-    private void setLocalDateList(){
-        date_ls.setItems(FXCollections.observableList(selectedDateLs));
+    private void setLocalDateList(List<String> ls){
+        date_ls.setItems(FXCollections.observableList(ls));
     }
     private void initStartDate() {
         st_time.setValue(ConnectLan.pre_acc.getSd());
@@ -150,7 +157,7 @@ public class LedgerController implements Initializable {
     }
     private void initTableSize() {
         ledgers_table.setPrefWidth(DashboardController.screenWidth-300);
-        ledgers_table.setPrefHeight(DashboardController.screenHeigh-400);
+        ledgers_table.setPrefHeight(DashboardController.screenHeigh-800);
         doichieu_table_1.setPrefWidth(DashboardController.screenWidth-300);
         doichieu_table_1.setPrefHeight(DashboardController.screenHeigh-500);
         doichieu_table_2.setPrefWidth(DashboardController.screenWidth-300);
@@ -170,14 +177,25 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void nhap_radio_action(ActionEvent actionEvent) {
-        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).filter(x->x.getPhieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())).toList());
+        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).filter(x->x.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())).toList());
     }
     @FXML
     public void xuat_radio_action(ActionEvent actionEvent) {
-        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).filter(x->x.getPhieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())).toList());
+        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).filter(x->x.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())).toList());
     }
     @FXML
     public void select_ledger_table(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount()==2){
+            Ledger l = ledgers_table.getSelectionModel().getSelectedItem();
+            if (l!=null){
+                ledger_id = l;
+                showDetailsScreen();
+            }
+        }
+    }
+    private void showDetailsScreen(){
+        primaryStage = new Stage();
+        Common.openNewStage2("ledger_details.fxml",primaryStage,"Chi tiết phiếu", StageStyle.UTILITY);
     }
     @FXML
     public void doichieu_table_1Clicked(MouseEvent mouseEvent) {
@@ -228,7 +246,7 @@ public class LedgerController implements Initializable {
             localDateList.forEach(x->{
                 selectedDateLs.add(x.format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName())));
             });
-            setLocalDateList();
+            setLocalDateList(selectedDateLs);
         }else{
             DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
         }
@@ -258,5 +276,15 @@ public class LedgerController implements Initializable {
     @FXML
     public void outClick(MouseEvent mouseEvent) {
         setItemToTableView(new ArrayList<>());
+    }
+    @FXML
+    public void hideDay(ActionEvent actionEvent) {
+        if (hideCkb.isSelected()){
+            LocalDate st = st_time.getValue();
+            List<LocalDate> ls = ledgerSelectList.stream().map(Ledger::getFrom_date).filter(fromDate -> fromDate.isAfter(st)).toList();
+            setLocalDateList(ls.stream().map(x->x.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).toList());
+        }else{
+            setLocalDateList(selectedDateLs);
+        }
     }
 }

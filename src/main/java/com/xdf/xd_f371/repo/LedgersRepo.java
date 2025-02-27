@@ -47,8 +47,6 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
             "group by 1,2) a on lxd.id=a.loaixd_id",nativeQuery = true)
     List<Object[]> findAllInvByRangeBefore(@Param("sd") LocalDate sd);
 
-    @Query(value = "select l.id as l_id,ld.id as ld_id,dvi_nhan_id,dvi_xuat_id,nhiemvu_id,pt_id,bill_id,from_date,end_date,lenh_so,loai_phieu,dvi_nhan,dvi_xuat,lpt,nhiemvu,note,create_by\n" +
-            "from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-            "where status like 'ACTIVE' and l.from_date between :sd and :ed",nativeQuery = true)
-    List<Object[]> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
+    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed",nativeQuery = true)
+    List<Ledger> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
 }

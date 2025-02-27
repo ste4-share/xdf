@@ -37,8 +37,8 @@ public class LedgerService {
     public List<MiniLedgerDto> findAllInterfaceLedger(String status){
         return ledgersRepo.findAllInterfaceLedger(status);
     }
-    public List<LedgerDto2> findAllLedgerDto(LocalDate st,LocalDate et){
-        return mapToLedgerDto(ledgersRepo.findAllLedgerDtoByTime(st,et));
+    public List<Ledger> findAllLedgerDto(LocalDate st,LocalDate et){
+        return ledgersRepo.findAllLedgerDtoByTime(st,et);
     }
 
     public List<Ledger> getAll(){
@@ -46,6 +46,9 @@ public class LedgerService {
     }
     public LedgerDetails save(LedgerDetails ledgerDetails) {
         return ledgerDetailRepo.save(ledgerDetails);
+    }
+    public List<LedgerDetails> getLedgerDetailById(Long id) {
+        return ledgerDetailRepo.findAllById(id);
     }
     public Ledger save(Ledger ledger) {
         return ledgersRepo.save(ledger);
@@ -156,18 +159,5 @@ public class LedgerService {
     @Transactional
     public void inactiveLedger(Long id ) {
         ledgersRepo.inactiveLedgers(id);
-    }
-    public List<LedgerDto2> mapToLedgerDto(List<Object[]> results) {
-        List<LedgerDto2> list = new ArrayList<>();
-        results.forEach(x->{
-            Date s = (Date) x[7];
-            Date e = (Date) x[8];
-            LocalDate se = (s==null) ? null : s.toLocalDate();
-            LocalDate ee = (e==null) ? null : e.toLocalDate();
-            list.add(new LedgerDto2((long) x[0], (long) x[1],(int) x[2],(int) x[3],
-                    (Long) x[4],((Short) x[5]).intValue(),(int) x[6],se,ee,(String) x[9],(String) x[10],
-                    (String) x[11],(String)x[12],(String)x[13],(String)x[14],(String)x[15],((Short)x[16]).toString()));
-        });
-        return list;
     }
 }

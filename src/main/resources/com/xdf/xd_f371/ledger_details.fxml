@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="494.0" prefWidth="903.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.LedgerDetailController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.LedgerDetailController">
    <children>
-      <StackPane prefHeight="29.0" prefWidth="856.0" style="-fx-background-color: #76b5c5;">
+      <StackPane prefHeight="29.0" prefWidth="856.0" style="-fx-background-color: #76b5c5; -fx-background-radius: 10;">
          <children>
             <Label text="Chi tiết sổ cái" textFill="WHITE">
                <font>
@@ -30,7 +30,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="phieu" prefHeight="30.0" prefWidth="156.0" text="Label">
+            <Label fx:id="phieu" prefHeight="30.0" prefWidth="456.0" text="Label">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -40,14 +40,14 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="tungay" layoutX="135.0" layoutY="10.0" prefHeight="30.0" prefWidth="64.0" text="Label">
+            <Label fx:id="tungay" layoutX="135.0" layoutY="10.0" prefHeight="30.0" prefWidth="84.0" text="Label">
                <font>
-                  <Font name="Cambria" size="12.0" />
+                  <Font name="Cambria Italic" size="12.0" />
                </font>
             </Label>
-            <Label layoutX="475.0" layoutY="10.0" prefHeight="30.0" prefWidth="27.0" text="---&gt;">
+            <Label layoutX="475.0" layoutY="10.0" prefHeight="30.0" prefWidth="51.0" text="---&gt;">
                <font>
-                  <Font name="Cambria Bold" size="14.0" />
+                  <Font name="Cambria Bold" size="18.0" />
                </font>
             </Label>
             <Label layoutX="291.0" layoutY="10.0" prefHeight="30.0" prefWidth="66.0" text="Đến ngày:">
@@ -55,9 +55,9 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>    
-            <Label fx:id="denngay" layoutX="351.0" layoutY="10.0" prefHeight="30.0" prefWidth="64.0" text="Label">
+            <Label fx:id="denngay" layoutX="351.0" layoutY="10.0" prefHeight="30.0" prefWidth="85.0" text="Label">
                <font>
-                  <Font name="Cambria" size="12.0" />
+                  <Font name="Cambria Italic" size="12.0" />
                </font>
             </Label>
          </children>
@@ -76,7 +76,7 @@
             </Label>
             <Label layoutX="416.0" layoutY="10.0" prefHeight="30.0" prefWidth="52.0" text="---&gt;">
                <font>
-                  <Font name="Cambria Bold" size="14.0" />
+                  <Font name="Cambria Bold" size="18.0" />
                </font>
             </Label>
             <Label layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="125.0" text="Đơn vị nhận:">
@@ -103,7 +103,17 @@
                   <Font name="Cambria" size="12.0" />
                </font>
             </Label>
-            <Label layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="44.0" text="Số km:">
+            <Label layoutX="439.0" layoutY="10.0" prefHeight="30.0" prefWidth="56.0" text="Loại NV:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="loainv" layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="66.0" text="Label">
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="44.0" text="[Số km:">
                <font>
                   <Font name="Cambria Bold" size="12.0" />
                </font>
@@ -115,32 +125,27 @@
             </Label>
             <Label layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="51.0" text="(Km/h)">
                <font>
-                  <Font name="Cambria Bold" size="10.0" />
+                  <Font name="Cambria Italic" size="10.0" />
                </font>
             </Label>
-            <Label layoutX="291.0" layoutY="10.0" prefHeight="30.0" prefWidth="44.0" text="Số giờ:">
+            <Label layoutX="291.0" layoutY="10.0" prefHeight="30.0" prefWidth="64.0" text="Số giờ H.Đ:">
                <font>
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="gio" layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="53.0" text="Label">
+            <Label fx:id="gio" layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="46.0" text="Label">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
             </Label>
             <Label layoutX="502.0" layoutY="10.0" prefHeight="30.0" prefWidth="53.0" text="(Giờ)">
                <font>
-                  <Font name="Cambria Bold" size="11.0" />
+                  <Font name="Cambria Italic" size="10.0" />
                </font>
             </Label>
-            <Label layoutX="439.0" layoutY="10.0" prefHeight="30.0" prefWidth="56.0" text="Loại NV:">
+            <Label prefHeight="30.0" prefWidth="23.0" text="]">
                <font>
                   <Font name="Cambria Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="loainv" layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="53.0" text="Label">
-               <font>
-                  <Font name="Cambria" size="12.0" />
                </font>
             </Label>
          </children>
@@ -162,19 +167,64 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="loai_xmt" prefHeight="30.0" prefWidth="100.0" text="Label">
+            <Label fx:id="loai_xmt" prefHeight="30.0" prefWidth="72.0" text="Label">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
             </Label>
-            <Label layoutX="291.0" layoutY="10.0" prefHeight="30.0" prefWidth="72.0" text="Định mức:">
+            <Label layoutX="291.0" layoutY="10.0" prefHeight="30.0" prefWidth="91.0" text="[Đ.mức: ---Km:">
                <font>
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="dinhmuc" layoutX="341.0" layoutY="10.0" prefHeight="30.0" prefWidth="62.0" text="Label">
+            <Label fx:id="dinhmuckm" layoutX="341.0" layoutY="10.0" prefHeight="30.0" prefWidth="44.0" text="Label">
                <font>
                   <Font name="Cambria" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="728.0" layoutY="10.0" prefHeight="30.0" prefWidth="35.0" text="Giờ:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="dinhmucgio" layoutX="763.0" layoutY="10.0" prefHeight="30.0" prefWidth="42.0" text="Label">
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="441.0" layoutY="10.0" prefHeight="30.0" prefWidth="33.0" text="MĐ:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="dinhmucmd" layoutX="532.0" layoutY="10.0" prefHeight="30.0" prefWidth="45.0" text="Label">
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="636.0" layoutY="10.0" prefHeight="30.0" prefWidth="35.0" text="TK:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="dinhmuctk" layoutX="733.0" layoutY="10.0" prefHeight="30.0" prefWidth="42.0" text="Label">
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="dinhmuc2" layoutX="511.0" layoutY="10.0" prefHeight="30.0" prefWidth="57.0" text="(Lit/100km)">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="dinhmuc111" layoutX="795.0" layoutY="10.0" prefHeight="30.0" prefWidth="42.0" text="(Lit/1h)">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="717.0" layoutY="10.0" prefHeight="30.0" prefWidth="23.0" text="]">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
          </children>
@@ -195,7 +245,7 @@
       </HBox>
       <HBox layoutX="20.0" layoutY="118.0">
          <children>
-            <Label prefHeight="30.0" prefWidth="125.0" text="Tính chất Nhập/Xuất:">
+            <Label prefHeight="30.0" prefWidth="125.0" text="Tính chất N/X:">
                <font>
                   <Font name="Cambria Bold" size="12.0" />
                </font>
@@ -244,12 +294,17 @@
       </HBox>
       <HBox layoutX="20.0" layoutY="208.0">
          <children>
-            <Separator prefHeight="6.0" prefWidth="718.0" />
+            <Separator prefHeight="16.0" prefWidth="942.0" />
          </children>
       </HBox>
+      <Label fx:id="soxe1" prefHeight="14.0" prefWidth="156.0" text="---Mặt hàng nhập/xuất---">
+         <font>
+            <Font name="Cambria Italic" size="10.0" />
+         </font>
+      </Label>
       <HBox layoutX="20.0" layoutY="238.0">
          <children>
-            <TableView fx:id="chitietdonhang_table" prefHeight="200.0" prefWidth="881.0" stylesheets="@css/table_style.css">
+            <TableView fx:id="chitietdonhang_table" prefHeight="200.0" prefWidth="930.0" stylesheets="@css/table_style.css">
               <columns>
                 <TableColumn fx:id="stt" maxWidth="50.0" minWidth="30.0" prefWidth="40.0" text="stt" />
                 <TableColumn fx:id="tenxd" maxWidth="150.0" minWidth="80.0" prefWidth="120.0" text="Tên Xăng dầu" />
