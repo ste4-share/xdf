@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.ConfigCons;
+import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.InvDto3;
@@ -35,9 +36,9 @@ import java.util.ResourceBundle;
 
 @Component
 public class LedgerController implements Initializable {
-    private static final List<LedgerDto2> ledgerSelectList = new ArrayList<>();
-    private static final List<String> selectedDateLs = new ArrayList<>();
-
+    private static List<LedgerDto2> ledgerSelectList = new ArrayList<>();
+    private static List<String> selectedDateLs = new ArrayList<>();
+    private LocalDate currentDateSelected;
     @Autowired
     private LedgerService ledgerService;
     @Autowired
@@ -88,8 +89,12 @@ public class LedgerController implements Initializable {
         LocalDate st = st_time.getValue();
         LocalDate et = lst_time.getValue();
         if (validDate(st,et)){
-            setItemToTableView(ledgerService.findAllLedgerDto(st,et));
+            ledgerSelectList = ledgerService.findAllLedgerDto(st,et);
+            setItemToTableView(ledgerSelectList);
         }
+    }
+    private void getLedgerByDate(LocalDate d){
+        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(d)).toList());
     }
     private void setItemToTableView(List<LedgerDto2> ls){
         ledgers_table.setItems(FXCollections.observableList(ls));
@@ -117,7 +122,6 @@ public class LedgerController implements Initializable {
     private void setLocalDateList(){
         date_ls.setItems(FXCollections.observableList(selectedDateLs));
     }
-
     private void initStartDate() {
         st_time.setValue(ConnectLan.pre_acc.getSd());
         lst_time.setValue(ConnectLan.pre_acc.getEd());
@@ -157,17 +161,20 @@ public class LedgerController implements Initializable {
     @FXML
     public void select_date_Clicked(MouseEvent mouseEvent) {
         String d = date_ls.getSelectionModel().getSelectedItems().get(0).toString();
-        LocalDate ld = stringToDate(d);
-
+        currentDateSelected = stringToDate(d);
+        getLedgerByDate(currentDateSelected);
     }
     @FXML
     public void all_radio_action(ActionEvent actionEvent) {
+        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).toList());
     }
     @FXML
     public void nhap_radio_action(ActionEvent actionEvent) {
+        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).filter(x->x.getPhieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())).toList());
     }
     @FXML
     public void xuat_radio_action(ActionEvent actionEvent) {
+        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).filter(x->x.getPhieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())).toList());
     }
     @FXML
     public void select_ledger_table(MouseEvent mouseEvent) {
@@ -215,6 +222,7 @@ public class LedgerController implements Initializable {
 
     private void listDate(LocalDate st,LocalDate et){
         if (validDate(st,et)){
+            selectedDateLs = new ArrayList<>();
             List<LocalDate> localDateList = st.datesUntil(et)
                     .toList();
             localDateList.forEach(x->{
@@ -249,7 +257,6 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void outClick(MouseEvent mouseEvent) {
-        System.out.println("refresh");
-        date_ls.refresh();
+        setItemToTableView(new ArrayList<>());
     }
 }
