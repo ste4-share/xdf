@@ -105,7 +105,6 @@ public class BaoCaoController implements Initializable {
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null) {
-                System.out.println("query: "+ getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
                 return createDataSheet(wb.getSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
             }
         }else{

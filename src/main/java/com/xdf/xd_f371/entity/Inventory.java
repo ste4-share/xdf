@@ -41,14 +41,14 @@ public class Inventory {
     @Column(name = "ed")
     private LocalDate ed;
     @Column(name = "dvi_id")
-    private int dvi_id;
+    private Integer dvi_id=0;
 
     @ManyToOne
     @JoinColumn(name = "petro_id",referencedColumnName = "id", insertable = false, updatable = false)
     private LoaiXangDau loaiXangDau;
 
     public Inventory(int petro_id, int tdk_nvdx, int tdk_sscd, int nhap_nvdx, int nhap_sscd, int xuat_nvdx, int xuat_sscd, String status, int price,
-                     LocalDate sd, LocalDate ed,int dvi_id) {
+                     LocalDate sd, LocalDate ed) {
         this.petro_id = petro_id;
         this.tdk_nvdx = tdk_nvdx;
         this.tdk_sscd = tdk_sscd;
@@ -60,7 +60,6 @@ public class Inventory {
         this.price = price;
         this.sd = sd;
         this.ed = ed;
-        this.dvi_id=dvi_id;
     }
 
     public Inventory(int petro_id, String status) {
