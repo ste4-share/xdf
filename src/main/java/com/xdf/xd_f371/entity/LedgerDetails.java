@@ -52,7 +52,6 @@ public class LedgerDetails {
     @Column(name = "thuc_xuat_tk")
     private double thuc_xuat_tk;
     @Column(name = "so_luong")
-    @NotNull
     @Min(value = 0)
     @Positive
     private double soluong;

@@ -141,11 +141,11 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setHe_so_vcf(vcf.getText().isEmpty() ? 0 : Double.parseDouble(vcf.getText()));
         ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
         ledgerDetails.setSoluong(tn);
-        ledgerDetails.setThanhtien((double) tn * p);
-        ledgerDetails.setSoluong_px((double) pn);
-        ledgerDetails.setThanhtien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanhtien())));
-        ledgerDetails.setThucnhap_str(TextToNumber.textToNum(String.valueOf(tn)));
-        ledgerDetails.setPhainhap_str(TextToNumber.textToNum(String.valueOf(pn)));
+        ledgerDetails.setThanhtien(tn * p);
+        ledgerDetails.setSoluong_px(pn);
+        ledgerDetails.setThanhtien_str(TextToNumber.textToNum_2digits(String.valueOf(ledgerDetails.getThanhtien())));
+        ledgerDetails.setThucnhap_str(TextToNumber.textToNum_2digits(String.valueOf(tn)));
+        ledgerDetails.setPhainhap_str(TextToNumber.textToNum_2digits(String.valueOf(pn)));
         ledgerDetails.setDongia_str(TextToNumber.textToNum(String.valueOf(p)));
         return ledgerDetails;
     }
