@@ -20,7 +20,7 @@ public class PttkDto {
     private String fb;
     private String tdv;
 
-    public PttkDto(String loai, String tenxd, Long e916, Long e921, Long e923, Long e927, Long dnb, Long dka, Long dvi, Long dns, Long fb) {
+    public PttkDto(String loai, String tenxd, double e916, double e921, double e923, double e927, double dnb, double dka, double dvi, double dns, double fb) {
         this.loai = loai;
         this.tenxd = tenxd;
         this.e916 = TextToNumber.textToNum(String.valueOf(e916));

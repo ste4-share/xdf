@@ -7,19 +7,19 @@ import lombok.Setter;
 @Setter
 public class InvDto2 {
     private int xd_id;
-    private int gia;
+    private double gia;
     private String loai;
     private String tenxd;
-    private Long sl_ton;
+    private double sl_ton;
 
-    public InvDto2(int xd_id, String loai, String tenxd, Long sl_ton) {
+    public InvDto2(int xd_id, String loai, String tenxd, double sl_ton) {
         this.xd_id = xd_id;
         this.loai = loai;
         this.tenxd = tenxd;
         this.sl_ton = sl_ton;
     }
 
-    public InvDto2(int xd_id,int gia, String tenxd, Long sl_ton) {
+    public InvDto2(int xd_id,double gia, String tenxd, double sl_ton) {
         this.xd_id = xd_id;
         this.tenxd = tenxd;
         this.sl_ton = sl_ton;

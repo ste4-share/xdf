@@ -26,7 +26,7 @@ public class LedgerDetails {
     @Column(name = "chat_luong")
     private String chat_luong;
     @Column(name = "phai_xuat")
-    private int phai_xuat;
+    private double phai_xuat;
     @Column(name = "nhiet_do_tt")
     @NotNull
     private double nhiet_do_tt;
@@ -40,7 +40,7 @@ public class LedgerDetails {
     @NotNull
     @Min(value = 0)
     @Positive
-    private int don_gia;
+    private double don_gia;
     @Column(name = "loaixd_id")
     private int loaixd_id;
     @Column(name = "phuongtien_id")
@@ -48,20 +48,20 @@ public class LedgerDetails {
     @Column(name = "ledger_id")
     private Long ledger_id;
     @Column(name = "thuc_xuat")
-    private int thuc_xuat;
+    private double thuc_xuat;
     @Column(name = "thuc_xuat_tk")
-    private int thuc_xuat_tk;
+    private double thuc_xuat_tk;
     @Column(name = "so_luong")
     @NotNull
     @Min(value = 0)
     @Positive
-    private int soluong;
+    private double soluong;
     @Column(name = "thuc_nhap")
-    private int thuc_nhap;
+    private double thuc_nhap;
     @Column(name = "phai_nhap")
-    private int phai_nhap;
+    private double phai_nhap;
     @Column(name = "thanhtien")
-    private Long thanhtien;
+    private double thanhtien;
     @Column(name = "haohut_sl")
     private int haohut_sl;
     @Column(name = "nl_gio")
@@ -74,15 +74,15 @@ public class LedgerDetails {
     @NotNull(message = "Phai xuat can not be null")
     @Min(value = 0)
     @Positive
-    private Long soluong_px;
+    private double soluong_px;
     @Column(name = "nhap_nvdx")
-    private Long nhap_nvdx = 0L;
+    private double nhap_nvdx = 0L;
     @Column(name = "nhap_sscd")
-    private Long nhap_sscd = 0L;
+    private double nhap_sscd = 0L;
     @Column(name = "xuat_nvdx")
-    private Long xuat_nvdx = 0L;
+    private double xuat_nvdx = 0L;
     @Column(name = "xuat_sscd")
-    private Long xuat_sscd = 0L;
+    private double xuat_sscd = 0L;
 
     @Transient
     private String thanhtien_str;

@@ -19,7 +19,7 @@ public class PhuongTien {
     @Column(name = "name")
     private String name;
     @Column(name = "quantity")
-    private int quantity;
+    private double quantity;
     @Column(name = "nguonnx_id")
     private int nguonnx_id;
     @Column(name = "loaiphuongtien_id")
@@ -27,7 +27,7 @@ public class PhuongTien {
     @Column(name = "status")
     private String status;
 
-    public PhuongTien(String name, int quantity, int nguonnx_id, int loaiphuongtien_id, String status) {
+    public PhuongTien(String name, double quantity, int nguonnx_id, int loaiphuongtien_id, String status) {
         this.name = name;
         this.quantity = quantity;
         this.nguonnx_id = nguonnx_id;
@@ -35,7 +35,7 @@ public class PhuongTien {
         this.status = status;
     }
 
-    public PhuongTien(int id, String name, int quantity, int nguonnx_id, int loaiphuongtien_id, String status) {
+    public PhuongTien(int id, String name, double quantity, int nguonnx_id, int loaiphuongtien_id, String status) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;

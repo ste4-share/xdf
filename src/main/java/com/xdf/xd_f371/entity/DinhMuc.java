@@ -19,15 +19,15 @@ public class DinhMuc {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "dm_md_gio")
-    private int dm_md_gio;
+    private double dm_md_gio;
     @Column(name = "dm_tk_gio")
-    private int dm_tk_gio;
+    private double dm_tk_gio;
     @Column(name = "dm_xm_gio")
-    private int dm_xm_gio;
+    private double dm_xm_gio;
     @Column(name = "dm_xm_km")
-    private int dm_xm_km;
+    private double dm_xm_km;
     @Column(name = "phuongtien_id")
-    private int phuongtien_id;
+    private double phuongtien_id;
     @Column(name = "years")
     private int years= LocalDate.now().getYear();
 
@@ -35,7 +35,7 @@ public class DinhMuc {
     @JoinColumn(name = "phuongtien_id", referencedColumnName = "id", insertable = false, updatable = false)
     private PhuongTien phuongTien;
 
-    public DinhMuc(int dm_md_gio, int dm_tk_gio, int dm_xm_gio, int dm_xm_km, int phuongtien_id) {
+    public DinhMuc(double dm_md_gio, double dm_tk_gio, double dm_xm_gio, double dm_xm_km, int phuongtien_id) {
         this.dm_md_gio = dm_md_gio;
         this.dm_tk_gio = dm_tk_gio;
         this.dm_xm_gio = dm_xm_gio;
@@ -43,7 +43,7 @@ public class DinhMuc {
         this.phuongtien_id = phuongtien_id;
     }
 
-    public DinhMuc(int id, int dm_md_gio, int dm_tk_gio, int dm_xm_gio, int dm_xm_km, int phuongtien_id) {
+    public DinhMuc(int id, double dm_md_gio, double dm_tk_gio, double dm_xm_gio, double dm_xm_km, int phuongtien_id) {
         this.id = id;
         this.dm_md_gio = dm_md_gio;
         this.dm_tk_gio = dm_tk_gio;

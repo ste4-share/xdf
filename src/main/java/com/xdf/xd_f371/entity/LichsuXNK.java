@@ -24,11 +24,11 @@ public class LichsuXNK {
     @Column(name = "loai_phieu")
     private String loai_phieu;
     @Column(name = "soluong")
-    private int soluong;
+    private double soluong;
     @Column(name = "tonsau")
-    private Long tonsau;
+    private double tonsau;
     @Column(name = "gia")
-    private int gia;
+    private double gia;
     @Column(name = "timestamp",insertable = false,updatable = false)
     private LocalDateTime createTime;
     @Column(name = "type")
@@ -53,7 +53,7 @@ public class LichsuXNK {
     @Transient
     private String createtime_str;
 
-    public LichsuXNK(String ten_xd, String loai_phieu, int soluong, Long tonsau, int mucgia, String type, int so,
+    public LichsuXNK(String ten_xd, String loai_phieu, double soluong, double tonsau, double mucgia, String type, int so,
                      String dvn, String dvx, String chungloaixd, LocalDate sd) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;

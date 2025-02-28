@@ -132,7 +132,7 @@ public class LedgerService {
             saveHistory(ledger,details1,0L);
         }
     }
-    private void saveHistory(Ledger l,LedgerDetails ld,Long tontruoc){
+    private void saveHistory(Ledger l,LedgerDetails ld,double tontruoc){
         if (l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
             LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(), ld.getSoluong(),
                     tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
@@ -147,13 +147,13 @@ public class LedgerService {
     }
     private void saveQuantity(LedgerDetails detail, Ledger ledger){
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
-            detail.setNhap_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
+            detail.setNhap_nvdx(Double.parseDouble(String.valueOf(detail.getSoluong())));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())){
-            detail.setXuat_nvdx(Long.parseLong(String.valueOf(detail.getSoluong())));
+            detail.setXuat_nvdx(Double.parseDouble(String.valueOf(detail.getSoluong())));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            detail.setNhap_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
+            detail.setNhap_sscd(Double.parseDouble(String.valueOf(detail.getSoluong())));
         }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()) && detail.getSscd_nvdx().equals(Purpose.SSCD.getName())){
-            detail.setXuat_sscd(Long.parseLong(String.valueOf(detail.getSoluong())));
+            detail.setXuat_sscd(Double.parseDouble(String.valueOf(detail.getSoluong())));
         }
     }
     @Transactional

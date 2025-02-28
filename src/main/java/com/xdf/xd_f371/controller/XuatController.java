@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class XuatController extends CommonFactory implements Initializable {
-    private static long inv_price;
+    private static double inv_price;
     private static AutoCompletionBinding<String> acbLogin;
     private static DinhMuc dinhMuc;
     public static String loainx;
@@ -47,7 +47,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<LoaiXangDauDto> cbb_tenxd;
     @FXML
-    private ComboBox<Integer> cbb_dongia;
+    private ComboBox<Double> cbb_dongia;
     @FXML
     private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox,nl_km_hb,nl_gio_hb;
     @FXML
@@ -85,14 +85,14 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
-        Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
+        Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
         NguonNx dvx = dvx_cbb.getValue();
-        if (dvx!=null){
-            if (lxd != null && gia != null) {
+        if (dvx!=null && gia!=null){
+            if (lxd != null) {
                 InvDto2 in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
-                if (in!=null){
+                if (in!=null) {
                     setInv_lb(in.getSl_ton());
-                }else {
+                } else {
                     setInv_lb(0);
                 }
             }
@@ -191,7 +191,7 @@ public class XuatController extends CommonFactory implements Initializable {
         sokm_hb.setDisable(false);
     }
 
-    private boolean isCbb(LoaiXangDauDto lxd,Integer gia){
+    private boolean isCbb(LoaiXangDauDto lxd,Double gia){
         if (lxd!=null){
             if (gia!=null){
                 return true;
@@ -208,7 +208,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void add(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
-        Integer gia = cbb_dongia.getSelectionModel().getSelectedItem();
+        Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (isCbb(lxd,gia)){
             LedgerDetails ld = getLedgerDetails(lxd,gia);
             if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
@@ -268,10 +268,10 @@ public class XuatController extends CommonFactory implements Initializable {
     public void cancel(ActionEvent actionEvent) {
         DashboardController.xuatStage.close();
     }
-    private int cal_phaixuat_km(int sokm, int dinhmuc){
+    private double cal_phaixuat_km(int sokm, double dinhmuc){
         return (sokm*dinhmuc)/100;
     }
-    private float cal_phaixuat_gio(float sogio, int dinhmuc){
+    private double cal_phaixuat_gio(double sogio, double dinhmuc){
         return sogio *dinhmuc;
     }
     @FXML
@@ -429,7 +429,7 @@ public class XuatController extends CommonFactory implements Initializable {
         nl_gio.setText("0");
         nl_km.setText("0");
     }
-    private void setDinhmucToLabel(String l1, String l2, int dm1,int dm2){
+    private void setDinhmucToLabel(String l1, String l2, double dm1,double dm2){
         lb_dm_gio.setText(l1);
         dm_gio.setText(TextToNumber.textToNum(String.valueOf(dm1)));
         lb_dm_km.setText(l2);
@@ -505,7 +505,7 @@ public class XuatController extends CommonFactory implements Initializable {
             if (!inventoryList.isEmpty()){
                 cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().filter(x->x.getSl_ton()!=0).map(InvDto2::getGia).toList()));
                 cbb_dongia.getSelectionModel().selectFirst();
-                Integer in = cbb_dongia.getSelectionModel().getSelectedItem();
+                Double in = cbb_dongia.getSelectionModel().getSelectedItem();
                 if (in!=null){
                     cbb_dongia.setStyle(null);
                     if (inventoryList.stream().anyMatch(x->x.getGia()==in)){
@@ -551,7 +551,7 @@ public class XuatController extends CommonFactory implements Initializable {
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
         ledger.setBill_id(Integer.parseInt(so.getText().isEmpty() ? "0" : so.getText()));
-        ledger.setAmount(ls_socai.stream().mapToLong(x-> ((long) x.getSoluong() *x.getDon_gia())).sum());
+        ledger.setAmount(ls_socai.stream().mapToDouble(x-> ((double) x.getSoluong() *x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
         ledger.setStatus("ACTIVE");
@@ -624,11 +624,11 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return ledger;
     }
-    private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd, Integer gia){
+    private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd, Double gia){
         LedgerDetails ledgerDetails = new LedgerDetails();
 
-        int txuat = thucxuat.getText().isEmpty() ? 0 : Integer.parseInt(thucxuat.getText());
-        int pxuat = phaixuat.getText().isEmpty() ? 0 : Integer.parseInt(phaixuat.getText());
+        double txuat = thucxuat.getText().isEmpty() ? 0 : Double.parseDouble(thucxuat.getText());
+        double pxuat = phaixuat.getText().isEmpty() ? 0 : Double.parseDouble(phaixuat.getText());
 
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
@@ -659,7 +659,7 @@ public class XuatController extends CommonFactory implements Initializable {
             ledgerDetails.setPhuongtien_id(0);
             ledgerDetails.setThuc_xuat_tk(0);
             ledgerDetails.setThuc_xuat(0);
-            ledgerDetails.setHaohut_sl(ledgerDetails.getSoluong());
+            ledgerDetails.setHaohut_sl((int)ledgerDetails.getSoluong());
         }else {
             ledgerDetails.setHaohut_sl(0);
             ledgerDetails.setPhuongtien_id(pt.getId());
@@ -672,14 +672,14 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledgerDetails.setThuc_xuat(txuat);
             }
         }
-        ledgerDetails.setThanhtien((long) ledgerDetails.getSoluong() * ledgerDetails.getDon_gia());
+        ledgerDetails.setThanhtien((double) ledgerDetails.getSoluong() * ledgerDetails.getDon_gia());
         ledgerDetails.setThanhtien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanhtien())));
         ledgerDetails.setThucxuat_str(TextToNumber.textToNum(String.valueOf(txuat)));
         ledgerDetails.setPhaixuat_str(TextToNumber.textToNum(String.valueOf(pxuat)));
         ledgerDetails.setDongia_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getDon_gia())));
         return ledgerDetails;
     }
-    private void setInv_lb(long inv) {
+    private void setInv_lb(double inv) {
         inv_price = inv;
         inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(inv)) + " (Lit)");
     }

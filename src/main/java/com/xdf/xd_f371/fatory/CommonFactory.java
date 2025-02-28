@@ -25,7 +25,7 @@ import java.util.*;
 
 @Component
 public class CommonFactory {
-    protected static Long inventory_quantity = 0L;
+    protected static double inventory_quantity = 0;
     protected static List<LedgerDetails> ls_socai;
     protected static List<Tcn> tcnx_ls = new ArrayList<>();
     public static String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
@@ -102,7 +102,7 @@ public class CommonFactory {
         col_tytrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
         col_thanhtien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
     }
-    protected boolean isNotDuplicate(int xd_id,int dongia,int tx, int px,String lp){
+    protected boolean isNotDuplicate(int xd_id,double dongia,double tx, double px,String lp){
         for (int i =0; i< ls_socai.size(); i++){
             LedgerDetails ld = ls_socai.get(i);
             if (ld.getLoaixd_id() == xd_id && ld.getDon_gia()==dongia){
@@ -110,19 +110,19 @@ public class CommonFactory {
                     ld.setThuc_nhap(ld.getThuc_nhap()+tx);
                     ld.setPhai_nhap(ld.getPhai_nhap()+px);
                     ld.setSoluong(ld.getThuc_nhap()+tx);
-                    ld.setSoluong_px((long) ld.getPhai_nhap() + px);
+                    ld.setSoluong_px((double) ld.getPhai_nhap() + px);
                     ld.setThucnhap_str(TextToNumber.textToNum(String.valueOf(ld.getThuc_nhap())));
                     ld.setPhainhap_str(TextToNumber.textToNum(String.valueOf(ld.getPhai_nhap())));
-                    ld.setThanhtien_str(TextToNumber.textToNum(String.valueOf((long) ld.getThuc_nhap()*ld.getDon_gia())));
+                    ld.setThanhtien_str(TextToNumber.textToNum(String.valueOf((double) ld.getThuc_nhap()*ld.getDon_gia())));
                     ls_socai.set(i, ld);
                 }else{
                     ld.setThuc_xuat(ld.getThuc_xuat() + tx);
                     ld.setPhai_xuat(ld.getPhai_xuat() + px);
                     ld.setSoluong(ld.getThuc_xuat() + tx);
-                    ld.setSoluong_px((long) ld.getPhai_xuat() + px);
+                    ld.setSoluong_px((double) ld.getPhai_xuat() + px);
                     ld.setThucxuat_str(TextToNumber.textToNum(String.valueOf(ld.getThuc_xuat())));
                     ld.setPhaixuat_str(TextToNumber.textToNum(String.valueOf(ld.getPhai_xuat())));
-                    ld.setThanhtien_str(TextToNumber.textToNum(String.valueOf((long) ld.getThuc_xuat()*ld.getDon_gia())));
+                    ld.setThanhtien_str(TextToNumber.textToNum(String.valueOf((double) ld.getThuc_xuat()*ld.getDon_gia())));
                     ls_socai.set(i, ld);
                 }
                 return false;

@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="964.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.XuatController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="939.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.XuatController">
    <top>
       <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0" style="-fx-background-color: #262626;" BorderPane.alignment="CENTER">
          <children>
@@ -34,11 +34,11 @@
          </BorderPane.margin></HBox>
    </top>
    <center>
-      <VBox prefHeight="913.0" prefWidth="1172.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="893.0" prefWidth="1172.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="828.0" prefWidth="1172.0">
+            <HBox prefHeight="614.0" prefWidth="1172.0">
                <children>
-                  <GridPane prefHeight="688.0" prefWidth="1140.0">
+                  <GridPane prefHeight="606.0" prefWidth="1140.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -49,28 +49,28 @@
                      <children>
                         <VBox prefHeight="558.0" prefWidth="552.0">
                            <children>
-                              <HBox layoutX="10.0" layoutY="20.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="10.0" layoutY="20.0">
                                  <children>
-                                    <Label fx:id="dvn_lb1" prefHeight="40.0" prefWidth="197.0" text="Loại xuất*:">
+                                    <Label fx:id="dvn_lb1" prefHeight="30.0" prefWidth="197.0" text="Loại xuất*:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="loai_xuat_cbb" onAction="#loaixuatAction" prefHeight="40.0" prefWidth="162.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                                    <ComboBox fx:id="loai_xuat_cbb" onAction="#loaixuatAction" prefHeight="30.0" prefWidth="162.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </ComboBox>
                                  </children>
                               </HBox>
-                              <HBox fx:id="loaixemaytau" prefHeight="40.0" prefWidth="543.0">
+                              <HBox fx:id="loaixemaytau">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Loại xe máy tàu:">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Loại xe máy tàu:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <RadioButton fx:id="mb_rd" mnemonicParsing="false" onAction="#mbRadioSel" prefHeight="46.0" prefWidth="102.0" text="Máy bay">
+                                    <RadioButton fx:id="mb_rd" mnemonicParsing="false" onAction="#mbRadioSel" prefHeight="30.0" prefWidth="102.0" text="Máy bay">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="lxmt_rd" />
                                        </toggleGroup>
@@ -78,12 +78,12 @@
                                           <Font name="Cambria Bold" size="12.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton layoutX="207.0" layoutY="10.0" mnemonicParsing="false" onAction="#xeRadioSelec" prefHeight="40.0" prefWidth="84.0" text="Xe" toggleGroup="$lxmt_rd" fx:id="xe_rd">
+                                    <RadioButton layoutX="207.0" layoutY="10.0" mnemonicParsing="false" onAction="#xeRadioSelec" prefHeight="30.0" prefWidth="84.0" text="Xe" toggleGroup="$lxmt_rd" fx:id="xe_rd">
                                        <font>
                                           <Font name="Cambria Bold" size="12.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton fx:id="may_rd" layoutX="309.0" layoutY="10.0" mnemonicParsing="false" onAction="#mayRadioSelec" prefHeight="46.0" prefWidth="102.0" text="Máy" toggleGroup="$lxmt_rd">
+                                    <RadioButton fx:id="may_rd" layoutX="309.0" layoutY="10.0" mnemonicParsing="false" onAction="#mayRadioSelec" prefHeight="30.0" prefWidth="102.0" text="Máy" toggleGroup="$lxmt_rd">
                                        <font>
                                           <Font name="Cambria Bold" size="12.0" />
                                        </font>
@@ -93,14 +93,14 @@
                                     <Insets top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="160.0" prefHeight="40.0" prefWidth="523.0" fx:id="xmt_hb">
+                              <HBox layoutX="10.0" layoutY="160.0" fx:id="xmt_hb">
                                  <children>
-                                    <Label fx:id="dvn_lb3" prefHeight="40.0" prefWidth="197.0" text="Xe máy tàu:">
+                                    <Label fx:id="dvn_lb3" prefHeight="30.0" prefWidth="197.0" text="Xe máy tàu:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox onAction="#nvSelected" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" fx:id="xmt_cbb">
+                                    <ComboBox onAction="#nvSelected" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" fx:id="xmt_cbb">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -144,14 +144,14 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <HBox fx:id="dvi_nhan" prefHeight="40.0" prefWidth="523.0">
+                              <HBox fx:id="dvi_nhan">
                                  <children>
-                                    <Label fx:id="dvn_lb" prefHeight="40.0" prefWidth="197.0" text="Đơn vị nhận*:">
+                                    <Label fx:id="dvn_lb" prefHeight="30.0" prefWidth="197.0" text="Đơn vị nhận*:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="dvn_cbb" onAction="#dvnSelectedAction" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                                    <ComboBox fx:id="dvn_cbb" onAction="#dvnSelectedAction" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -161,14 +161,14 @@
                                     <Insets bottom="10.0" top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox fx:id="pt1" prefHeight="40.0" prefWidth="523.0">
+                              <HBox fx:id="pt1">
                                  <children>
-                                    <Label fx:id="dvn_lb_1" prefHeight="40.0" prefWidth="197.0" text="Đơn vị xuất*:">
+                                    <Label fx:id="dvn_lb_1" prefHeight="30.0" prefWidth="197.0" text="Đơn vị xuất*:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="dvx_cbb" cache="true" onAction="#dvxAction" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                                    <ComboBox fx:id="dvx_cbb" cache="true" onAction="#dvxAction" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -178,14 +178,14 @@
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox prefHeight="40.0" prefWidth="523.0">
+                              <HBox>
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Số*:">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Số*:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="so" onKeyReleased="#soKeyRealed" onMouseClicked="#so_clicked" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="so" onKeyReleased="#soKeyRealed" onMouseClicked="#so_clicked" prefHeight="30.0" prefWidth="327.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -198,14 +198,14 @@
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox prefHeight="40.0" prefWidth="523.0">
+                              <HBox>
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Người nhận:">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Người nhận:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="nguoinhan" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="nguoinhan" prefHeight="30.0" prefWidth="327.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -218,14 +218,14 @@
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox prefHeight="40.0" prefWidth="523.0">
+                              <HBox>
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Tính chất xuất*:">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Tính chất xuất*:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="tcx" onMouseClicked="#tcx_clicked" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="tcx" onMouseClicked="#tcx_clicked" prefHeight="30.0" prefWidth="327.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -238,14 +238,14 @@
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="170.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="10.0" layoutY="170.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Lệnh số (KH):">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Lệnh số (KH):">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="lenhso" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="lenhso" prefHeight="30.0" prefWidth="327.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -258,14 +258,14 @@
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="210.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="10.0" layoutY="210.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Số xe:">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Số xe:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="soxe" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="soxe" prefHeight="30.0" prefWidth="327.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -278,14 +278,14 @@
                                     <Insets />
                                  </VBox.margin>
                               </HBox>
-                              <HBox fx:id="sokm_hb" prefHeight="40.0" prefWidth="543.0">
+                              <HBox fx:id="sokm_hb">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Số Km:">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Số Km:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="sokm" onKeyReleased="#km_keyrealese" onMouseClicked="#so_km_clicked" prefHeight="40.0" prefWidth="92.0">
+                                    <TextField fx:id="sokm" onKeyReleased="#km_keyrealese" onMouseClicked="#so_km_clicked" prefHeight="30.0" prefWidth="92.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -293,9 +293,9 @@
                                           <Font name="Cambria" size="18.0" />
                                        </font>
                                     </TextField>
-                                    <Label prefHeight="40.0" prefWidth="45.0" text="(Km)">
+                                    <Label prefHeight="30.0" prefWidth="45.0" text="(Km)">
                                        <font>
-                                          <Font name="Cambria Bold" size="16.0" />
+                                          <Font name="Cambria" size="12.0" />
                                        </font>
                                        <HBox.margin>
                                           <Insets left="10.0" />
@@ -306,14 +306,14 @@
                                     <Insets top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox fx:id="lgb_hb" prefHeight="40.0" prefWidth="543.0">
+                              <HBox fx:id="lgb_hb">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Loại giờ bay:">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Loại giờ bay:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <RadioButton fx:id="tk_rd" mnemonicParsing="false" prefHeight="39.0" prefWidth="97.0" text="Trên không">
+                                    <RadioButton fx:id="tk_rd" mnemonicParsing="false" prefHeight="30.0" prefWidth="97.0" text="Trên không">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="lgb1" />
                                        </toggleGroup>
@@ -321,7 +321,7 @@
                                           <Font name="Cambria Bold" size="12.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton fx:id="md_rd" mnemonicParsing="false" prefHeight="46.0" prefWidth="102.0" text="Mặt đất" toggleGroup="$lgb1">
+                                    <RadioButton fx:id="md_rd" mnemonicParsing="false" prefHeight="30.0" prefWidth="102.0" text="Mặt đất" toggleGroup="$lgb1">
                                        <font>
                                           <Font name="Cambria Bold" size="12.0" />
                                        </font>
@@ -331,14 +331,14 @@
                                     <Insets top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox fx:id="giohd" prefHeight="40.0" prefWidth="523.0">
+                              <HBox fx:id="giohd">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="197.0" text="Giờ H.Đ:">
+                                    <Label prefHeight="30.0" prefWidth="197.0" text="Giờ H.Đ:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="sogio" onKeyReleased="#giohd_key" onMouseClicked="#giohd_clicked" prefHeight="40.0" prefWidth="90.0">
+                                    <TextField fx:id="sogio" onKeyReleased="#giohd_key" onMouseClicked="#giohd_clicked" prefHeight="30.0" prefWidth="90.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -346,15 +346,15 @@
                                           <Font name="Cambria" size="18.0" />
                                        </font>
                                     </TextField>
-                                    <Label layoutX="307.0" layoutY="10.0" prefHeight="40.0" prefWidth="45.0" text="(Giờ)">
+                                    <Label layoutX="307.0" layoutY="10.0" prefHeight="30.0" prefWidth="45.0" text="(Giờ)">
                                        <font>
-                                          <Font name="Cambria Bold" size="16.0" />
+                                          <Font name="Cambria" size="12.0" />
                                        </font>
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="sophut" onKeyReleased="#phut_key" onMouseClicked="#phuthd_clicked" prefHeight="40.0" prefWidth="90.0">
+                                    <TextField fx:id="sophut" onKeyReleased="#phut_key" onMouseClicked="#phuthd_clicked" prefHeight="30.0" prefWidth="90.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -362,9 +362,9 @@
                                           <Font name="Cambria" size="18.0" />
                                        </font>
                                     </TextField>
-                                    <Label layoutX="352.0" layoutY="10.0" prefHeight="40.0" prefWidth="83.0" text="(Phút)">
+                                    <Label layoutX="352.0" layoutY="10.0" prefHeight="30.0" prefWidth="83.0" text="(Phút)">
                                        <font>
-                                          <Font name="Cambria Bold" size="16.0" />
+                                          <Font name="Cambria" size="12.0" />
                                        </font>
                                        <HBox.margin>
                                           <Insets left="10.0" />
@@ -382,19 +382,19 @@
                         </VBox>
                         <VBox prefHeight="672.0" prefWidth="571.0" GridPane.columnIndex="1">
                            <children>
-                              <HBox prefHeight="40.0" prefWidth="511.0">
+                              <HBox>
                                  <children>
-                                    <Label prefHeight="38.0" prefWidth="97.0" text="Từ ngày:">
+                                    <Label prefHeight="30.0" prefWidth="97.0" text="Từ ngày:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <DatePicker fx:id="tungay" editable="false" prefHeight="40.0" prefWidth="155.0" style="-fx-background-radius: 10;">
+                                    <DatePicker fx:id="tungay" editable="false" prefHeight="30.0" prefWidth="155.0" style="-fx-background-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </DatePicker>
-                                    <Label layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="97.0" text="Đến ngày:">
+                                    <Label layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="97.0" text="Đến ngày:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -402,16 +402,16 @@
                                           <Insets left="20.0" />
                                        </HBox.margin>
                                     </Label>
-                                    <DatePicker fx:id="denngay" editable="false" layoutX="107.0" layoutY="10.0" prefHeight="40.0" prefWidth="155.0" style="-fx-background-radius: 10;">
+                                    <DatePicker fx:id="denngay" editable="false" layoutX="107.0" layoutY="10.0" prefHeight="30.0" prefWidth="155.0" style="-fx-background-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </DatePicker>
                                  </children>
                               </HBox>
-                              <HBox layoutX="45.0" layoutY="475.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="45.0" layoutY="475.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="Cho nhiệm vụ:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="Cho nhiệm vụ:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -419,7 +419,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <RadioButton fx:id="nvdx_rd" layoutX="172.0" layoutY="10.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="102.0" text="NVDX">
+                                    <RadioButton fx:id="nvdx_rd" layoutX="172.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="102.0" text="NVDX">
                                        <font>
                                           <Font name="Cambria Bold" size="12.0" />
                                        </font>
@@ -427,7 +427,7 @@
                                           <ToggleGroup fx:id="sscd_nvdx_toggle" />
                                        </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton fx:id="sscd_rd" disable="true" mnemonicParsing="false" prefHeight="46.0" prefWidth="102.0" text="SSCD" toggleGroup="$sscd_nvdx_toggle">
+                                    <RadioButton fx:id="sscd_rd" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="102.0" text="SSCD" toggleGroup="$sscd_nvdx_toggle">
                                        <font>
                                           <Font name="Cambria Bold" size="12.0" />
                                        </font>
@@ -437,14 +437,14 @@
                                     <Insets top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox prefHeight="40.0" prefWidth="523.0">
+                              <HBox>
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="Tên Xăng Dầu:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="Tên Xăng Dầu:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="cbb_tenxd" editable="true" onAction="#selectxd" prefHeight="40.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                                    <ComboBox fx:id="cbb_tenxd" editable="true" onAction="#selectxd" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -454,18 +454,26 @@
                                     <Insets bottom="10.0" top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="10.0" layoutY="10.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="Đơn giá:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="Đơn giá:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="cbb_dongia" onAction="#dongiaSelected" prefHeight="40.0" prefWidth="327.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+                                    <ComboBox fx:id="cbb_dongia" onAction="#dongiaSelected" prefHeight="30.0" prefWidth="188.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </ComboBox>
+                                    <Label fx:id="chungloai_lb11" prefHeight="30.0" prefWidth="145.0" text="(VND/Lit)">
+                                       <font>
+                                          <Font name="Cambria Bold Italic" size="11.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
                                  </children>
                                  <VBox.margin>
                                     <Insets />
@@ -490,9 +498,9 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <HBox fx:id="px_hbox" layoutX="10.0" layoutY="60.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox fx:id="px_hbox" layoutX="10.0" layoutY="60.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="Phái xuất:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="Phái xuất:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -500,7 +508,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="phaixuat" onKeyReleased="#px_kr" onMouseClicked="#px_clicked" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="phaixuat" onKeyReleased="#px_kr" onMouseClicked="#px_clicked" prefHeight="30.0" prefWidth="188.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -508,14 +516,22 @@
                                           <Font name="Cambria" size="18.0" />
                                        </font>
                                     </TextField>
+                                    <Label fx:id="chungloai_lb1" prefHeight="30.0" prefWidth="145.0" text="Lit 15 độ C">
+                                       <font>
+                                          <Font name="Cambria Bold Italic" size="11.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
                                  </children>
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="210.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="10.0" layoutY="210.0">
                                  <children>
-                                    <Label fx:id="tx_label" prefHeight="40.0" prefWidth="162.0" text="Thực xuất:">
+                                    <Label fx:id="tx_label" prefHeight="30.0" prefWidth="162.0" text="Thực xuất:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -523,7 +539,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="thucxuat" onKeyReleased="#tx_kr" onMouseClicked="#tx_clicked" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="thucxuat" onKeyReleased="#tx_kr" onMouseClicked="#tx_clicked" prefHeight="30.0" prefWidth="188.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -531,11 +547,19 @@
                                           <Font name="Cambria" size="18.0" />
                                        </font>
                                     </TextField>
+                                    <Label fx:id="chungloai_lb12" prefHeight="30.0" prefWidth="145.0" text="Lit 15 độ C">
+                                       <font>
+                                          <Font name="Cambria Bold Italic" size="11.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
                                  </children>
                               </HBox>
-                              <HBox fx:id="nl_km_hb" layoutX="45.0" layoutY="235.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox fx:id="nl_km_hb" layoutX="45.0" layoutY="235.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="N.liệu theo Km:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="N.liệu theo Km:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -543,7 +567,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="nl_km" disable="true" editable="false" onKeyReleased="#nl_km_kr" onMouseClicked="#nl_km_clicked" prefHeight="40.0" prefWidth="186.0">
+                                    <TextField fx:id="nl_km" disable="true" editable="false" onKeyReleased="#nl_km_kr" onMouseClicked="#nl_km_clicked" prefHeight="30.0" prefWidth="186.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -556,9 +580,9 @@
                                     <Insets top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox fx:id="nl_gio_hb" layoutX="45.0" layoutY="285.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox fx:id="nl_gio_hb" layoutX="45.0" layoutY="285.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="N.liệu theo Giờ:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="N.liệu theo Giờ:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -566,7 +590,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="nl_gio" disable="true" editable="false" onKeyReleased="#nl_gio_kr" onMouseClicked="#nlgio__clicked" prefHeight="40.0" prefWidth="185.0">
+                                    <TextField fx:id="nl_gio" disable="true" editable="false" onKeyReleased="#nl_gio_kr" onMouseClicked="#nlgio__clicked" prefHeight="30.0" prefWidth="185.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -574,19 +598,22 @@
                                           <Font name="Times New Roman" size="12.0" />
                                        </font>
                                     </TextField>
-                                    <Button mnemonicParsing="false" onAction="#cal_nl_gio" prefHeight="37.0" prefWidth="30.0" text="\@">
+                                    <Button mnemonicParsing="false" onAction="#cal_nl_gio" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 15;" text="\@">
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </Button>
                                  </children>
                                  <VBox.margin>
                                     <Insets top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="110.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="10.0" layoutY="110.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="Nhiệt độ thực tế:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="Nhiệt độ thực tế:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -594,7 +621,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="nhietdo" onKeyReleased="#nhietdo_kr" onMouseClicked="#nhietdo_clicked" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="nhietdo" onKeyReleased="#nhietdo_kr" onMouseClicked="#nhietdo_clicked" prefHeight="30.0" prefWidth="188.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -602,14 +629,22 @@
                                           <Font name="Cambria" size="18.0" />
                                        </font>
                                     </TextField>
+                                    <Label fx:id="chungloai_lb121" prefHeight="30.0" prefWidth="145.0" text="độ C">
+                                       <font>
+                                          <Font name="Cambria Bold Italic" size="11.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
                                  </children>
                                  <VBox.margin>
                                     <Insets bottom="10.0" top="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="160.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="10.0" layoutY="160.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="Hệ số VCF:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="Hệ số VCF:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -617,7 +652,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="vcf" onKeyReleased="#vcf_kr" onMouseClicked="#cvf_clicked" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="vcf" onKeyReleased="#vcf_kr" onMouseClicked="#cvf_clicked" prefHeight="30.0" prefWidth="188.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -630,9 +665,9 @@
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox layoutX="10.0" layoutY="210.0" prefHeight="40.0" prefWidth="523.0">
+                              <HBox layoutX="10.0" layoutY="210.0">
                                  <children>
-                                    <Label prefHeight="40.0" prefWidth="162.0" text="Tỷ trọng:">
+                                    <Label prefHeight="30.0" prefWidth="162.0" text="Tỷ trọng:">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -640,7 +675,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="tytrong" onKeyReleased="#tytrong_kr" onMouseClicked="#tytrong_clicked" prefHeight="40.0" prefWidth="327.0">
+                                    <TextField fx:id="tytrong" onKeyReleased="#tytrong_kr" onMouseClicked="#tytrong_clicked" prefHeight="30.0" prefWidth="188.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -655,7 +690,7 @@
                               </HBox>
                               <HBox alignment="BOTTOM_RIGHT" prefHeight="67.0" prefWidth="520.0">
                                  <children>
-                                    <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" prefHeight="41.0" prefWidth="101.0" style="-fx-background-color: #008000; -fx-background-radius: 10;" text="Thêm" textFill="WHITE">
+                                    <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" prefHeight="29.0" prefWidth="96.0" style="-fx-background-color: #008000; -fx-background-radius: 10;" text="Thêm" textFill="WHITE">
                                        <font>
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
@@ -686,7 +721,7 @@
                   </GridPane>
                </children>
             </HBox>
-            <VBox prefHeight="319.0" prefWidth="1172.0">
+            <VBox prefHeight="282.0" prefWidth="1172.0">
                <children>
                   <TableView fx:id="tbView" onMouseClicked="#selected_item" prefHeight="201.0" prefWidth="1152.0">
                     <columns>
@@ -714,9 +749,9 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </TableView>
-                  <HBox alignment="CENTER" prefHeight="133.0" prefWidth="1166.0">
+                  <HBox alignment="CENTER" prefHeight="66.0" prefWidth="1172.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#xuat" prefHeight="43.0" prefWidth="128.0" style="-fx-background-color: #002db3; -fx-background-radius: 10;" text="Xuất" textFill="WHITE" fx:id="xuatButton">
+                        <Button mnemonicParsing="false" onAction="#xuat" prefHeight="35.0" prefWidth="128.0" style="-fx-background-color: #002db3; -fx-background-radius: 10;" text="Xuất" textFill="WHITE" fx:id="xuatButton">
                            <HBox.margin>
                               <Insets right="25.0" />
                            </HBox.margin>
@@ -727,7 +762,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancel" prefHeight="43.0" prefWidth="126.0" style="-fx-background-color: #996633; -fx-background-radius: 10;" text="Hủy" textFill="WHITE">
+                        <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancel" prefHeight="35.0" prefWidth="126.0" style="-fx-background-color: #996633; -fx-background-radius: 10;" text="Hủy" textFill="WHITE">
                            <font>
                               <Font name="Cambria Bold" size="18.0" />
                            </font>

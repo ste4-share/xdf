@@ -14,7 +14,7 @@ public class LedgerDto {
     private Long ledger_id;
     private Long ledger_detail_id;
     private int bill_id;
-    private Long amount;
+    private double amount;
     private LocalDate from_date;
     private LocalDate end_date;
     private String status;
@@ -40,23 +40,23 @@ public class LedgerDto {
     private String ten_xd;
     private String chung_loai;
     private String chat_luong;
-    private int phai_xuat;
+    private double phai_xuat;
     private double nhiet_do_tt;
     private double ty_trong;
     private double he_so_vcf;
-    private int don_gia;
+    private double don_gia;
     private int loaixd_id;
     private int phuongtien_id;
-    private int thuc_xuat;
-    private int thuc_xuat_tk;
-    private int soluong;
-    private int thuc_nhap;
-    private int phai_nhap;
+    private double thuc_xuat;
+    private double thuc_xuat_tk;
+    private double soluong;
+    private double thuc_nhap;
+    private double phai_nhap;
     private int haohut_sl;
     private String loainv;
     private Long nl_gio;
     private Long nl_km;
-    private Long soluong_px;
+    private double soluong_px;
 
     private String soluongpx_str;
     private String soluong_str;
@@ -65,13 +65,13 @@ public class LedgerDto {
     private String thanhtien;
 
     public LedgerDto(Long ledger_id, Long ledger_detail_id, int bill_id,
-                     Long amount, LocalDate from_date, LocalDate end_date, String status,
+                     double amount, LocalDate from_date, LocalDate end_date, String status,
                      int so_km, String giohd_md, String giohd_tk,
                      int sl_tieuthu_md, int sl_tieuthu_tk, int dvi_nhan_id, int dvi_xuat_id,
                      String loai_phieu, String dvi_nhan, String dvi_xuat, String loaigiobay, String nguoi_nhan, String so_xe, String lenh_so, String nhiemvu, int nhiemvu_id,
-                     int tcn_id, String ma_xd, String ten_xd, String chung_loai, String chat_luong, int phai_xuat, double nhiet_do_tt, double ty_trong,
-                     double he_so_vcf, int don_gia, int loaixd_id, int phuongtien_id, int thuc_xuat, int thuc_xuat_tk,
-                     int soluong, int thuc_nhap, int phai_nhap, int haohut_sl, String loainv, Long nl_gio, Long nl_km, Long soluong_px) {
+                     int tcn_id, String ma_xd, String ten_xd, String chung_loai, String chat_luong, double phai_xuat, double nhiet_do_tt, double ty_trong,
+                     double he_so_vcf, double don_gia, int loaixd_id, int phuongtien_id, double thuc_xuat, double thuc_xuat_tk,
+                     double soluong, double thuc_nhap, double phai_nhap, int haohut_sl, String loainv, Long nl_gio, Long nl_km, double soluong_px) {
         this.ledger_id = ledger_id;
         this.ledger_detail_id = ledger_detail_id;
         this.bill_id = bill_id;

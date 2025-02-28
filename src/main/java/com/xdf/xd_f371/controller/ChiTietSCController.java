@@ -125,7 +125,7 @@ public class ChiTietSCController implements Initializable {
             addNewRow(sheet);
         }
         int row_num = 12;
-        Long thanh_tien = 0L;
+        double thanh_tien = 0;
         for (int i = 0; i< ls.size(); i++) {
             setCEll(sheet, String.valueOf(i+1), row_num,1,isNew);
             setCEll(sheet, ls.get(i).getMa_xd(), row_num,2,isNew);
@@ -139,7 +139,7 @@ public class ChiTietSCController implements Initializable {
             setCEll(sheet, String.valueOf(ls.get(i).getDon_gia()), row_num,10,isNew);
             setCEll(sheet, String.valueOf(ls.get(i).getSoluong()*ls.get(i).getDon_gia()), row_num,11,isNew);
             row_num = row_num+1;
-            thanh_tien = thanh_tien + ((long) ls.get(i).getDon_gia() * ls.get(i).getSoluong());
+            thanh_tien = thanh_tien + ((double) ls.get(i).getDon_gia() * ls.get(i).getSoluong());
             if (i == ls.size() - 1){
                 setCEll(sheet,String.valueOf(ls.get(0).getAmount()), 14+ls.size(),11,isNew);
             }

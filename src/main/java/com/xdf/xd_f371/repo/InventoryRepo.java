@@ -41,7 +41,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "left join (select loaixd_id,don_gia as price, sum(xuat_nvdx+xuat_sscd) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
             "where status like 'ACTIVE' and dvi_xuat_id=:dvi_id and loai_phieu like 'XUAT' and don_gia=:gia group by 1,2) XUAT_fb on lxd.id=XUAT_fb.loaixd_id\n" +
             "where lxd.id=:lxd_id",nativeQuery = true)
-    List<Object[]> findPreInventoryPriceAndUnit(@Param("lxd_id") int lxd_id,@Param("gia") int gia,@Param("dvi_id") int dvi_id);
+    List<Object[]> findPreInventoryPriceAndUnit(@Param("lxd_id") int lxd_id,@Param("gia") double gia,@Param("dvi_id") int dvi_id);
     @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +
             "case when tdk_nvdx is null then 0 else tdk_nvdx end,\n" +
             "case when tdk_sscd is null then 0 else tdk_sscd end,\n" +

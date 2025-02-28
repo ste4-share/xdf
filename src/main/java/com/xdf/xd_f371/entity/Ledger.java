@@ -24,7 +24,7 @@ public class Ledger {
     @Min(1)
     private int bill_id;
     @Column(name = "amount")
-    private Long amount;
+    private Double amount;
     @Column(name = "from_date")
     private LocalDate from_date;
     @Column(name = "end_date")

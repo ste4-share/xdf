@@ -25,9 +25,8 @@ import java.util.function.Function;
 @Component
 public class ChangingController implements Initializable {
     public static Stage addAff_stage;
-    public static int sum = 0;
-    public static Long quantity =0L;
-    public static int quantity_convert =0;
+    public static double quantity =0;
+    public static double quantity_convert =0;
     private static TonkhoDto tonkho_selected;
     private static List<PriceAndQuantityDto> sscd_ls_buf = new ArrayList<>();
     private static List<PriceAndQuantityDto> nvdx_ls_buf = new ArrayList<>();
@@ -129,14 +128,14 @@ public class ChangingController implements Initializable {
         col2.setCellValueFactory(new PropertyValueFactory<PriceAndQuantityDto, String>("quantity_str"));
     }
     private List<PriceAndQuantityDto> setDataToTable(TableView<PriceAndQuantityDto> tb,List<InventoryDto> list,
-                                                     Function<InventoryDto,Long> toStr1,Function<InventoryDto,Long> toStr2){
+                                                     Function<InventoryDto,Double> toStr1,Function<InventoryDto,Double> toStr2){
         List<PriceAndQuantityDto> result = new ArrayList<>();
         if (!list.isEmpty()) {
             for (InventoryDto inventory : list) {
-                Long quantity = toStr1.apply(inventory)-toStr2.apply(inventory);
-                int pri = inventory.getDon_gia();
+                double quantity = toStr1.apply(inventory)-toStr2.apply(inventory);
+                double pri = inventory.getDon_gia();
                 if (quantity>0) {
-                    result.add(new PriceAndQuantityDto(Integer.parseInt(String.valueOf(pri)),quantity));
+                    result.add(new PriceAndQuantityDto(Double.parseDouble(String.valueOf(pri)),quantity));
                 }
             }
         }

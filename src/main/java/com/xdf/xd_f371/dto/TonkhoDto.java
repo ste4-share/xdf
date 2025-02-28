@@ -12,14 +12,14 @@ public class TonkhoDto {
     private String maxd;
     private String tenxd;
     private String loai;
-    private long tdk_nvdx;
-    private long tdk_sscd;
-    private Long nhap_nvdx;
-    private Long xuat_nvdx;
-    private Long nvdx;
-    private Long nhap_sscd;
-    private Long xuat_sscd;
-    private Long sscd;
+    private double tdk_nvdx;
+    private double tdk_sscd;
+    private double nhap_nvdx;
+    private double xuat_nvdx;
+    private double nvdx;
+    private double nhap_sscd;
+    private double xuat_sscd;
+    private double sscd;
 
     private String tdk_nvdx_str;
     private String tdk_sscd_str;
@@ -38,7 +38,7 @@ public class TonkhoDto {
     private String sscd_str;
     private String total;
 
-    public TonkhoDto(int petro_id, String maxd, String tenxd, String loai, long tdk_nvdx, long tdk_sscd,
+    public TonkhoDto(int petro_id, String maxd, String tenxd, String loai, double tdk_nvdx, double tdk_sscd,
                      String nhap_nvdx, String xuat_nvdx, String nvdx, String nhap_sscd, String xuat_sscd, String sscd) {
         this.petro_id = petro_id;
         this.maxd = maxd;
@@ -46,12 +46,12 @@ public class TonkhoDto {
         this.loai = loai;
         this.tdk_nvdx = tdk_nvdx;
         this.tdk_sscd = tdk_sscd;
-        this.nhap_nvdx = Long.parseLong(nhap_nvdx);
-        this.xuat_nvdx = Long.parseLong(xuat_nvdx);
-        this.nvdx = Long.parseLong(nvdx);
-        this.nhap_sscd = Long.parseLong(nhap_sscd);
-        this.xuat_sscd = Long.parseLong(xuat_sscd);
-        this.sscd = Long.parseLong(sscd);
+        this.nhap_nvdx = Double.parseDouble(nhap_nvdx);
+        this.xuat_nvdx = Double.parseDouble(xuat_nvdx);
+        this.nvdx = Double.parseDouble(nvdx);
+        this.nhap_sscd = Double.parseDouble(nhap_sscd);
+        this.xuat_sscd = Double.parseDouble(xuat_sscd);
+        this.sscd = Double.parseDouble(sscd);
         this.tdk_nvdx_str = TextToNumber.textToNum(String.valueOf(tdk_nvdx));
         this.tdk_sscd_str = TextToNumber.textToNum(String.valueOf(tdk_sscd));
         this.tdk_total = TextToNumber.textToNum(String.valueOf(tdk_sscd+tdk_nvdx));
@@ -61,9 +61,9 @@ public class TonkhoDto {
         this.nhap_sscd_str = TextToNumber.textToNum(nhap_sscd);
         this.xuat_sscd_str = TextToNumber.textToNum(xuat_sscd);
         this.sscd_str = TextToNumber.textToNum(sscd);
-        this.tck_nvdx_str = TextToNumber.textToNum(String.valueOf(tdk_nvdx+Long.parseLong(nvdx)));
-        this.tck_sscd_str = TextToNumber.textToNum(String.valueOf(tdk_sscd+Long.parseLong(sscd)));
-        this.tck_total = TextToNumber.textToNum(String.valueOf(tdk_nvdx+Long.parseLong(nvdx)+tdk_sscd+Long.parseLong(sscd)));
+        this.tck_nvdx_str = TextToNumber.textToNum(String.valueOf(tdk_nvdx+Double.parseDouble(nvdx)));
+        this.tck_sscd_str = TextToNumber.textToNum(String.valueOf(tdk_sscd+Double.parseDouble(sscd)));
+        this.tck_total = TextToNumber.textToNum(String.valueOf(tdk_nvdx+Double.parseDouble(nvdx)+tdk_sscd+Double.parseDouble(sscd)));
     }
 
     public TonkhoDto() {

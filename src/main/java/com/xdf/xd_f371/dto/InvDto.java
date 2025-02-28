@@ -12,15 +12,15 @@ public class InvDto {
     private String maxd;
     private String tenxd;
     private int petroleum_type_id;
-    private int don_gia;
-    private int nhap_nvdx;
-    private int nhap_sscd;
-    private int xuat_nvdx;
-    private int xuat_sscd;
+    private double don_gia;
+    private double nhap_nvdx;
+    private double nhap_sscd;
+    private double xuat_nvdx;
+    private double xuat_sscd;
     private LocalDate sd;
     private LocalDate ed;
 
-    public InvDto(int petro_id, String maxd, String tenxd, int petroleum_type_id, int don_gia, int nhap_nvdx, int nhap_sscd, int xuat_nvdx, int xuat_sscd,LocalDate sd,LocalDate ed) {
+    public InvDto(int petro_id, String maxd, String tenxd, int petroleum_type_id, double don_gia, double nhap_nvdx, double nhap_sscd, double xuat_nvdx, double xuat_sscd,LocalDate sd,LocalDate ed) {
         this.petro_id = petro_id;
         this.maxd = maxd;
         this.tenxd = tenxd;
@@ -34,7 +34,7 @@ public class InvDto {
         this.ed = ed;
     }
 
-    public InvDto(int petro_id, int don_gia, int nhap_nvdx, int nhap_sscd, int xuat_nvdx, int xuat_sscd, LocalDate sd, LocalDate ed) {
+    public InvDto(int petro_id, double don_gia, double nhap_nvdx, double nhap_sscd, double xuat_nvdx, double xuat_sscd, LocalDate sd, LocalDate ed) {
         this.petro_id = petro_id;
         this.don_gia = don_gia;
         this.nhap_nvdx = nhap_nvdx;

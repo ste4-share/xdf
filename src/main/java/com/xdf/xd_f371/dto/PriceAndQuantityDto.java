@@ -7,12 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PriceAndQuantityDto {
-    private int price;
-    private Long quantity;
+    private double price;
+    private double quantity;
     private String price_str;
     private String quantity_str;
 
-    public PriceAndQuantityDto(int price, Long quantity) {
+    public PriceAndQuantityDto(double price, double quantity) {
         this.price = price;
         this.quantity = quantity;
         this.price_str = TextToNumber.textToNum(String.valueOf(price));

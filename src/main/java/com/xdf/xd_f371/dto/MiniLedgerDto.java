@@ -23,12 +23,12 @@ public class MiniLedgerDto {
     private String timestamp_str;
     private Long count;
     private String count_str;
-    private Long tong;
+    private double tong;
     private String tong_str;
     private String nhiemvu;
     private String username;
 
-    public MiniLedgerDto(Long id, int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDate timestamp, String nhiemvu, String username, Long count, Long tong) {
+    public MiniLedgerDto(Long id, int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDate timestamp, String nhiemvu, String username, Long count, double tong) {
         this.id = id;
         this.so = so;
         this.so_str = String.valueOf(so);

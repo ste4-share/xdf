@@ -11,19 +11,19 @@ public class DinhMucPhuongTienDto {
     private int dm_id;
     private int phuongtien_id;
     private int loaiphuongtien_id;
-    private int dm_md_gio;
-    private int dm_tk_gio;
-    private int dm_xm_gio;
-    private int dm_xm_km;
+    private double dm_md_gio;
+    private double dm_tk_gio;
+    private double dm_xm_gio;
+    private double dm_xm_km;
     private String nameDv;
     private String name_pt;
-    private int quantity;
+    private double quantity;
     private String typeName;
     private String type;
     private int nnx_id;
 
-    public DinhMucPhuongTienDto(int dm_id, int phuongtien_id, int loaiphuongtien_id, int dm_md_gio,
-                                int dm_tk_gio, int dm_xm_gio, int dm_xm_km, String nameDv, String name_pt, int quantity, String typeName, String type) {
+    public DinhMucPhuongTienDto(int dm_id, int phuongtien_id, int loaiphuongtien_id, double dm_md_gio,
+                                double dm_tk_gio, double dm_xm_gio, double dm_xm_km, String nameDv, String name_pt, double quantity, String typeName, String type) {
         this.dm_id = dm_id;
         this.phuongtien_id = phuongtien_id;
         this.loaiphuongtien_id = loaiphuongtien_id;

@@ -270,7 +270,7 @@
                                     <Cursor fx:constant="TEXT" />
                                  </cursor>
                               </TextField>
-                              <Label prefHeight="38.0" prefWidth="92.0" text="(VND / lit)">
+                              <Label fx:id="text_dongia" prefHeight="38.0" prefWidth="148.0" text="0 (VND/Lit)">
                                  <font>
                                     <Font name="Cambria Bold" size="13.0" />
                                  </font>
@@ -297,7 +297,7 @@
                                  <cursor>
                                     <Cursor fx:constant="TEXT" />
                                  </cursor></TextField>
-                              <Label focusTraversable="false" prefHeight="38.0" prefWidth="87.0" text="lit t độ C">
+                              <Label fx:id="text_phainhap" focusTraversable="false" prefHeight="38.0" prefWidth="150.0" text="lit 15 độ C">
                                  <font>
                                     <Font name="Cambria Bold" size="13.0" />
                                  </font>
@@ -324,7 +324,7 @@
                                  <cursor>
                                     <Cursor fx:constant="TEXT" />
                                  </cursor></TextField>
-                              <Label prefHeight="38.0" prefWidth="91.0" text="lit 15 độ C">
+                              <Label fx:id="text_thucnhap" prefHeight="38.0" prefWidth="146.0" text="lit 15 độ C">
                                  <font>
                                     <Font name="Cambria Bold" size="13.0" />
                                  </font>
@@ -405,7 +405,7 @@
                </font></Label>
             <Separator layoutX="16.0" layoutY="49.0" prefHeight="12.0" prefWidth="496.0" />
             <Separator layoutX="581.0" layoutY="50.0" prefHeight="12.0" prefWidth="561.0" />
-            <Button id="addbtn" fx:id="addbtn" layoutX="1028.0" layoutY="556.0" mnemonicParsing="false" onAction="#btnInsert" prefHeight="38.0" prefWidth="116.0" style="-fx-background-color: #027a20; -fx-background-radius: 10;" text="Thêm mới" textFill="WHITE">
+            <Button id="addbtn" fx:id="addbtn" layoutX="1040.0" layoutY="562.0" mnemonicParsing="false" onAction="#btnInsert" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #027a20; -fx-background-radius: 10;" text="Thêm mới" textFill="WHITE">
                <font>
                   <Font name="Cambria Bold" size="17.0" />
                </font>

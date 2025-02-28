@@ -44,41 +44,41 @@ public class InventoryService {
     public List<TonkhoDto> mapToTonkhoDto(List<Object[]> results) {
         return results.stream()
                 .map(row -> new TonkhoDto((int) row[0], (String) row[1], (String) row[2], (String) row[3],
-                        ((BigDecimal) row[4]).longValue(), ((BigDecimal) row[5]).longValue(),  row[6].toString(),
+                        ((BigDecimal) row[4]).doubleValue(), ((BigDecimal) row[5]).doubleValue(),  row[6].toString(),
                          row[7].toString(), row[8].toString(), row[9].toString(), row[10].toString(), row[11].toString()))
                 .collect(Collectors.toList());
     }
     public List<InvDto2> mapPreInvWithPrice(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InvDto2((int) row[0],(int) row[2],(String) row[1],((BigDecimal) row[3]).longValue()))
+                .map(row -> new InvDto2((int) row[0],(double) row[2],(String) row[1],(double) row[3]))
                 .collect(Collectors.toList());
     }
     public InvDto2 mapPreInvenPrice(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InvDto2((int) row[0],(int) row[2],(String) row[1],((BigDecimal) row[3]).longValue()))
+                .map(row -> new InvDto2((int) row[0],(double) row[2],(String) row[1],(double) row[3]))
                 .toList().get(0);
     }
     public InvDto2 mapPreInven(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InvDto2((int) row[0],(String) row[1],(String) row[2],((BigDecimal) row[3]).longValue()))
+                .map(row -> new InvDto2((int) row[0],(String) row[1],(String) row[2],(double) row[3]))
                 .toList().get(0);
     }
     public List<InventoryDto> mapPreInventoryPetro(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InventoryDto((int) row[0],(Long) row[1],(int) row[2],((BigDecimal) row[3]).longValue(),
-                        ((BigDecimal) row[4]).longValue(),((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue()))
+                .map(row -> new InventoryDto((int) row[0],(Long) row[1],(double) row[2],(double) row[3],
+                        (double) row[4],(double) row[5],(double) row[6]))
                 .toList();
     }
     public List<PttkDto> mapPttkPetro() {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> pttk = reportDAO.findByWhatEver(SubQuery.bc_pttk_q());
         return pttk.stream()
-                .map(row -> new PttkDto((String) row[1],(String) row[2],((BigDecimal) row[3]).longValue(),((BigDecimal) row[4]).longValue(),
-                        ((BigDecimal) row[5]).longValue(),((BigDecimal) row[6]).longValue(),((BigDecimal) row[7]).longValue(),((BigDecimal) row[8]).longValue(),((BigDecimal) row[9]).longValue(),
-                        ((BigDecimal) row[10]).longValue(),((BigDecimal) row[11]).longValue()))
+                .map(row -> new PttkDto((String) row[1],(String) row[2],(double) row[3],(double) row[4],
+                        (double) row[5],(double) row[6],(double) row[7],(double) row[8],(double) row[9],
+                        (double) row[10],(double) row[11]))
                 .toList();
     }
-    public InvDto2 getPreInvPriceAndUnit(int petro_id,int dongia,int unit_id){
+    public InvDto2 getPreInvPriceAndUnit(int petro_id,double dongia,int unit_id){
         if (!inventoryRepo.findPreInventoryPriceAndUnit(petro_id,dongia,unit_id).isEmpty()){
             return mapPreInvenPrice(inventoryRepo.findPreInventoryPriceAndUnit(petro_id,dongia,unit_id));
         }
@@ -109,8 +109,8 @@ public class InventoryService {
             Date e = (Date) x[7];
             LocalDate se = (s==null) ? null : s.toLocalDate();
             LocalDate ee = (e==null) ? null : e.toLocalDate();
-            list.add(new InvDto((int) x[0],(int) x[1],((BigDecimal) x[2]).intValue(),((BigDecimal) x[3]).intValue(),
-                    ((BigDecimal) x[4]).intValue(),((BigDecimal) x[5]).intValue(),se, ee));
+            list.add(new InvDto((int) x[0],(double) x[1],(double) x[2],(double) x[3],
+                    (double) x[4],(double) x[5],se, ee));
         });
         return list;
     }

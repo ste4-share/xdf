@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class InvDto3 {
     private int xd_id;
-    private int gia;
+    private double gia;
     private String loai;
     private String tenxd;
     private String tt_sscd;
