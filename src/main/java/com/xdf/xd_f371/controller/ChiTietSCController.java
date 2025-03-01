@@ -20,17 +20,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -146,7 +140,6 @@ public class ChiTietSCController implements Initializable {
         }
         return 1;
     }
-
     private void addNewRow(XSSFSheet sheet){
         if (sheet.getPhysicalNumberOfRows() > 0) {
             int lastRow = sheet.getLastRowNum();
@@ -156,7 +149,6 @@ public class ChiTietSCController implements Initializable {
             System.out.println("The sheet is empty.");
         }
     }
-
     private void setCEll(XSSFSheet sheet, String value, int row_num, int cell_num,boolean isNew){
         if (!isNew){
             XSSFRow row = sheet.getRow(row_num);

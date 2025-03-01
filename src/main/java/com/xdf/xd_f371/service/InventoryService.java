@@ -42,11 +42,12 @@ public class InventoryService {
         return mapToTonkhoDto(inventoryRepo.getAllTonkho(sd,ed));
     }
     public List<TonkhoDto> mapToTonkhoDto(List<Object[]> results) {
-        return results.stream()
-                .map(row -> new TonkhoDto((int) row[0], (String) row[1], (String) row[2], (String) row[3],
-                        ((BigDecimal) row[4]).doubleValue(), ((BigDecimal) row[5]).doubleValue(),  row[6].toString(),
-                         row[7].toString(), row[8].toString(), row[9].toString(), row[10].toString(), row[11].toString()))
-                .collect(Collectors.toList());
+        List<TonkhoDto> ls = new ArrayList<>();
+        for (Object[] row : results) {
+            ls.add(new TonkhoDto((int) row[0], (String) row[1], (String) row[2], (String) row[3],
+                    (double) row[4],(double) row[5],  row[6].toString(),
+                    row[7].toString(), row[8].toString(), row[9].toString(), row[10].toString(), row[11].toString()));
+        }return ls;
     }
     public List<InvDto2> mapPreInvWithPrice(List<Object[]> results) {
         return results.stream()

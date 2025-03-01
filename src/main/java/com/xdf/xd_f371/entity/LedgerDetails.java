@@ -75,13 +75,13 @@ public class LedgerDetails {
     @Positive
     private double soluong_px;
     @Column(name = "nhap_nvdx")
-    private double nhap_nvdx = 0L;
+    private double nhap_nvdx = 0;
     @Column(name = "nhap_sscd")
-    private double nhap_sscd = 0L;
+    private double nhap_sscd = 0;
     @Column(name = "xuat_nvdx")
-    private double xuat_nvdx = 0L;
+    private double xuat_nvdx = 0;
     @Column(name = "xuat_sscd")
-    private double xuat_sscd = 0L;
+    private double xuat_sscd = 0;
 
     @Transient
     private String thanhtien_str;

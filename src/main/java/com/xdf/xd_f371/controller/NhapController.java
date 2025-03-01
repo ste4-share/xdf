@@ -117,12 +117,10 @@ public class NhapController extends CommonFactory implements Initializable {
         setNguonnxCombobox(cmb_dvvc, nguonNxService.findByStatusUnlessTructhuoc());
         cmb_dvvc.getSelectionModel().selectFirst();
     }
-
     private void setDvnCombobox() {
         setNguonnxCombobox(cmb_dvn, nguonNxService.findByAllBy());
         cmb_dvn.getSelectionModel().selectFirst();
     }
-
     private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd){
         double tn = thucNhap.getText().isEmpty() ? 0 : Double.parseDouble(thucNhap.getText());
         double pn = phaiNhap.getText().isEmpty() ? 0 : Double.parseDouble(phaiNhap.getText());
@@ -143,7 +141,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setSoluong(tn);
         ledgerDetails.setThanhtien(tn * p);
         ledgerDetails.setSoluong_px(pn);
-        ledgerDetails.setThanhtien_str(TextToNumber.textToNum_2digits(String.valueOf(ledgerDetails.getThanhtien())));
+        ledgerDetails.setThanhtien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanhtien())));
         ledgerDetails.setThucnhap_str(TextToNumber.textToNum_2digits(String.valueOf(tn)));
         ledgerDetails.setPhainhap_str(TextToNumber.textToNum_2digits(String.valueOf(pn)));
         ledgerDetails.setDongia_str(TextToNumber.textToNum(String.valueOf(p)));
@@ -287,7 +285,7 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     private void setTonKhoLabel(double i){
         inventory_quantity = i;
-        lb_tontheoxd.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(inventory_quantity)) +" (Lit)");
+        lb_tontheoxd.setText("Số lượng tồn: "+ TextToNumber.textToNum_2digits(String.valueOf(inventory_quantity)) +" (Lit)");
     }
     @FXML
     public void changedItemLoaiXd(ActionEvent actionEvent) {
@@ -361,7 +359,7 @@ public class NhapController extends CommonFactory implements Initializable {
         thucNhap.setText(phaiNhap.getText());
         try {
             if (!phaiNhap.getText().isEmpty()){
-                text_phainhap.setText(TextToNumber.textToNum(phaiNhap.getText()) + " lit 15 độ C");
+                text_phainhap.setText(TextToNumber.textToNum_2digits(phaiNhap.getText()) + " lit 15 độ C");
             }else{
                 text_phainhap.setText("0 (Lit)");
             }
@@ -374,7 +372,7 @@ public class NhapController extends CommonFactory implements Initializable {
         validateToSettingStyle(thucNhap);
         try {
             if (!thucNhap.getText().isEmpty()){
-                text_thucnhap.setText(TextToNumber.textToNum(thucNhap.getText()) + " lit 15 độ C");
+                text_thucnhap.setText(TextToNumber.textToNum_2digits(thucNhap.getText()) + " lit 15 độ C");
             }else{
                 text_thucnhap.setText("0 (Lit)");
             }

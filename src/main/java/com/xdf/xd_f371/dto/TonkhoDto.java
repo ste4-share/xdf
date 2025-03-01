@@ -4,6 +4,8 @@ import com.xdf.xd_f371.util.TextToNumber;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -44,26 +46,26 @@ public class TonkhoDto {
         this.maxd = maxd;
         this.tenxd = tenxd;
         this.loai = loai;
-        this.tdk_nvdx = tdk_nvdx;
-        this.tdk_sscd = tdk_sscd;
+        this.tdk_nvdx = Double.parseDouble(String.valueOf(tdk_nvdx));
+        this.tdk_sscd = Double.parseDouble(String.valueOf(tdk_sscd));
         this.nhap_nvdx = Double.parseDouble(nhap_nvdx);
         this.xuat_nvdx = Double.parseDouble(xuat_nvdx);
         this.nvdx = Double.parseDouble(nvdx);
         this.nhap_sscd = Double.parseDouble(nhap_sscd);
         this.xuat_sscd = Double.parseDouble(xuat_sscd);
         this.sscd = Double.parseDouble(sscd);
-        this.tdk_nvdx_str = TextToNumber.textToNum(String.valueOf(tdk_nvdx));
-        this.tdk_sscd_str = TextToNumber.textToNum(String.valueOf(tdk_sscd));
-        this.tdk_total = TextToNumber.textToNum(String.valueOf(tdk_sscd+tdk_nvdx));
-        this.nhap_nvdx_str = TextToNumber.textToNum(nhap_nvdx);
-        this.xuat_nvdx_str = TextToNumber.textToNum(xuat_nvdx);
-        this.nvdx_str = TextToNumber.textToNum(nvdx);
-        this.nhap_sscd_str = TextToNumber.textToNum(nhap_sscd);
-        this.xuat_sscd_str = TextToNumber.textToNum(xuat_sscd);
-        this.sscd_str = TextToNumber.textToNum(sscd);
-        this.tck_nvdx_str = TextToNumber.textToNum(String.valueOf(tdk_nvdx+Double.parseDouble(nvdx)));
-        this.tck_sscd_str = TextToNumber.textToNum(String.valueOf(tdk_sscd+Double.parseDouble(sscd)));
-        this.tck_total = TextToNumber.textToNum(String.valueOf(tdk_nvdx+Double.parseDouble(nvdx)+tdk_sscd+Double.parseDouble(sscd)));
+        this.tdk_nvdx_str = TextToNumber.textToNum_2digits(String.valueOf(tdk_nvdx));
+        this.tdk_sscd_str = TextToNumber.textToNum_2digits(String.valueOf(tdk_sscd));
+        this.tdk_total = TextToNumber.textToNum_2digits(String.valueOf(this.tdk_sscd+this.tdk_nvdx));
+        this.nhap_nvdx_str = TextToNumber.textToNum_2digits(nhap_nvdx);
+        this.xuat_nvdx_str = TextToNumber.textToNum_2digits(xuat_nvdx);
+        this.nvdx_str = TextToNumber.textToNum_2digits(nvdx);
+        this.nhap_sscd_str = TextToNumber.textToNum_2digits(nhap_sscd);
+        this.xuat_sscd_str = TextToNumber.textToNum_2digits(xuat_sscd);
+        this.sscd_str = TextToNumber.textToNum_2digits(sscd);
+        this.tck_nvdx_str = TextToNumber.textToNum_2digits(String.valueOf(this.tdk_nvdx+Double.parseDouble(nvdx)));
+        this.tck_sscd_str = TextToNumber.textToNum_2digits(String.valueOf(this.tdk_sscd+Double.parseDouble(sscd)));
+        this.tck_total = TextToNumber.textToNum_2digits(String.valueOf(this.tdk_nvdx+Double.parseDouble(nvdx)+this.tdk_sscd+Double.parseDouble(sscd)));
     }
 
     public TonkhoDto() {

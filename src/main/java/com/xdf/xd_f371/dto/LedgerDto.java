@@ -118,10 +118,10 @@ public class LedgerDto {
         this.nl_km = nl_km;
         this.soluong_px = soluong_px;
 
-        soluongpx_str = TextToNumber.textToNum(String.valueOf(soluong_px));
-        soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
-        dongia_str = TextToNumber.textToNum(String.valueOf(don_gia));
-        amount_str = TextToNumber.textToNum(String.valueOf(amount));
-        thanhtien = TextToNumber.textToNum(String.valueOf(((long) soluong*don_gia)));
+        soluongpx_str = TextToNumber.textToNum_2digits(String.valueOf(soluong_px));
+        soluong_str = TextToNumber.textToNum_2digits(String.valueOf(soluong));
+        dongia_str = TextToNumber.textToNum_2digits(String.valueOf(don_gia));
+        amount_str = TextToNumber.textToNum_2digits(String.valueOf(amount));
+        thanhtien = TextToNumber.textToNum(String.valueOf((soluong*don_gia)));
     }
 }
