@@ -23,15 +23,15 @@ public class PttkDto {
     public PttkDto(String loai, String tenxd, double e916, double e921, double e923, double e927, double dnb, double dka, double dvi, double dns, double fb) {
         this.loai = loai;
         this.tenxd = tenxd;
-        this.e916 = TextToNumber.textToNum(String.valueOf(e916));
-        this.e921 = TextToNumber.textToNum(String.valueOf(e921));
-        this.e923 = TextToNumber.textToNum(String.valueOf(e923));
-        this.e927 = TextToNumber.textToNum(String.valueOf(e927));
-        this.dnb = TextToNumber.textToNum(String.valueOf(dnb));
-        this.dka = TextToNumber.textToNum(String.valueOf(dka));
-        this.dvi = TextToNumber.textToNum(String.valueOf(dvi));
-        this.dns = TextToNumber.textToNum(String.valueOf(dns));
-        this.fb = TextToNumber.textToNum(String.valueOf(fb));
-        this.tdv = TextToNumber.textToNum(String.valueOf((e916+e921+e923+e927+dnb+dka+dvi+dns+fb)));
+        this.e916 = TextToNumber.textToNum_2digits(e916);
+        this.e921 = TextToNumber.textToNum_2digits(e921);
+        this.e923 = TextToNumber.textToNum_2digits(e923);
+        this.e927 = TextToNumber.textToNum_2digits(e927);
+        this.dnb = TextToNumber.textToNum_2digits(dnb);
+        this.dka = TextToNumber.textToNum_2digits(dka);
+        this.dvi = TextToNumber.textToNum_2digits(dvi);
+        this.dns = TextToNumber.textToNum_2digits(dns);
+        this.fb = TextToNumber.textToNum_2digits(fb);
+        this.tdv = TextToNumber.textToNum_2digits(e916+e921+e923+e927+dnb+dka+dvi+dns+fb);
     }
 }

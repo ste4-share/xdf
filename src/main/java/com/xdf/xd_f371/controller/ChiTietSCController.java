@@ -133,7 +133,7 @@ public class ChiTietSCController implements Initializable {
             setCEll(sheet, String.valueOf(ls.get(i).getDon_gia()), row_num,10,isNew);
             setCEll(sheet, String.valueOf(ls.get(i).getSoluong()*ls.get(i).getDon_gia()), row_num,11,isNew);
             row_num = row_num+1;
-            thanh_tien = thanh_tien + ((double) ls.get(i).getDon_gia() * ls.get(i).getSoluong());
+            thanh_tien = thanh_tien + (ls.get(i).getDon_gia() * ls.get(i).getSoluong());
             if (i == ls.size() - 1){
                 setCEll(sheet,String.valueOf(ls.get(0).getAmount()), 14+ls.size(),11,isNew);
             }
@@ -171,7 +171,7 @@ public class ChiTietSCController implements Initializable {
         fct_stt.setSortable(false);
         fct_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tbChiTiet.getItems().indexOf(column.getValue())+1).asString());
         fct_tenxd.setCellValueFactory(new PropertyValueFactory<LedgerDto, String>("ten_xd"));
-        fct_dongia.setCellValueFactory(new PropertyValueFactory<LedgerDto, String>("don_gia"));
+        fct_dongia.setCellValueFactory(new PropertyValueFactory<LedgerDto, String>("dongia_str"));
         fct_phaixuat.setCellValueFactory(new PropertyValueFactory<LedgerDto, String>("soluongpx_str"));
         fct_thucxuat.setCellValueFactory(new PropertyValueFactory<LedgerDto, String>("soluong_str"));
         fct_nhietdo.setCellValueFactory(new PropertyValueFactory<LedgerDto, String>("nhiet_do_tt"));

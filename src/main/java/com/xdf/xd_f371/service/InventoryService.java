@@ -45,8 +45,7 @@ public class InventoryService {
         List<TonkhoDto> ls = new ArrayList<>();
         for (Object[] row : results) {
             ls.add(new TonkhoDto((int) row[0], (String) row[1], (String) row[2], (String) row[3],
-                    (double) row[4],(double) row[5],  row[6].toString(),
-                    row[7].toString(), row[8].toString(), row[9].toString(), row[10].toString(), row[11].toString()));
+                    (double) row[4],(double) row[5], (double) row[6],(double) row[7],(double) row[8],(double) row[9],(double) row[10],(double) row[11]));
         }return ls;
     }
     public List<InvDto2> mapPreInvWithPrice(List<Object[]> results) {

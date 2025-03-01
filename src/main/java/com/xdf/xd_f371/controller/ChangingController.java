@@ -135,7 +135,7 @@ public class ChangingController implements Initializable {
                 double quantity = toStr1.apply(inventory)-toStr2.apply(inventory);
                 double pri = inventory.getDon_gia();
                 if (quantity>0) {
-                    result.add(new PriceAndQuantityDto(Double.parseDouble(String.valueOf(pri)),quantity));
+                    result.add(new PriceAndQuantityDto(pri,quantity));
                 }
             }
         }

@@ -66,11 +66,11 @@ public class LichsuXNK {
         this.dvx = dvx;
         this.chungloaixd = chungloaixd;
         this.sd = sd;
-        this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
-        this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
-        this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
+        this.tonsau_str = TextToNumber.textToNum_2digits(tonsau);
+        this.soluong_str = TextToNumber.textToNum_2digits(soluong);
+        this.gia_str = TextToNumber.textToNum_2digits(mucgia);
     }
-    public LichsuXNK(String ten_xd, String loai_phieu, Long tontruoc, int soluong, Long tonsau, int mucgia, String type, int so,
+    public LichsuXNK(String ten_xd, String loai_phieu, double tontruoc, double soluong, double tonsau, double mucgia, String type, int so,
                      String dvn, String dvx, String chungloaixd, LocalDateTime createTime, LocalDate sd) {
         this.ten_xd = ten_xd;
         this.loai_phieu = loai_phieu;
@@ -85,9 +85,9 @@ public class LichsuXNK {
         this.sd = sd;
         this.createTime = createTime;
         this.createtime_str = (createTime == null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
-        this.tonsau_str = TextToNumber.textToNum(String.valueOf(tonsau));
-        this.soluong_str = TextToNumber.textToNum(String.valueOf(soluong));
-        this.gia_str = TextToNumber.textToNum(String.valueOf(mucgia));
+        this.tonsau_str = TextToNumber.textToNum_2digits(tonsau);
+        this.soluong_str = TextToNumber.textToNum_2digits(soluong);
+        this.gia_str = TextToNumber.textToNum_2digits(mucgia);
     }
     public LichsuXNK(LichsuXNK ls) {
         this.ten_xd = ls.getTen_xd();
@@ -103,8 +103,8 @@ public class LichsuXNK {
         this.sd = ls.getSd();
         this.createTime = ls.getCreateTime();
         this.createtime_str = (createTime == null ? "" :createTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
-        this.tonsau_str = TextToNumber.textToNum(String.valueOf(ls.getTonsau()));
-        this.soluong_str = TextToNumber.textToNum(String.valueOf(ls.getSoluong()));
-        this.gia_str = TextToNumber.textToNum(String.valueOf(ls.getGia()));
+        this.tonsau_str = TextToNumber.textToNum_2digits(ls.getTonsau());
+        this.soluong_str = TextToNumber.textToNum_2digits(ls.getSoluong());
+        this.gia_str = TextToNumber.textToNum_2digits(ls.getGia());
     }
 }

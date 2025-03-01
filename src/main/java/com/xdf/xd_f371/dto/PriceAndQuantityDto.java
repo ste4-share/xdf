@@ -15,7 +15,7 @@ public class PriceAndQuantityDto {
     public PriceAndQuantityDto(double price, double quantity) {
         this.price = price;
         this.quantity = quantity;
-        this.price_str = TextToNumber.textToNum(String.valueOf(price));
-        this.quantity_str = TextToNumber.textToNum(String.valueOf(quantity));
+        this.price_str = TextToNumber.textToNum_2digits(price);
+        this.quantity_str = TextToNumber.textToNum_2digits(quantity);
     }
 }

@@ -39,9 +39,9 @@ public class Ledger {
     @Column(name = "giohd_tk")
     private String giohd_tk;
     @Column(name = "sl_tieuthu_md")
-    private int sl_tieuthu_md;
+    private double sl_tieuthu_md;
     @Column(name = "sl_tieuthu_tk")
-    private int sl_tieuthu_tk;
+    private double sl_tieuthu_tk;
     @Column(name = "dvi_nhan_id")
     private int dvi_nhan_id;
     @Column(name = "dvi_xuat_id")

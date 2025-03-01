@@ -20,7 +20,7 @@ public class TextToNumber {
             numberFormat.setMaximumFractionDigits(0);
             return numberFormat.format(Double.parseDouble(text));
     }
-    public static String textToNum_2digits(String text){
+    public static String textToNum_2digits(double d){
         Locale locale = new Locale("vi", "VN");
         Currency currency = Currency.getInstance("VND");
 
@@ -30,6 +30,6 @@ public class TextToNumber {
         numberFormat.setDecimalFormatSymbols(symbols);
         numberFormat.setCurrency(currency);
         numberFormat.setMaximumFractionDigits(2);
-        return numberFormat.format(Double.parseDouble(text));
+        return numberFormat.format(d);
     }
 }

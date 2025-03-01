@@ -28,7 +28,7 @@ public class QuantityFormController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         notion_lb.setText(null);
         sl_ton = ChangingController.quantity;
-        slton_lb.setText(TextToNumber.textToNum(String.valueOf(sl_ton)));
+        slton_lb.setText(TextToNumber.textToNum_2digits(sl_ton));
     }
     @FXML
     public void maxBtn(ActionEvent actionEvent) {
@@ -57,7 +57,7 @@ public class QuantityFormController implements Initializable {
                 double cal = sl_ton - qt;
                 if (cal >= 0) {
                     setErrorText(null,null);
-                    slton_lb.setText(TextToNumber.textToNum(String.valueOf(cal)));
+                    slton_lb.setText(TextToNumber.textToNum_2digits(cal));
                 } else {
                     setErrorText("Số lượng vượt mức tồn đang có.",CommonFactory.styleErrorField);
                 }

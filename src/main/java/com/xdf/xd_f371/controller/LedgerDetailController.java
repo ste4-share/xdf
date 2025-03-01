@@ -55,12 +55,12 @@ public class LedgerDetailController implements Initializable {
     }
     private void convertDetailsList(){
         details.forEach(x->{
-            x.setPhainhap_str(TextToNumber.textToNum(String.valueOf(x.getPhai_nhap())));
-            x.setThucnhap_str(TextToNumber.textToNum(String.valueOf(x.getThuc_nhap())));
-            x.setPhaixuat_str(TextToNumber.textToNum(String.valueOf(x.getPhai_xuat())));
-            x.setThucxuat_str(TextToNumber.textToNum(String.valueOf(x.getThuc_xuat())));
-            x.setDongia_str(TextToNumber.textToNum(String.valueOf(x.getDon_gia())));
-            x.setThanhtien_str(TextToNumber.textToNum(String.valueOf(x.getThanhtien())));
+            x.setPhainhap_str(TextToNumber.textToNum_2digits(x.getPhai_nhap()));
+            x.setThucnhap_str(TextToNumber.textToNum_2digits(x.getThuc_nhap()));
+            x.setPhaixuat_str(TextToNumber.textToNum_2digits(x.getPhai_xuat()));
+            x.setThucxuat_str(TextToNumber.textToNum_2digits(x.getThuc_xuat()));
+            x.setDongia_str(TextToNumber.textToNum_2digits(x.getDon_gia()));
+            x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
         });
     }
     private void initLabelValues(){

@@ -431,9 +431,9 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     private void setDinhmucToLabel(String l1, String l2, double dm1,double dm2){
         lb_dm_gio.setText(l1);
-        dm_gio.setText(TextToNumber.textToNum(String.valueOf(dm1)));
+        dm_gio.setText(TextToNumber.textToNum_2digits(dm1));
         lb_dm_km.setText(l2);
-        dm_km.setText(TextToNumber.textToNum(String.valueOf(dm2)));
+        dm_km.setText(TextToNumber.textToNum_2digits(dm2));
     }
     private void setLoaiXangDauByRadio(String lpt,boolean pxhb, String lxd1,String lxd2){
         mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(lpt));
@@ -558,9 +558,9 @@ public class XuatController extends CommonFactory implements Initializable {
 
         if (tk_rd.isSelected()){
             ledger.setSl_tieuthu_md(0);
-            ledger.setSl_tieuthu_tk(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
+            ledger.setSl_tieuthu_tk(Double.parseDouble(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
         }else if (md_rd.isSelected()){
-            ledger.setSl_tieuthu_md(Integer.parseInt(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
+            ledger.setSl_tieuthu_md(Double.parseDouble(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
             ledger.setSl_tieuthu_tk(0);
         }else{
             ledger.setSl_tieuthu_md(0);
@@ -672,16 +672,16 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledgerDetails.setThuc_xuat(txuat);
             }
         }
-        ledgerDetails.setThanhtien((double) ledgerDetails.getSoluong() * ledgerDetails.getDon_gia());
-        ledgerDetails.setThanhtien_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getThanhtien())));
-        ledgerDetails.setThucxuat_str(TextToNumber.textToNum(String.valueOf(txuat)));
-        ledgerDetails.setPhaixuat_str(TextToNumber.textToNum(String.valueOf(pxuat)));
-        ledgerDetails.setDongia_str(TextToNumber.textToNum(String.valueOf(ledgerDetails.getDon_gia())));
+        ledgerDetails.setThanhtien(ledgerDetails.getSoluong() * ledgerDetails.getDon_gia());
+        ledgerDetails.setThanhtien_str(TextToNumber.textToNum_2digits(ledgerDetails.getThanhtien()));
+        ledgerDetails.setThucxuat_str(TextToNumber.textToNum_2digits(txuat));
+        ledgerDetails.setPhaixuat_str(TextToNumber.textToNum_2digits(pxuat));
+        ledgerDetails.setDongia_str(TextToNumber.textToNum_2digits(ledgerDetails.getDon_gia()));
         return ledgerDetails;
     }
     private void setInv_lb(double inv) {
         inv_price = inv;
-        inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum(String.valueOf(inv)) + " (Lit)");
+        inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum_2digits(inv) + " (Lit)");
     }
     private ChitietNhiemVu identifyNhiemvu(){
         try {

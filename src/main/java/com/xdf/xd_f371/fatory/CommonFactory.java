@@ -110,19 +110,19 @@ public class CommonFactory {
                     ld.setThuc_nhap(ld.getThuc_nhap()+tx);
                     ld.setPhai_nhap(ld.getPhai_nhap()+px);
                     ld.setSoluong(ld.getThuc_nhap()+tx);
-                    ld.setSoluong_px((double) ld.getPhai_nhap() + px);
-                    ld.setThucnhap_str(TextToNumber.textToNum(String.valueOf(ld.getThuc_nhap())));
-                    ld.setPhainhap_str(TextToNumber.textToNum(String.valueOf(ld.getPhai_nhap())));
-                    ld.setThanhtien_str(TextToNumber.textToNum(String.valueOf((double) ld.getThuc_nhap()*ld.getDon_gia())));
+                    ld.setSoluong_px(ld.getPhai_nhap() + px);
+                    ld.setThucnhap_str(TextToNumber.textToNum_2digits(ld.getThuc_nhap()));
+                    ld.setPhainhap_str(TextToNumber.textToNum_2digits(ld.getPhai_nhap()));
+                    ld.setThanhtien_str(TextToNumber.textToNum_2digits(ld.getThuc_nhap()*ld.getDon_gia()));
                     ls_socai.set(i, ld);
                 }else{
                     ld.setThuc_xuat(ld.getThuc_xuat() + tx);
                     ld.setPhai_xuat(ld.getPhai_xuat() + px);
                     ld.setSoluong(ld.getThuc_xuat() + tx);
-                    ld.setSoluong_px((double) ld.getPhai_xuat() + px);
-                    ld.setThucxuat_str(TextToNumber.textToNum(String.valueOf(ld.getThuc_xuat())));
-                    ld.setPhaixuat_str(TextToNumber.textToNum(String.valueOf(ld.getPhai_xuat())));
-                    ld.setThanhtien_str(TextToNumber.textToNum(String.valueOf((double) ld.getThuc_xuat()*ld.getDon_gia())));
+                    ld.setSoluong_px(ld.getPhai_xuat() + px);
+                    ld.setThucxuat_str(TextToNumber.textToNum_2digits(ld.getThuc_xuat()));
+                    ld.setPhaixuat_str(TextToNumber.textToNum_2digits(ld.getPhai_xuat()));
+                    ld.setThanhtien_str(TextToNumber.textToNum_2digits(ld.getThuc_xuat()*ld.getDon_gia()));
                     ls_socai.set(i, ld);
                 }
                 return false;

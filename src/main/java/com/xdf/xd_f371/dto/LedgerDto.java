@@ -21,8 +21,8 @@ public class LedgerDto {
     private int so_km;
     private String giohd_md;
     private String giohd_tk;
-    private int sl_tieuthu_md;
-    private int sl_tieuthu_tk;
+    private double sl_tieuthu_md;
+    private double sl_tieuthu_tk;
     private int dvi_nhan_id;
     private int dvi_xuat_id;
     private String loai_phieu;
@@ -67,7 +67,7 @@ public class LedgerDto {
     public LedgerDto(Long ledger_id, Long ledger_detail_id, int bill_id,
                      double amount, LocalDate from_date, LocalDate end_date, String status,
                      int so_km, String giohd_md, String giohd_tk,
-                     int sl_tieuthu_md, int sl_tieuthu_tk, int dvi_nhan_id, int dvi_xuat_id,
+                     double sl_tieuthu_md, double sl_tieuthu_tk, int dvi_nhan_id, int dvi_xuat_id,
                      String loai_phieu, String dvi_nhan, String dvi_xuat, String loaigiobay, String nguoi_nhan, String so_xe, String lenh_so, String nhiemvu, int nhiemvu_id,
                      int tcn_id, String ma_xd, String ten_xd, String chung_loai, String chat_luong, double phai_xuat, double nhiet_do_tt, double ty_trong,
                      double he_so_vcf, double don_gia, int loaixd_id, int phuongtien_id, double thuc_xuat, double thuc_xuat_tk,
@@ -118,10 +118,10 @@ public class LedgerDto {
         this.nl_km = nl_km;
         this.soluong_px = soluong_px;
 
-        soluongpx_str = TextToNumber.textToNum_2digits(String.valueOf(soluong_px));
-        soluong_str = TextToNumber.textToNum_2digits(String.valueOf(soluong));
-        dongia_str = TextToNumber.textToNum_2digits(String.valueOf(don_gia));
-        amount_str = TextToNumber.textToNum_2digits(String.valueOf(amount));
+        soluongpx_str = TextToNumber.textToNum_2digits(soluong_px);
+        soluong_str = TextToNumber.textToNum_2digits(soluong);
+        dongia_str = TextToNumber.textToNum_2digits(don_gia);
+        amount_str = TextToNumber.textToNum_2digits(amount);
         thanhtien = TextToNumber.textToNum(String.valueOf((soluong*don_gia)));
     }
 }
