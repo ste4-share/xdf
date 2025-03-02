@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
@@ -63,6 +64,26 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkho(@Param("sd") LocalDate sd, @Param("ed") LocalDate ed);
     @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +
+            "case when tdk_nvdx is null then 0 else tdk_nvdx end,\n" +
+            "case when tdk_sscd is null then 0 else tdk_sscd end,\n" +
+            "case when b.nhap_nvdx is null then 0 else b.nhap_nvdx end,\n" +
+            "case when b.xuat_nvdx is null then 0 else b.xuat_nvdx end,\n" +
+            "case when b.nhap_nvdx-b.xuat_nvdx is null then 0 else b.nhap_nvdx-b.xuat_nvdx end,\n" +
+            "case when b.nhap_sscd is null then 0 else b.nhap_sscd end,\n" +
+            "case when b.xuat_sscd is null then 0 else b.xuat_sscd end,\n" +
+            "case when b.nhap_sscd-b.xuat_sscd is null then 0 else b.nhap_sscd-b.xuat_sscd end,\n" +
+            "cl.priority_1,cl.priority_2,cl.priority_3\n" +
+            "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
+            "left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory\n" +
+            "group by 1) a on a.petro_id=lxd.id\n" +
+            "left join (SELECT loaixd_id,sum(nhap_nvdx) as nhap_nvdx,\n" +
+            "sum(nhap_sscd) as nhap_sscd,sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd\n" +
+            "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
+            "where status like 'ACTIVE' and l.from_date between :sd and :ed and (dvi_nhan_id=:dvi_id or dvi_xuat_id=:dvi_id) \n" +
+            "group by 1) b on lxd.id=loaixd_id\n" +
+            "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
+    List<Object[]> getAllTonkho_toanDv(@Param("sd") LocalDate sd, @Param("ed") LocalDate ed,@Param("dvi_id") int dv_id);
+    @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +
             "case when max(a.nhap_nvdx) is null then 0 else max(a.nhap_nvdx) end as nhap_nvdx,\n" +
             "case when max(a.xuat_nvdx) is null then 0 else max(a.xuat_nvdx) end as xuat_nvdx,\n" +
             "case when max(a.nhap_nvdx-a.xuat_nvdx) is null then 0 else max(a.nhap_nvdx-a.xuat_nvdx) end as nvdx,\n" +
@@ -79,4 +100,6 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "group by 1,2,3,4,cl.priority_1,cl.priority_2,cl.priority_3\n" +
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkhoNotCondition();
+    @Query(value = "select dvi_id from inventory limit 1",nativeQuery = true)
+    Optional<Integer> getdviIdFromIn();
 }

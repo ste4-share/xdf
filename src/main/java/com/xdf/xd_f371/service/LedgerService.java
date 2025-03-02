@@ -114,18 +114,18 @@ public class LedgerService {
         Accounts acc = ConnectLan.pre_acc;
         if (acc.getSd()!=null && acc.getEd()!=null) {
             if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-                InvDto2 inventory = inventoryService.getPreInvWithDvi(details1.getLoaixd_id(),ledger.getDvi_nhan_id());
+                List<InvDto2> inventory = inventoryService.getPreInvPriceList(details1.getLoaixd_id(),ledger.getDvi_nhan_id());
                 if (inventory==null) {
                     saveHistory(ledger,details1,0L);
                 } else {
-                    saveHistory(ledger,details1,inventory.getSl_ton());
+                    saveHistory(ledger,details1,inventory.get(0).getSl_ton());
                 }
             }else{
-                InvDto2 inventory = inventoryService.getPreInvWithDvi(details1.getLoaixd_id(),ledger.getDvi_xuat_id());
+                List<InvDto2> inventory = inventoryService.getPreInvPriceList(details1.getLoaixd_id(),ledger.getDvi_xuat_id());
                 if (inventory==null) {
                     saveHistory(ledger,details1,0L);
                 } else {
-                    saveHistory(ledger,details1,inventory.getSl_ton());
+                    saveHistory(ledger,details1,inventory.get(0).getSl_ton());
                 }
             }
         } else {
@@ -138,7 +138,7 @@ public class LedgerService {
                     tontruoc+ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
                     l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getFrom_date());
             lichsuRepo.save(lichsuXNK);
-        }else {
+        } else {
             LichsuXNK lichsuXNK = new LichsuXNK(ld.getTen_xd(), l.getLoai_phieu(),
                     ld.getSoluong(), tontruoc - ld.getSoluong(), ld.getDon_gia(),  ld.getSscd_nvdx(),
                     l.getBill_id(), l.getDvi_nhan(), l.getDvi_xuat(), ld.getChung_loai(),l.getFrom_date());

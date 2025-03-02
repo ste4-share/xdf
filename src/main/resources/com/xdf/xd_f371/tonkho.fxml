@@ -64,7 +64,12 @@
                                  <children>
                                     <HBox prefHeight="20.0" prefWidth="1337.0">
                                        <children>
-                                          <Label prefHeight="55.0" prefWidth="601.0" text="--Tồn kho toàn đơn vị--">
+                                          <Label prefHeight="20.0" prefWidth="226.0" text="--Tồn kho đơn vị--">
+                                             <font>
+                                                <Font name="Cambria Italic" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="dv_lb" layoutX="10.0" layoutY="10.0" prefHeight="20.0" prefWidth="226.0" text="...">
                                              <font>
                                                 <Font name="Cambria Italic" size="14.0" />
                                              </font>
@@ -230,7 +235,7 @@
                                                 <TableColumn fx:id="ls_gia" prefWidth="83.0" text="Giá (vnđ)" />
                                              </columns></TableColumn>
                                           <TableColumn fx:id="ls_soluong" maxWidth="180.0" minWidth="120.0" prefWidth="125.0" text="S/lượng N.Xuất (lit)" />
-                                          <TableColumn fx:id="ls_tonsau" prefWidth="87.0" text="Tồn sau (lit)" />
+                                          <TableColumn fx:id="ls_tonsau" prefWidth="87.0" text="Tồn sau (dv Nhận)(lit)" />
                                           <TableColumn fx:id="ls_create_at" prefWidth="89.0" text="Thời gian" />
                                        </columns>
                                        <columnResizePolicy>

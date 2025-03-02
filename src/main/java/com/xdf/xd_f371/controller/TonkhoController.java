@@ -37,6 +37,7 @@ public class TonkhoController implements Initializable {
     private static List<LichsuXNK> histories = new ArrayList<>();
     public static TonkhoDto pickTonKho = new TonkhoDto();
     private static List<PttkDto> pttkDtos = new ArrayList<>();
+    public static NguonNx ref_unit = null;
     @FXML
     public TableView<TonkhoDto> tb_tonkho;
     @FXML
@@ -57,11 +58,13 @@ public class TonkhoController implements Initializable {
     @FXML
     private DatePicker ls_s_date;
     @FXML
-    private Label sd_lb, ed_lb;
+    private Label sd_lb, ed_lb,dv_lb;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
     private LichsuService lichsuService;
+    @Autowired
+    private NguonNxService nguonNxService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -93,6 +96,16 @@ public class TonkhoController implements Initializable {
             sd_lb.setText(null);
             ed_lb.setText(null);
         }
+        indentifyNguonnx();
+    }
+    private void indentifyNguonnx(){
+        Integer i =inventoryService.getDvFromInv();
+        if (i!=null){
+            Optional<NguonNx> nx = nguonNxService.findById(i);
+            nx.ifPresent(nguonNx -> dv_lb.setText(nguonNx.getTen()));
+        }else {
+            dv_lb.setText(null);
+        }
     }
     private void fillDataToTableLichsu() {
         histories = new ArrayList<>();
@@ -113,7 +126,13 @@ public class TonkhoController implements Initializable {
     private void fillDataToTableTonkho(){
         Accounts acc = ConnectLan.pre_acc;
         if (acc.getSd()!=null && acc.getEd()!=null){
-            tkt = inventoryService.getAllTonkho(acc.getSd(),acc.getEd());
+            if (ref_unit!=null){
+                dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
+                tkt = inventoryService.getAllTonkhoTDV(acc.getSd(),acc.getEd(),ref_unit.getId());
+            } else {
+                dv_lb.setText("--Tồn kho toàn đơn vị--");
+                tkt = inventoryService.getAllTonkho(acc.getSd(),acc.getEd());
+            }
         }else{
             tkt = inventoryService.getAllTonkhoNotCondition();
         }

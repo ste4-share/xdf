@@ -270,14 +270,14 @@ public class BaoCaoController implements Initializable {
         Common.copyFileExcel(file_name,dest_file);
     }
     private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
+        arr_tt.clear();
+        String n_sum1="";
+        String x_sum2="";
+        String sl1="";
+        String sl2="";
+        String n_case_1="";
+        String x_case_2="";
         if (tdvCk.isSelected()){
-            arr_tt.clear();
-            String n_sum1="";
-            String x_sum2="";
-            String sl1="";
-            String sl2="";
-            String n_case_1="";
-            String x_case_2="";
             for (int i=0; i<tructhuocService.findAll().size(); i++) {
                 TrucThuoc tt = tructhuocService.findAll().get(i);
                 arr_tt.add(tt.getType());
@@ -291,13 +291,7 @@ public class BaoCaoController implements Initializable {
             String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
             return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }else{
-            arr_tt.clear();
-            String n_sum1="";
-            String x_sum2="";
-            String sl1="";
-            String sl2="";
-            String n_case_1="";
-            String x_case_2="";
+            int dv_id =dvi_cbb.getSelectionModel().getSelectedItem().getId();
             for (int i=0; i<tructhuocService.findAll().size(); i++) {
                 TrucThuoc tt = tructhuocService.findAll().get(i);
                 arr_tt.add(tt.getType());
@@ -305,11 +299,11 @@ public class BaoCaoController implements Initializable {
                 x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
                 sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
                 sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
-                n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and l.dvi_nhan_id="+dvi_cbb.getSelectionModel().getSelectedItem().getId()+" group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
-                x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and l.dvi_xuat_id="+dvi_cbb.getSelectionModel().getSelectedItem().getId()+" group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
+                n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and l.dvi_nhan_id="+dv_id+" group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
+                x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and l.dvi_xuat_id="+dv_id+" group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
             }
             String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
-            return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
+            return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(SubQuery.end_q2_2(dv_id)).concat(n_case_1).concat(x_case_2).concat(en);
         }
     }
     private String getCusQueryNlEmpty(String begin_1,String end_q1, String end_q1_1){
@@ -416,5 +410,10 @@ public class BaoCaoController implements Initializable {
     }
     @FXML
     public void toandonvickAction(ActionEvent actionEvent) {
+        if (tdvCk.isSelected()){
+            dvi_cbb.setDisable(true);
+        }else{
+            dvi_cbb.setDisable(false);
+        }
     }
 }

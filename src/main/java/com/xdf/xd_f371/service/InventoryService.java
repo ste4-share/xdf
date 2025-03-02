@@ -38,8 +38,14 @@ public class InventoryService {
     public List<TonkhoDto> getAllTonkhoNotCondition(){
         return mapToTonkhoDto(inventoryRepo.getAllTonkhoNotCondition());
     }
+    public Integer getDvFromInv(){
+        return inventoryRepo.getdviIdFromIn().orElse(null);
+    }
     public List<TonkhoDto> getAllTonkho(LocalDate sd, LocalDate ed) {
         return mapToTonkhoDto(inventoryRepo.getAllTonkho(sd,ed));
+    }
+    public List<TonkhoDto> getAllTonkhoTDV(LocalDate sd, LocalDate ed,int dv_id) {
+        return mapToTonkhoDto(inventoryRepo.getAllTonkho_toanDv(sd,ed,dv_id));
     }
     public List<TonkhoDto> mapToTonkhoDto(List<Object[]> results) {
         List<TonkhoDto> ls = new ArrayList<>();
@@ -136,31 +142,30 @@ public class InventoryService {
         acc.setSd(sd.getValue());
         acc.setEd(ed.getValue());
         Accounts a = accountRepo.save(acc);
-        List<Ledger> previous_invs = previous_invs = ledgersRepo.findAllByBeforeDateRange(a.getSd());
-//        if (ischecked){
-//            previous_invs = ledgersRepo.findAllByBeforeDateRange(a.getSd());
-//        }else{
-//            previous_invs = ledgersRepo.findAllByBeforeDateRange2(a.getSd(),nnx.getId());
-//        }
+        List<Ledger> previous_invs;
+        if (ischecked){
+            previous_invs = ledgersRepo.findAllByBeforeDateRange(a.getSd());
+        }else{
+            previous_invs = ledgersRepo.findAllByBeforeDateRange2(a.getSd(),nnx.getId());
+        }
+        inventoryRepo.deleteAll();
         if (!previous_invs.isEmpty()){
-            inventoryRepo.deleteAll();
             List<InvDto> invDtoList = mapToInvDto(ledgersRepo.findAllInvByRangeBefore(a.getSd()));
             invDtoList.forEach(x -> {
                 if (x.getNhap_nvdx()-x.getXuat_nvdx()<=0 && x.getNhap_sscd()-x.getXuat_sscd()<=0){
                     inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),
                             x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(),
-                            MucGiaEnum.OUT_STOCK_ALL.getStatus(), x.getDon_gia(),x.getSd(),x.getEd()));
+                            MucGiaEnum.OUT_STOCK_ALL.getStatus(), x.getDon_gia(),x.getSd(),x.getEd(),nnx.getId()));
                 }else{
                     inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),
                             x.getNhap_sscd()-x.getXuat_sscd(),x.getNhap_nvdx(), x.getNhap_sscd(),x.getXuat_nvdx(),x.getXuat_sscd(),
-                            MucGiaEnum.IN_STOCK.getStatus(), x.getDon_gia(),x.getSd(),x.getEd()));
+                            MucGiaEnum.IN_STOCK.getStatus(), x.getDon_gia(),x.getSd(),x.getEd(),nnx.getId()));
                 }
             });
         }else{
-            inventoryRepo.deleteAll();
             loaiXangDauRepo.findAll().forEach(x->{
                 inventoryRepo.save(new Inventory(x.getId(),0, 0,0, 0,0,0,
-                        MucGiaEnum.OUT_STOCK_ALL.getStatus(), 0,null,null));
+                        MucGiaEnum.OUT_STOCK_ALL.getStatus(), 0,null,null,nnx.getId()));
             });
         }
     }

@@ -145,8 +145,8 @@ public class SubQuery {
     public static String end_q2(){
         return "max(p1) as p1, max(p2) as p2, max(p3) as p3,grouping(tinhchat) as tc,grouping(loai) as l,grouping(tenxd) as xd from (select lxd.id,tinhchat,cl.chungloai,loai,maxd,tenxd,case when max(tdk_nvdx) is null then 0 else max(tdk_nvdx) end as tdk_nvdx,case when max(tdk_sscd) is null then 0 else max(tdk_sscd) end as tdk_sscd,case when max(tdk_sscd)+max(tdk_nvdx) is null then 0 else max(tdk_sscd)+max(tdk_nvdx) end as cong_tdk,";
     }
-    public static String end_q2_2(){
-        return "max(cl.priority_1) as p1,max(cl.priority_2) as p2,max(cl.priority_3) as p3 from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory group by 1) a on a.petro_id=lxd.id";
+    public static String end_q2_2(int dv_id){
+        return "max(cl.priority_1) as p1,max(cl.priority_2) as p2,max(cl.priority_3) as p3 from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory where dvi_id="+dv_id+" group by 1) a on a.petro_id=lxd.id";
     }
     public static String ttxd_nv(int y){
         return "select max(tt) as tt,max(pri) as pri,n,\n" +

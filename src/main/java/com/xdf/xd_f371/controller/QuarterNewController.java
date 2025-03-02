@@ -49,7 +49,9 @@ public class QuarterNewController implements Initializable {
     public void save(ActionEvent actionEvent) {
         if (Common.date_valid(ed,sd)){
             if (DialogMessage.callAlertWithMessage(null,"Luu", "Luu thay doi?", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                inventoryService.saveInvWhenSwitchQuarter(sd,ed,dviCbb.getSelectionModel().getSelectedItem(),tdv.isSelected());
+                NguonNx nnx = dviCbb.getSelectionModel().getSelectedItem();
+                selectUnit(nnx);
+                inventoryService.saveInvWhenSwitchQuarter(sd,ed,nnx,tdv.isSelected());
                 DialogMessage.successShowing("Luu thanh cong!!");
                 TonkhoController.tk_stage.close();
             }
@@ -68,5 +70,17 @@ public class QuarterNewController implements Initializable {
     }
     @FXML
     public void tdvAction(ActionEvent actionEvent) {
+        NguonNx nnx = dviCbb.getSelectionModel().getSelectedItem();
+        selectUnit(nnx);
+    }
+
+    private void selectUnit(NguonNx nnx) {
+        if (tdv.isSelected()){
+            TonkhoController.ref_unit=null;
+            dviCbb.setDisable(true);
+        }else{
+            TonkhoController.ref_unit=nnx;
+            dviCbb.setDisable(false);
+        }
     }
 }

@@ -48,7 +48,7 @@ public class Inventory {
     private LoaiXangDau loaiXangDau;
 
     public Inventory(int petro_id, double tdk_nvdx, double tdk_sscd, double nhap_nvdx, double nhap_sscd, double xuat_nvdx, double xuat_sscd, String status, double price,
-                     LocalDate sd, LocalDate ed) {
+                     LocalDate sd, LocalDate ed,int dvi_id) {
         this.petro_id = petro_id;
         this.tdk_nvdx = tdk_nvdx;
         this.tdk_sscd = tdk_sscd;
@@ -60,6 +60,7 @@ public class Inventory {
         this.price = price;
         this.sd = sd;
         this.ed = ed;
+        this.dvi_id=dvi_id;
     }
 
     public Inventory(int petro_id, String status) {
