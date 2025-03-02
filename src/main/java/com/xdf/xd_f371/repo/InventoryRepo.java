@@ -25,6 +25,10 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id \n" +
             "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1,2,3",nativeQuery = true)
     List<Object[]> findPreInventoryPetro(@Param("lxd_id") int lxd_id);
+    @Query(value = "SELECT loaixd_id,ld.id as id,don_gia,sum(nhap_nvdx),sum(xuat_nvdx),sum(nhap_sscd),sum(xuat_sscd)\n" +
+            "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id \n" +
+            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and dvi_nhan_id=:dvi_id group by 1,2,3",nativeQuery = true)
+    List<Object[]> findPreInventoryPetro(@Param("lxd_id") int lxd_id,@Param("dvi_id") int dvid);
     @Query(value = "select lxd.id,loai,tenxd,\n" +
             "(case when NHAP_fb.tonkho is null then 0 else NHAP_fb.tonkho end)-(case when XUAT_fb.tonkho is null then 0 else XUAT_fb.tonkho end) as fb\n" +
             "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +

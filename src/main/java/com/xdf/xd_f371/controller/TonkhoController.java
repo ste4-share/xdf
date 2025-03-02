@@ -102,8 +102,12 @@ public class TonkhoController implements Initializable {
         Integer i =inventoryService.getDvFromInv();
         if (i!=null){
             Optional<NguonNx> nx = nguonNxService.findById(i);
-            nx.ifPresent(nguonNx -> dv_lb.setText(nguonNx.getTen()));
+            nx.ifPresent(nguonNx -> {
+                ref_unit=nguonNx;
+                dv_lb.setText(nguonNx.getTen());
+            });
         }else {
+            ref_unit=null;
             dv_lb.setText(null);
         }
     }
@@ -226,7 +230,12 @@ public class TonkhoController implements Initializable {
         if (mouseEvent.getClickCount() == 2 && spotDto != null) {
             pickTonKho = spotDto;
             tk_stage = new Stage();
-            List<InventoryDto> list = inventoryService.findPreInventoryPetro(spotDto.getPetro_id());
+            List<InventoryDto> list;
+            if (ref_unit!=null){
+                list = inventoryService.findPreInventoryPetroFollowUnit(spotDto.getPetro_id(),ref_unit.getId());
+            }else{
+                list = inventoryService.findPreInventoryPetro(spotDto.getPetro_id());
+            }
             if (list==null){
                 DialogMessage.successShowing(spotDto.getTenxd() + " đã hết hàng!! Vui lòng nhập thêm");
             }else{

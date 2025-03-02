@@ -11,51 +11,40 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="434.0" prefWidth="638.0"
-            style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.xdf.xd_f371.controller.ChangingController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="441.0" prefWidth="638.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.ChangingController">
    <children>
-      <AnchorPane prefHeight="46.0" prefWidth="638.0" style="-fx-background-color: #e74c3c;">
-         <children>
-            <Label alignment="CENTER" layoutX="83.0" layoutY="5.0" prefHeight="37.0" prefWidth="488.0" text="SỬA ĐỔI" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Cambria Bold" size="26.0" />
-               </font>
-            </Label>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="14.0" layoutY="53.0" prefHeight="306.0" prefWidth="608.0">
+      <AnchorPane layoutX="15.0" layoutY="67.0" prefHeight="306.0" prefWidth="608.0">
          <children>
             <VBox prefHeight="297.0" prefWidth="608.0" style="-fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                <children>
-                  <HBox alignment="CENTER" layoutX="11.0" layoutY="49.0" prefHeight="41.0" prefWidth="606.0">
+                  <HBox alignment="CENTER" layoutX="11.0" layoutY="49.0" prefHeight="31.0" prefWidth="606.0">
                      <children>
                         <Label fx:id="petro_name" alignment="CENTER" prefHeight="20.0" prefWidth="192.0" text="Petroleum">
                            <font>
-                              <Font name="Cambria Bold" size="18.0" />
+                              <Font name="Cambria Bold" size="14.0" />
                            </font>
                         </Label>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="227.0" prefWidth="604.0">
+                  <HBox alignment="CENTER" prefHeight="266.0" prefWidth="606.0">
                      <children>
-                        <VBox>
+                        <VBox prefHeight="249.0" prefWidth="220.0">
                            <HBox.margin>
                               <Insets left="35.0" />
                            </HBox.margin>
                            <children>
-                              <Label prefHeight="20.0" prefWidth="192.0" text="NVDX:">
+                              <Label prefHeight="20.0" prefWidth="192.0" text="Tồn cho nvdx:">
                                  <font>
-                                    <Font name="Cambria Bold" size="14.0" />
+                                    <Font name="Cambria Bold" size="12.0" />
                                  </font>
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </Label>
-                              <TableView fx:id="nvdx_tb" onMouseClicked="#nvdxClicked" onMousePressed="#nvdx_press" prefHeight="184.0" prefWidth="220.0">
+                              <TableView fx:id="nvdx_tb" onMouseClicked="#nvdxClicked" onMousePressed="#nvdx_press" prefHeight="213.0" prefWidth="220.0" stylesheets="@css/table_style.css">
                                 <columns>
-                                  <TableColumn fx:id="nvdx_price" prefWidth="75.0" text="Mức giá" />
-                                  <TableColumn fx:id="nvdx_quantity" prefWidth="75.0" text="Số lượng" />
+                                  <TableColumn fx:id="nvdx_price" prefWidth="75.0" text="Mức giá(vnd)" />
+                                  <TableColumn fx:id="nvdx_quantity" prefWidth="75.0" text="Số lượng(Lit)" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -68,14 +57,14 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="225.0" layoutY="10.0">
                            <children>
-                              <Button fx:id="nvdx_sscd" mnemonicParsing="false" onAction="#nvdxToSscdAction" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="&gt;&gt;|">
+                              <Button fx:id="nvdx_sscd" mnemonicParsing="false" onAction="#nvdxToSscdAction" prefHeight="25.0" prefWidth="43.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="&gt;&gt;|">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                                  <font>
                                     <Font name="System Bold" size="13.0" />
                                  </font></Button>
-                              <Button fx:id="sscd_nvdx" layoutX="10.0" layoutY="84.0" mnemonicParsing="false" onAction="#sscdToNvdxAction" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="|&lt;&lt;">
+                              <Button fx:id="sscd_nvdx" layoutX="10.0" layoutY="84.0" mnemonicParsing="false" onAction="#sscdToNvdxAction" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="|&lt;&lt;">
                                  <VBox.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="25.0" />
                                  </VBox.margin>
@@ -93,18 +82,18 @@
                         </VBox>
                         <VBox layoutX="325.0" layoutY="10.0">
                            <children>
-                              <Label prefHeight="20.0" prefWidth="167.0" text="SSCD:">
+                              <Label prefHeight="20.0" prefWidth="167.0" text="Tồn cho sscd:">
                                  <font>
-                                    <Font name="Cambria Bold" size="15.0" />
+                                    <Font name="Cambria Bold" size="12.0" />
                                  </font>
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </Label>
-                              <TableView fx:id="sscd_tb" onMouseClicked="#sscdClicked" onMousePressed="#sscd_press" prefHeight="186.0" prefWidth="238.0">
+                              <TableView fx:id="sscd_tb" onMouseClicked="#sscdClicked" onMousePressed="#sscd_press" prefHeight="212.0" prefWidth="238.0" stylesheets="@css/table_style.css">
                                  <columns>
-                                    <TableColumn fx:id="sscd_price" prefWidth="75.0" text="Mức giá" />
-                                    <TableColumn fx:id="sscd_quantity" prefWidth="75.0" text="Số lượng" />
+                                    <TableColumn fx:id="sscd_price" prefWidth="75.0" text="Mức giá(vnd)" />
+                                    <TableColumn fx:id="sscd_quantity" prefWidth="75.0" text="Số lượng(Lit)" />
                                  </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -117,31 +106,49 @@
                         </VBox>
                      </children>
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </VBox.margin>
                   </HBox>
                </children>
             </VBox>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="25.0" layoutY="349.0" prefHeight="63.0" prefWidth="589.0">
+      <AnchorPane layoutX="26.0" layoutY="373.0" prefHeight="54.0" prefWidth="589.0">
          <children>
-            <Button fx:id="changeBtn" contentDisplay="CENTER" layoutX="182.0" layoutY="28.0" mnemonicParsing="false" onAction="#changeSScd" prefHeight="46.0" prefWidth="105.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="THAY ĐỔI">
+            <Button fx:id="changeBtn" contentDisplay="CENTER" layoutX="185.0" layoutY="12.0" mnemonicParsing="false" onAction="#changeSScd" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="THAY ĐỔI">
                <font>
-                  <Font name="Cambria Bold" size="16.0" />
+                  <Font name="Cambria Bold" size="14.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="cancel_btn" contentDisplay="CENTER" layoutX="303.0" layoutY="28.0" mnemonicParsing="false" onAction="#cancelForm" prefHeight="46.0" prefWidth="105.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="HỦY">
+            <Button fx:id="cancel_btn" contentDisplay="CENTER" layoutX="304.0" layoutY="12.0" mnemonicParsing="false" onAction="#cancelForm" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="HỦY">
                <font>
-                  <Font name="Cambria Bold" size="16.0" />
+                  <Font name="Cambria Bold" size="14.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="3.0" layoutY="4.0" prefHeight="30.0" prefWidth="631.0" style="-fx-background-color: #a8a8a8; -fx-background-radius: 10;">
+         <children>
+            <Label fx:id="petro_name1" alignment="CENTER" layoutX="220.0" layoutY="6.0" prefHeight="20.0" prefWidth="192.0" text="Chi tiết mức giá" textFill="#0a0a0a">
+               <font>
+                  <Font name="Cambria Bold" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="15.0" layoutY="35.0" prefHeight="29.0" prefWidth="606.0">
+         <children>
+            <Label fx:id="unit_lb" alignment="CENTER" layoutY="13.0" prefHeight="16.0" prefWidth="100.0" text="--Units--">
+               <font>
+                  <Font name="Cambria Italic" size="12.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

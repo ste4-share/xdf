@@ -36,7 +36,7 @@ public class ChangingController implements Initializable {
     @FXML
     private TableColumn<PriceAndQuantityDto, String> nvdx_price,nvdx_quantity,sscd_price,sscd_quantity;
     @FXML
-    private Label petro_name;
+    private Label petro_name,unit_lb;
     @FXML
     private Button nvdx_sscd, sscd_nvdx,changeBtn,cancel_btn;
     @Autowired
@@ -46,11 +46,30 @@ public class ChangingController implements Initializable {
         nvdx_ls_buf = new ArrayList<>();
         tonkho_selected = TonkhoController.pickTonKho;
         petro_name.setText(tonkho_selected.getTenxd());
-        list = inventoryService.findPreInventoryPetro(tonkho_selected.getPetro_id());
+        initListInv_p();
         setNvdxTable(nvdx_tb);
         setSScdTable(sscd_tb);
-        setVisibleForBtn(true, true);
         setHoverForBtn();
+        setLabels();
+    }
+
+    private void initListInv_p() {
+        if (TonkhoController.ref_unit!=null){
+            list = inventoryService.findPreInventoryPetroFollowUnit(tonkho_selected.getPetro_id(),TonkhoController.ref_unit.getId());
+        }else{
+            list = inventoryService.findPreInventoryPetro(tonkho_selected.getPetro_id());
+            changeBtn.setDisable(true);
+            nvdx_sscd.setVisible(false);
+            sscd_nvdx.setVisible(false);
+        }
+    }
+
+    private void setLabels() {
+        if (TonkhoController.ref_unit!=null){
+            unit_lb.setText(TonkhoController.ref_unit.getTen());
+        }else{
+            unit_lb.setText("Toàn đơn vị");
+        }
     }
     private void setHoverForBtn(){
         Common.hoverButton(sscd_nvdx, "#ffffff");
@@ -130,7 +149,7 @@ public class ChangingController implements Initializable {
     private List<PriceAndQuantityDto> setDataToTable(TableView<PriceAndQuantityDto> tb,List<InventoryDto> list,
                                                      Function<InventoryDto,Double> toStr1,Function<InventoryDto,Double> toStr2){
         List<PriceAndQuantityDto> result = new ArrayList<>();
-        if (!list.isEmpty()) {
+        if (list!=null && !list.isEmpty()) {
             for (InventoryDto inventory : list) {
                 double quantity = toStr1.apply(inventory)-toStr2.apply(inventory);
                 double pri = inventory.getDon_gia();
@@ -140,6 +159,7 @@ public class ChangingController implements Initializable {
             }
         }
         tb.setItems(FXCollections.observableList(result));
+        tb.refresh();
         return result;
     }
     @FXML

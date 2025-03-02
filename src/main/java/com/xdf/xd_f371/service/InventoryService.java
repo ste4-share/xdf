@@ -96,6 +96,12 @@ public class InventoryService {
         }
         return null;
     }
+    public List<InventoryDto> findPreInventoryPetroFollowUnit(int petro_id, int id){
+        if (!inventoryRepo.findPreInventoryPetro(petro_id,id).isEmpty()){
+            return mapPreInventoryPetro(inventoryRepo.findPreInventoryPetro(petro_id,id));
+        }
+        return null;
+    }
     public List<InvDto2> getPreInvPriceList(int petro_id,int dvid){
         if (!inventoryRepo.findPreInventoryAndPrice(petro_id,dvid).isEmpty()){
             return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id,dvid));

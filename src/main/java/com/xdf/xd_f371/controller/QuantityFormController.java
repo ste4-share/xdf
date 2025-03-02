@@ -28,6 +28,7 @@ public class QuantityFormController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         notion_lb.setText(null);
         sl_ton = ChangingController.quantity;
+        ChangingController.quantity_convert=0;
         slton_lb.setText(TextToNumber.textToNum_2digits(sl_ton));
     }
     @FXML
