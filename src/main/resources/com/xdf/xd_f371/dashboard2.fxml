@@ -370,12 +370,12 @@
                                 <columns>
                                     <TableColumn fx:id="nguoitao" prefWidth="105.0" text="Người nhập phiếu" />
                                   <TableColumn fx:id="so" prefWidth="60.0" text="Số" />
-                                  <TableColumn fx:id="loaiphieu" minWidth="20.0" prefWidth="91.0" text="Loại phiếu" />
+                                  <TableColumn fx:id="loaiphieu" minWidth="20.0" prefWidth="91.0" text="Phiếu (Nhập/Xuất)" />
                                     <TableColumn fx:id="dvi_nhan" prefWidth="122.0" text="Đ.vị Nhập" />
                                     <TableColumn fx:id="dvi_xuat" prefWidth="94.0" text="Đ.vị Xuất" />
                                     <TableColumn fx:id="nvu" prefWidth="91.0" text="Nhiệm vụ" />
-                                    <TableColumn fx:id="soluong" prefWidth="92.0" text="Số lượng" />
-                                    <TableColumn fx:id="tong" text="Tổng Giá trị" />
+                                    <TableColumn fx:id="soluong" prefWidth="92.0" text="Số lượng (mặt hàng)" />
+                                    <TableColumn fx:id="tong" text="Tổng Giá trị (vnd)" />
                                     <TableColumn fx:id="ngaytao" prefWidth="129.0" text="Thời gian" />
                                 </columns>
                                  <VBox.margin>

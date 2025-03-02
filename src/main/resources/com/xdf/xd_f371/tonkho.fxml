@@ -111,30 +111,30 @@
                                           <TableColumn fx:id="col_cl" maxWidth="150.0" prefWidth="91.0" text="Chủng loại" />
                                           <TableColumn fx:id="col_nvdx_tk11" prefWidth="331.0" text="Tồn đầu kỳ (Lit)">
                                              <columns>
-                                                <TableColumn fx:id="col_nvdx_tdk" maxWidth="100.0" prefWidth="70.0" text="NVDX" />
-                                                <TableColumn fx:id="col_sscd_tdk" maxWidth="100.0" prefWidth="89.0" text="SSCD" />
-                                                <TableColumn fx:id="col_cong_tdk" maxWidth="100.0" prefWidth="57.0" text="Tổng" />
+                                                <TableColumn fx:id="col_nvdx_tdk" maxWidth="100.0" prefWidth="70.0" text="NVDX(Lit)" />
+                                                <TableColumn fx:id="col_sscd_tdk" maxWidth="100.0" prefWidth="89.0" text="SSCD(Lit)" />
+                                                <TableColumn fx:id="col_cong_tdk" maxWidth="100.0" prefWidth="57.0" text="Tổng(Lit)" />
                                              </columns>
                                           </TableColumn>
                                           <TableColumn prefWidth="67.0" text="NVDX (Lit)">
                                              <columns>
-                                                <TableColumn fx:id="col_nhap_nvdx" maxWidth="100.0" prefWidth="75.0" text="Nhập" />
-                                                <TableColumn fx:id="col_xuat_nvdx" maxWidth="100.0" prefWidth="75.0" text="Xuất" />
-                                                <TableColumn fx:id="col_nvdx" maxWidth="100.0" prefWidth="75.0" text="Tồn NVDX" />
+                                                <TableColumn fx:id="col_nhap_nvdx" maxWidth="100.0" prefWidth="75.0" text="Nhập(Lit)" />
+                                                <TableColumn fx:id="col_xuat_nvdx" maxWidth="100.0" prefWidth="75.0" text="Xuất(Lit)" />
+                                                <TableColumn fx:id="col_nvdx" maxWidth="100.0" prefWidth="75.0" text="Tồn NVDX(Lit)" />
                                              </columns>
                                           </TableColumn>
                                           <TableColumn fx:id="col_nhap_sscd1" prefWidth="223.0" text="SSCD (Lit)">
                                              <columns>
-                                                <TableColumn fx:id="col_nhap_sscd" maxWidth="100.0" prefWidth="75.0" text="Nhập" />
-                                                <TableColumn fx:id="col_xuat_sscd" maxWidth="100.0" prefWidth="75.0" text="Xuất" />
-                                                <TableColumn fx:id="col_sscd" maxWidth="100.0" prefWidth="75.0" text="Tồn SSCD" />
+                                                <TableColumn fx:id="col_nhap_sscd" maxWidth="100.0" prefWidth="75.0" text="Nhập(Lit)" />
+                                                <TableColumn fx:id="col_xuat_sscd" maxWidth="100.0" prefWidth="75.0" text="Xuất(Lit)" />
+                                                <TableColumn fx:id="col_sscd" maxWidth="100.0" prefWidth="75.0" text="Tồn SSCD(Lit)" />
                                              </columns>
                                           </TableColumn>
                                           <TableColumn fx:id="col_nvdx_tk121111211" prefWidth="269.0" text="Tồn cuối kỳ (Lit)">
                                              <columns>
-                                                <TableColumn fx:id="col_nvdx_tck" maxWidth="120.0" prefWidth="100.0" text="NVDX" />
-                                                <TableColumn fx:id="col_sscd_tck" maxWidth="120.0" prefWidth="100.0" text="SSCD" />
-                                                <TableColumn fx:id="col_cong_tck" maxWidth="150.0" prefWidth="100.0" text="Cộng" />
+                                                <TableColumn fx:id="col_nvdx_tck" maxWidth="120.0" prefWidth="100.0" text="NVDX(Lit)" />
+                                                <TableColumn fx:id="col_sscd_tck" maxWidth="120.0" prefWidth="100.0" text="SSCD(Lit)" />
+                                                <TableColumn fx:id="col_cong_tck" maxWidth="150.0" prefWidth="100.0" text="Cộng(Lit)" />
                                              </columns>
                                           </TableColumn>
                                       </columns>
@@ -277,18 +277,18 @@
                                         <TableColumn fx:id="pttk_stt" maxWidth="50.0" minWidth="40.0" prefWidth="50.0" text="TT" />
                                           <TableColumn fx:id="pttk_loaixd" maxWidth="150.0" minWidth="100.0" prefWidth="125.0" text="Loại" />
                                         <TableColumn fx:id="pttk_tenxd" maxWidth="250.0" minWidth="200.0" prefWidth="250.0" text="Diễn giải" />
-                                          <TableColumn prefWidth="75.0" text="Trong đó">
+                                          <TableColumn prefWidth="75.0" text="Tồn Kho(Lit)">
                                              <columns>
-                                                <TableColumn fx:id="pttk_e916" prefWidth="75.0" text="e916" />
-                                                <TableColumn fx:id="pttk_e921" prefWidth="75.0" text="e921" />
-                                                <TableColumn fx:id="pttk_e923" prefWidth="75.0" text="e923" />
-                                                <TableColumn fx:id="pttk_e927" prefWidth="75.0" text="e927" />
-                                                <TableColumn fx:id="pttk_dnb" prefWidth="75.0" text="d Nội Bài" />
-                                                <TableColumn fx:id="pttk_dka" prefWidth="75.0" text="d Kiến An" />
-                                                <TableColumn fx:id="pttk_dvi" prefWidth="75.0" text="d Vinh" />
-                                                <TableColumn fx:id="pttk_dns" prefWidth="75.0" text="d Nà Sản" />
-                                                <TableColumn fx:id="pttk_fbo" prefWidth="75.0" text="f bộ" />
-                                                <TableColumn fx:id="pttk_tdv" prefWidth="75.0" text="Toàn đơn vị" />
+                                                <TableColumn fx:id="pttk_e916" prefWidth="75.0" text="e916(Lit)" />
+                                                <TableColumn fx:id="pttk_e921" prefWidth="75.0" text="e921(Lit)" />
+                                                <TableColumn fx:id="pttk_e923" prefWidth="75.0" text="e923(Lit)" />
+                                                <TableColumn fx:id="pttk_e927" prefWidth="75.0" text="e927(Lit)" />
+                                                <TableColumn fx:id="pttk_dnb" prefWidth="75.0" text="d Nội Bài(Lit)" />
+                                                <TableColumn fx:id="pttk_dka" prefWidth="75.0" text="d Kiến An(Lit)" />
+                                                <TableColumn fx:id="pttk_dvi" prefWidth="75.0" text="d Vinh(Lit)" />
+                                                <TableColumn fx:id="pttk_dns" prefWidth="75.0" text="d Nà Sản(Lit)" />
+                                                <TableColumn fx:id="pttk_fbo" prefWidth="75.0" text="f bộ(Lit)" />
+                                                <TableColumn fx:id="pttk_tdv" prefWidth="75.0" text="Toàn đơn vị(Lit)" />
                                              </columns>
                                           </TableColumn>
                                       </columns>

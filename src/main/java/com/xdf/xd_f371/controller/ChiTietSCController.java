@@ -26,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,7 +155,11 @@ public class ChiTietSCController implements Initializable {
         if (!isNew){
             XSSFRow row = sheet.getRow(row_num);
             if (StringUtils.isNumeric(value)){
-                row.getCell(cell_num).setCellValue(new BigDecimal(value).doubleValue());
+                BigDecimal bigDecimal = new BigDecimal(value);
+                bigDecimal.setScale(2, RoundingMode.HALF_UP);
+                NumberFormat numberFormat = NumberFormat.getInstance();
+                numberFormat.setMinimumFractionDigits(2);
+                row.getCell(cell_num).setCellValue(numberFormat.format(bigDecimal));
             } else {
                 row.getCell(cell_num).setCellValue(value);
             }

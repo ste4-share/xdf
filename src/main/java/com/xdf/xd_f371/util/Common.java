@@ -163,6 +163,7 @@ public class Common {
                 mapData_createNew.apply(wb);
                 fis.close();
                 FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+                XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
                 wb.write(fileOutputStream);
                 fileOutputStream.close();
                 wb.close();
@@ -172,9 +173,9 @@ public class Common {
                 mapData_get.apply(wb);
                 fis.close();
                 FileOutputStream fileOutputStream = new FileOutputStream(file_name);
-                XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
                 wb.setActiveSheet(wb.getSheetIndex(sheetName));
                 wb.setSelectedTab(wb.getSheetIndex(sheetName));
+                XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
                 wb.write(fileOutputStream);
                 fileOutputStream.close();
                 wb.close();

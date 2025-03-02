@@ -39,7 +39,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<PhuongTien> xmt_cbb;
     @FXML
-    private Label inv_lb, dm_gio, dm_km,lb_dm_km,lb_dm_gio,chungloai_lb,loai_xmt;
+    private Label inv_lb, dm_gio, dm_km,lb_dm_km,lb_dm_gio,chungloai_lb,loai_xmt,gia_vnd;
     @FXML
     private ComboBox<NguonNx> dvn_cbb,dvx_cbb;
     @FXML
@@ -74,6 +74,7 @@ public class XuatController extends CommonFactory implements Initializable {
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         nvdx_rd.setSelected(true);
         tungay.setValue(LocalDate.now());
+        gia_vnd.setText("(VND/Lit)");
         initDefailtVar();
         initLoaiXuatCbb();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
@@ -88,6 +89,7 @@ public class XuatController extends CommonFactory implements Initializable {
         Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
         NguonNx dvx = dvx_cbb.getValue();
         if (dvx!=null && gia!=null){
+            gia_vnd.setText(TextToNumber.textToNum_2digits(gia)+" (VND/Lit)");
             if (lxd != null) {
                 InvDto2 in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
                 if (in!=null) {

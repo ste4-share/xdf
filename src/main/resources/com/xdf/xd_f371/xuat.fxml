@@ -466,7 +466,7 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </ComboBox>
-                                    <Label fx:id="chungloai_lb11" prefHeight="30.0" prefWidth="145.0" text="(VND/Lit)">
+                                    <Label fx:id="gia_vnd" prefHeight="30.0" prefWidth="145.0" text="(VND/Lit)">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
