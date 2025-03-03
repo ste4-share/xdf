@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +21,8 @@ public class InventoryUnitService {
     public List<InventoryUnits> getInventoryByUnitByPetro(Long root_id,Long petroId){
         return inventoryUnitsRepo.getInventoryByUnitByPetro(root_id,petroId);
     }
-    public InventoryUnits getInventoryByUnitByPetroByPrice(Long root_id,Long petroId,double price){
-        return inventoryUnitsRepo.getInventoryByUnitByPetroByPrice(root_id,petroId,price).orElse(null);
+    public Optional<InventoryUnits> getInventoryByUnitByPetroByPrice(Long root_id, Long petroId, double price){
+        return inventoryUnitsRepo.getInventoryByUnitByPetroByPrice(root_id,petroId,price);
     }
     public void updateQuantityForPetro(double nvdx,double sscd,Long root_id,Long petro_id,double price){
         inventoryUnitsRepo.updateQuantityForPetro(nvdx,sscd,root_id,petro_id,price);

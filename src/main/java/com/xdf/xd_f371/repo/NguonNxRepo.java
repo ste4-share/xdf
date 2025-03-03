@@ -12,11 +12,13 @@ import java.util.Optional;
 @Repository
 public interface NguonNxRepo extends JpaRepository<NguonNx,Integer> {
     Optional<NguonNx> findByTen(String ten);
-    @Query(value = "select nnx.* from nguon_nx nnx left join donvi_tructhuoc dvtt on dvi_tructhuoc_id=nnx.id where dvtt.id is null",nativeQuery = true)
-    List<NguonNx> findByStatusUnlessTructhuoc();
     List<NguonNx> findByStatus(String status);
     @Query("select n from NguonNx n join n.donViTrucThuocs dvtt order by dvtt.pr")
     List<NguonNx> findByAllBy();
+    @Query(value = "select * from nguon_nx where id <> :nid",nativeQuery = true)
+    List<NguonNx> findAllByDifrentId(@Param("nid") int id);
+    @Query(value = "select * from nguon_nx where id=:nid",nativeQuery = true)
+    List<NguonNx> findAllById(@Param("nid") int id);
     @Query(value = "select nnx.* from nguon_nx nnx left join donvi_tructhuoc dvtt on dvi_tructhuoc_id=nnx.id where dvtt.id is not null and nnx.id=:nnx_id",nativeQuery = true)
     Optional<NguonNx> findAllByNguonnxId(@Param("nnx_id") int id);
 }

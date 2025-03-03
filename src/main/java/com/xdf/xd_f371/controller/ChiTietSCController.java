@@ -67,7 +67,7 @@ public class ChiTietSCController implements Initializable {
     }
     @FXML
     public void exitBtn(ActionEvent actionEvent) {
-        DashboardController.ctStage.close();
+        DashboardController.primaryStage.close();
     }
     private void printBill(){
         if (DialogMessage.callAlertWithMessage(MessageCons.TITLE_PRINT.getName(), MessageCons.HEADER_PRINT.getName(), MessageCons.CONTENT.getName(), Alert.AlertType.CONFIRMATION)==ButtonType.OK){
@@ -91,7 +91,7 @@ public class ChiTietSCController implements Initializable {
                 }
             }else {
                 DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
-                DashboardController.ctStage.close();
+                DashboardController.primaryStage.close();
             }
         }
     }
@@ -216,7 +216,7 @@ public class ChiTietSCController implements Initializable {
         if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
             ledgerService.inactiveLedger(ls.get(0).getLedger_id());
             DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
-            DashboardController.ctStage.close();
+            DashboardController.primaryStage.close();
         }
     }
 }

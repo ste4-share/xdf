@@ -114,11 +114,19 @@ public class NhapController extends CommonFactory implements Initializable {
     }
 
     private void setDvvcCombobox(){
-        setNguonnxCombobox(cmb_dvvc, nguonNxService.findByStatusUnlessTructhuoc());
+        if (configurationService.findByParam(ConfigCons.ROOT_ID.getName()).isPresent()){
+            setNguonnxCombobox(cmb_dvvc, nguonNxService.findAllByDifrentId(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())));
+        }else{
+            setNguonnxCombobox(cmb_dvvc,new ArrayList<>());
+        }
         cmb_dvvc.getSelectionModel().selectFirst();
     }
     private void setDvnCombobox() {
-        setNguonnxCombobox(cmb_dvn, nguonNxService.findByAllBy());
+        if (configurationService.findByParam(ConfigCons.ROOT_ID.getName()).isPresent()){
+            setNguonnxCombobox(cmb_dvn, nguonNxService.findAllById(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())));
+        }else{
+            setNguonnxCombobox(cmb_dvvc,new ArrayList<>());
+        }
         cmb_dvn.getSelectionModel().selectFirst();
     }
     private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd){

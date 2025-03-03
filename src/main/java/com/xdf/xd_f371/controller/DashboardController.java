@@ -48,8 +48,6 @@ public class DashboardController implements Initializable {
     public static String lp = null;
     public static Long so_select = 0L;
     public static Stage primaryStage;
-    public static Stage xuatStage ;
-    public static Stage ctStage;
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
     public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
@@ -119,6 +117,10 @@ public class DashboardController implements Initializable {
     @FXML
     public void importActionClick(ActionEvent actionEvent){
         primaryStage = new Stage();
+        primaryStage.setOnHidden(event -> {
+            ConnectLan.primaryStage.toFront();
+            ConnectLan.primaryStage.requestFocus();
+        });
         Common.openNewStage("nhap.fxml", primaryStage,"FORM NHAP", StageStyle.UTILITY);
         updateData();
     }
@@ -134,8 +136,12 @@ public class DashboardController implements Initializable {
     }
     @FXML
     public void exportBtnClick(ActionEvent actionEvent) throws IOException {
-        xuatStage = new Stage();
-        Common.openNewStage("xuat.fxml", xuatStage,"FORM XUAT",StageStyle.UTILITY);
+        primaryStage = new Stage();
+        primaryStage.setOnHidden(event -> {
+            ConnectLan.primaryStage.toFront();
+            ConnectLan.primaryStage.requestFocus();
+        });
+        Common.openNewStage("xuat.fxml", primaryStage,"FORM XUAT",StageStyle.UTILITY);
         updateData();
     }
     @FXML
@@ -196,14 +202,19 @@ public class DashboardController implements Initializable {
     }
     @FXML
     public void tb_selected(MouseEvent mouseEvent) {
-        ctStage = new Stage();
+
         if (mouseEvent.getClickCount()==2){
             MiniLedgerDto m = tbTTNX.getSelectionModel().getSelectedItem();
             if (m!=null){
                 try {
-                    so_select = (long) m.getId();
+                    so_select = m.getId();
                     lp = m.getLoai_phieu();
-                    Common.openNewStage("chitietsc.fxml", ctStage,"CHI TIẾT",StageStyle.UTILITY);
+                    primaryStage = new Stage();
+                    primaryStage.setOnHidden(event -> {
+                        ConnectLan.primaryStage.toFront();
+                        ConnectLan.primaryStage.requestFocus();
+                    });
+                    Common.openNewStage("chitietsc.fxml", primaryStage,"CHI TIẾT",StageStyle.UTILITY);
                     updateData();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -359,5 +370,13 @@ public class DashboardController implements Initializable {
         setPagination_nxt(ttp_ls);
         setLedgersToTable(ttp_ls);
     }
-
+    @FXML
+    public void SettingClicked(ActionEvent actionEvent) {
+        primaryStage = new Stage();
+        primaryStage.setOnHidden(event -> {
+            ConnectLan.primaryStage.toFront();
+            ConnectLan.primaryStage.requestFocus();
+        });
+        Common.openNewStage("setting.fxml", primaryStage,"CÀI ĐẶT",StageStyle.UTILITY);
+    }
 }

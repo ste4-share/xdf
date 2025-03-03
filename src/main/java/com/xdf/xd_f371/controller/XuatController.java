@@ -140,7 +140,8 @@ public class XuatController extends CommonFactory implements Initializable {
         if (lx.equals(LoaiXuat.X_K.getName())){
             tcx.setText(null);
             initValueForLoaiXuatCbb(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()),
-                    new ArrayList<>(),nguonNxService.findByAllBy(),nguonNxService.findAll(),loaiXdService.findAllOrderby()
+                    new ArrayList<>(),nguonNxService.findAllById(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())),
+                    nguonNxService.findAllByDifrentId(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())),loaiXdService.findAllOrderby()
                     ,true);
             nl_km_hb.setDisable(true);
             nl_gio_hb.setDisable(true);
@@ -150,7 +151,8 @@ public class XuatController extends CommonFactory implements Initializable {
             List<String> str = new ArrayList<>();
             ls.forEach(x->str.add(x.getTen_nv()  +" - "+ x.getChitiet()));
             initValueForLoaiXuatCbb(str, phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()),
-                    nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName()),false);
+                    nguonNxService.findAllById(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())),
+                    new ArrayList<>(),loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName()),false);
             px_hbox.setDisable(false);
             sokm_hb.setDisable(true);
             LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
@@ -244,7 +246,7 @@ public class XuatController extends CommonFactory implements Initializable {
                             Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
                             DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
                                     "Thanh cong", Alert.AlertType.INFORMATION);
-                            DashboardController.xuatStage.close();
+                            DashboardController.primaryStage.close();
                         } else {
                             DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
                                     "Nhập sai định dạng.", Alert.AlertType.ERROR);
@@ -268,7 +270,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void cancel(ActionEvent actionEvent) {
-        DashboardController.xuatStage.close();
+        DashboardController.primaryStage.close();
     }
     private double cal_phaixuat_km(int sokm, double dinhmuc){
         return (sokm*dinhmuc)/100;
@@ -477,8 +479,8 @@ public class XuatController extends CommonFactory implements Initializable {
         loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.HH.getName())));
         loai_xuat_cbb.getSelectionModel().selectFirst();
         loainx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
-        mapItemsForDonvi(nguonNxService.findByAllBy(), dvx_cbb);
-        mapItemsForDonvi(nguonNxService.findAll(),dvn_cbb);
+        mapItemsForDonvi(nguonNxService.findAllById(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())), dvx_cbb);
+        mapItemsForDonvi(nguonNxService.findAllByDifrentId(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())),dvn_cbb);
         List<PhuongTien> pt= new ArrayList<>();
         mapItemsForXeMayTau(pt);
         disableFeature(true);

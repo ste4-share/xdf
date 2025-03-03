@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Pagination?>
@@ -199,7 +200,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <HBox alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="591.0" prefHeight="86.0" prefWidth="244.0" styleClass="dvi-men" stylesheets="@css/menu.css">
+                  <HBox alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="591.0" prefHeight="86.0" prefWidth="244.0">
                      <children>
                         <Label fx:id="preUser" prefHeight="50.0" prefWidth="157.0" text="USER:" textFill="WHITE">
                            <HBox.margin>
@@ -222,6 +223,23 @@
                         <Insets left="10.0" />
                      </VBox.margin>
                   </Label>
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="575.0" prefHeight="32.0" prefWidth="225.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <children>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/Pinion.png" />
+                           </image>
+                        </ImageView>
+                        <Hyperlink onAction="#SettingClicked" text="Cài đặt">
+                           <font>
+                              <Font name="Cambria Bold Italic" size="12.0" />
+                           </font>
+                        </Hyperlink>
+                     </children>
+                  </HBox>
                </children>
                <cursor>
                   <Cursor fx:constant="HAND" />
