@@ -62,8 +62,6 @@ public class XuatController extends CommonFactory implements Initializable {
     private PhuongtienService phuongtienService;
     @Autowired
     private TcnService tcnService;
-    @Autowired
-    private HanmucNhiemvuService hanmucNhiemvuService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -87,30 +85,19 @@ public class XuatController extends CommonFactory implements Initializable {
     public void dongiaSelected(ActionEvent actionEvent) {
         Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (gia!=null){
-
             mapLabelPrice(gia);
             gia_vnd.setText(TextToNumber.textToNum_2digits(gia)+" (VND/Lit)");
         }
     }
     @FXML
-    public void dvnSelectedAction(ActionEvent actionEvent) {
-    }
-    @FXML
     public void nvSelected(ActionEvent actionEvent) {
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
         setlabelDinhmuc(pt);
-        if (pt!=null){
-            List<NguonNx> nguonNx = hanmucNhiemvuService.getAllDviTructhuocByTaubay(pt.getId(),LocalDate.now().getYear());
-            if (!nguonNx.isEmpty()){
-                mapItemsForDonvi(nguonNx,dvx_cbb);
-            }else{
-                mapItemsForDonvi(nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()), dvx_cbb);
-            }
+        if (pt!=null) {
             mapLoaixdByList(pt);
             loai_xmt.setText(pt.getLoaiPhuongTien().getTypeName());
         }
     }
-
     private void setlabelDinhmuc(PhuongTien pt){
         if (pt!=null){
             dinhMuc = dinhmucService.findDinhmucByPhuongtien(pt.getId(), LocalDate.now().getYear()).orElse(null);
@@ -137,12 +124,12 @@ public class XuatController extends CommonFactory implements Initializable {
                     ,true);
             nl_km_hb.setDisable(true);
             nl_gio_hb.setDisable(true);
-        } else if (lx.equals(LoaiXuat.NV.getName())) {
+        } else if (lx.equals(LoaiXuat.NV.getName())){
             tcx.setText(null);
             List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName());
             List<String> str = new ArrayList<>();
             ls.forEach(x->str.add(x.getTen_nv()  +" - "+ x.getChitiet()));
-            initValueForLoaiXuatCbb(str, phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()),
+            initValueForLoaiXuatCbb(str, phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle(),DashboardController.ref_Dv.getId()),
                     nguonNxService.findAllById(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())),
                     new ArrayList<>(),loaiXdService.findByType(LoaiXDCons.DAUBAY.getName(), LoaiXDCons.DAUHACAP.getName()),false);
             px_hbox.setDisable(false);
@@ -154,7 +141,9 @@ public class XuatController extends CommonFactory implements Initializable {
             List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.HAOHUT.getName());
             List<String> str = new ArrayList<>();
             ls.forEach(x->str.add(x.getTen_nv()  +" - "+ x.getChitiet()));
-            initValueForLoaiXuatCbb(str, new ArrayList<>(),nguonNxService.findByAllBy(),new ArrayList<>(),loaiXdService.findAllOrderby(),true);
+            initValueForLoaiXuatCbb(str, new ArrayList<>(),
+                    nguonNxService.findAllById(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())),
+                    new ArrayList<>(),loaiXdService.findAllOrderby(),true);
             dvi_nhan.setDisable(true);
             sokm_hb.setDisable(true);
         }
@@ -206,23 +195,29 @@ public class XuatController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (isCbb(lxd,gia)){
-            LedgerDetails ld = getLedgerDetails(lxd,gia);
-            if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
-                if (inventory_quantity < ld.getSoluong()){
-                    DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.WARNING);
-                } else {
-                    if (validateField(ld).isEmpty()) {
-                        if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_xuat(),ld.getPhai_xuat(),LoaiPhieuCons.PHIEU_XUAT.getName())) {
-                            ls_socai.add(ld);
-                        }
-                        setTonKhoLabel(inventory_quantity-ld.getSoluong());
-                        setCellValueFactoryXuat();
-                        clearFields();
+            PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
+            if (pt!=null) {
+                LedgerDetails ld = getLedgerDetails(lxd, gia);
+                if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
+                    if (inventory_quantity < ld.getSoluong()) {
+                        DialogMessage.message("Error", "so luong xuat > so luong ton kho", "Co loi xay ra", Alert.AlertType.WARNING);
                     } else {
-                        DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                                "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                        if (validateField(ld).isEmpty()) {
+                            if (isNotDuplicate(ld.getLoaixd_id(), ld.getDon_gia(), ld.getThuc_xuat(), ld.getPhai_xuat(), LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                                ls_socai.add(ld);
+                            }
+                            setTonKhoLabel(inventory_quantity - ld.getSoluong());
+                            setCellValueFactoryXuat();
+                            clearFields();
+                        } else {
+                            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                                    "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                        }
                     }
                 }
+            }else{
+                xmt_cbb.setStyle(CommonFactory.styleErrorField);
+                DialogMessage.errorShowing("Xe máy tàu trống, vui lòng thử lại.");
             }
         }
     }
@@ -432,7 +427,7 @@ public class XuatController extends CommonFactory implements Initializable {
         dm_km.setText(TextToNumber.textToNum_2digits(dm2));
     }
     private void setLoaiXangDauByRadio(String lpt,boolean pxhb, String lxd1,String lxd2){
-        mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(lpt));
+        mapItemsForXeMayTau(phuongtienService.findPhuongTienByLoaiPhuongTien(lpt,DashboardController.ref_Dv.getId()));
         md_rd.setSelected(!pxhb);
         lgb_hb.setDisable(!pxhb);
         cbb_tenxd.setItems(FXCollections.observableList(loaiXdService.findByType(lxd1, lxd2)));

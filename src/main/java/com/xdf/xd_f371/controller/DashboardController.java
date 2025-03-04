@@ -1,8 +1,11 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
+import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.MiniLedgerDto;
+import com.xdf.xd_f371.entity.Configuration;
+import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
@@ -38,16 +41,14 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Component
 public class DashboardController implements Initializable {
     public static String lp = null;
     public static Long so_select = 0L;
     public static Stage primaryStage;
+    public static NguonNx ref_Dv=null;
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
     public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
@@ -87,6 +88,10 @@ public class DashboardController implements Initializable {
 
     @Autowired
     private LedgerService ledgerService;
+    @Autowired
+    private ConfigurationService configurationService;
+    @Autowired
+    private NguonNxService nguonNxService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -95,6 +100,7 @@ public class DashboardController implements Initializable {
         tbTTNX.setPrefHeight(screenHeigh-300);
         Common.hoverButton(importBtn ,"#040cb5");
         Common.hoverButton(exportBtn,"#27b50e");
+        initRefDv();
         preUser.setText("--- " + ConnectLan.pre_acc.getUsername()+" ---");
         ttp_ls = ledgerService.findAllInterfaceLedger(StatusCons.ACTIVED.getName());
         getCurrentTiming();
@@ -105,6 +111,15 @@ public class DashboardController implements Initializable {
         setStyleForClickedMEnu(nxt_menu,dvi_menu,dinhmuc_menu,tonkho_menu,nhiemvu_menu,report,ledger_menu);
         startUpdatingLedgerData();
     }
+
+    private void initRefDv() {
+        Optional<Configuration> configuration = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
+        if (configuration.isPresent()){
+            Optional<NguonNx> nx = nguonNxService.findById(Integer.parseInt(configuration.get().getValue()));
+            nx.ifPresent(x->ref_Dv=x);
+        }
+    }
+
     private void startUpdatingLedgerData() {
         LedgerUpdateService service = new LedgerUpdateService();
         service.setOnSucceeded(event -> {

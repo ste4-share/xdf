@@ -3,6 +3,7 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.cons.LoaiNVCons;
 import com.xdf.xd_f371.dto.HanmucNhiemvuTaubayDto;
 import com.xdf.xd_f371.dto.NhiemVuDto;
+import com.xdf.xd_f371.entity.Configuration;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.NhiemvuTaubay;
 import com.xdf.xd_f371.entity.PhuongTien;
@@ -62,7 +63,7 @@ public class AddNewChitieuNvForm implements Initializable {
         Common.hoverButton(savebtn,"#ffffff");
     }
     private void initPT() {
-        ComponentUtil.setItemsToComboBox(pt_cbb,phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle()),
+        ComponentUtil.setItemsToComboBox(pt_cbb,phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle(), DashboardController.ref_Dv.getId()),
                 PhuongTien::getName, input->phuongtienService.findPhuongTienByName(input).orElse(null));
         pt_cbb.getSelectionModel().selectFirst();
     }

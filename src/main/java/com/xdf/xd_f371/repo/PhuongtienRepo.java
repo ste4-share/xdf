@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface PhuongtienRepo extends JpaRepository<PhuongTien,Integer> {
-    @Query("select p from PhuongTien p join p.loaiPhuongTien lpt where lpt.type like :loaipt")
-    List<PhuongTien> findPhuongTienByLoaiPhuongTien(@Param("loaipt") String loaiPhuongTien);
+    @Query("select p from PhuongTien p join p.loaiPhuongTien lpt where lpt.type like :loaipt and p.nguonnx_id=:dvid")
+    List<PhuongTien> findPhuongTienByLoaiPhuongTien(@Param("loaipt") String loaiPhuongTien,@Param("dvid") int dvid);
 
     @Query("select p from PhuongTien p where p.name like :n")
     Optional<PhuongTien> findPhuongTienByName(@Param("n") String name);

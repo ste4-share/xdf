@@ -24,8 +24,8 @@ public class PhuongtienService {
     private final LoaiPhuongTienRepo loaiPhuongTienRepo;
     private final DinhMucRepo dinhMucRepo;
 
-    public List<PhuongTien> findPhuongTienByLoaiPhuongTien(String loaiPhuongTien){
-        return phuongtienRepo.findPhuongTienByLoaiPhuongTien(loaiPhuongTien);
+    public List<PhuongTien> findPhuongTienByLoaiPhuongTien(String loaiPhuongTien,int dvi_id){
+        return phuongtienRepo.findPhuongTienByLoaiPhuongTien(loaiPhuongTien,dvi_id);
     }
     public PhuongTien save(PhuongTien phuongTien){
         return phuongtienRepo.save(phuongTien);
