@@ -89,7 +89,7 @@ public class TonkhoController implements Initializable {
         if (acc.getSd()!=null && acc.getEd()!=null){
             sd_lb.setText(acc.getSd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             ed_lb.setText(acc.getEd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        }else{
+        } else {
             sd_lb.setText(null);
             ed_lb.setText(null);
         }
