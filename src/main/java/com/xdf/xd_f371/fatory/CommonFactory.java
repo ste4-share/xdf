@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.fatory;
 
+import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
@@ -16,6 +17,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +27,10 @@ import java.util.*;
 
 @Component
 public class CommonFactory {
+    protected static Stage primaryStage;
     protected static double inventory_quantity = 0;
+    protected Configuration config = null;
+    protected List<InventoryUnits> i = new ArrayList<>();
     protected static List<LedgerDetails> ls_socai;
     protected static List<Tcn> tcnx_ls = new ArrayList<>();
     public static String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
@@ -34,18 +39,27 @@ public class CommonFactory {
     @Autowired
     protected NguonNxService nguonNxService;
     @Autowired
-    protected TructhuocService tructhuocService;
+    protected InventoryUnitService inventoryUnitService;
     @Autowired
-    protected InventoryService inventoryService;
+    protected TructhuocService tructhuocService;
     @Autowired
     protected ConfigurationService configurationService;
     @FXML
     protected TableView<LedgerDetails> tbView;
     @FXML
+    protected Label lb_tontheoxd;
+    @FXML
+    protected RadioButton nvdx_rd;
+    @FXML
     protected DatePicker tungay, denngay;
     @FXML
     protected TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phainx,col_nhietdo,col_tytrong,col_vcf,col_thucnx,col_thanhtien;
 
+
+    protected void initInventoryUnit(){
+        Optional<Configuration> c = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
+        c.ifPresent(configuration -> config = configuration);
+    }
     protected List<String> validateField(Object object){
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
@@ -54,6 +68,24 @@ public class CommonFactory {
             return List.of(violation.getPropertyPath().toString());
         }
         return new ArrayList<>();
+    }
+    protected void setInvLabel(LoaiXangDauDto lxd){
+        i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),lxd.getXd_id());
+        if (!i.isEmpty()){
+            if (nvdx_rd.isSelected()){
+                double sum_inventory_nvdx = i.stream().mapToDouble(InventoryUnits::getNvdx_quantity).sum();
+                setTonKhoLabel(sum_inventory_nvdx);
+            } else {
+                double sum_inventory_sscd = i.stream().mapToDouble(InventoryUnits::getSscd_quantity).sum();
+                setTonKhoLabel(sum_inventory_sscd);
+            }
+        } else {
+            setTonKhoLabel(0);
+        }
+    }
+    protected void setTonKhoLabel(double i){
+        inventory_quantity = i;
+        lb_tontheoxd.setText("Số lượng tồn: "+ TextToNumber.textToNum_2digits(inventory_quantity) +" (Lit)");
     }
     protected void cleanErrorField(TextField field){
         field.selectAll();

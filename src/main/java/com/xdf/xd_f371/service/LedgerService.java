@@ -32,7 +32,6 @@ public class LedgerService {
     private ConfigurationService configurationService;
     @Autowired
     private InventoryUnitService inventoryUnitService;
-
     public List<LedgerDto> getLedgers() {
         return ledgersRepo.findLedgerByID(DashboardController.so_select);
     }
@@ -42,7 +41,6 @@ public class LedgerService {
     public List<Ledger> findAllLedgerDto(LocalDate st,LocalDate et){
         return ledgersRepo.findAllLedgerDtoByTime(st,et);
     }
-
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();
     }
@@ -106,24 +104,22 @@ public class LedgerService {
 //                    }
 //                }
 //            }
-
         } catch (Exception e){
             DialogMessage.errorShowing("Something wrong!");
             e.printStackTrace();
         }
         return savedLedger;
     }
-
     private void saveInventoryUnit(LedgerDetails detail,String loaiphieu) {
         Optional<Configuration> config = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
         if (config.isPresent()){
             Long root_id = Long.parseLong(config.get().getValue());
-            Optional<InventoryUnits> existInvUnit = inventoryUnitService.getInventoryByUnitByPetroByPrice(root_id,Long.parseLong(String.valueOf(detail.getLoaixd_id())),detail.getDon_gia());
+            Optional<InventoryUnits> existInvUnit = inventoryUnitService.getInventoryByUnitByPetroByPrice(root_id,detail.getLoaixd_id(),detail.getDon_gia());
             if (existInvUnit.isPresent()){
                 if(loaiphieu.equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
                     double existnvdx = existInvUnit.get().getNvdx_quantity();
                     existInvUnit.get().setNvdx_quantity(existnvdx+detail.getSoluong());
-                }else {
+                } else {
                     double existnvdx = existInvUnit.get().getNvdx_quantity();
                     existInvUnit.get().setNvdx_quantity(existnvdx-detail.getSoluong());
                 }
@@ -135,7 +131,6 @@ public class LedgerService {
             throw new RuntimeException();
         }
     }
-
     //    private void inv(Ledger ledger,LedgerDetails details1){
 //        Accounts acc = ConnectLan.pre_acc;
 //        if (acc.getSd()!=null && acc.getEd()!=null) {

@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
@@ -481,12 +482,12 @@
                               </HBox>
                               <HBox>
                                  <children>
-                                    <Label prefHeight="17.0" prefWidth="162.0">
+                                    <Label prefHeight="25.0" prefWidth="165.0">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="inv_lb" prefHeight="17.0" prefWidth="154.0" text="Số lượng tồn: ">
+                                    <Label fx:id="lb_tontheoxd" prefHeight="17.0" prefWidth="154.0" text="Số lượng tồn: ">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
@@ -496,6 +497,11 @@
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
                                     </Label>
+                                    <Hyperlink onMouseEntered="#chitietEnter" onMouseExited="#chitietExited" text="chi tiết">
+                                       <font>
+                                          <Font name="Cambria Italic" size="12.0" />
+                                       </font>
+                                    </Hyperlink>
                                  </children>
                               </HBox>
                               <HBox fx:id="px_hbox" layoutX="10.0" layoutY="60.0">

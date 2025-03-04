@@ -1,10 +1,6 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.ConfigCons;
-import com.xdf.xd_f371.cons.LoaiPhieuCons;
-import com.xdf.xd_f371.cons.Purpose;
-import com.xdf.xd_f371.cons.StatusCons;
-import com.xdf.xd_f371.dto.InvDto2;
+import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
@@ -22,6 +18,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,9 +36,7 @@ public class NhapController extends CommonFactory implements Initializable {
     private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
             donGiaTf, thucNhap,phaiNhap,tThucTe, vcf,tyTrong;
     @FXML
-    private Label lb_tontheoxd, notification,chungloai_lb,text_dongia,text_phainhap,text_thucnhap;
-    @FXML
-    private RadioButton nvdx_rd;
+    private Label notification,chungloai_lb,text_dongia,text_phainhap,text_thucnhap;
     @FXML
     private Button addbtn,importbtn,cancelbtn;
 
@@ -69,7 +65,7 @@ public class NhapController extends CommonFactory implements Initializable {
         text_thucnhap.setText("0 Lit 15 độ C");
         tungay.setValue(LocalDate.now());
         nvdx_rd.setSelected(true);
-
+        initInventoryUnit();
         Common.hoverButton(addbtn ,"#027a20");
         Common.hoverButton(importbtn,"#0000b3");
         Common.hoverButton(cancelbtn,"#595959");
@@ -79,23 +75,19 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvnCombobox();
 
         setUpForSearchCompleteTion();
-        setInvLabel();
+        setPreInv();
     }
 
-    private void setInvLabel(){
+    private void setPreInv() {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
-            NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
-            if (dvn!=null){
-                InvDto2 i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
-                if (i!=null){
-                    setTonKhoLabel(i.getSl_ton());
-                } else {
-                    setTonKhoLabel(0L);
-                }
-            }
+            setInvLabel(lxd);
+            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
+        }else{
+            chungloai_lb.setText("Chủng loại: ---");
         }
     }
+
     private void setUpForSearchCompleteTion(){
         List<String> search_arr = new ArrayList<>();
 
@@ -181,8 +173,8 @@ public class NhapController extends CommonFactory implements Initializable {
             }
         }else{
             cmb_tenxd.setStyle(styleErrorField);
-            DialogMessage.message("Lỗi", "...",
-                    "Ten xang dau khong xac dinh.", Alert.AlertType.ERROR);
+            DialogMessage.message(null, null,
+                    MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.ERROR);
         }
     }
 
@@ -198,12 +190,12 @@ public class NhapController extends CommonFactory implements Initializable {
                             Ledger l = getLedger();
                             if (validateField(l).isEmpty()) {
                                 Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                                DialogMessage.message("Thong bao", "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
-                                        "Thanh cong", Alert.AlertType.INFORMATION);
+                                DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
+                                        MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
                                 DashboardController.primaryStage.close();
                             } else {
-                                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
-                                        "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                                DialogMessage.message(MessageCons.LOI.getName(), changeStyleTextFieldByValidation(l),
+                                        MessageCons.SAI_DINH_DANG.getName(), Alert.AlertType.WARNING);
                             }
                         }else{
                             cmb_dvn.setStyle(styleErrorField);
@@ -214,10 +206,10 @@ public class NhapController extends CommonFactory implements Initializable {
                         DialogMessage.errorShowing("Không tìm thấy nguồn nhập xuất, vui lòng thử lại.");
                     }
                 }catch (NumberFormatException e){
-                    DialogMessage.errorShowing("Số sai định dạng, vui lòng thử lại");
+                    DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
                     throw new RuntimeException(e);
                 } catch (Exception e) {
-                    DialogMessage.errorShowing("có lỗi xảy ra, vui lòng thử lại sau.");
+                    DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
                     throw new RuntimeException(e);
                 }
             }
@@ -291,38 +283,15 @@ public class NhapController extends CommonFactory implements Initializable {
         vcf.setText("0");
         tyTrong.setText("0");
     }
-    private void setTonKhoLabel(double i){
-        inventory_quantity = i;
-        lb_tontheoxd.setText("Số lượng tồn: "+ TextToNumber.textToNum_2digits(inventory_quantity) +" (Lit)");
-    }
+
     @FXML
     public void changedItemLoaiXd(ActionEvent actionEvent) {
-        LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
-        if (lxd!=null){
-            NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
-            if (dvn!=null){
-                InvDto2 i = inventoryService.getPreInvWithDvi(lxd.getXd_id(),dvn.getId());
-                if (i!=null){
-                    setTonKhoLabel(i.getSl_ton());
-                    LedgerDetails ld = ls_socai.stream().filter(x->x.getLoaixd_id()==lxd.getXd_id()).findFirst().orElse(null);
-                    if (ld!=null){
-                        setTonKhoLabel(i.getSl_ton()+ld.getSoluong());
-                    }else{
-                        setTonKhoLabel(i.getSl_ton());
-                    }
-                }else{
-                    setTonKhoLabel(0L);
-                }
-            }
-            chungloai_lb.setText("Chủng loại: "+lxd.getLoai());
-        }else{
-            chungloai_lb.setText("Chủng loại: ---");
-        }
+        setPreInv();
     }
     @FXML
     public void select_item(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount()==2){
-            if (DialogMessage.callAlertWithMessage("Delete", "Xoa", "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+            if (DialogMessage.callAlertWithMessage(null, null, "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
                 LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
                     ls_socai.remove(ld);
@@ -450,10 +419,19 @@ public class NhapController extends CommonFactory implements Initializable {
     public void dvnAction(ActionEvent actionEvent) {
         cmb_dvn.setStyle(null);
         cmb_tenxd.getSelectionModel().selectFirst();
-        setInvLabel();
+        setPreInv();
     }
     @FXML
     public void cmb_dvvcAction(ActionEvent actionEvent) {
         cmb_dvvc.setStyle(null);
+    }
+    @FXML
+    public void chitietExited(MouseEvent mouseEvent) {
+        primaryStage = new Stage();
+        Common.openNewStage("price_view.fxml", primaryStage,null, StageStyle.TRANSPARENT);
+    }
+    @FXML
+    public void chitietEntered(MouseEvent mouseEvent) {
+        primaryStage.close();
     }
 }

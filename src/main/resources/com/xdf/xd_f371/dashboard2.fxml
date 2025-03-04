@@ -215,7 +215,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </HBox>
-                  <Label fx:id="datetime_showing" alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="159.0" text="Ngày 31/08/2024 16:22 pm" textFill="WHITE" wrapText="true">
+                  <Label fx:id="datetime_showing" alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="145.0" text="Ngày 31/08/2024 Giờ:16:22 pm" textFill="WHITE" wrapText="true">
                      <font>
                         <Font name="Cambria" size="16.0" />
                      </font>

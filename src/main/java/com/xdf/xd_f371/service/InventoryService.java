@@ -12,13 +12,11 @@ import javafx.scene.control.DatePicker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -54,21 +52,6 @@ public class InventoryService {
                     (double) row[4],(double) row[5], (double) row[6],(double) row[7],(double) row[8],(double) row[9],(double) row[10],(double) row[11]));
         }return ls;
     }
-    public List<InvDto2> mapPreInvWithPrice(List<Object[]> results) {
-        return results.stream()
-                .map(row -> new InvDto2((int) row[0],(double) row[2],(String) row[1],(double) row[3]))
-                .collect(Collectors.toList());
-    }
-    public InvDto2 mapPreInvenPrice(List<Object[]> results) {
-        return results.stream()
-                .map(row -> new InvDto2((int) row[0],(double) row[2],(String) row[1],(double) row[3]))
-                .toList().get(0);
-    }
-    public InvDto2 mapPreInven(List<Object[]> results) {
-        return results.stream()
-                .map(row -> new InvDto2((int) row[0],(String) row[1],(String) row[2],(double) row[3]))
-                .toList().get(0);
-    }
     public List<InventoryDto> mapPreInventoryPetro(List<Object[]> results) {
         return results.stream()
                 .map(row -> new InventoryDto((int) row[0],(Long) row[1],(double) row[2],(double) row[3],
@@ -84,12 +67,6 @@ public class InventoryService {
                         (double) row[10],(double) row[11]))
                 .toList();
     }
-    public InvDto2 getPreInvPriceAndUnit(int petro_id,double dongia,int unit_id){
-        if (!inventoryRepo.findPreInventoryPriceAndUnit(petro_id,dongia,unit_id).isEmpty()){
-            return mapPreInvenPrice(inventoryRepo.findPreInventoryPriceAndUnit(petro_id,dongia,unit_id));
-        }
-        return null;
-    }
     public List<InventoryDto> findPreInventoryPetro(int petro_id){
         if (!inventoryRepo.findPreInventoryPetro(petro_id).isEmpty()){
             return mapPreInventoryPetro(inventoryRepo.findPreInventoryPetro(petro_id));
@@ -99,18 +76,6 @@ public class InventoryService {
     public List<InventoryDto> findPreInventoryPetroFollowUnit(int petro_id, int id){
         if (!inventoryRepo.findPreInventoryPetro(petro_id,id).isEmpty()){
             return mapPreInventoryPetro(inventoryRepo.findPreInventoryPetro(petro_id,id));
-        }
-        return null;
-    }
-    public List<InvDto2> getPreInvPriceList(int petro_id,int dvid){
-        if (!inventoryRepo.findPreInventoryAndPrice(petro_id,dvid).isEmpty()){
-            return mapPreInvWithPrice(inventoryRepo.findPreInventoryAndPrice(petro_id,dvid));
-        }
-        return new ArrayList<>();
-    }
-    public InvDto2 getPreInvWithDvi(int petro_id, int dvi_id){
-        if (!inventoryRepo.findPreInventoryFllowUnit(petro_id,dvi_id).isEmpty()){
-            return mapPreInven(inventoryRepo.findPreInventoryFllowUnit(petro_id,dvi_id));
         }
         return null;
     }

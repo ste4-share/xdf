@@ -18,13 +18,13 @@ public class InventoryUnitService {
     public List<InventoryUnits> getInventoryByUnit(Long root_id){
         return inventoryUnitsRepo.getInventoryByUnit(root_id);
     }
-    public List<InventoryUnits> getInventoryByUnitByPetro(Long root_id,Long petroId){
+    public List<InventoryUnits> getInventoryByUnitByPetro(Long root_id,int petroId){
         return inventoryUnitsRepo.getInventoryByUnitByPetro(root_id,petroId);
     }
-    public Optional<InventoryUnits> getInventoryByUnitByPetroByPrice(Long root_id, Long petroId, double price){
+    public Optional<InventoryUnits> getInventoryByUnitByPetroByPrice(Long root_id, int petroId, double price){
         return inventoryUnitsRepo.getInventoryByUnitByPetroByPrice(root_id,petroId,price);
     }
-    public void updateQuantityForPetro(double nvdx,double sscd,Long root_id,Long petro_id,double price){
+    public void updateQuantityForPetro(double nvdx,double sscd,Long root_id,int petro_id,double price){
         inventoryUnitsRepo.updateQuantityForPetro(nvdx,sscd,root_id,petro_id,price);
     }
 }

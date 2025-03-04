@@ -12,15 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
-    @Query(value = "select lxd.id,tenxd,case when NHAP_fb.price is null then 0 else NHAP_fb.price end as gia,\n" +
-            "(case when NHAP_fb.tonkho is null then 0 else NHAP_fb.tonkho end)-(case when XUAT_fb.tonkho is null then 0 else XUAT_fb.tonkho end) as fb\n" +
-            "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +
-            "left join (select loaixd_id,don_gia as price, sum(nhap_nvdx) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-            "where status like 'ACTIVE' and dvi_nhan_id=:dvi_id and loai_phieu like 'NHAP' group by 1,2) NHAP_fb on lxd.id=NHAP_fb.loaixd_id\n" +
-            "left join (select loaixd_id,don_gia as price, sum(xuat_nvdx) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-            "where status like 'ACTIVE' and dvi_xuat_id=:dvi_id and loai_phieu like 'XUAT' group by 1,2) XUAT_fb on lxd.id=XUAT_fb.loaixd_id\n" +
-            "where lxd.id=:lxd_id",nativeQuery = true)
-    List<Object[]> findPreInventoryAndPrice(@Param("lxd_id") int lxd_id,@Param("dvi_id") int dvi_id);
     @Query(value = "SELECT loaixd_id,ld.id as id,don_gia,sum(nhap_nvdx),sum(xuat_nvdx),sum(nhap_sscd),sum(xuat_sscd)\n" +
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id \n" +
             "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1,2,3",nativeQuery = true)
@@ -29,15 +20,6 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id \n" +
             "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and dvi_nhan_id=:dvi_id group by 1,2,3",nativeQuery = true)
     List<Object[]> findPreInventoryPetro(@Param("lxd_id") int lxd_id,@Param("dvi_id") int dvid);
-    @Query(value = "select lxd.id,loai,tenxd,\n" +
-            "(case when NHAP_fb.tonkho is null then 0 else NHAP_fb.tonkho end)-(case when XUAT_fb.tonkho is null then 0 else XUAT_fb.tonkho end) as fb\n" +
-            "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +
-            "left join (select loaixd_id, sum(nhap_nvdx+nhap_sscd) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-            "where status like 'ACTIVE' and dvi_nhan_id=:dvi_id and loai_phieu like 'NHAP' group by 1) NHAP_fb on lxd.id=NHAP_fb.loaixd_id\n" +
-            "left join (select loaixd_id, sum(xuat_nvdx+xuat_sscd) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-            "where status like 'ACTIVE' and dvi_xuat_id=:dvi_id and loai_phieu like 'XUAT' group by 1) XUAT_fb on lxd.id=XUAT_fb.loaixd_id\n" +
-            "where lxd.id=:lxd_id",nativeQuery = true)
-    List<Object[]> findPreInventoryFllowUnit(@Param("lxd_id") int lxd_id,@Param("dvi_id") int dvi_id);
     @Query(value = "select lxd.id,tenxd,case when NHAP_fb.price is null then 0 else NHAP_fb.price end as gia,\n" +
             "(case when NHAP_fb.tonkho is null then 0 else NHAP_fb.tonkho end)-(case when XUAT_fb.tonkho is null then 0 else XUAT_fb.tonkho end) as fb\n" +
             "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +

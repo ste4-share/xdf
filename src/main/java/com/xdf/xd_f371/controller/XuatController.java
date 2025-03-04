@@ -28,18 +28,17 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class XuatController extends CommonFactory implements Initializable {
-    private static double inv_price;
     private static AutoCompletionBinding<String> acbLogin;
     private static DinhMuc dinhMuc;
     public static String loainx;
     @FXML
     private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong,nl_gio,nl_km;
     @FXML
-    private RadioButton md_rd,tk_rd, mb_rd,nvdx_rd;
+    private RadioButton md_rd,tk_rd, mb_rd;
     @FXML
     private ComboBox<PhuongTien> xmt_cbb;
     @FXML
-    private Label inv_lb, dm_gio, dm_km,lb_dm_km,lb_dm_gio,chungloai_lb,loai_xmt,gia_vnd;
+    private Label dm_gio, dm_km,lb_dm_km,lb_dm_gio,chungloai_lb,loai_xmt,gia_vnd;
     @FXML
     private ComboBox<NguonNx> dvn_cbb,dvx_cbb;
     @FXML
@@ -77,6 +76,7 @@ public class XuatController extends CommonFactory implements Initializable {
         gia_vnd.setText("(VND/Lit)");
         initDefailtVar();
         initLoaiXuatCbb();
+        initInventoryUnit();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
         mapXdForCombobox();
         Common.hoverButton(addBtn, "#027a20");
@@ -85,19 +85,11 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {
-        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
-        NguonNx dvx = dvx_cbb.getValue();
-        if (dvx!=null && gia!=null){
+        if (gia!=null){
+
+            mapLabelPrice(gia);
             gia_vnd.setText(TextToNumber.textToNum_2digits(gia)+" (VND/Lit)");
-            if (lxd != null) {
-                InvDto2 in = inventoryService.getPreInvPriceAndUnit(lxd.getXd_id(),gia,dvx.getId());
-                if (in!=null) {
-                    setInv_lb(in.getSl_ton());
-                } else {
-                    setInv_lb(0);
-                }
-            }
         }
     }
     @FXML
@@ -201,11 +193,11 @@ public class XuatController extends CommonFactory implements Initializable {
                 return true;
             }else{
                 cbb_dongia.setStyle(styleErrorField);
-                DialogMessage.message(null, lxd.getTenxd()+" - Het hang","Mặt hàng này đã hết, vui lòng nhập thêm.", Alert.AlertType.WARNING);
+                DialogMessage.message(null, lxd.getTenxd() + " - Het hang","Mặt hàng này đã hết, vui lòng nhập thêm.", Alert.AlertType.WARNING);
             }
         }else{
             cbb_tenxd.setStyle(styleErrorField);
-            DialogMessage.message(null, "ten xang dau khong xac dinh","Co loi xay ra", Alert.AlertType.WARNING);
+            DialogMessage.message(null, null,MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
         }
         return false;
     }
@@ -216,14 +208,14 @@ public class XuatController extends CommonFactory implements Initializable {
         if (isCbb(lxd,gia)){
             LedgerDetails ld = getLedgerDetails(lxd,gia);
             if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
-                if (inv_price < ld.getSoluong()){
+                if (inventory_quantity < ld.getSoluong()){
                     DialogMessage.message("Error", "so luong xuat > so luong ton kho","Co loi xay ra", Alert.AlertType.WARNING);
                 } else {
                     if (validateField(ld).isEmpty()) {
                         if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_xuat(),ld.getPhai_xuat(),LoaiPhieuCons.PHIEU_XUAT.getName())) {
                             ls_socai.add(ld);
                         }
-                        setInv_lb(inv_price-ld.getSoluong());
+                        setTonKhoLabel(inventory_quantity-ld.getSoluong());
                         setCellValueFactoryXuat();
                         clearFields();
                     } else {
@@ -248,18 +240,18 @@ public class XuatController extends CommonFactory implements Initializable {
                                     "Thanh cong", Alert.AlertType.INFORMATION);
                             DashboardController.primaryStage.close();
                         } else {
-                            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(l),
-                                    "Nhập sai định dạng.", Alert.AlertType.ERROR);
+                            DialogMessage.message(null, changeStyleTextFieldByValidation(l),
+                                    MessageCons.SAI_DINH_DANG.getName(), Alert.AlertType.ERROR);
                         }
                     }else{
                         dvx_cbb.setStyle(styleErrorField);
                         DialogMessage.errorShowing("Không tìm thấy nguồn nhập xuất, vui lòng thử lại.");
                     }
                 }catch (NumberFormatException e){
-                    DialogMessage.errorShowing("Số sai định dạng, vui lòng thử lại");
+                    DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
                     throw new RuntimeException(e);
                 } catch (Exception e) {
-                    DialogMessage.errorShowing("có lỗi xảy ra, vui lòng thử lại sau.");
+                    DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
                     throw new RuntimeException(e);
                 }
             }
@@ -503,34 +495,34 @@ public class XuatController extends CommonFactory implements Initializable {
         }
     }
     private void mapPrice(int xd_id){
-        NguonNx n = dvx_cbb.getSelectionModel().getSelectedItem();
-        if (n!=null){
-            List<InvDto2> inventoryList = inventoryService.getPreInvPriceList(xd_id,n.getId());
-            if (!inventoryList.isEmpty()){
-                cbb_dongia.setItems(FXCollections.observableList(inventoryList.stream().filter(x->x.getSl_ton()!=0).map(InvDto2::getGia).toList()));
-                cbb_dongia.getSelectionModel().selectFirst();
-                Double in = cbb_dongia.getSelectionModel().getSelectedItem();
-                if (in!=null){
-                    cbb_dongia.setStyle(null);
-                    if (inventoryList.stream().anyMatch(x->x.getGia()==in)){
-                        InvDto2 i = inventoryList.stream().filter(x->x.getGia()==in).findFirst().orElse(null);
-                        if (i!=null){
-                            setInv_lb(i.getSl_ton());
-                        }else{
-                            setInv_lb(0);
-                        }
-                    }
-                }else{
-                    setInv_lb(0);
-                }
-            } else {
-                cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
-                setInv_lb(0);
+        i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),xd_id);
+        i = i.stream().filter(x->x.getNvdx_quantity()>0).toList();
+        if (!i.isEmpty()){
+            List<Double> priceList = i.stream().map(InventoryUnits::getPrice).toList();
+            setGiaCbbItems(priceList);
+            Double pre_price = cbb_dongia.getSelectionModel().getSelectedItem();
+            mapLabelPrice(pre_price);
+        }else{
+            setTonKhoLabel(0);
+            setGiaCbbItems(new ArrayList<>());
+        }
+    }
+    private void mapLabelPrice(Double pre_price){
+        if (pre_price!=null){
+            cbb_dongia.setStyle(null);
+            InventoryUnits preInventoryUnit = i.stream().filter(x->x.getPrice()==pre_price).findFirst().orElse(null);
+            if (preInventoryUnit!=null){
+                setTonKhoLabel(preInventoryUnit.getNvdx_quantity());
+            }else{
+                setTonKhoLabel(0);
             }
         }else{
-            cbb_dongia.setItems(FXCollections.observableList(new ArrayList<>()));
-            setInv_lb(0);
+            setTonKhoLabel(0);
         }
+    }
+    private void setGiaCbbItems(List<Double> ls){
+        cbb_dongia.setItems(FXCollections.observableList(ls));
+        cbb_dongia.getSelectionModel().selectFirst();
     }
     private void setCellValueFactoryXuat(){
         setcellFactory("phaixuat_str","thucxuat_str");
@@ -558,7 +550,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledger.setAmount(ls_socai.stream().mapToDouble(x-> ((double) x.getSoluong() *x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
-        ledger.setStatus("ACTIVE");
+        ledger.setStatus(StatusCons.ACTIVED.getName());
 
         if (tk_rd.isSelected()){
             ledger.setSl_tieuthu_md(0);
@@ -683,10 +675,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setDongia_str(TextToNumber.textToNum_2digits(ledgerDetails.getDon_gia()));
         return ledgerDetails;
     }
-    private void setInv_lb(double inv) {
-        inv_price = inv;
-        inv_lb.setText("Số lượng tồn: "+ TextToNumber.textToNum_2digits(inv) + " (Lit)");
-    }
+
     private ChitietNhiemVu identifyNhiemvu(){
         try {
             String text = tcx.getText();
@@ -783,7 +772,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
                     ls_socai.remove(ld);
-                    setInv_lb(inv_price+ld.getSoluong());
+                    setTonKhoLabel(inventory_quantity+ld.getSoluong());
                     tbView.setItems(FXCollections.observableList(ls_socai));
                     tbView.refresh();
                 }
@@ -798,5 +787,11 @@ public class XuatController extends CommonFactory implements Initializable {
     private void mapPrice2(){
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         mapPrice(lxd.getXd_id());
+    }
+
+    public void chitietExited(MouseEvent mouseEvent) {
+    }
+
+    public void chitietEnter(MouseEvent mouseEvent) {
     }
 }

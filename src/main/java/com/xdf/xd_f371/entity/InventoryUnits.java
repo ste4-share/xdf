@@ -18,11 +18,12 @@ import java.time.format.DateTimeFormatter;
 public class InventoryUnits {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private int id;
     @Column(name = "root_unit_id")
     private Long root_unit_id;
     @Column(name = "petro_id")
-    private Long petro_id;
+    private int petro_id;
     @Column(name = "price")
     private double price;
     @Column(name = "nvdx_quantity")
@@ -39,7 +40,7 @@ public class InventoryUnits {
 
     public InventoryUnits(LedgerDetails ld,Long rootID) {
         this.root_unit_id = rootID;
-        this.petro_id = (long) Integer.parseInt(String.valueOf(ld.getLoaixd_id()));
+        this.petro_id = ld.getLoaixd_id();
         this.price = ld.getDon_gia();
         this.status = StatusCons.ACTIVED.getName();
         if (ld.getSscd_nvdx().equals(Purpose.NVDX.getName())){
@@ -51,8 +52,7 @@ public class InventoryUnits {
         }
     }
 
-    public InventoryUnits(Long id, Long root_unit_id, Long petro_id, double price, double nvdx_quantity, double sscd_quantity, String status, LocalDateTime created_at) {
-        this.id = id;
+    public InventoryUnits(Long root_unit_id, int petro_id, double price, double nvdx_quantity, double sscd_quantity, String status, LocalDateTime created_at) {
         this.root_unit_id = root_unit_id;
         this.petro_id = petro_id;
         this.price = price;
