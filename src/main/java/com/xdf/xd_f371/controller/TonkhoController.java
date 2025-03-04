@@ -1,10 +1,10 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.dto.InventoryDto;
+import com.xdf.xd_f371.dto.InventoryUnitDto;
 import com.xdf.xd_f371.dto.PttkDto;
-import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,59 +32,57 @@ import java.util.stream.Collectors;
 public class TonkhoController implements Initializable {
 
     public static Stage tk_stage;
-    private static List<TonkhoDto> tkt = new ArrayList<>();
-    private static List<LichsuXNK> histories = new ArrayList<>();
-    public static TonkhoDto pickTonKho = new TonkhoDto();
+    private static List<InventoryUnitDto> inventoryUnitDtoArrayList = new ArrayList<>();
+    public static InventoryUnitDto pickTonKho = new InventoryUnitDto();
     private static List<PttkDto> pttkDtos = new ArrayList<>();
     public static NguonNx ref_unit = null;
     @FXML
-    public TableView<TonkhoDto> tb_tonkho;
-    @FXML
-    public TableView<LichsuXNK> tb_history;
+    private TableView<InventoryUnitDto> tb_inventory;
     @FXML
     public TableView<PttkDto> pttk_tb;
     @FXML
     public TableColumn<PttkDto, String> pttk_stt,pttk_loaixd,pttk_tenxd,pttk_e916,pttk_e921,pttk_e923,pttk_e927,pttk_dnb,pttk_dka,pttk_dvi,pttk_dns,pttk_fbo,pttk_tdv;
     @FXML
-    public TableColumn<TonkhoDto, String> col_stt_tk,col_tenxd_tk,col_cl,col_nvdx_tdk,col_sscd_tdk,
-            col_cong_tdk, col_nhap_nvdx, col_xuat_nvdx,col_nvdx, col_nhap_sscd, col_xuat_sscd,col_sscd,
-            col_nvdx_tck,col_sscd_tck,col_cong_tck;
+    public TableColumn<InventoryUnitDto, String> col_stt_i,col_tenxd_i,col_cl_i,col_nvdx_tdk_i,col_sscd_tdk_i,
+            col_cong_tdk_i, col_pre_nvdx_i, col_pre_sscd_i,col_pre_inv_i, col_nvdx_datt_i, col_sscd_datt_i,col_cong_datt_i;
     @FXML
-    public TableColumn<LichsuXNK, String> ls_stt,ls_so,ls_lp,ls_dvn,ls_dvx,
-            ls_tenxd, ls_cl,ls_soluong,ls_lnv, ls_tonsau,ls_gia, ls_create_at;
-    @FXML
-    private TextField ls_search, search_inventory,ls_search_so,from_date,to_date,timkiem_pttk_tf, ls_search_tendv;
-    @FXML
-    private DatePicker ls_s_date;
+    private TextField search_inventory,timkiem_pttk_tf;
     @FXML
     private Label sd_lb, ed_lb,dv_lb;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
-    private LichsuService lichsuService;
+    private ConfigurationService configurationService;
     @Autowired
     private NguonNxService nguonNxService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        tb_tonkho.setPrefWidth(DashboardController.screenWidth);
-        tb_tonkho.setPrefHeight(DashboardController.screenHeigh-350);
-        tb_history.setPrefWidth(DashboardController.screenWidth);
-        tb_history.setPrefHeight(DashboardController.screenHeigh-350);
+        tb_inventory.setPrefWidth(DashboardController.screenWidth);
+        tb_inventory.setPrefHeight(DashboardController.screenHeigh-350);
         pttk_tb.setPrefWidth(DashboardController.screenWidth);
         pttk_tb.setPrefHeight(DashboardController.screenHeigh-350);
-
-        CommonFactory.setVi_DatePicker(ls_s_date);
         setLb();
-        pickTonKho = new TonkhoDto();
-        fillDataToTableTonkho();
-        setTonkhoTongToCol();
-        setLichsuTb();
-        fillDataToTableLichsu();
+        fillDataToTableInventoryUnit();
+        setCellFactoryInventoryTb();
         setCellFactoryPttk();
         initPttkTb();
-        searching(tkt.stream().map(TonkhoDto::getTenxd).toList());
-        searching_ls(histories.stream().map(LichsuXNK::getTen_xd).toList());
+        searching(inventoryUnitDtoArrayList.stream().map(InventoryUnitDto::getTenxd).toList());
+    }
+    private void fillDataToTableInventoryUnit() {
+        if (ref_unit!=null){
+            dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
+            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDtoByUnit(ref_unit.getId());
+            setDataToTbInventory(inventoryUnitDtoArrayList);
+        }else{
+            dv_lb.setText("--Tồn kho toàn đơn vị--");
+            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDto();
+            setDataToTbInventory(inventoryUnitDtoArrayList);
+        }
+    }
+    private void setDataToTbInventory(List<InventoryUnitDto> ls){
+        tb_inventory.setItems(FXCollections.observableList(ls));
+        tb_inventory.refresh();
     }
     private void setLb(){
         Accounts acc = ConnectLan.pre_acc;
@@ -99,9 +96,9 @@ public class TonkhoController implements Initializable {
         indentifyNguonnx();
     }
     private void indentifyNguonnx(){
-        Integer i =inventoryService.getDvFromInv();
-        if (i!=null){
-            Optional<NguonNx> nx = nguonNxService.findById(i);
+        Optional<Configuration> i = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
+        if (i.isPresent()){
+            Optional<NguonNx> nx = nguonNxService.findById(Integer.parseInt(i.get().getValue()));
             nx.ifPresent(nguonNx -> {
                 ref_unit=nguonNx;
                 dv_lb.setText(nguonNx.getTen());
@@ -110,41 +107,6 @@ public class TonkhoController implements Initializable {
             ref_unit=null;
             dv_lb.setText(null);
         }
-    }
-    private void fillDataToTableLichsu() {
-        histories = new ArrayList<>();
-        Accounts acc = ConnectLan.pre_acc;
-        if (acc.getSd()!=null && acc.getEd()!=null){
-            List<LichsuXNK> ls = lichsuService.findAllByQuyid(acc.getSd(),acc.getEd());
-            ls.forEach(x->histories.add(new LichsuXNK(x)));
-        }else{
-            List<LichsuXNK> ls = lichsuService.findAll();
-            ls.forEach(x->histories.add(new LichsuXNK(x)));
-        }
-        tb_history.setItems(FXCollections.observableArrayList(histories));
-    }
-    private void mapLsTb(List<LichsuXNK> ls){
-        tb_history.setItems(FXCollections.observableArrayList(ls));
-    }
-
-    private void fillDataToTableTonkho(){
-        Accounts acc = ConnectLan.pre_acc;
-        if (acc.getSd()!=null && acc.getEd()!=null){
-            if (ref_unit!=null){
-                dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
-                tkt = inventoryService.getAllTonkhoTDV(acc.getSd(),acc.getEd(),ref_unit.getId());
-            } else {
-                dv_lb.setText("--Tồn kho toàn đơn vị--");
-                tkt = inventoryService.getAllTonkho(acc.getSd(),acc.getEd());
-            }
-        }else{
-            tkt = inventoryService.getAllTonkhoNotCondition();
-        }
-        tb_tonkho.setItems(FXCollections.observableArrayList(tkt));
-        tb_tonkho.refresh();
-    }
-    private void mapInvTb(List<TonkhoDto> ls){
-        tb_tonkho.setItems( FXCollections.observableArrayList(ls));
     }
     private void initPttkTb(){
         Accounts q = ConnectLan.pre_acc;
@@ -158,6 +120,21 @@ public class TonkhoController implements Initializable {
     private void mapPttkTb(List<PttkDto> ls){
         pttk_tb.setItems( FXCollections.observableArrayList(ls));
         pttk_tb.refresh();
+    }
+    private void setCellFactoryInventoryTb() {
+        col_stt_i.setSortable(false);
+        col_stt_i.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_inventory.getItems().indexOf(column.getValue())+1).asString());
+        col_tenxd_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("tenxd"));
+        col_cl_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("loai"));
+        col_nvdx_tdk_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("tdk_nvdx_str"));
+        col_sscd_tdk_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("tdk_sscd_str"));
+        col_cong_tdk_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("tdk_str"));
+        col_pre_nvdx_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("pre_nvdx_str"));
+        col_pre_sscd_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("pre_sscd_str"));
+        col_pre_inv_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("pre_str"));
+        col_nvdx_datt_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("datt_nvdx_str"));
+        col_sscd_datt_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("datt_sscd_str"));
+        col_cong_datt_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("datt_str"));
     }
     private void setCellFactoryPttk(){
         pttk_stt.setSortable(false);
@@ -175,39 +152,6 @@ public class TonkhoController implements Initializable {
         pttk_fbo.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("fb"));
         pttk_tdv.setCellValueFactory(new PropertyValueFactory<PttkDto, String>("tdv"));
     }
-    private void setTonkhoTongToCol(){
-        col_stt_tk.setSortable(false);
-        col_stt_tk.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_tonkho.getItems().indexOf(column.getValue())+1).asString());
-        col_tenxd_tk.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tenxd"));
-        col_cl.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("loai"));
-        col_nvdx_tdk.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tdk_nvdx_str"));
-        col_sscd_tdk.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tdk_sscd_str"));
-        col_cong_tdk.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tdk_total"));
-        col_nhap_nvdx.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("nhap_nvdx_str"));
-        col_xuat_nvdx.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("xuat_nvdx_str"));
-        col_nvdx.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("nvdx_str"));
-        col_nhap_sscd.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("nhap_sscd_str"));
-        col_xuat_sscd.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("xuat_sscd_str"));
-        col_sscd.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("sscd_str"));
-        col_nvdx_tck.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tck_nvdx_str"));
-        col_sscd_tck.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tck_sscd_str"));
-        col_cong_tck.setCellValueFactory(new PropertyValueFactory<TonkhoDto, String>("tck_total"));
-    }
-    private void setLichsuTb(){
-        ls_stt.setSortable(false);
-        ls_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_history.getItems().indexOf(column.getValue())+1).asString());
-        ls_so.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("so"));
-        ls_lp.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("loai_phieu"));
-        ls_dvn.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("dvn"));
-        ls_dvx.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("dvx"));
-        ls_tenxd.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("ten_xd"));
-        ls_cl.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("chungloaixd"));
-        ls_soluong.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("soluong_str"));
-        ls_tonsau.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("tonsau_str"));
-        ls_create_at.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("createtime_str"));
-        ls_lnv.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("type"));
-        ls_gia.setCellValueFactory(new PropertyValueFactory<LichsuXNK, String>("gia_str"));
-    }
     private void searching(List<String> search_arr){
         TextFields.bindAutoCompletion(search_inventory,t -> {
             return search_arr.stream().filter(elem
@@ -216,17 +160,10 @@ public class TonkhoController implements Initializable {
             }).collect(Collectors.toList());
         });
     }
-    private void searching_ls(List<String> search_arr){
-        TextFields.bindAutoCompletion(ls_search,t -> {
-            return search_arr.stream().filter(elem
-                    -> {
-                return elem.toLowerCase().contains(t.getUserText().toLowerCase());
-            }).collect(Collectors.toList());
-        });
-    }
+
     @FXML
     public void setClickToTonTb(MouseEvent mouseEvent) {
-        TonkhoDto spotDto = tb_tonkho.getSelectionModel().getSelectedItem();
+        InventoryUnitDto spotDto = tb_inventory.getSelectionModel().getSelectedItem();
         if (mouseEvent.getClickCount() == 2 && spotDto != null) {
             pickTonKho = spotDto;
             tk_stage = new Stage();
@@ -240,7 +177,7 @@ public class TonkhoController implements Initializable {
                 DialogMessage.successShowing(spotDto.getTenxd() + " đã hết hàng!! Vui lòng nhập thêm");
             }else{
                 Common.openNewStage("changesscd-form.fxml", tk_stage,"Thay Doi", StageStyle.DECORATED);
-                fillDataToTableTonkho();
+                fillDataToTableInventoryUnit();
             }
         }
     }
@@ -248,64 +185,27 @@ public class TonkhoController implements Initializable {
     public void addnew_petro(ActionEvent actionEvent) {
         tk_stage = new Stage();
         Common.openNewStage("add_inv_form.fxml", tk_stage,"THEM MOI", StageStyle.DECORATED);
-        fillDataToTableTonkho();
+        fillDataToTableInventoryUnit();
     }
     @FXML
     public void timkiem_tk_clicked(MouseEvent mouseEvent) {
         search_inventory.selectAll();
     }
     @FXML
-    public void ls_search_clicked(MouseEvent mouseEvent) {
-        ls_search.selectAll();
-    }
-    @FXML
     public void inv_kr(KeyEvent keyEvent) {
         String text = search_inventory.getText().trim();
         if (!text.isEmpty()){
-            List<TonkhoDto> ls = tkt.stream().filter(x->x.getTenxd().equals(text)).toList();
-            mapInvTb(ls);
+            List<InventoryUnitDto> ls = inventoryUnitDtoArrayList.stream().filter(x->x.getTenxd().equals(text)).toList();
+            setDataToTbInventory(ls);
         }else{
-            mapInvTb(tkt);
-        }
-    }
-    @FXML
-    public void ls_kr(KeyEvent keyEvent) {
-        String text = ls_search.getText().trim();
-        if (!text.isEmpty()){
-            List<LichsuXNK> ls = histories.stream().filter(x->x.getTen_xd().equals(text)).toList();
-            mapLsTb(ls);
-        } else {
-            mapLsTb(histories);
-        }
-    }
-    @FXML
-    public void sd_clicked(ActionEvent actionEvent) {
-        LocalDate sd = ls_s_date.getValue();
-        if (sd!=null){
-            mapLsTb(histories.stream().filter(x->x.getSd().isAfter(sd)).toList());
-        } else {
-            mapLsTb(histories);
-        }
-    }
-    @FXML
-    public void ls_search_so_clicked(MouseEvent mouseEvent) {
-        ls_search_so.selectAll();
-    }
-    @FXML
-    public void ls_so_kr(KeyEvent keyEvent) {
-        String text = ls_search_so.getText().trim();
-        if (!text.isEmpty()){
-            List<LichsuXNK> ls = histories.stream().filter(x->x.getSo()==Integer.parseInt(text)).toList();
-            mapLsTb(ls);
-        } else {
-            mapLsTb(histories);
+            setDataToTbInventory(inventoryUnitDtoArrayList);
         }
     }
     @FXML
     public void endQuarterAction(ActionEvent actionEvent) {
         tk_stage = new Stage();
         Common.openNewStage("quarter.fxml", tk_stage,null, StageStyle.UTILITY);
-        fillDataToTableTonkho();
+        fillDataToTableInventoryUnit();
     }
 
     @FXML
@@ -319,19 +219,6 @@ public class TonkhoController implements Initializable {
             mapPttkTb(pttkDtos.stream().filter(x->x.getTenxd().toLowerCase().contains(t)).toList());
         }else{
             mapPttkTb(pttkDtos);
-        }
-    }
-    @FXML
-    public void ls_search_tendv_clicked(MouseEvent mouseEvent) {
-        ls_search_tendv.selectAll();
-    }
-    @FXML
-    public void ls_tendv_kr(KeyEvent keyEvent) {
-        String t = ls_search_tendv.getText().trim();
-        if (!t.isEmpty()){
-            mapLsTb(histories.stream().filter(x->x.getDvn().toLowerCase().contains(t)).toList());
-        }else{
-            mapLsTb(histories);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.InventoryDto;
+import com.xdf.xd_f371.dto.InventoryUnitDto;
 import com.xdf.xd_f371.dto.PriceAndQuantityDto;
 import com.xdf.xd_f371.dto.TonkhoDto;
 import com.xdf.xd_f371.service.InventoryService;
@@ -27,7 +28,7 @@ public class ChangingController implements Initializable {
     public static Stage addAff_stage;
     public static double quantity =0;
     public static double quantity_convert =0;
-    private static TonkhoDto tonkho_selected;
+    private static InventoryUnitDto tonkho_selected;
     private static List<PriceAndQuantityDto> sscd_ls_buf = new ArrayList<>();
     private static List<PriceAndQuantityDto> nvdx_ls_buf = new ArrayList<>();
     public static List<InventoryDto> list = new ArrayList<>();

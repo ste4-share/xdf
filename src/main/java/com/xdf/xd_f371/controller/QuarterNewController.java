@@ -41,7 +41,7 @@ public class QuarterNewController implements Initializable {
         initDviCbb();
     }
     private void initDviCbb() {
-        ComponentUtil.setItemsToComboBox(dviCbb,nguonNxService.findByAllBy(), NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(dviCbb,nguonNxService.findAllById(TonkhoController.ref_unit.getId()), NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(dviCbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
         dviCbb.getSelectionModel().selectFirst();
     }

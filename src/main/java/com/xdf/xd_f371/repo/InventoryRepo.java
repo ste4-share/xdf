@@ -69,6 +69,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "group by 1) b on lxd.id=loaixd_id\n" +
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkho_toanDv(@Param("sd") LocalDate sd, @Param("ed") LocalDate ed,@Param("dvi_id") int dv_id);
+
     @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +
             "case when max(a.nhap_nvdx) is null then 0 else max(a.nhap_nvdx) end as nhap_nvdx,\n" +
             "case when max(a.xuat_nvdx) is null then 0 else max(a.xuat_nvdx) end as xuat_nvdx,\n" +
@@ -86,6 +87,32 @@ public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
             "group by 1,2,3,4,cl.priority_1,cl.priority_2,cl.priority_3\n" +
             "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
     List<Object[]> getAllTonkhoNotCondition();
+    @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +
+            "case when tdk_nvdx is null then 0 else tdk_nvdx end,\n" +
+            "case when tdk_sscd is null then 0 else tdk_sscd end,\n" +
+            "case when pre_nvdx is null then 0 else pre_nvdx end,\n" +
+            "case when pre_sscd is null then 0 else pre_sscd end,\n" +
+            "cl.priority_1,cl.priority_2,cl.priority_3\n" +
+            "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
+            "left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory\n" +
+            "group by 1) a on a.petro_id=lxd.id\n" +
+            "left join (SELECT petro_id,sum(nvdx_quantity) as pre_nvdx,sum(sscd_quantity) as pre_sscd FROM public.inventory_units\n" +
+            "group by 1) b on b.petro_id=lxd.id\n" +
+            "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
+    List<Object[]> getAllInventoryUnit();
+    @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +
+            "case when tdk_nvdx is null then 0 else tdk_nvdx end,\n" +
+            "case when tdk_sscd is null then 0 else tdk_sscd end,\n" +
+            "case when pre_nvdx is null then 0 else pre_nvdx end,\n" +
+            "case when pre_sscd is null then 0 else pre_sscd end,\n" +
+            "cl.priority_1,cl.priority_2,cl.priority_3\n" +
+            "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
+            "left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory where dvi_id=:rid \n" +
+            "group by 1) a on a.petro_id=lxd.id\n" +
+            "left join (SELECT petro_id,sum(nvdx_quantity) as pre_nvdx,sum(sscd_quantity) as pre_sscd FROM public.inventory_units where root_unit_id=:rid \n" +
+            "group by 1) b on b.petro_id=lxd.id\n" +
+            "order by cl.priority_1,cl.priority_2,cl.priority_3",nativeQuery = true)
+    List<Object[]> getAllInventoryUnitByRootId(@Param("rid") int root_unitid);
     @Query(value = "select dvi_id from inventory limit 1",nativeQuery = true)
     Optional<Integer> getdviIdFromIn();
 }

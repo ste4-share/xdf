@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.service;
 
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.controller.ConnectLan;
@@ -33,23 +34,16 @@ public class InventoryService {
     public Inventory findById(int id){
         return inventoryRepo.findById(id).orElse(null);
     }
-    public List<TonkhoDto> getAllTonkhoNotCondition(){
-        return mapToTonkhoDto(inventoryRepo.getAllTonkhoNotCondition());
+    public List<InventoryUnitDto> getAllInventoryUnitDto(){
+        return mapToInventoryUnitDto(inventoryRepo.getAllInventoryUnit());
+    }public List<InventoryUnitDto> getAllInventoryUnitDtoByUnit(int rid){
+        return mapToInventoryUnitDto(inventoryRepo.getAllInventoryUnitByRootId(rid));
     }
-    public Integer getDvFromInv(){
-        return inventoryRepo.getdviIdFromIn().orElse(null);
-    }
-    public List<TonkhoDto> getAllTonkho(LocalDate sd, LocalDate ed) {
-        return mapToTonkhoDto(inventoryRepo.getAllTonkho(sd,ed));
-    }
-    public List<TonkhoDto> getAllTonkhoTDV(LocalDate sd, LocalDate ed,int dv_id) {
-        return mapToTonkhoDto(inventoryRepo.getAllTonkho_toanDv(sd,ed,dv_id));
-    }
-    public List<TonkhoDto> mapToTonkhoDto(List<Object[]> results) {
-        List<TonkhoDto> ls = new ArrayList<>();
+    public List<InventoryUnitDto> mapToInventoryUnitDto(List<Object[]> results) {
+        List<InventoryUnitDto> ls = new ArrayList<>();
         for (Object[] row : results) {
-            ls.add(new TonkhoDto((int) row[0], (String) row[1], (String) row[2], (String) row[3],
-                    (double) row[4],(double) row[5], (double) row[6],(double) row[7],(double) row[8],(double) row[9],(double) row[10],(double) row[11]));
+            ls.add(new InventoryUnitDto((int) row[0], (String) row[1], (String) row[2], (String) row[3],
+                    (double) row[4],(double) row[5], (double) row[6],(double) row[7]));
         }return ls;
     }
     public List<InventoryDto> mapPreInventoryPetro(List<Object[]> results) {
@@ -103,8 +97,8 @@ public class InventoryService {
             l_pre.setXuat_sscd(inv.getXuat_sscd());
             ledgerDetailRepo.save(l_pre);
         }else{
-            DialogMessage.errorShowing("Something went wrong!");
-            throw new RuntimeException("Something went wrong!");
+            DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+            throw new RuntimeException(MessageCons.CO_LOI_XAY_RA.getName());
         }
     }
     @Transactional
