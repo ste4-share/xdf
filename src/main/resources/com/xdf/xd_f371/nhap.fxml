@@ -13,6 +13,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -230,13 +231,16 @@
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor></ComboBox>
-                              <Hyperlink disable="true" onMouseEntered="#chitietEntered" onMouseExited="#chitietExited" prefHeight="37.0" prefWidth="75.0" text="chi tiết">
+                              <Hyperlink disable="true" onMouseEntered="#chitietEntered" onMouseExited="#chitietExited" prefHeight="37.0" prefWidth="88.0" text="Chi tiết">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
                                  <font>
                                     <Font name="Cambria Italic" size="12.0" />
                                  </font>
+                                 <tooltip>
+                                    <Tooltip text="Empty Tooltip" />
+                                 </tooltip>
                               </Hyperlink>
                            </children>
                            <VBox.margin>
@@ -414,9 +418,9 @@
                </font></Label>
             <Separator layoutX="16.0" layoutY="49.0" prefHeight="12.0" prefWidth="496.0" />
             <Separator layoutX="581.0" layoutY="50.0" prefHeight="12.0" prefWidth="561.0" />
-            <Button id="addbtn" fx:id="addbtn" layoutX="1040.0" layoutY="562.0" mnemonicParsing="false" onAction="#btnInsert" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #027a20; -fx-background-radius: 10;" text="Thêm mới" textFill="WHITE">
+            <Button id="addbtn" fx:id="addbtn" layoutX="1040.0" layoutY="562.0" mnemonicParsing="false" onAction="#btnInsert" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #027a20; -fx-background-radius: 10;" text="Thêm" textFill="WHITE">
                <font>
-                  <Font name="Cambria Bold" size="17.0" />
+                  <Font name="Cambria Bold" size="12.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -450,17 +454,17 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </TableView>
-      <Button id="importbtn" fx:id="importbtn" layoutX="471.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnImport" prefHeight="38.0" prefWidth="116.0" style="-fx-background-color: #0000b3; -fx-background-radius: 10;" text="NHẬP" textFill="#fffbfb">
+      <Button id="importbtn" fx:id="importbtn" layoutX="478.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnImport" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #0000b3; -fx-background-radius: 10;" text="NHẬP" textFill="#fffbfb">
          <font>
-            <Font name="Cambria Bold" size="18.0" />
+            <Font name="Cambria Bold" size="14.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button id="cancelbtn" fx:id="cancelbtn" cancelButton="true" layoutX="611.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="38.0" prefWidth="116.0" style="-fx-background-color: #595959; -fx-background-radius: 10;" text="HỦY" textFill="WHITE">
+      <Button id="cancelbtn" fx:id="cancelbtn" cancelButton="true" layoutX="618.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #595959; -fx-background-radius: 10;" text="HỦY" textFill="WHITE">
          <font>
-            <Font name="Cambria Bold" size="18.0" />
+            <Font name="Cambria Bold" size="14.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
