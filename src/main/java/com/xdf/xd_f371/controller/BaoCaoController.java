@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -341,16 +342,18 @@ public class BaoCaoController implements Initializable {
                 if (row.getCell(j+begin_col)==null){
                     if (val==null){
                         row.createCell(j+begin_col).setCellValue(val);
-                    } else if (StringUtils.isNumeric(val)){
-                        row.createCell(j+begin_col).setCellValue(new BigDecimal(val).longValue());
+                    } else if (Common.isDoubleNumber(val)){
+                        BigDecimal bigDecimal = new BigDecimal(val).setScale(2, RoundingMode.HALF_UP);
+                        row.createCell(j+begin_col).setCellValue(bigDecimal.doubleValue());
                     } else {
                         row.createCell(j+begin_col).setCellValue(val);
                     }
                 }else{
                     if (val==null){
                         row.getCell(j+begin_col).setCellValue(val);
-                    } else if (StringUtils.isNumeric(val)){
-                        row.getCell(j+begin_col).setCellValue(new BigDecimal(val).longValue());
+                    } else if (Common.isDoubleNumber(val)){
+                        BigDecimal bigDecimal = new BigDecimal(val).setScale(2, RoundingMode.HALF_UP);
+                        row.getCell(j+begin_col).setCellValue(bigDecimal.doubleValue());
                     } else {
                         row.getCell(j+begin_col).setCellValue(val);
                     }
@@ -386,16 +389,18 @@ public class BaoCaoController implements Initializable {
                 if (row.getCell(j+1)==null){
                     if (val==null){
                         row.createCell(j+1).setCellValue(val);
-                    } else if (StringUtils.isNumeric(val)){
-                        row.createCell(j+1).setCellValue(new BigDecimal(val).longValue());
+                    } else if (Common.isDoubleNumber(val)){
+                        BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
+                        row.createCell(j+1).setCellValue(bigDecimal.doubleValue());
                     } else {
                         row.createCell(j+1).setCellValue(val);
                     }
                 }else{
                     if (val==null){
                         row.getCell(j+1).setCellValue(val);
-                    } else if (StringUtils.isNumeric(val)){
-                        row.getCell(j+1).setCellValue(new BigDecimal(val).longValue());
+                    } else if (Common.isDoubleNumber(val)){
+                        BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
+                        row.getCell(j+1).setCellValue(bigDecimal.doubleValue());
                     } else {
                         row.getCell(j+1).setCellValue(val);
                     }

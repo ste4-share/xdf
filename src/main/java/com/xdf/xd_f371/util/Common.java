@@ -184,6 +184,7 @@ public class Common {
             DialogMessage.message("THÔNG BÁO LỖI", e.getMessage(), "Có lỗi xảy ra!", Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -243,6 +244,15 @@ public class Common {
             return false;
         } catch(Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+    public static boolean isDoubleNumber(String number){
+        try {
+            double i = Double.parseDouble(number);
+            long l = Long.parseLong(number);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 }
