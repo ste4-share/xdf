@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
 @Component
 public class LedgerDetailController implements Initializable {
     private List<LedgerDetails> details = new ArrayList<>();
-    private final Ledger ledger = LedgerController.ledger_id;
+    private final Ledger ledger = new Ledger();
     @FXML
     private Label phieu,tungay,denngay,dvx,dvn,nv,km,gio,loainv,nguoinhan,xmt,loai_xmt,dinhmuckm,dinhmucgio,dinhmucmd,dinhmuctk,so,tcnx,lenhkh,soxe;
     @FXML

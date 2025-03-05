@@ -33,8 +33,8 @@ public class LedgerService {
     public List<MiniLedgerDto> findAllInterfaceLedger(String status){
         return ledgersRepo.findAllInterfaceLedger(status);
     }
-    public List<Ledger> findAllLedgerDto(LocalDate st,LocalDate et){
-        return ledgersRepo.findAllLedgerDtoByTime(st,et);
+    public List<Ledger> findAllLedgerDto(LocalDate st,LocalDate et,int id){
+        return ledgersRepo.findAllLedgerDtoByTime(st,et,id);
     }
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();
