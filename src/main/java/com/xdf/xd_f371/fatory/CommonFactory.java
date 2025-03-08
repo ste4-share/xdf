@@ -17,16 +17,19 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
 public class CommonFactory {
+    public static String pre_path;
     protected static Stage primaryStage;
     protected static double inventory_quantity = 0;
     protected Configuration config = null;
@@ -178,5 +181,18 @@ public class CommonFactory {
                         : null;
             }
         });
+    }
+    public static void setSelectDirectory(Stage primaryStage){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select a Directory");
+
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+
+        if (selectedDirectory != null) {
+            pre_path= selectedDirectory.getAbsolutePath();
+        } else {
+            pre_path = null;
+            DialogMessage.message(null, null,"No directory selected.", Alert.AlertType.WARNING);
+        }
     }
 }

@@ -21,7 +21,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -81,7 +80,7 @@ public class BaoCaoController implements Initializable {
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null){
-                return mapDataToSheet(wb.getSheet(sheetName), 8,
+                return Common.mapDataToSheet(wb.getSheet(sheetName), 8,
                         SubQuery.lcv_q(q.getSd(),q.getEd()),1);
             }
         }else{
@@ -118,52 +117,52 @@ public class BaoCaoController implements Initializable {
     }
     private Integer map_ttnlbtkh_create(XSSFWorkbook wb,String sheetName){
         if (q!=null){
-            return mapDataToSheet(wb.createSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()),1);
+            return Common.mapDataToSheet(wb.createSheet(sheetName), 8,SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()),1);
         }
         return null;
     }
     private Integer map_ttnlbtkh_getting(XSSFWorkbook wb,String sheetName){
         if (q!=null) {
-            int row_index1 = mapDataToSheet(wb.getSheet(sheetName), 8,
+            int row_index1 = Common.mapDataToSheet(wb.getSheet(sheetName), 8,
                     SubQuery.ttnlbtkh_for_mb(q.getSd(),q.getEd()),1);
-            int row_index2 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,
+            int row_index2 = Common.mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,
                     SubQuery.ttnlbtkh_for_all(q.getSd(),q.getEd()),1);
-            int row_index3 = mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,
+            int row_index3 = Common.mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,
                     SubQuery.ttnlbtkh_for_dv(q.getSd(),q.getEd()),1);
-            return mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,
+            return Common.mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,
                     SubQuery.ttnlbtkh_for_tongmaybay(q.getSd(),q.getEd()),1);
         }
         return 0;
     }
     private Integer map_ttxdtnv_create(XSSFWorkbook wb,String sheetName){
         if (q!=null) {
-            return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.ttxd_nv(LocalDate.now().getYear()), 4);
+            return Common.mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.ttxd_nv(LocalDate.now().getYear()), 4);
         }
         return 0;
     }
     private Integer map_ttxdtnv_getting(XSSFWorkbook wb,String sheetName){
         if (q!=null){
-            return mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(LocalDate.now().getYear()),4);
+            return Common.mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(LocalDate.now().getYear()),4);
         }
         return 0;
     }
     private Integer map_ttxd_xmt_create(XSSFWorkbook wb,String sheetName){
         if (q!=null) {
-            return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_ttxd_xmt_q(q.getSd(),q.getEd(),q.getSd().getYear()), 4);
+            return Common.mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_ttxd_xmt_q(q.getSd(),q.getEd(),q.getSd().getYear()), 4);
         }
         return 0;
     }
     private Integer map_ttxd_xmt_get(XSSFWorkbook wb,String sheetName){
         if (q!=null) {
-            return mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_ttxd_xmt_q(q.getSd(),q.getEd(),q.getSd().getYear()), 4);
+            return Common.mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_ttxd_xmt_q(q.getSd(),q.getEd(),q.getSd().getYear()), 4);
         }
         return 0;
     }
     private Integer map_pttk_create(XSSFWorkbook wb,String sheetName){
-        return mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_pttk_q(), 4);
+        return Common.mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_pttk_q(), 4);
     }
     private Integer map_pttk_get(XSSFWorkbook wb,String sheetName){
-        return mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_pttk_q(), 4);
+        return Common.mapDataToSheet(wb.getSheet(sheetName), 8, SubQuery.bc_pttk_q(), 4);
     }
     @FXML
     public void bc_nxt(ActionEvent actionEvent) {
@@ -328,40 +327,7 @@ public class BaoCaoController implements Initializable {
         String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
         return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
     }
-    private int mapDataToSheet(XSSFSheet sheet,  int begin_data_current,String query, int begin_col){
-        ReportDAO reportDAO = new ReportDAO();
-        List<Object[]> nxtls = reportDAO.findByWhatEver(query);
-        for(int i =0; i< nxtls.size(); i++){
-            Object[] rows_data = nxtls.get(i);
-            XSSFRow row = sheet.getRow(begin_data_current+i);
-            if (row==null){
-                row = sheet.createRow(begin_data_current+i);
-            }
-            for (int j =0;j<rows_data.length;j++){
-                String val = rows_data[j]==null ?"" : rows_data[j].toString();
-                if (row.getCell(j+begin_col)==null){
-                    if (val==null){
-                        row.createCell(j+begin_col).setCellValue(val);
-                    } else if (Common.isDoubleNumber(val)){
-                        BigDecimal bigDecimal = new BigDecimal(val).setScale(2, RoundingMode.HALF_UP);
-                        row.createCell(j+begin_col).setCellValue(bigDecimal.doubleValue());
-                    } else {
-                        row.createCell(j+begin_col).setCellValue(val);
-                    }
-                }else{
-                    if (val==null){
-                        row.getCell(j+begin_col).setCellValue(val);
-                    } else if (Common.isDoubleNumber(val)){
-                        BigDecimal bigDecimal = new BigDecimal(val).setScale(2, RoundingMode.HALF_UP);
-                        row.getCell(j+begin_col).setCellValue(bigDecimal.doubleValue());
-                    } else {
-                        row.getCell(j+begin_col).setCellValue(val);
-                    }
-                }
-            }
-        }
-        return nxtls.size();
-    }
+
     private int createDataSheet(XSSFSheet sheet,String query) {
         int sizett = arr_tt.size();
         ReportDAO reportDAO = new ReportDAO();

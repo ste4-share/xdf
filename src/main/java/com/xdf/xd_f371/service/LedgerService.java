@@ -36,6 +36,11 @@ public class LedgerService {
     public List<Ledger> findAllLedgerDto(LocalDate st,LocalDate et,int id){
         return ledgersRepo.findAllLedgerDtoByTime(st,et,id);
     }
+    public List<String> getColumnNames_LEDGER(){
+        return ledgersRepo.getColumnNames_LEDGER();
+    }public List<String> getColumnNames_LEDGER_DETAIL(){
+        return ledgersRepo.getColumnNames_LEDGER_DETAIL();
+    }
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();
     }

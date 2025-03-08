@@ -51,4 +51,8 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
 
     @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid",nativeQuery = true)
     List<Ledger> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed,@Param("dvid") int dvid);
+    @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='ledgers';",nativeQuery = true)
+    List<String> getColumnNames_LEDGER();
+    @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='ledger_details';",nativeQuery = true)
+    List<String> getColumnNames_LEDGER_DETAIL();
 }

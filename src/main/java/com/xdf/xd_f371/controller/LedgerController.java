@@ -1,14 +1,12 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.ConfigCons;
-import com.xdf.xd_f371.cons.LoaiPhieuCons;
-import com.xdf.xd_f371.cons.MessageCons;
-import com.xdf.xd_f371.cons.StatusCons;
+import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.dto.InvDto3;
 import com.xdf.xd_f371.entity.Ledger;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.LedgerService;
 import com.xdf.xd_f371.service.NguonNxService;
@@ -21,13 +19,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,8 +44,9 @@ import java.util.ResourceBundle;
 
 @Component
 public class LedgerController implements Initializable {
-    private static List<Ledger> ledgerSelectList = new ArrayList<>();
-    private static List<String> selectedDateLs = new ArrayList<>();
+    private final String file_name = "data.xlsx";
+    private List<Ledger> ledgerSelectList = new ArrayList<>();
+    private List<String> selectedDateLs = new ArrayList<>();
     private List<LedgerDetails> details = new ArrayList<>();
     private LocalDate currentDateSelected;
     public static Stage primaryStage;
@@ -192,7 +200,7 @@ public class LedgerController implements Initializable {
         doichieu_table_2.setPrefWidth(DashboardController.screenWidth-300);
         doichieu_table_2.setPrefHeight(DashboardController.screenHeigh-500);
         tonkho_tb.setPrefWidth(DashboardController.screenWidth-300);
-        tonkho_tb.setPrefHeight(DashboardController.screenHeigh-400);
+        tonkho_tb.setPrefHeight(DashboardController.screenHeigh-800);
     }
     @FXML
     public void select_date_Clicked(MouseEvent mouseEvent) {
@@ -338,5 +346,103 @@ public class LedgerController implements Initializable {
         }else{
             setLocalDateList(selectedDateLs);
         }
+    }
+    @FXML
+    public void export_fileClicked(MouseEvent mouseEvent) {
+        CommonFactory.setSelectDirectory(DashboardController.primaryStage);
+        System.out.println("prePath: " +CommonFactory.pre_path);
+        mapLEdgerDataToFile();
+    }
+    @FXML
+    public void importFileClicked(MouseEvent mouseEvent) {
+        CommonFactory.setSelectDirectory(DashboardController.primaryStage);
+        System.out.println("prePath: " +CommonFactory.pre_path);
+    }
+    private void mapLEdgerDataToFile(){
+        try {
+            String file_n = CommonFactory.pre_path+"\\"+file_name;
+            File file = new File(file_n);
+            if (file.exists()){
+                Common.deleteExcel(file_n);
+            }
+            file.createNewFile();
+            FileInputStream fis = new FileInputStream(file);
+            XSSFWorkbook wb = new XSSFWorkbook();
+            //
+            XSSFSheet sheet = wb.createSheet("SOCAI_DATA");
+            ReportDAO reportDAO = new ReportDAO();
+            List<Object[]> nxtls = reportDAO.findByWhatEver("select * from ledgers where status like 'ACTIVE'");
+            setCellExcel(wb,sheet,nxtls,ledgerService.getColumnNames_LEDGER());
+
+            XSSFSheet sheet2 = wb.createSheet("CHITIETSOCAI_DATA");
+            List<Object[]> nxtls2 = reportDAO.findByWhatEver("select ld from ledger_details ld join ledgers l on ld.ledger_id=l.id where status like 'ACTIVE'");
+            setCellExcel(wb,sheet2,nxtls2,ledgerService.getColumnNames_LEDGER_DETAIL());
+
+            if (DialogMessage.callAlertWithMessage(null,null,"successfully", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                Common.openDesktop(CommonFactory.pre_path);
+            }
+
+            fis.close();
+            FileOutputStream fileOutputStream = new FileOutputStream(CommonFactory.pre_path+"\\"+file_name);
+            XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
+            wb.write(fileOutputStream);
+            fileOutputStream.close();
+            wb.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void setCellExcel(XSSFWorkbook wb,XSSFSheet sheet,List<Object[]> nxtls,List<String> titles){
+        XSSFRow title_row = sheet.createRow(0);
+        for (int i =0; i< titles.size();i++){
+            XSSFCell cell = title_row.createCell(i);
+            XSSFCellStyle style = wb.createCellStyle();
+            setCellBorderStyle(style,cell);
+            setBoldFont(wb,style,cell);
+            cell.setCellValue(titles.get(i));
+        }
+        for(int i =0; i< nxtls.size(); i++){
+            Object[] rows_data = nxtls.get(i);
+            XSSFRow row = sheet.createRow(i+1);
+
+            for (int j =0;j<rows_data.length;j++){
+                String val = rows_data[j]==null ?"" : rows_data[j].toString();
+                XSSFCell cell = row.createCell(j);
+                XSSFCellStyle style = wb.createCellStyle();
+                setCellBorderStyle(style,cell);
+                if(Common.isLongNumber(val)){
+                    setDataFormat(wb,style,cell,"#,##0");
+                    cell.setCellValue(new BigDecimal(val).longValue());
+                }
+                else if(Common.isDoubleNumber(val)){
+                    setDataFormat(wb,style,cell,"#,##0.00");
+                    BigDecimal bigDecimal = new BigDecimal(val).setScale(2, RoundingMode.HALF_UP);
+                    cell.setCellValue(bigDecimal.doubleValue());
+                }else{
+                    cell.setCellValue(val);
+                }
+            }
+        }
+    }
+
+    private void setDataFormat(XSSFWorkbook wb,CellStyle style,XSSFCell cell,String format_text){
+        XSSFDataFormat format = wb.createDataFormat();
+        style.setDataFormat(format.getFormat(format_text));
+        cell.setCellStyle(style);
+    }
+    private void setBoldFont(XSSFWorkbook wb,CellStyle style,XSSFCell cell){
+        XSSFFont font = wb.createFont();
+        font.setBold(true);
+        font.setFontName("Times New Roman");
+        font.setFontHeightInPoints((short) 11);
+        style.setFont(font);
+        cell.setCellStyle(style);
+    }
+    private void setCellBorderStyle(CellStyle style,XSSFCell cell){
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.DOUBLE);
+        style.setBorderRight(BorderStyle.THIN);
+        cell.setCellStyle(style);
     }
 }

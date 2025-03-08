@@ -216,21 +216,6 @@ public class ConnectLan implements Initializable {
     }
     @FXML
     public void browserBtnACtion(ActionEvent actionEvent) {
-        setSelectDirectory(DashboardController.primaryStage);
+        CommonFactory.setSelectDirectory(DashboardController.primaryStage);
     }
-    private void setSelectDirectory(Stage primaryStage){
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select a Directory");
-
-        File selectedDirectory = directoryChooser.showDialog(primaryStage);
-
-        if (selectedDirectory != null) {
-            path_tf.setText(selectedDirectory.getAbsolutePath());
-            pre_path= selectedDirectory.getAbsolutePath();
-        } else {
-            pre_path = null;
-            DialogMessage.message(null, null,"No directory selected.", Alert.AlertType.WARNING);
-        }
-    }
-
 }

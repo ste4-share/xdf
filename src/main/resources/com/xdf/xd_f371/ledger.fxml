@@ -80,6 +80,29 @@
                                           <Font name="Cambria" size="12.0" />
                                        </font>
                                     </Label>
+                                    <StackPane onMouseClicked="#export_fileClicked" stylesheets="@css/imageview.css">
+                                       <children>
+                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@img/export_2099221.png" />
+                                             </image>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ImageView>
+                                       </children>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </StackPane>
+                                    <Label prefHeight="30.0" prefWidth="99.0" text="Xuất file">
+                                       <font>
+                                          <Font name="Cambria" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
                                  </children>
                               </HBox>
                               <HBox layoutX="10.0" layoutY="10.0">
@@ -200,14 +223,18 @@
                                     </VBox>
                                  </children>
                               </HBox>
-                              <Label prefHeight="30.0" prefWidth="124.0" text="---Chi tiết nhiệm vụ---">
-                                 <font>
-                                    <Font name="Cambria Italic" size="10.0" />
-                                 </font>
+                              <HBox>
                                  <VBox.margin>
                                     <Insets top="10.0" />
                                  </VBox.margin>
-                              </Label>
+                                 <children>
+                                    <Label prefHeight="30.0" prefWidth="124.0" text="---Chi tiết nhiệm vụ---">
+                                       <font>
+                                          <Font name="Cambria Italic" size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
                               <VBox>
                                  <children>
                                     <HBox>
@@ -474,7 +501,7 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </ImageView>
-                                          <Label prefHeight="17.0" prefWidth="65.0" text="Nhập File">
+                                          <Label onMouseClicked="#importFileClicked" prefHeight="17.0" prefWidth="65.0" text="Nhập File">
                                              <HBox.margin>
                                                 <Insets left="5.0" top="5.0" />
                                              </HBox.margin>
