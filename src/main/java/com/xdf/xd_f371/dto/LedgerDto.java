@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class LedgerDto {
-    private Long ledger_id;
-    private Long ledger_detail_id;
+    private String ledger_id;
+    private String ledger_detail_id;
     private int bill_id;
     private double amount;
     private LocalDate from_date;
@@ -62,7 +62,7 @@ public class LedgerDto {
     private String dongia_str;
     private String thanhtien;
 
-    public LedgerDto(Long ledger_id, Long ledger_detail_id, int bill_id,
+    public LedgerDto(String ledger_id, String ledger_detail_id, int bill_id,
                      double amount, LocalDate from_date, LocalDate end_date, String status,
                      int so_km, String giohd_md, String giohd_tk,
                      int dvi_nhan_id, int dvi_xuat_id,

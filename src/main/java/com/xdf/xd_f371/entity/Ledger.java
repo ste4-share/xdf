@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Ledger {
     @Id
-    private Long id;
+    private String id;
     @Column(name = "bill_id")
     @NotNull
     @Min(1)
@@ -79,6 +79,8 @@ public class Ledger {
     private int pt_id;
     @Column(name = "note")
     private String note;
+    @Column(name = "year")
+    private int year;
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LedgerDetails> ledgerDetails;
     @ManyToOne

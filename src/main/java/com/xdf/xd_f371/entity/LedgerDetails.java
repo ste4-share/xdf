@@ -8,9 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-
-
 @Entity
 @Table(name = "ledger_details")
 @Getter
@@ -18,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LedgerDetails {
     @Id
-    private Long id;
+    private String id;
     @Column(name = "ma_xd")
     private String ma_xd;
     @Column(name = "ten_xd")
@@ -48,7 +45,7 @@ public class LedgerDetails {
     @Column(name = "phuongtien_id")
     private int phuongtien_id;
     @Column(name = "ledger_id")
-    private Long ledger_id;
+    private String ledger_id;
     @Column(name = "thuc_xuat")
     private double thuc_xuat;
     @Column(name = "thuc_xuat_tk")

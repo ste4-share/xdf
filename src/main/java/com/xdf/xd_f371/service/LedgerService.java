@@ -6,6 +6,7 @@ import com.xdf.xd_f371.cons.Purpose;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +50,7 @@ public class LedgerService {
     public LedgerDetails save(LedgerDetails ledgerDetails) {
         return ledgerDetailRepo.save(ledgerDetails);
     }
-    public List<LedgerDetails> getLedgerDetailById(Long id) {
+    public List<LedgerDetails> getLedgerDetailById(String id) {
         return ledgerDetailRepo.findAllById(id);
     }
     public Ledger save(Ledger ledger) {
@@ -57,7 +60,9 @@ public class LedgerService {
     public Ledger saveLedgerWithDetails(Ledger ledger, List<LedgerDetails> details){
         Ledger savedLedger = ledgersRepo.save(ledger);
         try {
-            for (LedgerDetails detail : details) {
+            for (int i=0;i<details.size();i++){
+                LedgerDetails detail = details.get(i);
+                detail.setId(generateLEdgerDetailId(savedLedger.getId(),i));
                 detail.setLedger(savedLedger);
                 detail.setLedger_id(savedLedger.getId());
                 saveInventoryUnit(detail,ledger.getLoai_phieu());
@@ -65,10 +70,12 @@ public class LedgerService {
                 ledgerDetailRepo.save(detail);
             }
         } catch (Exception e){
-            DialogMessage.errorShowing("Something wrong!");
             e.printStackTrace();
         }
         return savedLedger;
+    }
+    private String generateLEdgerDetailId(String ledgerid,int index){
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+ledgerid).concat("_"+index);
     }
     private void saveInventoryUnit(LedgerDetails detail,String loaiphieu) {
         Optional<Configuration> config = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
@@ -103,7 +110,7 @@ public class LedgerService {
         }
     }
     @Transactional
-    public void inactiveLedger(Long id ) {
+    public void inactiveLedger(String id ) {
         ledgersRepo.inactiveLedgers(id);
     }
 }

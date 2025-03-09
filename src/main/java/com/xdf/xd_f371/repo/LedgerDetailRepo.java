@@ -12,5 +12,5 @@ import java.util.List;
 @Repository
 public interface LedgerDetailRepo extends JpaRepository<LedgerDetails, Long> {
     @Query(value = "select * from ledger_details where ledger_id=:ld_id",nativeQuery = true)
-    List<LedgerDetails> findAllById(@Param("ld_id") Long id);
+    List<LedgerDetails> findAllById(@Param("ld_id") String id);
 }

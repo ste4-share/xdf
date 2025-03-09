@@ -46,7 +46,7 @@ import java.util.*;
 @Component
 public class DashboardController implements Initializable {
     public static String lp = null;
-    public static Long so_select = 0L;
+    public static String so_select = null;
     public static Stage primaryStage;
     public static NguonNx ref_Dv=null;
     private static List<MiniLedgerDto> ttp_ls = new ArrayList<>();

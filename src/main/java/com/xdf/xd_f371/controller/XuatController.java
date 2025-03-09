@@ -544,6 +544,8 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
             ledger.setNote(note.getText());
         }
+        ledger.setYear(tungay.getValue().getYear());
+        ledger.setId(generateId(ledger.getYear(),ledger.getRoot_id(),lenhso.getText(),LoaiPhieuCons.PHIEU_XUAT.getName()));
         return ledger;
     }
     private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd, Double gia){

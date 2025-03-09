@@ -19,7 +19,7 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
             "l.nguoi_nhan,l.so_xe,l.lenh_so,l.nhiemvu,l.nhiemvu_id,l.tcn_id,ld.ma_xd,ld.ten_xd,ld.chung_loai,ld.chat_luong,ld.phai_xuat,ld.nhiet_do_tt,ld.ty_trong," +
             "ld.he_so_vcf,ld.don_gia,ld.loaixd_id,ld.phuongtien_id,ld.thuc_xuat, ld.thuc_xuat_tk,ld.soluong,ld.thuc_nhap," +
             "ld.phai_nhap,ld.haohut_sl,l.loainv,ld.nl_gio,ld.nl_km,ld.soluong_px) from Ledger l join l.ledgerDetails ld where l.id=:i")
-    List<LedgerDto> findLedgerByID(@Param("i") Long billId);
+    List<LedgerDto> findLedgerByID(@Param("i") String billId);
     @Query("select new com.xdf.xd_f371.dto.MiniLedgerDto(l.id,l.bill_id, l.loai_phieu,l.dvi_nhan,l.dvi_xuat,l.timestamp,l.nhiemvu," +
             "a.username, count(ld.ten_xd), sum(ld.soluong*ld.don_gia)) from Ledger l join " +
             "l.ledgerDetails ld join l.accounts a where l.status like :s " +
@@ -34,7 +34,7 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
     void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code);
     @Modifying
     @Query(value = "update ledgers l set status='IN_ACTIVE' where l.id=:i", nativeQuery = true)
-    void inactiveLedgers(@Param("i") Long id);
+    void inactiveLedgers(@Param("i") String id);
     @Query(value = "select lxd.id,\n" +
             "case when don_gia is null then 0 else don_gia end,\n" +
             "case when nhap_nvdx is null then 0 else nhap_nvdx end,\n" +

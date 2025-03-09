@@ -23,8 +23,6 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -213,5 +211,11 @@ public class CommonFactory {
             return selectedFile.getAbsoluteFile();
         }
         return null;
+    }
+    protected String generateId(int year, int root_id, String lenh_so,String lp){
+        String y = String.valueOf(year);
+        String rid = String.valueOf(root_id);
+        Long time = System.currentTimeMillis();
+        return y.concat("_"+rid).concat("_"+lenh_so).concat("_"+lp+"_").concat(String.valueOf(time));
     }
 }

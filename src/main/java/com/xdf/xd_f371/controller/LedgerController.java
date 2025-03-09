@@ -565,7 +565,7 @@ public class LedgerController implements Initializable {
             Cell pt_id = row.getCell(31);
             Cell note = row.getCell(32);
 
-            l.setId((long) id.getNumericCellValue());
+            l.setId(id.getStringCellValue());
             l.setBill_id((int) bill_id.getNumericCellValue());
             l.setAmount(amount.getNumericCellValue());
             l.setFrom_date(stringToLocalDate(from_date.getStringCellValue()));
@@ -630,7 +630,7 @@ public class LedgerController implements Initializable {
             Cell xuat_nvdx = row.getCell(26);
             Cell xuat_sscd = row.getCell(27);
 
-            l.setId((long) id.getNumericCellValue());
+            l.setId( id.getStringCellValue());
             l.setMa_xd(maxd.getStringCellValue());
             l.setTen_xd(tenxd.getStringCellValue());
             l.setChung_loai(chungloai.getStringCellValue());
@@ -640,7 +640,7 @@ public class LedgerController implements Initializable {
             l.setDon_gia(dongia.getNumericCellValue());
             l.setLoaixd_id((int) loaixd_id.getNumericCellValue());
             l.setPhuongtien_id((int) phuongtienid.getNumericCellValue());
-            l.setLedger_id((long) ledger_id.getNumericCellValue());
+            l.setLedger_id(ledger_id.getStringCellValue());
             l.setThuc_xuat_tk(thucxuattk.getNumericCellValue());
             l.setSoluong(soluong.getNumericCellValue());
             l.setThuc_nhap(thuc_nhap.getNumericCellValue());

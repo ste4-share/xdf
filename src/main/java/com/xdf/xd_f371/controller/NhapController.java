@@ -275,6 +275,8 @@ public class NhapController extends CommonFactory implements Initializable {
             ledger.setTcn_id(tcnService.save(new Tcn(LoaiPhieuCons.PHIEU_XUAT.getName(), tcNhap.getText())).getId());
         }
         ledger.setTructhuoc(tructhuocService.findById(cmb_dvvc.getSelectionModel().getSelectedItem().getTructhuoc_id()).orElseThrow().getType());
+        ledger.setYear(tungay.getValue().getYear());
+        ledger.setId(generateId(ledger.getYear(),ledger.getRoot_id(),lenhKHso.getText(),LoaiPhieuCons.PHIEU_NHAP.getName()));
         return ledger;
     }
     private void clearHH(){
