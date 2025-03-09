@@ -379,7 +379,7 @@
                               <RowConstraints maxHeight="421.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <TableView fx:id="doichieu_table_1" onMouseClicked="#doichieu_table_1Clicked" prefHeight="134.0" prefWidth="646.0" stylesheets="@css/table_style.css" GridPane.rowIndex="2">
+                              <TableView fx:id="root_table" onMouseClicked="#root_tableClicked" prefHeight="134.0" prefWidth="646.0" stylesheets="@css/table_style.css" GridPane.rowIndex="2">
                                  <columns>
                                     <TableColumn fx:id="root_col_stt" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="stt" />
                                     <TableColumn fx:id="root_col_id" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="ID" />
@@ -469,7 +469,7 @@
                                     </ComboBox>
                                  </children>
                               </HBox>
-                              <TableView fx:id="doichieu_table_2" layoutX="20.0" layoutY="103.0" onMouseClicked="#doichieu_table_2Click" prefHeight="134.0" prefWidth="646.0" stylesheets="@css/table_style.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                              <TableView fx:id="ref_table" layoutX="20.0" layoutY="103.0" onMouseClicked="#ref_tableClick" prefHeight="134.0" prefWidth="646.0" stylesheets="@css/table_style.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                  <columns>
                                     <TableColumn fx:id="ref_col_stt" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="stt" />
                                     <TableColumn fx:id="ref_col_id" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="ID" />

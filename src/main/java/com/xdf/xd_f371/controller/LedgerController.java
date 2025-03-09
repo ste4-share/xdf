@@ -19,28 +19,30 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.DataFormat;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Component
 public class LedgerController implements Initializable {
@@ -64,7 +66,7 @@ public class LedgerController implements Initializable {
     @FXML
     private Button ref_to_root;
     @FXML
-    private TableView<Ledger> ledgers_table,doichieu_table_1,doichieu_table_2;
+    private TableView<Ledger> ledgers_table,root_table,ref_table;
     @FXML
     private TableColumn<Ledger,String> ledgers_col_stt,ledgers_col_id,ledgers_col_so,ledgers_col_stdate,ledgers_col_edate,ledgers_col_lenhkh,ledgers_col_loainx,
             ledgers_col_dvn,ledgers_col_dvx,ledgers_col_xmt,ledgers_col_nv,ledgers_col_note,ledgers_col_createtime,
@@ -101,11 +103,58 @@ public class LedgerController implements Initializable {
         initVietnameseDate();
         initTableSize();
         initRootUnitLable();
-        initNnxCombobox();
+        initNnxCombobox(nguonNxService.findByAllBy());
         initStartDate();
         initLocalDateList();
         setCellFactoryForLeger_table();
+        setCellFactoryForRefTable();
+        setCellFactoryForRootTable();
         initLedgerList();
+        initRootLedgerList();
+    }
+
+    private void initRootLedgerList() {
+        LocalDate tungay = tab2_tungay.getValue();
+        LocalDate denngay = tab2_denngay.getValue();
+        List<Ledger> ls = ledgerService.findAllLedgerDto(tungay,denngay,DashboardController.ref_Dv.getId());
+        setItemsTo_Roottable(ls);
+    }
+
+    private void setItemsTo_Roottable(List<Ledger> ls) {
+        root_table.setItems(FXCollections.observableList(ls));
+        root_table.refresh();
+    }
+
+    private void setCellFactoryForRootTable() {
+        root_col_stt.setSortable(false);
+        root_col_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(root_table.getItems().indexOf(column.getValue())+1).asString());
+        root_col_id.setCellValueFactory(new PropertyValueFactory<Ledger, String>("id"));
+        root_col_so.setCellValueFactory(new PropertyValueFactory<Ledger, String>("bill_id"));
+        root_col_lenh.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lenh_so"));
+        root_col_loainx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("loai_phieu"));
+        root_col_dvnhap.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_nhan"));
+        root_col_dvx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_xuat"));
+        root_col_xmt.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lpt"));
+        root_col_nv.setCellValueFactory(new PropertyValueFactory<Ledger, String>("nhiemvu"));
+        root_col_note.setCellValueFactory(new PropertyValueFactory<Ledger, String>("note"));
+    }
+
+    private void setCellFactoryForRefTable() {
+        ref_col_stt.setSortable(false);
+        ref_col_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ref_table.getItems().indexOf(column.getValue())+1).asString());
+        ref_col_id.setCellValueFactory(new PropertyValueFactory<Ledger, String>("id"));
+        ref_col_so.setCellValueFactory(new PropertyValueFactory<Ledger, String>("bill_id"));
+        ref_col_lenhkh.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lenh_so"));
+        ref_col_loainx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("loai_phieu"));
+        ref_col_dvn.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_nhan"));
+        ref_col_dvx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_xuat"));
+        ref_col_xmt.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lpt"));
+        ref_col_nv.setCellValueFactory(new PropertyValueFactory<Ledger, String>("nhiemvu"));
+        ref_col_note.setCellValueFactory(new PropertyValueFactory<Ledger, String>("note"));
+    }
+    private void setItemsTo_RefTable(List<Ledger> ls){
+        ref_table.refresh();
+        ref_table.setItems(FXCollections.observableList(ls));
     }
 
     private void setCellFactoryForTable() {
@@ -170,8 +219,8 @@ public class LedgerController implements Initializable {
         tab2_tungay.setValue(ConnectLan.pre_acc.getSd());
         tab2_denngay.setValue(ConnectLan.pre_acc.getEd());
     }
-    private void initNnxCombobox() {
-        ComponentUtil.setItemsToComboBox(dvi_ref_cbb,nguonNxService.findByAllBy(),NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
+    private void initNnxCombobox(List<NguonNx> nnxls) {
+        ComponentUtil.setItemsToComboBox(dvi_ref_cbb,nnxls,NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(dvi_ref_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
     }
     private void hoverBtn() {
@@ -195,10 +244,10 @@ public class LedgerController implements Initializable {
         ledgers_table.setPrefHeight(DashboardController.screenHeigh-800);
         chitiet_tb.setPrefWidth(DashboardController.screenWidth-300);
         chitiet_tb.setPrefHeight(DashboardController.screenHeigh-800);
-        doichieu_table_1.setPrefWidth(DashboardController.screenWidth-300);
-        doichieu_table_1.setPrefHeight(DashboardController.screenHeigh-500);
-        doichieu_table_2.setPrefWidth(DashboardController.screenWidth-300);
-        doichieu_table_2.setPrefHeight(DashboardController.screenHeigh-500);
+        root_table.setPrefWidth(DashboardController.screenWidth-800);
+        root_table.setPrefHeight(DashboardController.screenHeigh-500);
+        ref_table.setPrefWidth(DashboardController.screenWidth-800);
+        ref_table.setPrefHeight(DashboardController.screenHeigh-500);
         tonkho_tb.setPrefWidth(DashboardController.screenWidth-300);
         tonkho_tb.setPrefHeight(DashboardController.screenHeigh-800);
     }
@@ -257,9 +306,6 @@ public class LedgerController implements Initializable {
 //        Common.openNewStage2("ledger_details.fxml",primaryStage,"Chi tiết phiếu", StageStyle.UTILITY);
 //    }
     @FXML
-    public void doichieu_table_1Clicked(MouseEvent mouseEvent) {
-    }
-    @FXML
     public void tungayAction(ActionEvent actionEvent) {
     }
     @FXML
@@ -270,9 +316,6 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void dvi_ref_cbbAction(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void doichieu_table_2Click(MouseEvent mouseEvent) {
     }
     @FXML
     public void importBtnClick(MouseEvent mouseEvent) {
@@ -347,17 +390,28 @@ public class LedgerController implements Initializable {
             setLocalDateList(selectedDateLs);
         }
     }
+
     @FXML
     public void export_fileClicked(MouseEvent mouseEvent) {
         CommonFactory.setSelectDirectory(DashboardController.primaryStage);
-        System.out.println("prePath: " +CommonFactory.pre_path);
         mapLEdgerDataToFile();
     }
     @FXML
     public void importFileClicked(MouseEvent mouseEvent) {
-        CommonFactory.setSelectDirectory(DashboardController.primaryStage);
-        System.out.println("prePath: " +CommonFactory.pre_path);
+        importDataToTable();
     }
+    private void importDataToTable() {
+        File file = CommonFactory.setSelectFileDirectory(DashboardController.primaryStage);
+        List<Ledger> l = importDataToListLEdger(file);
+        List<NguonNx> n = nguonNxService.findAllById(l.get(0).getRoot_id());
+        if (!n.isEmpty()){
+            dvi_ref_cbb.getSelectionModel().select(n.get(0));
+        }
+        setItemsTo_RefTable(l);
+        List<LedgerDetails> ld = importDataToListLedger_Detail(file);
+        System.out.println("ld"+ld.size());
+    }
+
     private void mapLEdgerDataToFile(){
         try {
             String file_n = CommonFactory.pre_path+"\\"+file_name;
@@ -368,7 +422,6 @@ public class LedgerController implements Initializable {
             file.createNewFile();
             FileInputStream fis = new FileInputStream(file);
             XSSFWorkbook wb = new XSSFWorkbook();
-            //
             XSSFSheet sheet = wb.createSheet("SOCAI_DATA");
             ReportDAO reportDAO = new ReportDAO();
             List<Object[]> nxtls = reportDAO.findByWhatEver("select * from ledgers where status like 'ACTIVE'");
@@ -401,7 +454,7 @@ public class LedgerController implements Initializable {
             setBoldFont(wb,style,cell);
             cell.setCellValue(titles.get(i));
         }
-        for(int i =0; i< nxtls.size(); i++){
+        for(int i =0; i< nxtls.size(); i++) {
             Object[] rows_data = nxtls.get(i);
             XSSFRow row = sheet.createRow(i+1);
 
@@ -424,7 +477,6 @@ public class LedgerController implements Initializable {
             }
         }
     }
-
     private void setDataFormat(XSSFWorkbook wb,CellStyle style,XSSFCell cell,String format_text){
         XSSFDataFormat format = wb.createDataFormat();
         style.setDataFormat(format.getFormat(format_text));
@@ -441,8 +493,210 @@ public class LedgerController implements Initializable {
     private void setCellBorderStyle(CellStyle style,XSSFCell cell){
         style.setBorderTop(BorderStyle.THIN);
         style.setBorderBottom(BorderStyle.THIN);
-        style.setBorderLeft(BorderStyle.DOUBLE);
+        style.setBorderLeft(BorderStyle.THIN);
         style.setBorderRight(BorderStyle.THIN);
         cell.setCellStyle(style);
+    }
+    private Ledger importCellToLEdger(Row row){
+        Ledger l =new Ledger();
+        if (row!=null){
+            Cell id = row.getCell(0);
+            Cell bill_id = row.getCell(1);
+            Cell amount = row.getCell(2);
+            Cell from_date = row.getCell(3);
+            Cell end_date = row.getCell(4);
+            Cell status = row.getCell(5);
+            Cell sl_tieuthu_md = row.getCell(6);
+            Cell sl_tieuthu_tk = row.getCell(7);
+            Cell dvi_nhan_id = row.getCell(8);
+            Cell dvi_xuat_id = row.getCell(9);
+            Cell loai_phieu = row.getCell(10);
+            Cell dvi_nhan = row.getCell(11);
+            Cell dvi_xuat = row.getCell(12);
+            Cell loaigiobay = row.getCell(13);
+            Cell nguoinhan = row.getCell(14);
+            Cell soxe = row.getCell(15);
+            Cell lenhso = row.getCell(16);
+            Cell nhiemvu = row.getCell(17);
+            Cell nhiemvuId = row.getCell(18);
+            Cell sokm = row.getCell(19);
+            Cell tcn_id = row.getCell(20);
+            Cell timestamp = row.getCell(21);
+            Cell giohd_md = row.getCell(22);
+            Cell giohd_tk = row.getCell(23);
+            Cell loainv = row.getCell(24);
+            Cell tructhuoc = row.getCell(25);
+            Cell lpt = row.getCell(26);
+            Cell lpt2 = row.getCell(27);
+            Cell version = row.getCell(28);
+            Cell create_by = row.getCell(29);
+            Cell root_id = row.getCell(30);
+            Cell pt_id = row.getCell(31);
+            Cell note = row.getCell(32);
+
+            l.setId((long) id.getNumericCellValue());
+            l.setBill_id((int) bill_id.getNumericCellValue());
+            l.setAmount(amount.getNumericCellValue());
+            l.setFrom_date(stringToLocalDate(from_date.getStringCellValue()));
+            l.setEnd_date(stringToLocalDate(end_date.getStringCellValue()));
+            l.setStatus(status.getStringCellValue());
+            l.setSl_tieuthu_md(sl_tieuthu_md.getNumericCellValue());
+            l.setSl_tieuthu_tk(sl_tieuthu_tk.getNumericCellValue());
+            l.setDvi_nhan_id((int) dvi_nhan_id.getNumericCellValue());
+            l.setDvi_xuat_id((int) dvi_xuat_id.getNumericCellValue());
+            l.setLoai_phieu(loai_phieu.getStringCellValue());
+            l.setDvi_nhan(dvi_nhan.getStringCellValue());
+            l.setDvi_xuat(dvi_xuat.getStringCellValue());
+            l.setLoaigiobay(loaigiobay.getStringCellValue());
+            l.setNguoi_nhan(nguoinhan.getStringCellValue());
+            l.setSo_xe(soxe.getStringCellValue());
+            l.setLenh_so(lenhso.getStringCellValue());
+            l.setNhiemvu(nhiemvu.getStringCellValue());
+            l.setNhiemvu_id((int)  nhiemvuId.getNumericCellValue());
+            l.setSo_km((int) sokm.getNumericCellValue());
+            l.setTcn_id((int) tcn_id.getNumericCellValue());
+            l.setTimestamp(stringToLocalDatetime(timestamp.getStringCellValue()));
+            l.setGiohd_md(giohd_md.getStringCellValue());
+            l.setGiohd_tk(giohd_tk.getStringCellValue());
+            l.setLoainv(loainv.getStringCellValue());
+            l.setTructhuoc(tructhuoc.getStringCellValue());
+            l.setLpt(lpt.getStringCellValue());
+            l.setLpt_2(lpt2.getStringCellValue());
+            l.setVersion((int) version.getNumericCellValue());
+            l.setCreate_by((int) create_by.getNumericCellValue());
+            l.setRoot_id((int) root_id.getNumericCellValue());
+            l.setPt_id((int) pt_id.getNumericCellValue());
+            l.setNote(note.getStringCellValue());
+        }
+        return l;
+    }
+    private LedgerDetails importCellToLEdger_detail(Row row){
+        LedgerDetails l =new LedgerDetails();
+        if (row!=null){
+            Cell maxd = row.getCell(0);
+            Cell tenxd = row.getCell(1);
+            Cell chungloai = row.getCell(2);
+            Cell chatluong = row.getCell(3);
+            Cell phaixuat = row.getCell(4);
+            Cell thucxuat = row.getCell(5);
+            Cell dongia = row.getCell(6);
+            Cell id = row.getCell(7);
+            Cell loaixd_id = row.getCell(8);
+            Cell phuongtienid = row.getCell(9);
+            Cell ledger_id = row.getCell(10);
+            Cell thucxuattk = row.getCell(11);
+            Cell soluong = row.getCell(12);
+            Cell thuc_nhap = row.getCell(13);
+            Cell phai_nhap = row.getCell(14);
+            Cell thanhtien = row.getCell(15);
+            Cell haohutsl = row.getCell(16);
+            Cell nl_km = row.getCell(17);
+            Cell nl_gio = row.getCell(18);
+            Cell sl_px = row.getCell(19);
+            Cell sscd_nvdx = row.getCell(20);
+            Cell tytrong = row.getCell(21);
+            Cell nhietdo = row.getCell(22);
+            Cell vcf = row.getCell(23);
+            Cell nhap_nvdx = row.getCell(24);
+            Cell nhap_sscd = row.getCell(25);
+            Cell xuat_nvdx = row.getCell(26);
+            Cell xuat_sscd = row.getCell(27);
+
+            l.setId((long) id.getNumericCellValue());
+            l.setMa_xd(maxd.getStringCellValue());
+            l.setTen_xd(tenxd.getStringCellValue());
+            l.setChung_loai(chungloai.getStringCellValue());
+            l.setChat_luong(chatluong.getStringCellValue());
+            l.setPhai_xuat(phaixuat.getNumericCellValue());
+            l.setThuc_xuat(thucxuat.getNumericCellValue());
+            l.setDon_gia(dongia.getNumericCellValue());
+            l.setLoaixd_id((int) loaixd_id.getNumericCellValue());
+            l.setPhuongtien_id((int) phuongtienid.getNumericCellValue());
+            l.setLedger_id((long) ledger_id.getNumericCellValue());
+            l.setThuc_xuat_tk(thucxuattk.getNumericCellValue());
+            l.setSoluong(soluong.getNumericCellValue());
+            l.setThuc_nhap(thuc_nhap.getNumericCellValue());
+            l.setPhai_nhap(phai_nhap.getNumericCellValue());
+            l.setThanhtien(thanhtien.getNumericCellValue());
+            l.setHaohut_sl((int) haohutsl.getNumericCellValue());
+            l.setNl_km(Long.parseLong(nl_km.getStringCellValue().isEmpty() ? "0" : nl_km.getStringCellValue()));
+            l.setNl_gio(Long.parseLong(nl_gio.getStringCellValue().isEmpty() ? "0" : nl_gio.getStringCellValue()));
+            l.setSoluong_px((long)sl_px.getNumericCellValue());
+            l.setSscd_nvdx(sscd_nvdx.getStringCellValue());
+            l.setTy_trong(tytrong.getNumericCellValue());
+            l.setNhiet_do_tt(nhietdo.getNumericCellValue());
+            l.setHe_so_vcf(vcf.getNumericCellValue());
+            l.setNhap_nvdx(nhap_nvdx.getNumericCellValue());
+            l.setNhap_sscd(nhap_sscd.getNumericCellValue());
+            l.setXuat_nvdx(xuat_nvdx.getNumericCellValue());
+            l.setXuat_sscd(xuat_sscd.getNumericCellValue());
+        }
+        return l;
+    }
+    private List<Ledger> importDataToListLEdger(File f){
+        List<Ledger> ledgerList = new ArrayList<>();
+        try (FileInputStream fis = new FileInputStream(f);
+             XSSFWorkbook wb = new XSSFWorkbook(fis)) {
+            
+             XSSFSheet sheet = wb.getSheetAt(0); // Read first sheet
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            boolean isHeader = true; // Skip the header row
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                if (isHeader) {
+                    isHeader = false; // Skip header
+                    continue;
+                }
+                ledgerList.add(importCellToLEdger(row));
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ledgerList;
+    }
+
+    private List<LedgerDetails> importDataToListLedger_Detail(File f){
+        List<LedgerDetails> ledgerDetailsList = new ArrayList<>();
+        try (FileInputStream fis = new FileInputStream(f);
+             XSSFWorkbook wb = new XSSFWorkbook(fis)) {
+
+            XSSFSheet sheet = wb.getSheetAt(1); // Read first sheet
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            boolean isHeader = true; // Skip the header row
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                if (isHeader) {
+                    isHeader = false; // Skip header
+                    continue;
+                }
+                ledgerDetailsList.add(importCellToLEdger_detail(row));
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ledgerDetailsList;
+    }
+    private LocalDate stringToLocalDate(String date_text){
+        if (date_text.isEmpty()){
+            return null;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(date_text, formatter);
+    }
+    private LocalDateTime stringToLocalDatetime(String date_text){
+        if (date_text.isEmpty()){
+            return null;
+        }
+        String trimmedDateStr = date_text.substring(0, 19); // Removes microseconds
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(trimmedDateStr, formatter);
+    }
+    @FXML
+    public void ref_tableClick(MouseEvent mouseEvent) {
+    }
+    @FXML
+    public void root_tableClicked(MouseEvent mouseEvent) {
     }
 }

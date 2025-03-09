@@ -18,10 +18,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -190,9 +193,24 @@ public class CommonFactory {
 
         if (selectedDirectory != null) {
             pre_path= selectedDirectory.getAbsolutePath();
+            selectedDirectory.getAbsoluteFile();
         } else {
             pre_path = null;
             DialogMessage.message(null, null,"No directory selected.", Alert.AlertType.WARNING);
         }
+    }
+    public static File setSelectFileDirectory(Stage stage){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a File");
+        // Add file filters
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx")
+        );
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile != null) {
+            pre_path = selectedFile.getAbsolutePath();
+            return selectedFile.getAbsoluteFile();
+        }
+        return null;
     }
 }
