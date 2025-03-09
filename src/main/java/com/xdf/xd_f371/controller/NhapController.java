@@ -65,6 +65,7 @@ public class NhapController extends CommonFactory implements Initializable {
         text_thucnhap.setText("0 Lit 15 độ C");
         tungay.setValue(LocalDate.now());
         nvdx_rd.setSelected(true);
+        note.setText(null);
         initInventoryUnit();
         Common.hoverButton(addbtn ,"#027a20");
         Common.hoverButton(importbtn,"#0000b3");
@@ -266,6 +267,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setNguoi_nhan(recvTf.getText());
         ledger.setSo_xe(soXe.getText());
         ledger.setLenh_so(lenhKHso.getText());
+        ledger.setNote(note.getText());
         Tcn t = tcnService.findByName(tcNhap.getText().trim()).orElse(null);
         if (t != null) {
             ledger.setTcn_id(t.getId());

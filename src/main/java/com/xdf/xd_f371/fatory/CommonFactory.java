@@ -53,6 +53,8 @@ public class CommonFactory {
     @FXML
     protected TableView<LedgerDetails> tbView;
     @FXML
+    protected TextArea note;
+    @FXML
     protected Label lb_tontheoxd;
     @FXML
     protected RadioButton nvdx_rd;
@@ -196,7 +198,6 @@ public class CommonFactory {
             selectedDirectory.getAbsoluteFile();
         } else {
             pre_path = null;
-            DialogMessage.message(null, null,"No directory selected.", Alert.AlertType.WARNING);
         }
     }
     public static File setSelectFileDirectory(Stage stage){

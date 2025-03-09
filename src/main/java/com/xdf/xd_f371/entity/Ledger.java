@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class Ledger {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "bill_id")
     @NotNull
@@ -38,10 +37,6 @@ public class Ledger {
     private String giohd_md;
     @Column(name = "giohd_tk")
     private String giohd_tk;
-    @Column(name = "sl_tieuthu_md")
-    private double sl_tieuthu_md;
-    @Column(name = "sl_tieuthu_tk")
-    private double sl_tieuthu_tk;
     @Column(name = "dvi_nhan_id")
     private int dvi_nhan_id;
     @Column(name = "dvi_xuat_id")
@@ -84,9 +79,6 @@ public class Ledger {
     private int pt_id;
     @Column(name = "note")
     private String note;
-    @Version
-    private int version;
-
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LedgerDetails> ledgerDetails;
     @ManyToOne
@@ -102,8 +94,6 @@ public class Ledger {
         this.so_km = l.so_km;
         this.giohd_md = l.giohd_md;
         this.giohd_tk = l.giohd_tk;
-        this.sl_tieuthu_md = l.sl_tieuthu_md;
-        this.sl_tieuthu_tk = l.sl_tieuthu_tk;
         this.dvi_nhan_id = l.dvi_nhan_id;
         this.dvi_xuat_id = l.dvi_xuat_id;
         this.loai_phieu = l.loai_phieu;

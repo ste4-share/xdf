@@ -32,7 +32,7 @@ public class XuatController extends CommonFactory implements Initializable {
     private static DinhMuc dinhMuc;
     public static String loainx;
     @FXML
-    private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong,nl_gio,nl_km;
+    private TextField so,tcx,nguoinhan,lenhso,soxe,sokm,sogio, sophut,phaixuat,thucxuat,nhietdo,vcf,tytrong;
     @FXML
     private RadioButton md_rd,tk_rd, mb_rd;
     @FXML
@@ -48,7 +48,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<Double> cbb_dongia;
     @FXML
-    private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox,nl_km_hb,nl_gio_hb;
+    private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox;
     @FXML
     private Button addBtn,xuatButton,cancelBtn;
 
@@ -70,6 +70,7 @@ public class XuatController extends CommonFactory implements Initializable {
         setVi_DatePicker(denngay);
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         nvdx_rd.setSelected(true);
+        note.setText(null);
         tungay.setValue(LocalDate.now());
         gia_vnd.setText("(VND/Lit)");
         initDefailtVar();
@@ -122,8 +123,6 @@ public class XuatController extends CommonFactory implements Initializable {
                     new ArrayList<>(),nguonNxService.findAllById(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())),
                     nguonNxService.findAllByDifrentId(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())),loaiXdService.findAllOrderby()
                     ,true);
-            nl_km_hb.setDisable(true);
-            nl_gio_hb.setDisable(true);
         } else if (lx.equals(LoaiXuat.NV.getName())){
             tcx.setText(null);
             List<NhiemVuDto> ls = chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName());
@@ -259,38 +258,6 @@ public class XuatController extends CommonFactory implements Initializable {
     public void cancel(ActionEvent actionEvent) {
         DashboardController.primaryStage.close();
     }
-    private double cal_phaixuat_km(int sokm, double dinhmuc){
-        return (sokm*dinhmuc)/100;
-    }
-    private double cal_phaixuat_gio(double sogio, double dinhmuc){
-        return sogio *dinhmuc;
-    }
-    @FXML
-    public void cal_nl_gio(ActionEvent actionEvent) {
-        calNlTheoGio();
-    }
-    private void calNlTheoGio(){
-        float phut = (float) Integer.parseInt(sophut.getText())/60;
-        int du = (Integer.parseInt(sophut.getText()))/60;
-        float gio = Integer.parseInt(sogio.getText()) + phut + du;
-        PhuongTien pt =xmt_cbb.getSelectionModel().getSelectedItem();
-        if (pt!=null){
-            DinhMuc dm = dinhmucService.findDinhmucByPhuongtien(pt.getId(), LocalDate.now().getYear()).orElse(null);
-            if (dm!=null){
-                if (mb_rd.isSelected()){
-                    if (tk_rd.isSelected()){
-                        nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, dm.getDm_tk_gio())));
-                    } else{
-                        nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, dm.getDm_md_gio())));
-                    }
-                }else{
-                    nl_gio.setText(String.valueOf((int) cal_phaixuat_gio(gio, dm.getDm_xm_gio())));
-                }
-            }else{
-                DialogMessage.errorShowing("Không tìm thấy định mức cho phương tiện " + pt.getName());
-            }
-        }
-    }
     @FXML
     public void selectxd(ActionEvent actionEvent) {
         LoaiXangDauDto lxd = FxUtilTest.getComboBoxValue(cbb_tenxd);
@@ -302,14 +269,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void km_keyrealese(KeyEvent keyEvent) {
-        if (!nl_km.getText().isEmpty() && isNumber(nl_km.getText())){
-            try{
-                nl_km.setText(String.valueOf(cal_phaixuat_km(Integer.parseInt(sokm.getText()),
-                        Objects.requireNonNull(dinhmucService.findDinhmucByPhuongtien(xmt_cbb.getValue().getId(), LocalDate.now().getYear()).orElse(null)).getDm_xm_km())));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
+
     }
     @FXML
     public void soKeyRealed(KeyEvent keyEvent) {
@@ -339,14 +299,6 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void tx_kr(KeyEvent keyEvent) {
         validateToSettingStyle(thucxuat);
-    }
-    @FXML
-    public void nl_km_kr(KeyEvent keyEvent) {
-        validateToSettingStyle(nl_km);
-    }
-    @FXML
-    public void nl_gio_kr(KeyEvent keyEvent) {
-        validateToSettingStyle(nl_gio);
     }
     @FXML
     public void nhietdo_kr(KeyEvent keyEvent) {
@@ -389,14 +341,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cleanErrorField(thucxuat);
     }
     @FXML
-    public void nl_km_clicked(MouseEvent mouseEvent) {
-        cleanErrorField(nl_km);
-    }
-    @FXML
-    public void nlgio__clicked(MouseEvent mouseEvent) {
-        cleanErrorField(nl_gio);
-    }
-    @FXML
     public void nhietdo_clicked(MouseEvent mouseEvent) {
         cleanErrorField(nhietdo);
     }
@@ -417,8 +361,6 @@ public class XuatController extends CommonFactory implements Initializable {
         nhietdo.setText("0");
         tytrong.setText("0");
         vcf.setText("0");
-        nl_gio.setText("0");
-        nl_km.setText("0");
     }
     private void setDinhmucToLabel(String l1, String l2, double dm1,double dm2){
         lb_dm_gio.setText(l1);
@@ -530,8 +472,6 @@ public class XuatController extends CommonFactory implements Initializable {
         nhietdo.setText("0");
         vcf.setText("0");
         tytrong.setText("0");
-        nl_gio.setText("0");
-        nl_km.setText("0");
     }
     private Ledger getLedger() {
         NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
@@ -547,16 +487,6 @@ public class XuatController extends CommonFactory implements Initializable {
         ledger.setEnd_date(denngay.getValue());
         ledger.setStatus(StatusCons.ACTIVED.getName());
 
-        if (tk_rd.isSelected()){
-            ledger.setSl_tieuthu_md(0);
-            ledger.setSl_tieuthu_tk(Double.parseDouble(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
-        }else if (md_rd.isSelected()){
-            ledger.setSl_tieuthu_md(Double.parseDouble(thucxuat.getText().isEmpty() ? "0" : thucxuat.getText()));
-            ledger.setSl_tieuthu_tk(0);
-        }else{
-            ledger.setSl_tieuthu_md(0);
-            ledger.setSl_tieuthu_tk(0);
-        }
         ledger.setDvi_nhan(dvn==null ? "" : dvn.getTen());
         ledger.setDvi_xuat(dvx.getTen());
         ledger.setLoai_phieu(LoaiPhieuCons.PHIEU_XUAT.getName());
@@ -612,6 +542,7 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setSo_km(0);
             ledger.setGiohd_tk(DefaultVarCons.GIO_HD.getName());
             ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
+            ledger.setNote(note.getText());
         }
         return ledger;
     }
@@ -639,8 +570,6 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setSoluong_px((long) pxuat);
         ledgerDetails.setThuc_nhap(0);
         ledgerDetails.setPhai_nhap(0);
-        ledgerDetails.setNl_gio(Long.parseLong(nl_gio.getText().isEmpty() ? "0" : nl_gio.getText()));
-        ledgerDetails.setNl_km(Long.parseLong(nl_km.getText().isEmpty() ? "0" : nl_km.getText()));
         if (lx.equals(LoaiXuat.X_K.getName())){
             ledgerDetails.setPhuongtien_id(0);
             ledgerDetails.setThuc_xuat_tk(0);

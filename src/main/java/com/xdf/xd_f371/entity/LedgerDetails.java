@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+
+
 @Entity
 @Table(name = "ledger_details")
 @Getter
@@ -15,7 +18,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LedgerDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "ma_xd")
     private String ma_xd;

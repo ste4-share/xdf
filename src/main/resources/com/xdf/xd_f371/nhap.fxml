@@ -11,6 +11,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
@@ -164,6 +165,19 @@
                                     <Cursor fx:constant="TEXT" />
                                  </cursor></TextField>
                            </children>
+                        </HBox>
+                        <HBox layoutX="10.0" layoutY="360.0">
+                           <children>
+                              <Label prefHeight="38.0" prefWidth="144.0" text="Ghi chú:">
+                                 <font>
+                                    <Font name="Cambria Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <TextArea fx:id="note" prefHeight="100.0" prefWidth="344.0" />
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
                         </HBox>
                      </children>
                   </VBox>
@@ -418,7 +432,7 @@
                </font></Label>
             <Separator layoutX="16.0" layoutY="49.0" prefHeight="12.0" prefWidth="496.0" />
             <Separator layoutX="581.0" layoutY="50.0" prefHeight="12.0" prefWidth="561.0" />
-            <Button id="addbtn" fx:id="addbtn" layoutX="1040.0" layoutY="562.0" mnemonicParsing="false" onAction="#btnInsert" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #027a20; -fx-background-radius: 10;" text="Thêm" textFill="WHITE">
+            <Button id="addbtn" fx:id="addbtn" layoutX="985.0" layoutY="562.0" mnemonicParsing="false" onAction="#btnInsert" prefHeight="25.0" prefWidth="88.0" style="-fx-background-color: #027a20; -fx-background-radius: 10;" text="Thêm" textFill="WHITE">
                <font>
                   <Font name="Cambria Bold" size="12.0" />
                </font>
@@ -462,7 +476,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button id="cancelbtn" fx:id="cancelbtn" cancelButton="true" layoutX="618.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #595959; -fx-background-radius: 10;" text="HỦY" textFill="WHITE">
+      <Button id="cancelbtn" fx:id="cancelbtn" cancelButton="true" layoutX="618.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #595959; -fx-background-radius: 10;" text="QUAY LẠI" textFill="WHITE">
          <font>
             <Font name="Cambria Bold" size="14.0" />
          </font>
@@ -471,9 +485,9 @@
          </cursor></Button>
       <AnchorPane layoutY="2.0" style="-fx-background-color: #0231d9;">
          <children>
-            <Label alignment="CENTER" prefHeight="38.0" prefWidth="1198.0" text="PHIẾU NHẬP" textFill="#e4e4e4">
+            <Label alignment="CENTER" prefHeight="25.0" prefWidth="1198.0" text="PHIẾU NHẬP" textFill="#e4e4e4">
                <font>
-                  <Font name="Times New Roman Bold" size="20.0" />
+                  <Font name="Times New Roman Bold" size="14.0" />
                </font>
             </Label>
          </children>

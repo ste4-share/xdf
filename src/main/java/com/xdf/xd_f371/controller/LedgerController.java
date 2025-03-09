@@ -31,7 +31,6 @@ import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -48,8 +47,9 @@ import java.util.*;
 public class LedgerController implements Initializable {
     private final String file_name = "data.xlsx";
     private List<Ledger> ledgerSelectList = new ArrayList<>();
-    private List<String> selectedDateLs = new ArrayList<>();
     private List<LedgerDetails> details = new ArrayList<>();
+    private List<Ledger> refLedgerList = new ArrayList<>();
+    private List<LedgerDetails> refLedgerDetailList = new ArrayList<>();
     private LocalDate currentDateSelected;
     public static Stage primaryStage;
     public static Ledger ledger = new Ledger();
@@ -224,9 +224,9 @@ public class LedgerController implements Initializable {
         FxUtilTest.autoCompleteComboBoxPlus(dvi_ref_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
     }
     private void hoverBtn() {
-        Common.hoverButton(ref_to_root ,"#027a20");
-        importBtn.setOnMouseEntered(e -> importBtn.setStyle("-fx-background-color: #027a20; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10;-fx-border-radius:10"));
-        importBtn.setOnMouseExited(e -> importBtn.setStyle("-fx-background-color: #027a20;-fx-border-color:#a8a8a8;-fx-background-radius:10;-fx-border-radius:10"));
+        Common.hoverButton(ref_to_root ,"#ffffff");
+        importBtn.setOnMouseEntered(e -> importBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width:3;-fx-background-radius:10;-fx-border-radius:10"));
+        importBtn.setOnMouseExited(e -> importBtn.setStyle("-fx-background-color: #ffffff;-fx-border-color:#a8a8a8;-fx-background-radius:10;-fx-border-radius:10"));
     }
     private void initVietnameseDate() {
         CommonFactory.setVi_DatePicker(st_time);
@@ -313,12 +313,29 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void ref_to_rootAction(ActionEvent actionEvent) {
+        if (DialogMessage.callAlertWithMessage(null,null,"Bạn có muốn nhập dữ liệu từ đơn vị tham chiếu cho toàn đơn vị không?", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+            try {
+                refLedgerList.forEach(x->ledgerService.save(x));
+                refLedgerDetailList.forEach(x->ledgerService.save(x));
+            }catch (Exception e){
+                DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+                e.printStackTrace();
+            }
+        }
     }
     @FXML
     public void dvi_ref_cbbAction(ActionEvent actionEvent) {
     }
     @FXML
     public void importBtnClick(MouseEvent mouseEvent) {
+        importDataToTable();
+    }
+    @FXML
+    public void export_fileClicked(MouseEvent mouseEvent) {
+        CommonFactory.setSelectDirectory(DashboardController.primaryStage);
+        if (CommonFactory.pre_path!=null){
+            mapLEdgerDataToFile();
+        }
     }
     @FXML
     public void search_by_name_Click(MouseEvent mouseEvent) {
@@ -342,15 +359,9 @@ public class LedgerController implements Initializable {
 
     private void listDate(LocalDate st,LocalDate et){
         if (validDate(st,et)){
-            selectedDateLs = new ArrayList<>();
-            List<LocalDate> localDateList = st.datesUntil(et)
-                    .toList();
-            localDateList.forEach(x->{
-                selectedDateLs.add(x.format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName())));
-            });
-            setLocalDateList(selectedDateLs);
-        }else{
-            DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+            initLedgerList();
+            List<LocalDate> ls = ledgerSelectList.stream().map(Ledger::getFrom_date).filter(fromDate -> fromDate.isAfter(st)).distinct().toList();
+            setLocalDateList(ls.stream().map(x->x.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).toList());
         }
     }
     private boolean validDate(LocalDate st,LocalDate et){
@@ -379,37 +390,23 @@ public class LedgerController implements Initializable {
     public void outClick(MouseEvent mouseEvent) {
         setItemToTableView(new ArrayList<>());
     }
-    @FXML
-    public void hideDay(ActionEvent actionEvent) {
-        if (hideCkb.isSelected()){
-            LocalDate st = st_time.getValue();
-            initLedgerList();
-            List<LocalDate> ls = ledgerSelectList.stream().map(Ledger::getFrom_date).filter(fromDate -> fromDate.isAfter(st)).distinct().toList();
-            setLocalDateList(ls.stream().map(x->x.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).toList());
-        }else{
-            setLocalDateList(selectedDateLs);
-        }
-    }
-
-    @FXML
-    public void export_fileClicked(MouseEvent mouseEvent) {
-        CommonFactory.setSelectDirectory(DashboardController.primaryStage);
-        mapLEdgerDataToFile();
-    }
-    @FXML
-    public void importFileClicked(MouseEvent mouseEvent) {
-        importDataToTable();
-    }
     private void importDataToTable() {
+        refLedgerList = new ArrayList<>();
+        refLedgerDetailList = new ArrayList<>();
         File file = CommonFactory.setSelectFileDirectory(DashboardController.primaryStage);
-        List<Ledger> l = importDataToListLEdger(file);
-        List<NguonNx> n = nguonNxService.findAllById(l.get(0).getRoot_id());
-        if (!n.isEmpty()){
-            dvi_ref_cbb.getSelectionModel().select(n.get(0));
+        if (file!=null){
+            refLedgerList = importDataToListLEdger(file);
+            if (refLedgerList.isEmpty()){
+                DialogMessage.successShowing("Dữ liệu nhập từ file data.xlsx trống.");
+            }else{
+                List<NguonNx> n = nguonNxService.findAllById(refLedgerList.get(0).getRoot_id());
+                if (!n.isEmpty()){
+                    dvi_ref_cbb.getSelectionModel().select(n.get(0));
+                }
+                setItemsTo_RefTable(refLedgerList);
+                refLedgerDetailList = importDataToListLedger_Detail(file);
+            }
         }
-        setItemsTo_RefTable(l);
-        List<LedgerDetails> ld = importDataToListLedger_Detail(file);
-        System.out.println("ld"+ld.size());
     }
 
     private void mapLEdgerDataToFile(){
@@ -422,18 +419,11 @@ public class LedgerController implements Initializable {
             file.createNewFile();
             FileInputStream fis = new FileInputStream(file);
             XSSFWorkbook wb = new XSSFWorkbook();
-            XSSFSheet sheet = wb.createSheet("SOCAI_DATA");
             ReportDAO reportDAO = new ReportDAO();
-            List<Object[]> nxtls = reportDAO.findByWhatEver("select * from ledgers where status like 'ACTIVE'");
-            setCellExcel(wb,sheet,nxtls,ledgerService.getColumnNames_LEDGER());
 
-            XSSFSheet sheet2 = wb.createSheet("CHITIETSOCAI_DATA");
-            List<Object[]> nxtls2 = reportDAO.findByWhatEver("select ld from ledger_details ld join ledgers l on ld.ledger_id=l.id where status like 'ACTIVE'");
-            setCellExcel(wb,sheet2,nxtls2,ledgerService.getColumnNames_LEDGER_DETAIL());
-
-            if (DialogMessage.callAlertWithMessage(null,null,"successfully", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                Common.openDesktop(CommonFactory.pre_path);
-            }
+            mapQuySheet(wb);
+            mapLedger(wb,reportDAO);
+            mapLedgerDetail(wb,reportDAO);
 
             fis.close();
             FileOutputStream fileOutputStream = new FileOutputStream(CommonFactory.pre_path+"\\"+file_name);
@@ -441,10 +431,51 @@ public class LedgerController implements Initializable {
             wb.write(fileOutputStream);
             fileOutputStream.close();
             wb.close();
+            if (DialogMessage.callAlertWithMessage(null,null,"successfully", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                Common.openDesktop(CommonFactory.pre_path);
+            }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
         }
     }
+
+    private void mapLedgerDetail(XSSFWorkbook wb,ReportDAO reportDAO) {
+        XSSFSheet sheet2 = wb.createSheet("CHITIETSOCAI_DATA");
+        List<Object[]> nxtls2 = reportDAO.findByWhatEver("select ld from ledger_details ld join ledgers l on ld.ledger_id=l.id where status like 'ACTIVE' and l.from_date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"'");
+        setCellExcel(wb,sheet2,nxtls2,ledgerService.getColumnNames_LEDGER_DETAIL());
+    }
+
+    private void mapLedger(XSSFWorkbook wb,ReportDAO reportDAO) {
+        XSSFSheet sheet = wb.createSheet("SOCAI_DATA");
+        List<Object[]> nxtls = reportDAO.findByWhatEver("select * from ledgers l where status like 'ACTIVE' and l.from_date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"'");
+        setCellExcel(wb,sheet,nxtls,ledgerService.getColumnNames_LEDGER());
+    }
+
+    private void mapQuySheet(XSSFWorkbook wb) {
+        XSSFSheet quy = wb.createSheet("QUY_DATA");
+        XSSFRow title_row = quy.createRow(0);
+        XSSFCell cell = title_row.createCell(0);
+        XSSFCellStyle style = wb.createCellStyle();
+        setCellBorderStyle(style,cell);
+        setBoldFont(wb,style,cell);
+        cell.setCellValue("THÔNG TIN QUÝ");
+        XSSFCell cell1 = title_row.createCell(1);
+        cell1.setCellValue("Từ ngày:");
+        XSSFCell fd = title_row.createCell(2);
+        fd.setCellValue(st_time.getValue().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName())));
+        XSSFCell cell2 = title_row.createCell(3);
+        cell2.setCellValue("Đến ngày:");
+        XSSFCell ed = title_row.createCell(4);
+        ed.setCellValue(lst_time.getValue().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName())));
+
+        XSSFRow dv_row = quy.createRow(1);
+        XSSFCell cell_dv1 = dv_row.createCell(0);
+        setBoldFont(wb,style,cell_dv1);
+        cell_dv1.setCellValue("Đơn vị:");
+        XSSFCell cell_dv2 = dv_row.createCell(1);
+        cell_dv2.setCellValue(DashboardController.ref_Dv.getTen());
+    }
+
     private void setCellExcel(XSSFWorkbook wb,XSSFSheet sheet,List<Object[]> nxtls,List<String> titles){
         XSSFRow title_row = sheet.createRow(0);
         for (int i =0; i< titles.size();i++){
@@ -540,8 +571,6 @@ public class LedgerController implements Initializable {
             l.setFrom_date(stringToLocalDate(from_date.getStringCellValue()));
             l.setEnd_date(stringToLocalDate(end_date.getStringCellValue()));
             l.setStatus(status.getStringCellValue());
-            l.setSl_tieuthu_md(sl_tieuthu_md.getNumericCellValue());
-            l.setSl_tieuthu_tk(sl_tieuthu_tk.getNumericCellValue());
             l.setDvi_nhan_id((int) dvi_nhan_id.getNumericCellValue());
             l.setDvi_xuat_id((int) dvi_xuat_id.getNumericCellValue());
             l.setLoai_phieu(loai_phieu.getStringCellValue());
@@ -562,7 +591,6 @@ public class LedgerController implements Initializable {
             l.setTructhuoc(tructhuoc.getStringCellValue());
             l.setLpt(lpt.getStringCellValue());
             l.setLpt_2(lpt2.getStringCellValue());
-            l.setVersion((int) version.getNumericCellValue());
             l.setCreate_by((int) create_by.getNumericCellValue());
             l.setRoot_id((int) root_id.getNumericCellValue());
             l.setPt_id((int) pt_id.getNumericCellValue());
@@ -634,26 +662,26 @@ public class LedgerController implements Initializable {
         return l;
     }
     private List<Ledger> importDataToListLEdger(File f){
-        List<Ledger> ledgerList = new ArrayList<>();
+        List<Ledger> ledgeledgerListrList = new ArrayList<>();
         try (FileInputStream fis = new FileInputStream(f);
              XSSFWorkbook wb = new XSSFWorkbook(fis)) {
             
-             XSSFSheet sheet = wb.getSheetAt(0); // Read first sheet
+            XSSFSheet sheet = wb.getSheetAt(1);
             Iterator<Row> rowIterator = sheet.iterator();
-
-            boolean isHeader = true; // Skip the header row
+            boolean isHeader = true;
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 if (isHeader) {
-                    isHeader = false; // Skip header
+                    isHeader = false;
                     continue;
                 }
-                ledgerList.add(importCellToLEdger(row));
+                ledgeledgerListrList.add(importCellToLEdger(row));
             }
         }catch (IOException e) {
             e.printStackTrace();
         }
-        return ledgerList;
+        return ledgeledgerListrList;
+
     }
 
     private List<LedgerDetails> importDataToListLedger_Detail(File f){
@@ -661,14 +689,14 @@ public class LedgerController implements Initializable {
         try (FileInputStream fis = new FileInputStream(f);
              XSSFWorkbook wb = new XSSFWorkbook(fis)) {
 
-            XSSFSheet sheet = wb.getSheetAt(1); // Read first sheet
+            XSSFSheet sheet = wb.getSheetAt(1);
             Iterator<Row> rowIterator = sheet.iterator();
 
-            boolean isHeader = true; // Skip the header row
+            boolean isHeader = true;
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 if (isHeader) {
-                    isHeader = false; // Skip header
+                    isHeader = false;
                     continue;
                 }
                 ledgerDetailsList.add(importCellToLEdger_detail(row));

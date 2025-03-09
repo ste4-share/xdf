@@ -124,19 +124,11 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="41.0">
                                  <children>
-                                    <Label prefHeight="30.0" prefWidth="99.0" text="---Chi tiết ngày---">
+                                    <Label prefHeight="30.0" prefWidth="99.0" text="---Ngày ghi phiếu ---">
                                        <font>
                                           <Font name="Cambria Italic" size="10.0" />
                                        </font>
                                     </Label>
-                                    <CheckBox fx:id="hideCkb" mnemonicParsing="false" onAction="#hideDay" prefHeight="27.0" prefWidth="118.0" text="Ẩn ngày trống">
-                                       <font>
-                                          <Font name="Cambria Italic" size="12.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </CheckBox>
                                  </children>
                               </HBox>
                               <HBox>
@@ -445,9 +437,9 @@
                               </HBox>
                               <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <children>
-                                    <Button fx:id="ref_to_root" mnemonicParsing="false" onAction="#ref_to_rootAction" prefHeight="30.0" prefWidth="47.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="|&lt;&lt;">
+                                    <Button fx:id="ref_to_root" mnemonicParsing="false" onAction="#ref_to_rootAction" prefHeight="22.0" prefWidth="47.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="|&lt;&lt;">
                                        <font>
-                                          <Font name="Cambria Bold" size="14.0" />
+                                          <Font name="Cambria Bold" size="12.0" />
                                        </font>
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
@@ -491,17 +483,20 @@
                               </TableView>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
                                  <children>
-                                    <HBox fx:id="importBtn" alignment="CENTER_RIGHT" onMouseClicked="#importBtnClick" prefHeight="35.0" prefWidth="97.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
+                                    <HBox fx:id="importBtn" alignment="CENTER_RIGHT" onMouseClicked="#importBtnClick" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;">
                                        <children>
-                                          <ImageView fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="19.0" fitWidth="24.0" onMouseClicked="#importBtnClick" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@img/Upload.png" />
                                              </image>
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
                                           </ImageView>
-                                          <Label onMouseClicked="#importFileClicked" prefHeight="17.0" prefWidth="65.0" text="Nhập File">
+                                          <Label onMouseClicked="#importBtnClick" prefHeight="21.0" prefWidth="65.0" text="Nhập File">
                                              <HBox.margin>
                                                 <Insets left="5.0" top="5.0" />
                                              </HBox.margin>
