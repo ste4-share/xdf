@@ -158,18 +158,20 @@ public class NhapController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null) {
             LedgerDetails ld = getLedgerDetails(lxd);
-            if (!outfieldValid(tcNhap, "tinh chat nhap khoong duoc de trong.")){
-                cmb_tenxd.setStyle(null);
-                if (validateField(ld).isEmpty()) {
-                    if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
-                        ls_socai.add(ld);
+            if (!outfieldValid(tcNhap, MessageCons.NOT_EMPTY_tcn.getName())){
+                if (!outfieldValid(lenhKHso, MessageCons.NOT_EMPTY_lenhKH.getName())){
+                    cmb_tenxd.setStyle(null);
+                    if (validateField(ld).isEmpty()) {
+                        if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
+                            ls_socai.add(ld);
+                        }
+                        setcellFactoryNhap();
+                        setTonKhoLabel(inventory_quantity+ld.getSoluong());
+                        clearHH();
+                    }else{
+                        DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                                "Nhập sai định dạng.", Alert.AlertType.ERROR);
                     }
-                    setcellFactoryNhap();
-                    setTonKhoLabel(inventory_quantity+ld.getSoluong());
-                    clearHH();
-                }else{
-                    DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                            "Nhập sai định dạng.", Alert.AlertType.ERROR);
                 }
             }
         }else{

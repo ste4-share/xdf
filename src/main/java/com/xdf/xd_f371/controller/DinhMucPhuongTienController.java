@@ -5,8 +5,11 @@ import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.cons.LoaiPTEnum;
+import com.xdf.xd_f371.entity.UnitXmt;
+import com.xdf.xd_f371.repo.DinhMucRepo;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.UnitXmtService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -43,28 +46,46 @@ public class DinhMucPhuongTienController implements Initializable {
     @FXML
     ComboBox<NguonNx> units_cbb;
     @FXML
-    ComboBox<Integer> year_cbb;
+    private TableView<UnitXmt> unit_xmt;
+    @FXML
+    private TableColumn<UnitXmt,String> xmt_unit_stt,xmt_unit_soxe,xmt_unit_km,xmt_unit_gio,xmt_unit_md,xmt_unit_tk,xmt_unit_status,xmt_unit_id;
+    @FXML
+    private ComboBox<Integer> year_cbb;
     @FXML
     RadioButton xe_radio,may_radio,mb_radio;
     @FXML
     TextField search_tf;
     @FXML
-    TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,km,h,md,tk,tructhuoc,xmtid;
+    private CheckBox tdvChk;
+    @FXML
+    TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,tructhuoc,xmtid;
 
+    @Autowired
+    private DinhMucRepo dinhMucRepo;
     @Autowired
     private DinhmucService dinhmucService;
     @Autowired
     private NguonNxService nguonNxService;
+    @Autowired
+    private UnitXmtService unitXmtService;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        pt_tb.setPrefWidth(DashboardController.screenWidth);
+        pt_tb.setPrefWidth(DashboardController.screenWidth-800);
         pt_tb.setPrefHeight(DashboardController.screenHeigh-300);
+        unit_xmt.setPrefWidth(DashboardController.screenWidth-800);
+        unit_xmt.setPrefHeight(DashboardController.screenHeigh-300);
         xe_radio.setSelected(true);
         setfactoryForTable();
+        setfactoryFor_UnitXmt();
         initYearCbb();
         initNguonnxCbb();
         fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
         Common.hoverButton(addBtn, "#ffffff");
+    }
+
+    private void setItemsFor_unitxmt(List<UnitXmt> ls){
+        unit_xmt.setItems(FXCollections.observableList(ls));
+        unit_xmt.refresh();
     }
     private void initYearCbb() {
         year_cbb.setItems(FXCollections.observableList(dinhmucService.findAllYear()));
@@ -116,10 +137,17 @@ public class DinhMucPhuongTienController implements Initializable {
         type_name.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("typeName"));
         quantity.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("quantity"));
         tructhuoc.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("nameDv"));
-        km.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("dm_xm_km"));
-        h.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("dm_xm_gio"));
-        md.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("dm_md_gio"));
-        tk.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("dm_tk_gio"));
+    }
+    private void setfactoryFor_UnitXmt(){
+        xmt_unit_stt.setSortable(false);
+        xmt_unit_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(unit_xmt.getItems().indexOf(column.getValue())+1).asString());
+        xmt_unit_soxe.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("licence_plate_number"));
+        xmt_unit_id.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("id"));
+        xmt_unit_km.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("dm_km"));
+        xmt_unit_gio.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("dm_hours"));
+        xmt_unit_md.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("dm_md"));
+        xmt_unit_tk.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("dm_tk"));
+        xmt_unit_status.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("status"));
     }
     @FXML
     public void selectUnit(ActionEvent actionEvent) {
@@ -133,34 +161,14 @@ public class DinhMucPhuongTienController implements Initializable {
     }
     @FXML
     public void addNewPt(ActionEvent actionEvent) throws IOException {
-        dinhMucPhuongTienDto = new DinhMucPhuongTienDto();
-        dinhMucPhuongTienDto.setDm_md_gio(0);
-        dinhMucPhuongTienDto.setDm_tk_gio(0);
-        dinhMucPhuongTienDto.setDm_xm_gio(0);
-        dinhMucPhuongTienDto.setDm_xm_km(0);
-        dinhMucPhuongTienDto.setPhuongtien_id(0);
-        dinhMucPhuongTienDto.setQuantity(0);
-        dinhMucPhuongTienDto.setNnx_id(units_cbb.getSelectionModel().getSelectedItem().getId());
-        Integer y = year_cbb.getSelectionModel().getSelectedItem();
-        if (xe_radio.isSelected()){
-            ls = dinhmucService.findAllBy(y,LoaiPTEnum.XE.getNameVehicle());
-        }else if (may_radio.isSelected()){
-            ls = dinhmucService.findAllBy(y,LoaiPTEnum.MAY.getNameVehicle());
-        }else if (mb_radio.isSelected()){
-            ls = dinhmucService.findAllBy(y,LoaiPTEnum.MAYBAY.getNameVehicle());
-        }
         openAddScreen();
-        fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
-        xe_radio.setSelected(true);
     }
     @FXML
     public void pt_selected(MouseEvent mouseEvent) throws IOException {
-        if (mouseEvent.getClickCount()==2){
-            dinhMucPhuongTienDto = pt_tb.getSelectionModel().getSelectedItem();
-            if (dinhMucPhuongTienDto!=null){
-                openAddScreen();
-                fillDatatoptTable(dinhMucPhuongTienDto.getType());
-            }
+        dinhMucPhuongTienDto = pt_tb.getSelectionModel().getSelectedItem();
+        if (dinhMucPhuongTienDto!=null){
+            List<UnitXmt> ls = unitXmtService.findByUnitIdAndPtId(DashboardController.ref_Dv.getId(), dinhMucPhuongTienDto.getPhuongtien_id());
+            setItemsFor_unitxmt(ls);
         }
     }
     @FXML
@@ -197,5 +205,13 @@ public class DinhMucPhuongTienController implements Initializable {
     @FXML
     public void searchClicked(MouseEvent mouseEvent) {
         search_tf.selectAll();
+    }
+    @FXML
+    public void tdvChkAction(ActionEvent actionEvent) {
+        if (tdvChk.isSelected()){
+            units_cbb.setDisable(true);
+        }else{
+            units_cbb.setDisable(false);
+        }
     }
 }

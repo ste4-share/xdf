@@ -6,10 +6,13 @@ import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.PhuongTien;
+import com.xdf.xd_f371.entity.UnitXmt;
 import com.xdf.xd_f371.repo.DinhMucRepo;
 import com.xdf.xd_f371.repo.LoaiPhuongTienRepo;
 import com.xdf.xd_f371.repo.PhuongtienRepo;
+import com.xdf.xd_f371.repo.UnitXmtRepo;
 import com.xdf.xd_f371.util.DialogMessage;
+import jakarta.transaction.Transactional;
 import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ public class PhuongtienService {
     private final PhuongtienRepo phuongtienRepo;
     private final LoaiPhuongTienRepo loaiPhuongTienRepo;
     private final DinhMucRepo dinhMucRepo;
+    private final UnitXmtRepo unitXmtRepo;
 
     public List<PhuongTien> findPhuongTienByLoaiPhuongTien(String loaiPhuongTien,int dvi_id){
         return phuongtienRepo.findPhuongTienByLoaiPhuongTien(loaiPhuongTien,dvi_id);
@@ -50,23 +54,25 @@ public class PhuongtienService {
     public Optional<PhuongTien> findPhuongTienByName(String name) {
         return phuongtienRepo.findPhuongTienByName(name);
     }
-    public void savePt_DM(int ptid,DinhMucPhuongTienDto pt, int nnx_id){
+
+    @Transactional
+    public void updateXmtUnit(UnitXmt xmt){
         try {
-            if (pt.getPhuongtien_id()==0){
-                PhuongTien p = phuongtienRepo.save(new PhuongTien(ptid,pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
-                dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId()));
-            }else{
-                PhuongTien p = phuongtienRepo.save(new PhuongTien(pt.getPhuongtien_id(),pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
-                DinhMuc dm = dinhMucRepo.findDinhmucByPhuongtien(p.getId(), LocalDate.now().getYear()).orElse(null);
-                if (dm!=null){
-                    dinhMucRepo.save(new DinhMuc(dm.getId(),pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId()));
-                } else {
-                    dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId()));
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            DialogMessage.message(null,null, MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.ERROR);
+            unitXmtRepo.updateUnitXmtByPtAndUnit(xmt.getNote(),xmt.getUnit_id(),xmt.getXmt_id(),xmt.getDm_hours(),xmt.getDm_km(),xmt.getDm_md(),xmt.getDm_tk(),xmt.getLicence_plate_number(),xmt.getStatus());
+            DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Transactional
+    public void createNewXmtUnit(UnitXmt xmt,String pt_name,int lpt_id){
+        try {
+            PhuongTien pt= phuongtienRepo.save(new PhuongTien(pt_name,1,xmt.getUnit_id(),lpt_id,StatusCons.ACTIVED.getName()));
+            xmt.setXmt_id(pt.getId());
+            unitXmtRepo.save(xmt);
+            DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

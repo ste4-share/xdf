@@ -16,6 +16,10 @@ public interface DinhMucRepo extends JpaRepository<DinhMuc, Integer> {
             "p.name,p.quantity,lpt.typeName,lpt.type) from DinhMuc d full join d.phuongTien p join p.loaiPhuongTien lpt " +
             "join p.nguonNx n where d.years=:y and lpt.type like :type_pt")
     List<DinhMucPhuongTienDto> findAllBy(@Param("y") int y,@Param("type_pt") String type);
+    @Query("select new com.xdf.xd_f371.dto.DinhMucPhuongTienDto(d.id, p.id, lpt.id, d.dm_md_gio,d.dm_tk_gio, d.dm_xm_gio,d.dm_xm_km,n.ten," +
+            "p.name,p.quantity,lpt.typeName,lpt.type) from DinhMuc d full join d.phuongTien p join p.loaiPhuongTien lpt " +
+            "join p.nguonNx n")
+    List<DinhMucPhuongTienDto> findAllBy();
     @Query("select d from PhuongTien p join p.dinhmuc d where d.years=:y and d.phuongtien_id=:pt_id")
     Optional<DinhMuc> findDinhmucByPhuongtien(@Param("pt_id") int pt_id, @Param("y") int y);
     @Query(value = "select * from dinhmuc where years=:y",nativeQuery = true)

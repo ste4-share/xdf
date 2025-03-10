@@ -5,6 +5,7 @@ public enum StatusCons {
     IN_ACTIVED("IN_ACTIVE"),
     DONE("DONE"),
     RECORDING("RECORDING"),
+    GOOD("GOOD"),
     NORMAL_STATUS("NORMAL"),
     ROOT_STATUS("ROOT");
 

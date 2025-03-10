@@ -197,20 +197,22 @@ public class XuatController extends CommonFactory implements Initializable {
             PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
             if (pt!=null) {
                 LedgerDetails ld = getLedgerDetails(lxd, gia);
-                if (!outfieldValid(tcx, "tinh chat xuat khong duoc de trong.")) {
-                    if (inventory_quantity < ld.getSoluong()) {
-                        DialogMessage.message("Error", "so luong xuat > so luong ton kho", "Co loi xay ra", Alert.AlertType.WARNING);
-                    } else {
-                        if (validateField(ld).isEmpty()) {
-                            if (isNotDuplicate(ld.getLoaixd_id(), ld.getDon_gia(), ld.getThuc_xuat(), ld.getPhai_xuat(), LoaiPhieuCons.PHIEU_XUAT.getName())) {
-                                ls_socai.add(ld);
-                            }
-                            setTonKhoLabel(inventory_quantity - ld.getSoluong());
-                            setCellValueFactoryXuat();
-                            clearFields();
+                if (!outfieldValid(tcx, MessageCons.NOT_EMPTY_tcn.getName())) {
+                    if (!outfieldValid(lenhso,MessageCons.NOT_EMPTY_lenhKH.getName())) {
+                        if (inventory_quantity < ld.getSoluong()) {
+                            DialogMessage.message("Error", "so luong xuat > so luong ton kho", "Co loi xay ra", Alert.AlertType.WARNING);
                         } else {
-                            DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                                    "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                            if (validateField(ld).isEmpty()) {
+                                if (isNotDuplicate(ld.getLoaixd_id(), ld.getDon_gia(), ld.getThuc_xuat(), ld.getPhai_xuat(), LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                                    ls_socai.add(ld);
+                                }
+                                setTonKhoLabel(inventory_quantity - ld.getSoluong());
+                                setCellValueFactoryXuat();
+                                clearFields();
+                            } else {
+                                DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                                        "Nhập sai định dạng.", Alert.AlertType.WARNING);
+                            }
                         }
                     }
                 }

@@ -1,15 +1,16 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.MessageCons;
-import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
+import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
-import com.xdf.xd_f371.entity.NguonNx;
+import com.xdf.xd_f371.entity.PhuongTien;
+import com.xdf.xd_f371.entity.UnitXmt;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.PhuongtienService;
+import com.xdf.xd_f371.service.UnitXmtService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
+import com.xdf.xd_f371.util.FxUtilTest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,35 +21,52 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
 public class AddBtnPt implements Initializable {
+    private List<UnitXmt> unitXmtList = new ArrayList<>();
+
     @FXML
-    TextField pt_name, quantity,h,km,md,tk,pt_id;
+    private TextField h,km,md,tk,pt_id;
     @FXML
-    Button cancelBtn, saveBtn;
+    private TextArea note;
+    @FXML
+    private Button cancelBtn, saveBtn;
     @FXML
     private Label error_lb;
     @FXML
     private ComboBox<LoaiPhuongTien> cbb_loai;
     @FXML
-    private ComboBox<NguonNx> dvi_cbb;
+    private ComboBox<UnitXmt> license_plate_number;
+    @FXML
+    private CheckBox addNewChk;
+    @FXML
+    private ComboBox<PhuongTien> cbb_xmt;
     @Autowired
     private PhuongtienService phuongtienService;
     @Autowired
-    private NguonNxService nguonNxService;
+    private UnitXmtService unitXmtService;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         error_lb.setText(null);
+        initPt(phuongtienService.findAll());
         initLpt();
-        initField();
+        actionXmt();
+        initLicensePlateCbb(unitXmtList);
         Common.hoverButton(saveBtn, "#ffffff");
         Common.hoverButton(cancelBtn, "#ffffff");
     }
-    private void initNnx() {
-        ComponentUtil.setItemsToComboBox(dvi_cbb,nguonNxService.findByAllBy(),NguonNx::getTen,input->nguonNxService.findByTen(input).orElse(null));
-        dvi_cbb.getSelectionModel().selectFirst();
+    private void initPt(List<PhuongTien> ls) {
+        ComponentUtil.setItemsToComboBox(cbb_xmt,ls,PhuongTien::getName,input->phuongtienService.findPhuongTienByName(input).orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(cbb_xmt, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
+        cbb_xmt.getSelectionModel().selectFirst();
+    }
+    private void initLicensePlateCbb(List<UnitXmt> ls) {
+        ComponentUtil.setItemsToComboBox(license_plate_number,ls,UnitXmt::getLicence_plate_number,input->unitXmtService.findByLicensePlate(input));
+        license_plate_number.getSelectionModel().selectFirst();
     }
     private void initLpt() {
         ComponentUtil.setItemsToComboBox(cbb_loai,phuongtienService.findAllLpt(),LoaiPhuongTien::getTypeName,input->phuongtienService.findLptByName(input));
@@ -57,21 +75,6 @@ public class AddBtnPt implements Initializable {
         }else{
             cbb_loai.getSelectionModel().selectFirst();
         }
-    }
-    private void initField() {
-        DinhMucPhuongTienDto dm = DinhMucPhuongTienController.dinhMucPhuongTienDto;
-        initNnx();
-        if (dm.getPhuongtien_id()!=0){
-            pt_id.setText(String.valueOf(dm.getPhuongtien_id()));
-            cbb_loai.getSelectionModel().select(phuongtienService.findLptByName(dm.getTypeName()));
-            dvi_cbb.getSelectionModel().select(nguonNxService.findByTen(dm.getNameDv()).orElse(null));
-        }
-        h.setText(String.valueOf(dm.getDm_xm_gio()));
-        km.setText(String.valueOf(dm.getDm_xm_km()));
-        md.setText(String.valueOf(dm.getDm_md_gio()));
-        tk.setText(String.valueOf(dm.getDm_tk_gio()));
-        pt_name.setText(dm.getName_pt());
-        quantity.setText(String.valueOf(dm.getQuantity()));
     }
     private void isValid(TextField tf){
         if (Common.isNumber(tf.getText().trim())){
@@ -82,66 +85,29 @@ public class AddBtnPt implements Initializable {
             error_lb.setText("---Sai định dạng---");
         }
     }
-    private boolean savePtDm(DinhMucPhuongTienDto dm){
-        try {
-            if (isvalidField()){
-                dm.setName_pt(pt_name.getText());
-                dm.setQuantity(Double.parseDouble(quantity.getText()));
-                dm.setDm_xm_gio(Double.parseDouble(h.getText()));
-                dm.setDm_xm_km(Double.parseDouble(km.getText()));
-                dm.setDm_md_gio(Double.parseDouble(md.getText()));
-                dm.setDm_tk_gio(Double.parseDouble(tk.getText()));
-                dm.setLoaiphuongtien_id(cbb_loai.getSelectionModel().getSelectedItem().getId());
-                phuongtienService.savePt_DM(Integer.parseInt(pt_id.getText()),dm,dvi_cbb.getSelectionModel().getSelectedItem().getId());
-                return true;
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return false;
-    }
-    private boolean isvalidField(){
-        if (!pt_id.getText().trim().isEmpty()){
-            try {
-                Integer i = Integer.parseInt(pt_id.getText());
-                return true;
-            } catch (NumberFormatException e) {
-                pt_id.setStyle(CommonFactory.styleErrorField);
-                DialogMessage.errorShowing("ID không để trống hoặc chứa ký tự, vui lòng thử lại sau.");
-            }
-        }
-        return false;
-    }
     @FXML
     public void addBtn(ActionEvent actionEvent) {
-        DinhMucPhuongTienDto dm = DinhMucPhuongTienController.dinhMucPhuongTienDto;
+        PhuongTien pt = cbb_xmt.getSelectionModel().getSelectedItem();
         if(DialogMessage.callAlert()== ButtonType.OK){
-            if (error_lb.getText()==null){
-                if (savePtDm(dm)) {
-                    DialogMessage.callAlertWithMessage(null, "Thông báo", "Thêm phương tiện thành công", Alert.AlertType.CONFIRMATION);
+            if (pt!=null){
+                UnitXmt u = license_plate_number.getSelectionModel().getSelectedItem();
+                if (u!=null){
+                    phuongtienService.updateXmtUnit(new UnitXmt(pt_id.getText(),DashboardController.ref_Dv.getId(),pt.getId(),note.getText(),
+                            Double.parseDouble(h.getText()),Double.parseDouble(km.getText()),Double.parseDouble(md.getText()),Double.parseDouble(tk.getText()),
+                            u.getLicence_plate_number(), StatusCons.ACTIVED.getName()));
                     DinhMucPhuongTienController.norm_stage.close();
-                } else {
-                    DialogMessage.callAlertWithMessage(null, null, MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
                 }
             }else{
-                DialogMessage.callAlertWithMessage(null, null, MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
+                phuongtienService.createNewXmtUnit(new UnitXmt(pt_id.getText(),DashboardController.ref_Dv.getId(),0,note.getText(),
+                        Double.parseDouble(h.getText()),Double.parseDouble(km.getText()),Double.parseDouble(md.getText()),Double.parseDouble(tk.getText()),
+                        license_plate_number.getEditor().getText(), StatusCons.ACTIVED.getName()),cbb_xmt.getEditor().getText(),cbb_loai.getSelectionModel().getSelectedItem().getId());
+                DinhMucPhuongTienController.norm_stage.close();
             }
         }
     }
-
     @FXML
     public void cancelBtn(ActionEvent actionEvent) {
         DinhMucPhuongTienController.norm_stage.close();
-    }
-    @FXML
-    public void ms_sl(MouseEvent mouseEvent) {
-        quantity.selectAll();
-        tk.setStyle(null);
-    }
-    @FXML
-    public void kr_sl(KeyEvent keyEvent) {
-        isValid(quantity);
     }
     @FXML
     public void ms_gio(MouseEvent mouseEvent) {
@@ -180,21 +146,6 @@ public class AddBtnPt implements Initializable {
         isValid(tk);
     }
     @FXML
-    public void tenpt_kr(KeyEvent keyEvent) {
-        String t = pt_name.getText();
-        if (t!=null){
-            if (!t.isEmpty()){
-                if (DinhMucPhuongTienController.ls.stream().anyMatch(x->x.getName_pt().toLowerCase().equals(t.toLowerCase()))){
-                    pt_name.setStyle(CommonFactory.styleErrorField);
-                    error_lb.setText("Tên phương tiện đã tồn tại.");
-                }else{
-                    pt_name.setStyle(null);
-                    error_lb.setText(null);
-                }
-            }
-        }
-    }
-    @FXML
     public void cbb_loaiAction(ActionEvent actionEvent) {
          LoaiPhuongTien lpt = cbb_loai.getSelectionModel().getSelectedItem();
          if (lpt!=null){
@@ -207,8 +158,48 @@ public class AddBtnPt implements Initializable {
         pt_id.setStyle(null);
     }
     @FXML
-    public void xmtClicked(MouseEvent mouseEvent) {
-        pt_name.selectAll();
-        pt_name.setStyle(null);
+    public void cbb_xmtAction(ActionEvent actionEvent) {
+        actionXmt();
+    }
+
+    private void actionXmt() {
+        PhuongTien pt = cbb_xmt.getSelectionModel().getSelectedItem();
+        if (pt!=null){
+            unitXmtList = new ArrayList<>();
+            unitXmtList = unitXmtService.findByUnitIdAndPtId(DashboardController.ref_Dv.getId(),pt.getId());
+            initLicensePlateCbb(unitXmtList);
+            if (!unitXmtList.isEmpty()){
+                setDataToField(unitXmtList.get(0));
+            }
+        }
+    }
+
+    @FXML
+    public void license_plate_numberAction(ActionEvent actionEvent) {
+        UnitXmt l = license_plate_number.getSelectionModel().getSelectedItem();
+        if (l!=null){
+            setDataToField(l);
+        }
+    }
+    @FXML
+    public void addNewChkAction(ActionEvent actionEvent) {
+        if (addNewChk.isSelected()){
+            UnitXmt u = new UnitXmt(null,DashboardController.ref_Dv.getId(),0,null,0,0,0,0,null,null);
+            initPt(new ArrayList<>());
+            initLicensePlateCbb(new ArrayList<>());
+            setDataToField(u);
+        }else{
+            initPt(phuongtienService.findAll());
+            actionXmt();
+        }
+    }
+
+    private void setDataToField(UnitXmt unitXmt){
+        pt_id.setText(String.valueOf(unitXmt.getId()));
+        note.setText(unitXmt.getNote());
+        h.setText(String.valueOf(unitXmt.getDm_hours()));
+        km.setText(String.valueOf(unitXmt.getDm_km()));
+        tk.setText(String.valueOf(unitXmt.getDm_tk()));
+        md.setText(String.valueOf(unitXmt.getDm_md()));
     }
 }

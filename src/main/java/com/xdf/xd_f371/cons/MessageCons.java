@@ -9,6 +9,8 @@ public enum MessageCons {
     THONGBAO("Thông báo"),
     CONTENT("Bạn có muốn in phiếu không ?"),
     CO_LOI_XAY_RA("Có lỗi xảy ra, vui lòng thử lại sau."),
+    NOT_EMPTY_tcn("Tính chất nhập không được để trống."),
+    NOT_EMPTY_lenhKH("Lệnh không được để trống."),
     NOT_SELECT_END_TIME("Chưa chọn thời gian kết thúc."),
     NOT_SELECT_START_TIME("Chưa chọn thời gian kết thúc.");
 

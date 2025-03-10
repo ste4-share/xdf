@@ -17,7 +17,7 @@ public class DinhMucPhuongTienDto {
     private double dm_xm_km;
     private String nameDv;
     private String name_pt;
-    private double quantity;
+    private int quantity;
     private String typeName;
     private String type;
     private int nnx_id;
@@ -33,7 +33,7 @@ public class DinhMucPhuongTienDto {
         this.dm_xm_km = dm_xm_km;
         this.nameDv = nameDv;
         this.name_pt = name_pt;
-        this.quantity = quantity;
+        this.quantity = (int) quantity;
         this.typeName = typeName;
         this.type = type;
     }
