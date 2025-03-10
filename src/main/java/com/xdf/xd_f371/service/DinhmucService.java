@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.service;
 
-import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.repo.DinhMucRepo;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +12,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DinhmucService {
     private final DinhMucRepo dinhMucRepo;
-
-    public List<DinhMucPhuongTienDto> findAllBy(int y,String lpt){
-        return dinhMucRepo.findAllBy(y,lpt);
-    }
-    public List<DinhMuc> findAllByYear(int y){
-        return dinhMucRepo.findAllByYear(y);
-    }
     public DinhMuc save(DinhMuc dinhMuc){
         return dinhMucRepo.save(dinhMuc);
     }

@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PhuongTien {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
     private String name;

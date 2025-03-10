@@ -2,8 +2,8 @@ package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.StatusCons;
-import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
-import com.xdf.xd_f371.entity.DinhMuc;
+import com.xdf.xd_f371.dto.InventoryDto;
+import com.xdf.xd_f371.dto.XmtDto;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.entity.UnitXmt;
@@ -13,11 +13,13 @@ import com.xdf.xd_f371.repo.PhuongtienRepo;
 import com.xdf.xd_f371.repo.UnitXmtRepo;
 import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
-import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +28,23 @@ import java.util.Optional;
 public class PhuongtienService {
     private final PhuongtienRepo phuongtienRepo;
     private final LoaiPhuongTienRepo loaiPhuongTienRepo;
-    private final DinhMucRepo dinhMucRepo;
     private final UnitXmtRepo unitXmtRepo;
 
     public List<PhuongTien> findPhuongTienByLoaiPhuongTien(String loaiPhuongTien,int dvi_id){
         return phuongtienRepo.findPhuongTienByLoaiPhuongTien(loaiPhuongTien,dvi_id);
     }
+    public List<XmtDto> findXmtByType(String lpt,int dvid){
+        return mapXmt(phuongtienRepo.findXmtByType(lpt,dvid));
+    }
+    public List<XmtDto> findAllXmtByType(String lpt){
+        return mapXmt(phuongtienRepo.findXmtByTypeAll(lpt));
+    }
+    public List<XmtDto> mapXmt(List<Object[]> results) {
+        return results.stream()
+                .map(row -> new XmtDto((int) row[0],(String)row[1],(String)row[2],(Timestamp) row[3],(Integer) row[4]))
+                .toList();
+    }
+
     public PhuongTien save(PhuongTien phuongTien){
         return phuongtienRepo.save(phuongTien);
     }

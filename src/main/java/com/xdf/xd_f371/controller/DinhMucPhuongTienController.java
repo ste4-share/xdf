@@ -1,18 +1,16 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.StatusCons;
-import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
-import com.xdf.xd_f371.entity.DinhMuc;
+import com.xdf.xd_f371.dto.XmtDto;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.entity.UnitXmt;
-import com.xdf.xd_f371.repo.DinhMucRepo;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.PhuongtienService;
 import com.xdf.xd_f371.service.UnitXmtService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
-import com.xdf.xd_f371.util.DialogMessage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -29,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -37,10 +35,10 @@ import java.util.ResourceBundle;
 @Component
 public class DinhMucPhuongTienController implements Initializable {
     public static Stage norm_stage;
-    public static DinhMucPhuongTienDto dinhMucPhuongTienDto = new DinhMucPhuongTienDto();
-    public static List<DinhMucPhuongTienDto> ls = new ArrayList<>();
+    public static XmtDto xmtDto = new XmtDto();
+    public static List<XmtDto> ls = new ArrayList<>();
     @FXML
-    TableView<DinhMucPhuongTienDto> pt_tb;
+    TableView<XmtDto> pt_tb;
     @FXML
     private Button addBtn;
     @FXML
@@ -58,10 +56,10 @@ public class DinhMucPhuongTienController implements Initializable {
     @FXML
     private CheckBox tdvChk;
     @FXML
-    TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,tructhuoc,xmtid;
+    TableColumn<XmtDto, String> stt,xmt_name,type_name,quantity,xmtid;
 
     @Autowired
-    private DinhMucRepo dinhMucRepo;
+    private PhuongtienService phuongtienService;
     @Autowired
     private DinhmucService dinhmucService;
     @Autowired
@@ -96,47 +94,34 @@ public class DinhMucPhuongTienController implements Initializable {
         units_cbb.getSelectionModel().selectLast();
     }
     private void fillDatatoptTable(String lpt) {
-        NguonNx dvi = units_cbb.getSelectionModel().getSelectedItem();
-        Integer y = year_cbb.getSelectionModel().getSelectedItem();
-        if (dvi!=null && y!=null){
-            ls = dinhmucService.findAllBy(y, lpt);
-            if (!ls.isEmpty()){
-                pt_tb.setItems(FXCollections.observableList(ls));
-            }else {
-                if (DialogMessage.callAlertWithMessage(null,null,"Chưa đặt định mức cho phương tiện năm " + LocalDate.now().getYear()+
-                                ". Bạn có muốn chuyển định mức năm "+(LocalDate.now().getYear()-1)+" để dùng cho năm "+(LocalDate.now().getYear())
-                        , Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                    switchDinhmuc();
-                    xe_radio.setSelected(true);
-                    fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
-                }
+        if (tdvChk.isSelected()){
+            ls = phuongtienService.findAllXmtByType(lpt);
+            setItemsToTable(ls);
+        }else{
+            NguonNx dvi = units_cbb.getSelectionModel().getSelectedItem();
+            if (dvi!=null){
+                ls = phuongtienService.findXmtByType(lpt,dvi.getId());
+                setItemsToTable(ls);
             }
         }
     }
-    private void mapPtTb(List<DinhMucPhuongTienDto> ls){
+    private void setItemsToTable(List<XmtDto> ls){
+        if (!ls.isEmpty()){
+            pt_tb.setItems(FXCollections.observableList(ls));
+        }
+    }
+    private void mapPtTb(List<XmtDto> ls){
         pt_tb.setItems(FXCollections.observableList(ls));
         pt_tb.refresh();
     }
-    private void switchDinhmuc(){
-        List<DinhMuc> previousDm = dinhmucService.findAllByYear((LocalDate.now().getYear()-1));
-        if (!previousDm.isEmpty()){
-            previousDm.forEach(x->{
-                x.setYears(LocalDate.now().getYear());
-                dinhmucService.save(x);
-            });
-            DialogMessage.successShowing("Chuyen doi thanh cong");
-        } else {
-            DialogMessage.errorShowing("Khong co du lieu tu nam "+(LocalDate.now().getYear()-1));
-        }
-    }
+
     private void setfactoryForTable(){
         stt.setSortable(false);
         stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(pt_tb.getItems().indexOf(column.getValue())+1).asString());
-        xmt_name.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("name_pt"));
-        xmtid.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("phuongtien_id"));
-        type_name.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("typeName"));
-        quantity.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("quantity"));
-        tructhuoc.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("nameDv"));
+        xmt_name.setCellValueFactory(new PropertyValueFactory<XmtDto, String>("name"));
+        xmtid.setCellValueFactory(new PropertyValueFactory<XmtDto, String>("xmtId"));
+        type_name.setCellValueFactory(new PropertyValueFactory<XmtDto, String>("loaiXmt"));
+        quantity.setCellValueFactory(new PropertyValueFactory<XmtDto, String>("quantity"));
     }
     private void setfactoryFor_UnitXmt(){
         xmt_unit_stt.setSortable(false);
@@ -151,6 +136,10 @@ public class DinhMucPhuongTienController implements Initializable {
     }
     @FXML
     public void selectUnit(ActionEvent actionEvent) {
+        selectUnitByType();
+    }
+
+    private void selectUnitByType() {
         if (xe_radio.isSelected()){
             fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
         }else if (may_radio.isSelected()){
@@ -159,15 +148,16 @@ public class DinhMucPhuongTienController implements Initializable {
             fillDatatoptTable(LoaiPTEnum.MAYBAY.getNameVehicle());
         }
     }
+
     @FXML
     public void addNewPt(ActionEvent actionEvent) throws IOException {
         openAddScreen();
     }
     @FXML
     public void pt_selected(MouseEvent mouseEvent) throws IOException {
-        dinhMucPhuongTienDto = pt_tb.getSelectionModel().getSelectedItem();
-        if (dinhMucPhuongTienDto!=null){
-            List<UnitXmt> ls = unitXmtService.findByUnitIdAndPtId(DashboardController.ref_Dv.getId(), dinhMucPhuongTienDto.getPhuongtien_id());
+        xmtDto = pt_tb.getSelectionModel().getSelectedItem();
+        if (xmtDto!=null){
+            List<UnitXmt> ls = unitXmtService.findByUnitIdAndPtId(DashboardController.ref_Dv.getId(), xmtDto.getXmtId());
             setItemsFor_unitxmt(ls);
         }
     }
@@ -197,7 +187,7 @@ public class DinhMucPhuongTienController implements Initializable {
     public void searchKr(KeyEvent keyEvent) {
         String t = search_tf.getText().trim();
         if (!t.isEmpty()){
-            mapPtTb(ls.stream().filter(x->x.getName_pt().toLowerCase().contains(t)).toList());
+            mapPtTb(ls.stream().filter(x->x.getName().toLowerCase().contains(t)).toList());
         }else{
             mapPtTb(ls);
         }
@@ -210,8 +200,10 @@ public class DinhMucPhuongTienController implements Initializable {
     public void tdvChkAction(ActionEvent actionEvent) {
         if (tdvChk.isSelected()){
             units_cbb.setDisable(true);
+            selectUnitByType();
         }else{
             units_cbb.setDisable(false);
+            selectUnitByType();
         }
     }
 }
