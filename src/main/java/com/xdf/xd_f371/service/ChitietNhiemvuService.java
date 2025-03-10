@@ -70,26 +70,26 @@ public class ChitietNhiemvuService {
     public Optional<NhiemVu> findByName(String n,String status){
         return nhiemvuRepository.findByName(n,status);
     }
-    public void saveNhiemvu(int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d){
+    public void saveNhiemvu(int ctnv_id,int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d){
         Optional<NhiemVu> n_v = nhiemvuRepository.findByName(nv,StatusCons.ACTIVED.getName());
         if (n_v.isPresent()){
             Optional<ChitietNhiemVu> ctnv = chitietNhiemvuRepo.findByNhiemvu(ct,n_v.get().getId());
             if (ctnv.isPresent()){
                 DialogMessage.errorShowing("Nhiem vu da ton tai.");
             }else{
-                ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(n_v.get().getId(),ct));
+                ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(ctnv_id,n_v.get().getId(),ct));
                 hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
                         Long.parseLong(diezel_tf),Long.parseLong(d),Long.parseLong(x)));
                 DialogMessage.message(null, "Them thanh cong",
-                        "Thanh cong", Alert.AlertType.INFORMATION);
+                        null, Alert.AlertType.INFORMATION);
             }
         }else{
             NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,lnv.getId(),99,99));
-            ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(n.getId(),ct));
+            ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(ctnv_id,n.getId(),ct));
             hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
                     Long.parseLong(diezel_tf),Long.parseLong(d),Long.parseLong(x)));
             DialogMessage.message(null, "Them thanh cong",
-                    "Thanh cong", Alert.AlertType.INFORMATION);
+                    null, Alert.AlertType.INFORMATION);
         }
 
     }

@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface NhiemvuRepository extends JpaRepository<NhiemVu,Integer> {
     @Query(value = "select * from nhiemvu where ten_nv like :n and status like :st",nativeQuery = true)
     Optional<NhiemVu> findByName(@Param("n") String n,@Param("st") String st);
+    @Query(value = "select * from nhiemvu where id=:i",nativeQuery = true)
+    Optional<NhiemVu> findById(@Param("i") int id);
 }

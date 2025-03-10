@@ -68,7 +68,8 @@
                               </HBox>
                               <TableView fx:id="nv_tb" onMouseClicked="#nhiemvu_selected" stylesheets="@css/table_style.css">
                                 <columns>
-                                    <TableColumn fx:id="stt_1" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
+                                    <TableColumn fx:id="stt_1" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="stt" />
+                                    <TableColumn fx:id="nv_id" maxWidth="120.0" minWidth="45.0" prefWidth="100.0" text="ID" />
                                   <TableColumn fx:id="tennv" prefWidth="75.0" text="Nhiệm vụ" />
                                     <TableColumn fx:id="ctnv" prefWidth="144.0" text="Chi tiết nhiệm vụ" />
                                     <TableColumn fx:id="lnv" prefWidth="144.0" text="Loại nhiệm vụ" />
@@ -315,7 +316,8 @@
                               </HBox>
                               <TableView fx:id="tieuthunhiemvu" onMouseClicked="#nhiemvu_selected" stylesheets="@css/table_style.css">
                                  <columns>
-                                    <TableColumn fx:id="stt_3" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
+                                    <TableColumn fx:id="stt_3" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="stt" />
+                                    <TableColumn fx:id="hm_id" maxWidth="120.0" minWidth="45.0" prefWidth="100.0" text="ID" />
                                     <TableColumn fx:id="nv" maxWidth="1000.0" minWidth="150.0" prefWidth="175.0" text="Nhiệm vụ" />
                                     <TableColumn fx:id="ct" maxWidth="1000.0" minWidth="150.0" prefWidth="175.0" text="Chi tiết nhiệm vụ" />
                                     <TableColumn fx:id="khoi1111" prefWidth="712.0" text="Hạn mức được QC cấp">

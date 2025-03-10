@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.NguonNx;
@@ -24,7 +25,7 @@ import java.util.ResourceBundle;
 @Component
 public class AddBtnPt implements Initializable {
     @FXML
-    TextField pt_name, quantity,h,km,md,tk;
+    TextField pt_name, quantity,h,km,md,tk,pt_id;
     @FXML
     Button cancelBtn, saveBtn;
     @FXML
@@ -59,10 +60,9 @@ public class AddBtnPt implements Initializable {
     }
     private void initField() {
         DinhMucPhuongTienDto dm = DinhMucPhuongTienController.dinhMucPhuongTienDto;
-        if (dm.getPhuongtien_id()==0){
-            initNnx();
-        }else {
-            initNnx();
+        initNnx();
+        if (dm.getPhuongtien_id()!=0){
+            pt_id.setText(String.valueOf(dm.getPhuongtien_id()));
             cbb_loai.getSelectionModel().select(phuongtienService.findLptByName(dm.getTypeName()));
             dvi_cbb.getSelectionModel().select(nguonNxService.findByTen(dm.getNameDv()).orElse(null));
         }
@@ -84,18 +84,34 @@ public class AddBtnPt implements Initializable {
     }
     private boolean savePtDm(DinhMucPhuongTienDto dm){
         try {
-            dm.setName_pt(pt_name.getText());
-            dm.setQuantity(Integer.parseInt(quantity.getText()));
-            dm.setDm_xm_gio(Integer.parseInt(h.getText()));
-            dm.setDm_xm_km(Integer.parseInt(km.getText()));
-            dm.setDm_md_gio(Integer.parseInt(md.getText()));
-            dm.setDm_tk_gio(Integer.parseInt(tk.getText()));
-            dm.setLoaiphuongtien_id(cbb_loai.getSelectionModel().getSelectedItem().getId());
-            phuongtienService.savePt_DM(dm,dvi_cbb.getSelectionModel().getSelectedItem().getId());
-            return true;
+            if (isvalidField()){
+                dm.setName_pt(pt_name.getText());
+                dm.setQuantity(Double.parseDouble(quantity.getText()));
+                dm.setDm_xm_gio(Double.parseDouble(h.getText()));
+                dm.setDm_xm_km(Double.parseDouble(km.getText()));
+                dm.setDm_md_gio(Double.parseDouble(md.getText()));
+                dm.setDm_tk_gio(Double.parseDouble(tk.getText()));
+                dm.setLoaiphuongtien_id(cbb_loai.getSelectionModel().getSelectedItem().getId());
+                phuongtienService.savePt_DM(Integer.parseInt(pt_id.getText()),dm,dvi_cbb.getSelectionModel().getSelectedItem().getId());
+                return true;
+            }
         } catch (Exception e){
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
+        return false;
+    }
+    private boolean isvalidField(){
+        if (!pt_id.getText().trim().isEmpty()){
+            try {
+                Integer i = Integer.parseInt(pt_id.getText());
+                return true;
+            } catch (NumberFormatException e) {
+                pt_id.setStyle(CommonFactory.styleErrorField);
+                DialogMessage.errorShowing("ID không để trống hoặc chứa ký tự, vui lòng thử lại sau.");
+            }
+        }
+        return false;
     }
     @FXML
     public void addBtn(ActionEvent actionEvent) {
@@ -106,10 +122,10 @@ public class AddBtnPt implements Initializable {
                     DialogMessage.callAlertWithMessage(null, "Thông báo", "Thêm phương tiện thành công", Alert.AlertType.CONFIRMATION);
                     DinhMucPhuongTienController.norm_stage.close();
                 } else {
-                    DialogMessage.callAlertWithMessage(null, null, "Có lỗi xảy ra.", Alert.AlertType.WARNING);
+                    DialogMessage.callAlertWithMessage(null, null, MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
                 }
             }else{
-                DialogMessage.callAlertWithMessage(null, null, "Something stills wrong!", Alert.AlertType.WARNING);
+                DialogMessage.callAlertWithMessage(null, null, MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
             }
         }
     }
@@ -184,5 +200,15 @@ public class AddBtnPt implements Initializable {
          if (lpt!=null){
              Common.loaipt = lpt;
          }
+    }
+    @FXML
+    public void idClicked(MouseEvent mouseEvent) {
+        pt_id.selectAll();
+        pt_id.setStyle(null);
+    }
+    @FXML
+    public void xmtClicked(MouseEvent mouseEvent) {
+        pt_name.selectAll();
+        pt_name.setStyle(null);
     }
 }

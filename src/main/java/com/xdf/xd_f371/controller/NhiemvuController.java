@@ -52,7 +52,7 @@ public class NhiemvuController implements Initializable {
     @FXML
     TableColumn<HanmucNhiemvuTaubayDto, String> stt_2,dvi_x,t2_pt,t2_nv_2,ct_nv_2,t2_tk_2,t2_md_2,t2_nl_2;
     @FXML
-    TableColumn<HanmucNhiemvu2Dto, String> nv,ct,xang,diezel,daubay,stt_3,cong;
+    TableColumn<HanmucNhiemvu2Dto, String> nv,ct,xang,diezel,daubay,stt_3,cong,hm_id;
     @FXML
     private TextField mb_search;
 
@@ -63,7 +63,7 @@ public class NhiemvuController implements Initializable {
     @FXML
     TableView<NhiemVuDto> nv_tb;
     @FXML
-    TableColumn<NhiemVuDto, String> tennv, ctnv,lnv, khoi,stt_1;
+    TableColumn<NhiemVuDto, String> tennv, ctnv,lnv, khoi,stt_1,nv_id;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -188,6 +188,7 @@ public class NhiemvuController implements Initializable {
         stt_1.setSortable(false);
         stt_1.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(nv_tb.getItems().indexOf(column.getValue())+1).asString());
         tennv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_nv"));
+        nv_id.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ctnv_id"));
         ctnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("chitiet"));
         lnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_loai_nv"));
         khoi.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("khoi"));
@@ -196,6 +197,7 @@ public class NhiemvuController implements Initializable {
         stt_3.setSortable(false);
         stt_3.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tieuthunhiemvu.getItems().indexOf(column.getValue())+1).asString());
         nv.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("tenNv"));
+        hm_id.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("nhiemvu_id"));
         ct.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("chitiet_nhiemvu"));
         xang.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("xang_str"));
         diezel.setCellValueFactory(new PropertyValueFactory<HanmucNhiemvu2Dto, String>("diezel_str"));

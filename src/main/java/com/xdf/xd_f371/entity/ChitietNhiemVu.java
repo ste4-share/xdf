@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ChitietNhiemVu {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "nhiemvu_id")
     private int nhiemvu_id;
@@ -33,10 +32,6 @@ public class ChitietNhiemVu {
 
     public ChitietNhiemVu(int id, int nhiemvu_id, String nhiemvu) {
         this.id = id;
-        this.nhiemvu_id = nhiemvu_id;
-        this.nhiemvu = nhiemvu;
-    }
-    public ChitietNhiemVu(int nhiemvu_id, String nhiemvu) {
         this.nhiemvu_id = nhiemvu_id;
         this.nhiemvu = nhiemvu;
     }

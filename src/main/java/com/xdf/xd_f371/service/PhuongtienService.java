@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.service;
 
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.DinhMucPhuongTienDto;
 import com.xdf.xd_f371.entity.DinhMuc;
@@ -49,10 +50,10 @@ public class PhuongtienService {
     public Optional<PhuongTien> findPhuongTienByName(String name) {
         return phuongtienRepo.findPhuongTienByName(name);
     }
-    public void savePt_DM(DinhMucPhuongTienDto pt, int nnx_id){
+    public void savePt_DM(int ptid,DinhMucPhuongTienDto pt, int nnx_id){
         try {
             if (pt.getPhuongtien_id()==0){
-                PhuongTien p = phuongtienRepo.save(new PhuongTien(pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
+                PhuongTien p = phuongtienRepo.save(new PhuongTien(ptid,pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
                 dinhMucRepo.save(new DinhMuc(pt.getDm_md_gio(), pt.getDm_tk_gio(), pt.getDm_xm_gio(),pt.getDm_xm_km(),p.getId()));
             }else{
                 PhuongTien p = phuongtienRepo.save(new PhuongTien(pt.getPhuongtien_id(),pt.getName_pt(),pt.getQuantity(),nnx_id,pt.getLoaiphuongtien_id(), StatusCons.ACTIVED.getName()));
@@ -65,7 +66,7 @@ public class PhuongtienService {
             }
         }catch (Exception e){
             e.printStackTrace();
-            DialogMessage.message(null,null,"An error has occurred", Alert.AlertType.ERROR);
+            DialogMessage.message(null,null, MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.ERROR);
         }
     }
 }

@@ -27,7 +27,7 @@ public class AddNvController implements Initializable {
     @FXML
     private ComboBox<LoaiNhiemVu> cbb_lnv;
     @FXML
-    private TextField nv,ct,xang,diezel,daubay;
+    private TextField nv,ct,xang,diezel,daubay,id;
     @FXML
     private Button add_btn,cancel_btn;
     @Autowired
@@ -44,16 +44,24 @@ public class AddNvController implements Initializable {
         xang.setText("0");
         diezel.setText("0");
         daubay.setText("0");
+
     }
     private boolean isValid(){
         if (!Common.isNumber(xang.getText())){
             xang.setStyle(CommonFactory.styleErrorField);
+            DialogMessage.errorShowing("Xăng không chứa ký tự.");
             return false;
         }else if (!Common.isNumber(daubay.getText())){
             daubay.setStyle(CommonFactory.styleErrorField);
+            DialogMessage.errorShowing("Dầu bay không chứa ký tự.");
+            return false;
+        }else if (!Common.isNumber(id.getText())){
+            id.setStyle(CommonFactory.styleErrorField);
+            DialogMessage.errorShowing("Id không chứa ký tự.");
             return false;
         }else if (!Common.isNumber(diezel.getText())){
             diezel.setStyle(CommonFactory.styleErrorField);
+            DialogMessage.errorShowing("Diezel không chứa ký tự.");
             return false;
         }
         xang.setStyle(null);
@@ -74,11 +82,13 @@ public class AddNvController implements Initializable {
     }
     @FXML
     public void nv_clicked(MouseEvent mouseEvent) {
+        nv.setStyle(null);
         nv.selectAll();
     }
     @FXML
     public void ct_clicked(MouseEvent mouseEvent) {
         ct.selectAll();
+        ct.setStyle(null);
     }
     @FXML
     public void addAction(ActionEvent actionEvent) {
@@ -88,7 +98,7 @@ public class AddNvController implements Initializable {
         if (lnv!=null && t!=null && nx!=null){
             if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 if (isValid()){
-                    nhiemvuService.saveNhiemvu(t.getId(),nv.getText(),lnv,ct.getText(),nx,xang.getText(),diezel.getText(),daubay.getText());
+                    nhiemvuService.saveNhiemvu(Integer.parseInt(id.getText()),t.getId(),nv.getText(),lnv,ct.getText(),nx,xang.getText(),diezel.getText(),daubay.getText());
                     NhiemvuController.nvStage.close();
                 }
             }
@@ -101,5 +111,10 @@ public class AddNvController implements Initializable {
     }
     @FXML
     public void lnvAction(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void id_clicked(MouseEvent mouseEvent) {
+        id.selectAll();
+        id.setStyle(null);
     }
 }

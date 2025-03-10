@@ -49,7 +49,7 @@ public class DinhMucPhuongTienController implements Initializable {
     @FXML
     TextField search_tf;
     @FXML
-    TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,km,h,md,tk,tructhuoc;
+    TableColumn<DinhMucPhuongTienDto, String> stt,xmt_name,type_name,quantity,km,h,md,tk,tructhuoc,xmtid;
 
     @Autowired
     private DinhmucService dinhmucService;
@@ -112,6 +112,7 @@ public class DinhMucPhuongTienController implements Initializable {
         stt.setSortable(false);
         stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(pt_tb.getItems().indexOf(column.getValue())+1).asString());
         xmt_name.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("name_pt"));
+        xmtid.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("phuongtien_id"));
         type_name.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("typeName"));
         quantity.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("quantity"));
         tructhuoc.setCellValueFactory(new PropertyValueFactory<DinhMucPhuongTienDto, String>("nameDv"));
