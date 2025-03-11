@@ -1,8 +1,6 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.dto.XmtDto;
-import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.entity.UnitXmt;
 import com.xdf.xd_f371.service.DinhmucService;
@@ -10,7 +8,6 @@ import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.PhuongtienService;
 import com.xdf.xd_f371.service.UnitXmtService;
 import com.xdf.xd_f371.util.Common;
-import com.xdf.xd_f371.util.ComponentUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -42,9 +39,9 @@ public class DinhMucPhuongTienController implements Initializable {
     @FXML
     private Button addBtn;
     @FXML
-    ComboBox<NguonNx> units_cbb;
-    @FXML
     private TableView<UnitXmt> unit_xmt;
+    @FXML
+    private Label dv_lable;
     @FXML
     private TableColumn<UnitXmt,String> xmt_unit_stt,xmt_unit_soxe,xmt_unit_km,xmt_unit_gio,xmt_unit_md,xmt_unit_tk,xmt_unit_status,xmt_unit_id;
     @FXML
@@ -73,10 +70,11 @@ public class DinhMucPhuongTienController implements Initializable {
         unit_xmt.setPrefWidth(DashboardController.screenWidth-800);
         unit_xmt.setPrefHeight(DashboardController.screenHeigh-300);
         xe_radio.setSelected(true);
+        dv_lable.setText(DashboardController.ref_Dv.getTen());
         setfactoryForTable();
         setfactoryFor_UnitXmt();
         initYearCbb();
-        initNguonnxCbb();
+
         fillDatatoptTable(LoaiPTEnum.XE.getNameVehicle());
         Common.hoverButton(addBtn, "#ffffff");
     }
@@ -89,20 +87,13 @@ public class DinhMucPhuongTienController implements Initializable {
         year_cbb.setItems(FXCollections.observableList(dinhmucService.findAllYear()));
         year_cbb.getSelectionModel().selectFirst();
     }
-    private void initNguonnxCbb() {
-        ComponentUtil.setItemsToComboBox(units_cbb,nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()),NguonNx::getTen, input-> nguonNxService.findByTen(input).orElse(null));
-        units_cbb.getSelectionModel().selectLast();
-    }
     private void fillDatatoptTable(String lpt) {
         if (tdvChk.isSelected()){
             ls = phuongtienService.findAllXmtByType(lpt);
             setItemsToTable(ls);
         }else{
-            NguonNx dvi = units_cbb.getSelectionModel().getSelectedItem();
-            if (dvi!=null){
-                ls = phuongtienService.findXmtByType(lpt,dvi.getId());
-                setItemsToTable(ls);
-            }
+            ls = phuongtienService.findXmtByType(lpt,DashboardController.ref_Dv.getId());
+            setItemsToTable(ls);
         }
     }
     private void setItemsToTable(List<XmtDto> ls){
@@ -199,10 +190,8 @@ public class DinhMucPhuongTienController implements Initializable {
     @FXML
     public void tdvChkAction(ActionEvent actionEvent) {
         if (tdvChk.isSelected()){
-            units_cbb.setDisable(true);
             selectUnitByType();
         }else{
-            units_cbb.setDisable(false);
             selectUnitByType();
         }
     }

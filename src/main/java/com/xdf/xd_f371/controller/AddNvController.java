@@ -94,7 +94,7 @@ public class AddNvController implements Initializable {
     public void addAction(ActionEvent actionEvent) {
         LoaiNhiemVu lnv = cbb_lnv.getSelectionModel().getSelectedItem();
         Team t = cbb_team.getSelectionModel().getSelectedItem();
-        NguonNx nx = nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()).get(0);
+        NguonNx nx = DashboardController.ref_Dv;
         if (lnv!=null && t!=null && nx!=null){
             if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 if (isValid()){

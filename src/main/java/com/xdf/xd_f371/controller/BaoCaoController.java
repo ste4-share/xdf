@@ -60,6 +60,10 @@ public class BaoCaoController implements Initializable {
         rvb.setPrefWidth(DashboardController.screenWidth-300);
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
         initDviCbb();
+        dvi_cbb.getSelectionModel().select(DashboardController.ref_Dv);
+        initQuarter();
+    }
+    private void initQuarter() {
         q = ConnectLan.pre_acc;
         if (q.getSd()!=null){
             fromdate.setText(q.getSd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
@@ -75,7 +79,6 @@ public class BaoCaoController implements Initializable {
         FxUtilTest.autoCompleteComboBoxPlus(dvi_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
         dvi_cbb.getSelectionModel().selectFirst();
     }
-
     private Integer map_bc_lcv_create(XSSFWorkbook wb,String sheetName){
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){

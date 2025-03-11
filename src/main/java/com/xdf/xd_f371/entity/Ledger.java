@@ -117,5 +117,6 @@ public class Ledger {
         this.root_id = l.root_id;
         this.pt_id = l.pt_id;
         this.note = l.note;
+        this.year = l.getYear();
     }
 }

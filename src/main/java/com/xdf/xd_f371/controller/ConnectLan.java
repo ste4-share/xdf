@@ -1,9 +1,11 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
+import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.AccountService;
+import com.xdf.xd_f371.service.ConfigurationService;
 import com.xdf.xd_f371.service.ConnectionService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -59,6 +61,8 @@ public class ConnectLan implements Initializable {
     private AccountService accountService;
     @Autowired
     private ConnectionService connectionService;
+    @Autowired
+    private ConfigurationService configurationService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Common.hoverButton(connect,"#009107");
@@ -82,6 +86,7 @@ public class ConnectLan implements Initializable {
                 if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
                 rememberme(user,p,i,po,path);
                 setContext(i,po);
+                configurationService.updateValueByParam(ConfigCons.REPORT_PATH.getName(),path);
                 log_in(user,p,i,po,path);
             }else{
                 DialogMessage.message(null, "Vui long kiem tra lai ip va port", "That bai", Alert.AlertType.CONFIRMATION);

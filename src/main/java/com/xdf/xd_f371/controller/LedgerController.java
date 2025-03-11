@@ -58,11 +58,6 @@ public class LedgerController implements Initializable {
     private LedgerService ledgerService;
     @Autowired
     private NguonNxService nguonNxService;
-    @Autowired
-    private DinhmucService dinhmucService;
-    @Autowired
-    private TcnService tcnService;
-
     @FXML
     private Button ref_to_root;
     @FXML
@@ -92,8 +87,6 @@ public class LedgerController implements Initializable {
     private TextField search_by_name_tf;
     @FXML
     private ComboBox<NguonNx> dvi_ref_cbb;
-    @FXML
-    private CheckBox hideCkb;
     @FXML
     private HBox importBtn;
     @Override
@@ -235,8 +228,8 @@ public class LedgerController implements Initializable {
         CommonFactory.setVi_DatePicker(tab2_denngay);
     }
     private void initRootUnitLable() {
-        root_unit_lable.setText(nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()).get(0).getTen());
-        tab1_dvi_label.setText(nguonNxService.findByStatus(StatusCons.ROOT_STATUS.getName()).get(0).getTen());
+        root_unit_lable.setText(DashboardController.ref_Dv.getTen());
+        tab1_dvi_label.setText(DashboardController.ref_Dv.getTen());
         unitClickedLable.setText("-----");
     }
     private void initTableSize() {
@@ -537,33 +530,31 @@ public class LedgerController implements Initializable {
             Cell from_date = row.getCell(3);
             Cell end_date = row.getCell(4);
             Cell status = row.getCell(5);
-            Cell sl_tieuthu_md = row.getCell(6);
-            Cell sl_tieuthu_tk = row.getCell(7);
-            Cell dvi_nhan_id = row.getCell(8);
-            Cell dvi_xuat_id = row.getCell(9);
-            Cell loai_phieu = row.getCell(10);
-            Cell dvi_nhan = row.getCell(11);
-            Cell dvi_xuat = row.getCell(12);
-            Cell loaigiobay = row.getCell(13);
-            Cell nguoinhan = row.getCell(14);
-            Cell soxe = row.getCell(15);
-            Cell lenhso = row.getCell(16);
-            Cell nhiemvu = row.getCell(17);
-            Cell nhiemvuId = row.getCell(18);
-            Cell sokm = row.getCell(19);
-            Cell tcn_id = row.getCell(20);
-            Cell timestamp = row.getCell(21);
-            Cell giohd_md = row.getCell(22);
-            Cell giohd_tk = row.getCell(23);
-            Cell loainv = row.getCell(24);
-            Cell tructhuoc = row.getCell(25);
-            Cell lpt = row.getCell(26);
-            Cell lpt2 = row.getCell(27);
-            Cell version = row.getCell(28);
-            Cell create_by = row.getCell(29);
-            Cell root_id = row.getCell(30);
-            Cell pt_id = row.getCell(31);
-            Cell note = row.getCell(32);
+            Cell dvi_nhan_id = row.getCell(6);
+            Cell dvi_xuat_id = row.getCell(7);
+            Cell loai_phieu = row.getCell(8);
+            Cell dvi_nhan = row.getCell(9);
+            Cell dvi_xuat = row.getCell(10);
+            Cell loaigiobay = row.getCell(11);
+            Cell nguoinhan = row.getCell(12);
+            Cell soxe = row.getCell(13);
+            Cell lenhso = row.getCell(14);
+            Cell nhiemvu = row.getCell(15);
+            Cell nhiemvuId = row.getCell(16);
+            Cell sokm = row.getCell(17);
+            Cell tcn_id = row.getCell(18);
+            Cell timestamp = row.getCell(19);
+            Cell giohd_md = row.getCell(20);
+            Cell giohd_tk = row.getCell(21);
+            Cell loainv = row.getCell(22);
+            Cell tructhuoc = row.getCell(23);
+            Cell lpt = row.getCell(24);
+            Cell lpt2 = row.getCell(25);
+            Cell create_by = row.getCell(26);
+            Cell root_id = row.getCell(27);
+            Cell pt_id = row.getCell(28);
+            Cell note = row.getCell(29);
+            Cell year = row.getCell(30);
 
             l.setId(id.getStringCellValue());
             l.setBill_id((int) bill_id.getNumericCellValue());
@@ -595,6 +586,7 @@ public class LedgerController implements Initializable {
             l.setRoot_id((int) root_id.getNumericCellValue());
             l.setPt_id((int) pt_id.getNumericCellValue());
             l.setNote(note.getStringCellValue());
+            l.setYear((int) year.getNumericCellValue());
         }
         return l;
     }

@@ -63,10 +63,11 @@
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="units_cbb" editable="true" onAction="#selectUnit" prefHeight="30.0" prefWidth="124.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></ComboBox>
+                  <Label fx:id="dv_lable" layoutX="410.0" layoutY="10.0" prefHeight="30.0" prefWidth="74.0" text="Đơn vị:">
+                     <font>
+                        <Font name="Cambria Bold" size="16.0" />
+                     </font>
+                  </Label>
                   <CheckBox fx:id="tdvChk" mnemonicParsing="false" onAction="#tdvChkAction" prefHeight="30.0" prefWidth="96.0" text="Toàn đơn vị">
                      <HBox.margin>
                         <Insets left="10.0" />

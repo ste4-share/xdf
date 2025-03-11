@@ -44,8 +44,6 @@ public class NhiemvuController implements Initializable {
     @FXML
     TableView<HanmucNhiemvu2Dto> tieuthunhiemvu;
     @FXML
-    private Button add_btn_ctb;
-    @FXML
     TableView<HanmucNhiemvuTaubayDto> ctnv_pt;
     @FXML
     TabPane tab;
@@ -60,21 +58,15 @@ public class NhiemvuController implements Initializable {
     ComboBox<NguonNx> dvi_cbb;
     @FXML
     ComboBox<Integer> year_cbb;
-    @FXML
-    TableView<NhiemVuDto> nv_tb;
-    @FXML
-    TableColumn<NhiemVuDto, String> tennv, ctnv,lnv, khoi,stt_1,nv_id;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setScreen();
         initDviTb();
-        initNvTable();
 
         initYearCbb();
         initHanmucTb();
         inithanmucCellFactory();
-        initNvCellFactory();
         initHanmucNhiemvuTaubayCellFactory();
     }
     private void initHanmucTb() {
@@ -158,7 +150,6 @@ public class NhiemvuController implements Initializable {
         nvStage = new Stage();
         nvStage.initStyle(StageStyle.UTILITY);
         Common.openNewStage("add_nv.fxml", nvStage,null, StageStyle.DECORATED);
-        initNvTable();
     }
     private void openAddChitieuForm(){
         nvStage = new Stage();
@@ -169,9 +160,6 @@ public class NhiemvuController implements Initializable {
             hmnv = hanmucNhiemvuService.getAllByYear(y);
             initNhiemvuTaubay(hmnv);
         }
-    }
-    private void initNvTable(){
-        nv_tb.setItems(FXCollections.observableList(chitietNhiemvuService.findAllBy()));
     }
     private void initNhiemvuTaubay(List<HanmucNhiemvuTaubayDto> hmnv){
         ctnv_pt.setItems(FXCollections.observableList(hmnv));
@@ -184,15 +172,7 @@ public class NhiemvuController implements Initializable {
         ComponentUtil.setItemsToComboBox(dvi_cbb,nguonNxService.findByAllBy(),NguonNx::getTen,input->nguonNxService.findByTen(input).orElse(null));
         dvi_cbb.getSelectionModel().selectFirst();
     }
-    private void initNvCellFactory() {
-        stt_1.setSortable(false);
-        stt_1.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(nv_tb.getItems().indexOf(column.getValue())+1).asString());
-        tennv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_nv"));
-        nv_id.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ctnv_id"));
-        ctnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("chitiet"));
-        lnv.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("ten_loai_nv"));
-        khoi.setCellValueFactory(new PropertyValueFactory<NhiemVuDto, String>("khoi"));
-    }
+
     private void inithanmucCellFactory() {
         stt_3.setSortable(false);
         stt_3.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tieuthunhiemvu.getItems().indexOf(column.getValue())+1).asString());
@@ -218,8 +198,6 @@ public class NhiemvuController implements Initializable {
     private void setScreen(){
         ctnv_pt.setPrefWidth(DashboardController.screenWidth);
         ctnv_pt.setPrefHeight(DashboardController.screenHeigh-350);
-        nv_tb.setPrefWidth(DashboardController.screenWidth);
-        nv_tb.setPrefHeight(DashboardController.screenHeigh-350);
         tieuthunhiemvu.setPrefWidth(DashboardController.screenWidth);
         tieuthunhiemvu.setPrefHeight(DashboardController.screenHeigh-350);
     }
