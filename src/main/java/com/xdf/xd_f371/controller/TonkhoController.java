@@ -48,6 +48,8 @@ public class TonkhoController implements Initializable {
     @FXML
     private TextField search_inventory,timkiem_pttk_tf;
     @FXML
+    private CheckBox tdvChk;
+    @FXML
     private Label sd_lb, ed_lb,dv_lb;
     @Autowired
     private InventoryService inventoryService;
@@ -220,5 +222,21 @@ public class TonkhoController implements Initializable {
         }else{
             mapPttkTb(pttkDtos);
         }
+    }
+    @FXML
+    public void tdvChckAction(ActionEvent actionEvent) {
+        if (tdvChk.isSelected()){
+            dv_lb.setText("--Tồn kho toàn đơn vị--");
+            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDto();
+            setDataToTbInventory(inventoryUnitDtoArrayList);
+        }else{
+            dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
+            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDtoByUnit(ref_unit.getId());
+            setDataToTbInventory(inventoryUnitDtoArrayList);
+        }
+    }
+    @FXML
+    public void refreshPttkAction(ActionEvent actionEvent) {
+        initPttkTb();
     }
 }

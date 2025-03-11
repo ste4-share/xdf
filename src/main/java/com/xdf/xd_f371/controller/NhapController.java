@@ -48,7 +48,6 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvnCombobox();
         setUpForSearchCompleteTion();
         setPreInv();
-
     }
 
     private void initLabelValue() {
@@ -129,6 +128,8 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setThanhtien_str(TextToNumber.textToNum_2digits(ledgerDetails.getThanhtien()));
         ledgerDetails.setThucnhap_str(TextToNumber.textToNum_2digits(tn));
         ledgerDetails.setPhainhap_str(TextToNumber.textToNum_2digits(pn));
+        ledgerDetails.setSoluongpx_str(TextToNumber.textToNum_2digits(pn));
+        ledgerDetails.setSoluong_str(TextToNumber.textToNum_2digits(tn));
         ledgerDetails.setDongia_str(TextToNumber.textToNum_2digits(p));
         return ledgerDetails;
     }

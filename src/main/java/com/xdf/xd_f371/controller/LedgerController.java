@@ -118,7 +118,7 @@ public class LedgerController implements Initializable {
     private void initRootLedgerList() {
         LocalDate tungay = tab2_tungay.getValue();
         LocalDate denngay = tab2_denngay.getValue();
-        List<Ledger> ls = ledgerService.findAllLedgerDto(tungay,denngay,DashboardController.ref_Dv.getId());
+        List<Ledger> ls = ledgerService.findAllLedgerDto(tungay,denngay);
         setItemsTo_Roottable(ls);
     }
 
@@ -232,7 +232,7 @@ public class LedgerController implements Initializable {
         CommonFactory.setVi_DatePicker(tab2_denngay);
     }
     private void initRootUnitLable() {
-        root_unit_lable.setText(DashboardController.ref_Dv.getTen());
+        root_unit_lable.setText("Toàn đơn vị");
         tab1_dvi_label.setText(DashboardController.ref_Dv.getTen());
         unitClickedLable.setText("-----");
     }
@@ -324,6 +324,8 @@ public class LedgerController implements Initializable {
                     List<LedgerDetails> ldl = refLedgerDetailList.stream().filter(x -> x.getLedger_id().equals(l.getId())).toList();
                     l.setLedgerDetails(ldl);
                 }
+                DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
+                initRootLedgerList();
             }catch (Exception e){
                 DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
                 e.printStackTrace();
@@ -448,13 +450,13 @@ public class LedgerController implements Initializable {
 
     private void mapLedgerDetail(XSSFWorkbook wb,ReportDAO reportDAO) {
         XSSFSheet sheet2 = wb.createSheet("CHITIETSOCAI_DATA");
-        List<Object[]> nxtls2 = reportDAO.findByWhatEver("select ld from ledger_details ld join ledgers l on ld.ledger_id=l.id where status like 'ACTIVE' and l.from_date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"'");
+        List<Object[]> nxtls2 = reportDAO.findByWhatEver("select ld from ledger_details ld join ledgers l on ld.ledger_id=l.id where status like 'ACTIVE' and root_id="+DashboardController.ref_Dv.getId()+" and l.from_date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"'");
         setCellExcel(wb,sheet2,nxtls2,ledgerService.getColumnNames_LEDGER_DETAIL());
     }
 
     private void mapLedger(XSSFWorkbook wb,ReportDAO reportDAO) {
         XSSFSheet sheet = wb.createSheet("SOCAI_DATA");
-        List<Object[]> nxtls = reportDAO.findByWhatEver("select * from ledgers l where status like 'ACTIVE' and l.from_date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"'");
+        List<Object[]> nxtls = reportDAO.findByWhatEver("select * from ledgers l where status like 'ACTIVE' and l.from_date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"' and root_id="+DashboardController.ref_Dv.getId());
         setCellExcel(wb,sheet,nxtls,ledgerService.getColumnNames_LEDGER());
     }
 
