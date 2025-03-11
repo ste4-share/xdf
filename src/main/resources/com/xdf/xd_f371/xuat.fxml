@@ -207,7 +207,7 @@
                                           <Font name="Cambria Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="lenhso" prefHeight="30.0" prefWidth="327.0">
+                                    <TextField fx:id="lenhso" onKeyReleased="#lenhkhKr" onMouseClicked="#lenhkhClicked" prefHeight="30.0" prefWidth="327.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
@@ -523,13 +523,18 @@
                                           <Font name="Cambria" size="18.0" />
                                        </font>
                                     </TextField>
-                                    <Label fx:id="chungloai_lb1" prefHeight="30.0" prefWidth="145.0" text="Lit 15 độ C">
+                                    <Label fx:id="px_lb" prefHeight="30.0" prefWidth="96.0" text="---">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
+                                    </Label>
+                                    <Label fx:id="chungloai_lb11" layoutX="370.0" layoutY="10.0" prefHeight="30.0" prefWidth="57.0" text="Lit 15 độ C">
+                                       <font>
+                                          <Font name="Cambria Bold Italic" size="11.0" />
+                                       </font>
                                     </Label>
                                  </children>
                                  <VBox.margin>
@@ -554,7 +559,15 @@
                                           <Font name="Cambria" size="18.0" />
                                        </font>
                                     </TextField>
-                                    <Label fx:id="chungloai_lb12" prefHeight="30.0" prefWidth="145.0" text="Lit 15 độ C">
+                                    <Label fx:id="tx_lb" prefHeight="30.0" prefWidth="89.0" text="---">
+                                       <font>
+                                          <Font name="Cambria Bold Italic" size="11.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Label fx:id="chungloai_lb12" prefHeight="30.0" prefWidth="54.0" text="Lit 15 độ C">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="11.0" />
                                        </font>
@@ -717,20 +730,20 @@
                   </TableView>
                   <HBox alignment="CENTER" prefHeight="66.0" prefWidth="1172.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#xuat" prefHeight="35.0" prefWidth="128.0" style="-fx-background-color: #002db3; -fx-background-radius: 10;" text="Xuất" textFill="WHITE" fx:id="xuatButton">
+                        <Button mnemonicParsing="false" onAction="#xuat" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #002db3; -fx-background-radius: 10;" text="Xuất" textFill="WHITE" fx:id="xuatButton">
                            <HBox.margin>
                               <Insets right="25.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="Cambria Bold" size="18.0" />
+                              <Font name="Cambria Bold" size="14.0" />
                            </font>
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancel" prefHeight="35.0" prefWidth="126.0" style="-fx-background-color: #996633; -fx-background-radius: 10;" text="Hủy" textFill="WHITE">
+                        <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancel" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #996633; -fx-background-radius: 10;" text="Đóng" textFill="WHITE">
                            <font>
-                              <Font name="Cambria Bold" size="18.0" />
+                              <Font name="Cambria Bold" size="14.0" />
                            </font>
                            <cursor>
                               <Cursor fx:constant="HAND" />

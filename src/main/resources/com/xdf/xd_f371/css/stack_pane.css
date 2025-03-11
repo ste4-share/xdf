@@ -1,0 +1,14 @@
+.hover-stackpane {
+    -fx-background-color: #4A90E2; /* Ensure a background is set */
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.hover-stackpane:hover {
+    -fx-background-color: #357ABD;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 0, 5);
+}

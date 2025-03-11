@@ -23,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -105,6 +106,11 @@ public class LedgerController implements Initializable {
         initLedgerList();
         initRootLedgerList();
     }
+
+    private void updateData() {
+        initLedgerList();
+    }
+
 
     private void initRootLedgerList() {
         LocalDate tungay = tab2_tungay.getValue();
@@ -275,9 +281,13 @@ public class LedgerController implements Initializable {
                 x.setThucxuat_str(TextToNumber.textToNum_2digits(x.getThuc_xuat()));
                 x.setPhaixuat_str(TextToNumber.textToNum_2digits(x.getPhai_xuat()));
                 x.setThucnhap_str(TextToNumber.textToNum_2digits(x.getThuc_nhap()));
+                x.setPhainhap_str(TextToNumber.textToNum_2digits(x.getPhai_nhap()));
                 x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
             });
             setLedgerDetailTable(details);
+            if(mouseEvent.getClickCount()==2){
+                showDetailsScreen();
+            }
         }
     }
     private void setLEdgerDetailLabel(Ledger l){
@@ -294,10 +304,10 @@ public class LedgerController implements Initializable {
         chitiet_tb.refresh();
         chitiet_tb.setItems(FXCollections.observableList(ls));
     }
-//    private void showDetailsScreen(){
-//        primaryStage = new Stage();
-//        Common.openNewStage2("ledger_details.fxml",primaryStage,"Chi tiết phiếu", StageStyle.UTILITY);
-//    }
+    private void showDetailsScreen(){
+        primaryStage = new Stage();
+        Common.openNewStage2("ledger_details.fxml",primaryStage,"Chi tiết phiếu", StageStyle.UTILITY);
+    }
     @FXML
     public void tungayAction(ActionEvent actionEvent) {
     }
@@ -557,7 +567,7 @@ public class LedgerController implements Initializable {
             Cell year = row.getCell(30);
 
             l.setId(id.getStringCellValue());
-            l.setBill_id((int) bill_id.getNumericCellValue());
+            l.setBill_id(bill_id.getStringCellValue());
             l.setAmount(amount.getNumericCellValue());
             l.setFrom_date(stringToLocalDate(from_date.getStringCellValue()));
             l.setEnd_date(stringToLocalDate(end_date.getStringCellValue()));
@@ -709,7 +719,7 @@ public class LedgerController implements Initializable {
         if (date_text.isEmpty()){
             return null;
         }
-        String trimmedDateStr = date_text.substring(0, 19); // Removes microseconds
+        String trimmedDateStr = date_text.substring(0, 19);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(trimmedDateStr, formatter);
     }
@@ -718,5 +728,25 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void root_tableClicked(MouseEvent mouseEvent) {
+    }
+    @FXML
+    public void importBtnAction(ActionEvent actionEvent) {
+        primaryStage = new Stage();
+        primaryStage.setOnHidden(event -> {
+            ConnectLan.primaryStage.toFront();
+            ConnectLan.primaryStage.requestFocus();
+        });
+        Common.openNewStage("nhap.fxml", primaryStage,null, StageStyle.UTILITY);
+        updateData();
+    }
+    @FXML
+    public void exportBtnAction(ActionEvent actionEvent) {
+        primaryStage = new Stage();
+        primaryStage.setOnHidden(event -> {
+            ConnectLan.primaryStage.toFront();
+            ConnectLan.primaryStage.requestFocus();
+        });
+        Common.openNewStage("xuat.fxml", primaryStage,null,StageStyle.UTILITY);
+        updateData();
     }
 }

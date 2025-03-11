@@ -21,7 +21,7 @@ public class Ledger {
     @Column(name = "bill_id")
     @NotNull
     @Min(1)
-    private int bill_id;
+    private String bill_id;
     @Column(name = "amount")
     private Double amount;
     @Column(name = "from_date")

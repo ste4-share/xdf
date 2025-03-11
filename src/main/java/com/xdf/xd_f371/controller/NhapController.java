@@ -5,9 +5,6 @@ import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.xdf.xd_f371.service.InventoryService;
-import com.xdf.xd_f371.service.LoaiXdService;
-import com.xdf.xd_f371.service.TcnService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.TextToNumber;
@@ -21,11 +18,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.control.textfield.TextFields;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -39,44 +34,32 @@ public class NhapController extends CommonFactory implements Initializable {
     private Label notification,chungloai_lb,text_dongia,text_phainhap,text_thucnhap;
     @FXML
     private Button addbtn,importbtn,cancelbtn;
-
     @FXML
     private ComboBox<NguonNx> cmb_dvvc, cmb_dvn;
     @FXML
     private ComboBox<LoaiXangDauDto> cmb_tenxd;
 
-    @Autowired
-    private LoaiXdService loaiXdService;
-    @Autowired
-    private InventoryService inventoryService;
-    @Autowired
-    private TcnService tcnService;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setVi_DatePicker(tungay);
-        setVi_DatePicker(denngay);
-        ls_socai = new ArrayList<>();
-        tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
+        super.initialize(url,resourceBundle);
+        initLabelValue();
+        setTenXDToCombobox();
+        setDvvcCombobox();
+        setDvnCombobox();
+        setUpForSearchCompleteTion();
+        setPreInv();
+    }
+
+    private void initLabelValue() {
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
+        tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         notification.setText("");
         text_dongia.setText("0 (VND/Lit)");
         text_phainhap.setText("0 Lit 15 độ C");
         text_thucnhap.setText("0 Lit 15 độ C");
-        tungay.setValue(LocalDate.now());
-        nvdx_rd.setSelected(true);
-        note.setText(null);
-        initInventoryUnit();
         Common.hoverButton(addbtn ,"#027a20");
         Common.hoverButton(importbtn,"#0000b3");
         Common.hoverButton(cancelbtn,"#595959");
-
-        setTenXDToCombobox();
-        setDvvcCombobox();
-        setDvnCombobox();
-
-        setUpForSearchCompleteTion();
-        setPreInv();
     }
 
     private void setPreInv() {
@@ -123,9 +106,9 @@ public class NhapController extends CommonFactory implements Initializable {
         cmb_dvn.getSelectionModel().selectFirst();
     }
     private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd){
-        double tn = thucNhap.getText().isEmpty() ? 0 : Double.parseDouble(thucNhap.getText());
-        double pn = phaiNhap.getText().isEmpty() ? 0 : Double.parseDouble(phaiNhap.getText());
-        double p = donGiaTf.getText().trim().isEmpty() ? 0 : Double.parseDouble(donGiaTf.getText());
+        double tn = thucNhap.getText().isBlank() ? 0 : Double.parseDouble(thucNhap.getText());
+        double pn = phaiNhap.getText().isBlank() ? 0 : Double.parseDouble(phaiNhap.getText());
+        double p = donGiaTf.getText().trim().isBlank() ? 0 : Double.parseDouble(donGiaTf.getText());
 
         LedgerDetails ledgerDetails = new LedgerDetails();
         ledgerDetails.setMa_xd(lxd.getMaxd());
@@ -136,9 +119,9 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setDon_gia(p);
         ledgerDetails.setPhai_nhap(pn);
         ledgerDetails.setThuc_nhap(tn);
-        ledgerDetails.setNhiet_do_tt(tThucTe.getText().isEmpty() ? 0 : Double.parseDouble(tThucTe.getText()));
-        ledgerDetails.setHe_so_vcf(vcf.getText().isEmpty() ? 0 : Double.parseDouble(vcf.getText()));
-        ledgerDetails.setTy_trong(tyTrong.getText().isEmpty() ? 0 : Double.parseDouble(tyTrong.getText()));
+        ledgerDetails.setNhiet_do_tt(tThucTe.getText().isBlank() ? 0 : Double.parseDouble(tThucTe.getText()));
+        ledgerDetails.setHe_so_vcf(vcf.getText().isBlank() ? 0 : Double.parseDouble(vcf.getText()));
+        ledgerDetails.setTy_trong(tyTrong.getText().isBlank() ? 0 : Double.parseDouble(tyTrong.getText()));
         ledgerDetails.setSoluong(tn);
         ledgerDetails.setThanhtien(tn * p);
         ledgerDetails.setSoluong_px(pn);
@@ -195,7 +178,7 @@ public class NhapController extends CommonFactory implements Initializable {
                                 Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
                                 DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
                                         MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
-                                DashboardController.primaryStage.close();
+                                LedgerController.primaryStage.close();
                             } else {
                                 DialogMessage.message(MessageCons.LOI.getName(), changeStyleTextFieldByValidation(l),
                                         MessageCons.SAI_DINH_DANG.getName(), Alert.AlertType.WARNING);
@@ -240,9 +223,6 @@ public class NhapController extends CommonFactory implements Initializable {
             } else if (ls.get(0).equals("soluong")){
                 thucNhap.setStyle(styleErrorField);
                 return "thuc nhap phai lon hon 0";
-            }else if (ls.get(0).equals("bill_id")){
-                soTf.setStyle(styleErrorField);
-                return "so phai lon hon 0";
             }else if (ls.get(0).equals("tcn_id")){
                 tcNhap.setStyle(styleErrorField);
                 return "Tinh chat nhap khong xac dinh.";
@@ -255,7 +235,7 @@ public class NhapController extends CommonFactory implements Initializable {
         NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
-        ledger.setBill_id(Integer.parseInt(soTf.getText().trim().isEmpty() ? "0" : soTf.getText()));
+        ledger.setBill_id(soTf.getText());
         ledger.setAmount(ls_socai.stream().mapToDouble(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
@@ -310,24 +290,24 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     @FXML
     public void btnCancel(ActionEvent actionEvent) {
-        DashboardController.primaryStage.close();
+        LedgerController.primaryStage.close();
     }
     @FXML
     public void soValid(KeyEvent keyEvent) {
-        if(!soTf.getText().isEmpty()){
-            validateToSettingStyle(soTf);
-            if (Common.isNumber(soTf.getText())){
-                soTf.setStyle(null);
-            }else{
-                soTf.setStyle(styleErrorField);
+        if(!soTf.getText().isBlank()) {
+            soTf.setStyle(null);
+            if (ledgers.stream().anyMatch(l->l.getBill_id().equals(soTf.getText()))){
+                soTf.setStyle(CommonFactory.styleErrorField);
             }
+        }else{
+            soTf.setStyle(null);
         }
     }
     @FXML
     public void validate_dongia(KeyEvent keyEvent) {
         validateToSettingStyle(donGiaTf);
         try {
-            if (!donGiaTf.getText().isEmpty()){
+            if (!donGiaTf.getText().isBlank()){
                 text_dongia.setText(TextToNumber.textToNum_2digits(Double.parseDouble(donGiaTf.getText()))+ " (VND/Lit)");
             }else{
                 text_dongia.setText("0 (VND/Lit)");
@@ -341,7 +321,7 @@ public class NhapController extends CommonFactory implements Initializable {
         validateToSettingStyle(phaiNhap);
         thucNhap.setText(phaiNhap.getText());
         try {
-            if (!phaiNhap.getText().isEmpty()){
+            if (!phaiNhap.getText().isBlank()){
                 text_phainhap.setText(TextToNumber.textToNum_2digits(Double.parseDouble(phaiNhap.getText())) + " lit 15 độ C");
             }else{
                 text_phainhap.setText("0 (Lit)");
@@ -354,7 +334,7 @@ public class NhapController extends CommonFactory implements Initializable {
     public void validate_thucxuat(KeyEvent keyEvent) {
         validateToSettingStyle(thucNhap);
         try {
-            if (!thucNhap.getText().isEmpty()){
+            if (!thucNhap.getText().isBlank()){
                 text_thucnhap.setText(TextToNumber.textToNum_2digits(Double.parseDouble(thucNhap.getText())) + " lit 15 độ C");
             }else{
                 text_thucnhap.setText("0 (Lit)");
@@ -439,5 +419,14 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     public void chitietEntered(MouseEvent mouseEvent) {
         primaryStage.close();
+    }
+    @FXML
+    public void lenhsoKR(KeyEvent keyEvent) {
+        lenhKHso.setStyle(null);
+        if (lenhKHso.getText().isBlank()){
+            if (ledgers.stream().anyMatch(l->l.getLenh_so().equals(lenhKHso.getText().trim()))){
+                lenhKHso.setStyle(CommonFactory.styleErrorField);
+            }
+        }
     }
 }

@@ -51,37 +51,34 @@ public class XuatController extends CommonFactory implements Initializable {
     private HBox lgb_hb,giohd,sokm_hb,xmt_hb,loaixemaytau,dvi_nhan,px_hbox;
     @FXML
     private Button addBtn,xuatButton,cancelBtn;
+    @FXML
+    private Label px_lb,tx_lb;
 
     @Autowired
     private ChitietNhiemvuService chitietNhiemvuService;
     @Autowired
     private DinhmucService dinhmucService;
     @Autowired
-    private LoaiXdService loaiXdService;
-    @Autowired
     private PhuongtienService phuongtienService;
-    @Autowired
-    private TcnService tcnService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ls_socai = new ArrayList<>();
-        setVi_DatePicker(tungay);
-        setVi_DatePicker(denngay);
-        tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
-        nvdx_rd.setSelected(true);
-        note.setText(null);
-        tungay.setValue(LocalDate.now());
-        gia_vnd.setText("(VND/Lit)");
+        super.initialize(url,resourceBundle);
+        initLabel();
         initDefailtVar();
         initLoaiXuatCbb();
-        initInventoryUnit();
         searchCompleteTion(tcnx_ls.stream().map(Tcn::getName).collect(Collectors.toList()));
         mapXdForCombobox();
+    }
+
+    private void initLabel() {
+        tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
+        gia_vnd.setText("(VND/Lit)");
         Common.hoverButton(addBtn, "#027a20");
         Common.hoverButton(xuatButton, "#002db3");
         Common.hoverButton(cancelBtn, "#595959");
     }
+
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {
         Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
@@ -234,7 +231,7 @@ public class XuatController extends CommonFactory implements Initializable {
                             Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
                             DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
                                     "Thanh cong", Alert.AlertType.INFORMATION);
-                            DashboardController.primaryStage.close();
+                            LedgerController.primaryStage.close();
                         } else {
                             DialogMessage.message(null, changeStyleTextFieldByValidation(l),
                                     MessageCons.SAI_DINH_DANG.getName(), Alert.AlertType.ERROR);
@@ -258,7 +255,7 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void cancel(ActionEvent actionEvent) {
-        DashboardController.primaryStage.close();
+        LedgerController.primaryStage.close();
     }
     @FXML
     public void selectxd(ActionEvent actionEvent) {
@@ -275,13 +272,13 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void soKeyRealed(KeyEvent keyEvent) {
-        if(!so.getText().isEmpty()){
-            validateToSettingStyle(so);
-            if (isNumber(so.getText())){
-                so.setStyle(null);
-            }else{
-                so.setStyle(styleErrorField);
+        if(!so.getText().trim().isEmpty()){
+            so.setStyle(null);
+            if (ledgers.stream().anyMatch(l->l.getBill_id().equals(so.getText()))){
+                so.setText(CommonFactory.styleErrorField);
             }
+        }else{
+            so.setStyle(null);
         }
     }
     @FXML
@@ -297,10 +294,26 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void px_kr(KeyEvent keyEvent) {
         validateToSettingStyle(phaixuat);
+        if (!phaixuat.getText().isBlank()){
+            thucxuat.setText(phaixuat.getText());
+            try {
+                px_lb.setText(TextToNumber.textToNum_2digits(Double.parseDouble(phaixuat.getText())));
+                tx_lb.setText(TextToNumber.textToNum_2digits(Double.parseDouble(phaixuat.getText())));
+            } catch (NumberFormatException e) {
+                phaixuat.setStyle(CommonFactory.styleErrorField);
+            }
+        }
     }
     @FXML
     public void tx_kr(KeyEvent keyEvent) {
         validateToSettingStyle(thucxuat);
+        if (!phaixuat.getText().isBlank()){
+            try {
+                tx_lb.setText(TextToNumber.textToNum_2digits(Double.parseDouble(thucxuat.getText())));
+            } catch (NumberFormatException e) {
+                thucxuat.setStyle(CommonFactory.styleErrorField);
+            }
+        }
     }
     @FXML
     public void nhietdo_kr(KeyEvent keyEvent) {
@@ -483,7 +496,7 @@ public class XuatController extends CommonFactory implements Initializable {
 
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
-        ledger.setBill_id(Integer.parseInt(so.getText().isEmpty() ? "0" : so.getText()));
+        ledger.setBill_id(so.getText());
         ledger.setAmount(ls_socai.stream().mapToDouble(x-> ((double) x.getSoluong() *x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
@@ -513,7 +526,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setGiohd_tk(getStrInterval());
                 ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
             } else if (md_rd.isSelected()) {
-                ledger.setSo_km(Integer.parseInt(sokm.getText().isEmpty() ? "0" : sokm.getText()));
+                ledger.setSo_km(Integer.parseInt(sokm.getText().isBlank() ? "0" : sokm.getText()));
                 ledger.setGiohd_tk(DefaultVarCons.GIO_HD.getName());
                 ledger.setGiohd_md(getStrInterval());
             }
@@ -553,8 +566,8 @@ public class XuatController extends CommonFactory implements Initializable {
     private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd, Double gia){
         LedgerDetails ledgerDetails = new LedgerDetails();
 
-        double txuat = thucxuat.getText().isEmpty() ? 0 : Double.parseDouble(thucxuat.getText());
-        double pxuat = phaixuat.getText().isEmpty() ? 0 : Double.parseDouble(phaixuat.getText());
+        double txuat = thucxuat.getText().isBlank() ? 0 : Double.parseDouble(thucxuat.getText());
+        double pxuat = phaixuat.getText().isBlank() ? 0 : Double.parseDouble(phaixuat.getText());
 
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
@@ -566,12 +579,12 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setDon_gia(gia);
         ledgerDetails.setPhai_xuat(pxuat);
         ledgerDetails.setThuc_xuat(txuat);
-        ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText().isEmpty() ? "0" : nhietdo.getText()));
-        ledgerDetails.setHe_so_vcf(Double.parseDouble(vcf.getText().isEmpty() ? "0" : vcf.getText()));
-        ledgerDetails.setTy_trong(Double.parseDouble(tytrong.getText().isEmpty() ? "0" : tytrong.getText()));
+        ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText().isBlank() ? "0" : nhietdo.getText()));
+        ledgerDetails.setHe_so_vcf(Double.parseDouble(vcf.getText().isBlank() ? "0" : vcf.getText()));
+        ledgerDetails.setTy_trong(Double.parseDouble(tytrong.getText().isBlank() ? "0" : tytrong.getText()));
         ledgerDetails.setLoaixd_id(lxd.getXd_id());
         ledgerDetails.setSoluong(txuat);
-        ledgerDetails.setSoluong_px((long) pxuat);
+        ledgerDetails.setSoluong_px(pxuat);
         ledgerDetails.setThuc_nhap(0);
         ledgerDetails.setPhai_nhap(0);
         if (lx.equals(LoaiXuat.X_K.getName())){
@@ -621,8 +634,8 @@ public class XuatController extends CommonFactory implements Initializable {
         String hour_str = sogio.getText().trim();
         String m_str = sophut.getText().trim();
 
-        int hour1 = getHourMinute(Integer.parseInt(m_str.trim().isEmpty() ? "0" : m_str)).get(0);
-        int minute = getHourMinute(Integer.parseInt(m_str.trim().isEmpty() ? "0" : m_str)).get(1);
+        int hour1 = getHourMinute(Integer.parseInt(m_str.trim().isBlank() ? "0" : m_str)).get(0);
+        int minute = getHourMinute(Integer.parseInt(m_str.trim().isBlank() ? "0" : m_str)).get(1);
         int sum_hour = Integer.parseInt(hour_str) + hour1;
 
         if (minute <10){
@@ -633,7 +646,6 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return sum_hour+":"+minute+":00";
     }
-
     private List<Integer> getHourMinute(int minute){
         if (minute>=0 && minute <60){
             return List.of(0,minute);
@@ -645,7 +657,6 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return List.of();
     }
-
     private void mapItemsForXeMayTau(List<PhuongTien> phuongTiens) {
         ComponentUtil.setItemsToComboBox(xmt_cbb,phuongTiens,PhuongTien::getName, input -> phuongtienService.findPhuongTienByName(input).orElse(null));
         xmt_cbb.getSelectionModel().selectFirst();
@@ -664,7 +675,6 @@ public class XuatController extends CommonFactory implements Initializable {
         tk_rd.setSelected(!ex);
         mb_rd.setSelected(!ex);
     }
-
     private String changeStyleTextFieldByValidation(Object o){
         List<String> ls = validateField(o);
         if (!ls.isEmpty()){
@@ -683,9 +693,6 @@ public class XuatController extends CommonFactory implements Initializable {
             } else if (ls.get(0).equals("soluong")){
                 thucxuat.setStyle(styleErrorField);
                 return "thuc xuat phai lon hon 0";
-            }else if (ls.get(0).equals("bill_id")){
-                so.setStyle(styleErrorField);
-                return "so phai lon hon 0";
             }else if (ls.get(0).equals("tcn_id")){
                 tcx.setStyle(styleErrorField);
                 return "Tinh chat xuat khong xac dinh.";
@@ -716,10 +723,23 @@ public class XuatController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         mapPrice(lxd.getXd_id());
     }
-
+    @FXML
     public void chitietExited(MouseEvent mouseEvent) {
     }
-
+    @FXML
     public void chitietEnter(MouseEvent mouseEvent) {
+    }
+    @FXML
+    public void lenhkhKr(KeyEvent keyEvent) {
+        lenhso.setStyle(null);
+        if (!lenhso.getText().isBlank()){
+            if (ledgers.stream().anyMatch(l->l.getLenh_so().equals(lenhso.getText().trim()))){
+                lenhso.setStyle(CommonFactory.styleErrorField);
+            }
+        }
+    }
+    @FXML
+    public void lenhkhClicked(MouseEvent mouseEvent) {
+        lenhso.selectAll();
     }
 }

@@ -4,7 +4,6 @@ import com.xdf.xd_f371.util.TextToNumber;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @Setter
 public class MiniLedgerDto {
     private String id;
-    private int so;
+    private String so;
     private String so_str;
     private String loai_phieu;
     private String dvi_nhap;
@@ -28,7 +27,7 @@ public class MiniLedgerDto {
     private String nhiemvu;
     private String username;
 
-    public MiniLedgerDto(String id, int so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDateTime timestamp, String nhiemvu, String username, Long count, double tong) {
+    public MiniLedgerDto(String id, String so, String loai_phieu, String dvi_nhap, String dvi_xuat, LocalDateTime timestamp, String nhiemvu, String username, Long count, double tong) {
         this.id = id;
         this.so = so;
         this.so_str = String.valueOf(so);

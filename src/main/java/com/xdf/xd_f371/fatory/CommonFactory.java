@@ -2,6 +2,7 @@ package com.xdf.xd_f371.fatory;
 
 import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
+import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
@@ -15,6 +16,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
@@ -24,17 +26,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
-public class CommonFactory {
+public class CommonFactory implements Initializable {
     public static String pre_path;
     protected static Stage primaryStage;
     protected static double inventory_quantity = 0;
     protected Configuration config = null;
     protected List<InventoryUnits> i = new ArrayList<>();
+    protected static List<Ledger> ledgers = new ArrayList<>();
     protected static List<LedgerDetails> ls_socai;
     protected static List<Tcn> tcnx_ls = new ArrayList<>();
     public static String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
@@ -46,6 +50,10 @@ public class CommonFactory {
     protected InventoryUnitService inventoryUnitService;
     @Autowired
     protected TructhuocService tructhuocService;
+    @Autowired
+    protected TcnService tcnService;
+    @Autowired
+    protected LoaiXdService loaiXdService;
     @Autowired
     protected ConfigurationService configurationService;
     @FXML
@@ -61,7 +69,28 @@ public class CommonFactory {
     @FXML
     protected TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phainx,col_nhietdo,col_tytrong,col_vcf,col_thucnx,col_thanhtien;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        initLabelVar();
+        initLegersList();
+        initInventoryUnit();
+    }
 
+    private void initLabelVar() {
+        setVi_DatePicker(tungay);
+        setVi_DatePicker(denngay);
+        ls_socai = new ArrayList<>();
+        nvdx_rd.setSelected(true);
+        tungay.setValue(LocalDate.now());
+        note.setText(null);
+    }
+
+    private void initLegersList() {
+        if (DashboardController.ref_Dv!=null){
+            ledgers = ledgerService.findAllLedgerByUnit(DashboardController.ref_Dv.getId());
+        }
+        else ledgers = ledgerService.findAllLedgerActive();
+    }
     protected void initInventoryUnit(){
         Optional<Configuration> c = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
         c.ifPresent(configuration -> config = configuration);

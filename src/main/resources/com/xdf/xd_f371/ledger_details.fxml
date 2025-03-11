@@ -16,7 +16,7 @@
    <children>
       <StackPane prefHeight="29.0" prefWidth="856.0" style="-fx-background-color: #76b5c5; -fx-background-radius: 10;">
          <children>
-            <Label text="Chi tiết sổ cái" textFill="WHITE">
+            <Label text="Chi tiết phiếu" textFill="WHITE">
                <font>
                   <Font name="Cambria Bold" size="18.0" />
                </font>
@@ -332,13 +332,27 @@
       </HBox>
       <StackPane>
          <children>
-            <Button mnemonicParsing="false" onAction="#closeAction" prefHeight="21.0" prefWidth="71.0" text="Đóng">
+            <Button mnemonicParsing="false" onAction="#exportFileAction" prefHeight="21.0" prefWidth="71.0" text="Xuất file">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <StackPane.margin>
+                  <Insets right="80.0" />
+               </StackPane.margin>
+            </Button>
+            <Button layoutX="440.0" layoutY="10.0" mnemonicParsing="false" onAction="#closeAction" prefHeight="21.0" prefWidth="71.0" text="Đóng">
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <StackPane.margin>
+                  <Insets left="80.0" />
+               </StackPane.margin>
             </Button>
          </children>
          <VBox.margin>

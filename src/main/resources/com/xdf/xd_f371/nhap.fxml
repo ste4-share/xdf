@@ -95,6 +95,25 @@
                         </HBox>
                         <HBox>
                            <children>
+                              <Label prefHeight="38.0" prefWidth="144.0" text="Theo lệnh (KH) số :">
+                                 <font>
+                                    <Font name="Cambria Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <TextField id="recvTf" fx:id="lenhKHso" onKeyReleased="#lenhsoKR" onMouseClicked="#lenhso_clicked" prefHeight="38.0" prefWidth="344.0">
+                                 <font>
+                                    <Font name="Times New Roman" size="16.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="TEXT" />
+                                 </cursor></TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="17.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
                               <Label prefHeight="38.0" prefWidth="144.0" text="Người nhận hàng :">
                                  <font>
                                     <Font name="Cambria Bold" size="13.0" />
@@ -120,25 +139,6 @@
                                  </font>
                               </Label>
                               <TextField id="recvTf" fx:id="tcNhap" onMouseClicked="#tcn_clicked" prefHeight="38.0" prefWidth="344.0">
-                                 <font>
-                                    <Font name="Times New Roman" size="16.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="TEXT" />
-                                 </cursor></TextField>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="17.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <Label prefHeight="38.0" prefWidth="144.0" text="Theo lệnh (KH) số :">
-                                 <font>
-                                    <Font name="Cambria Bold" size="13.0" />
-                                 </font>
-                              </Label>
-                              <TextField id="recvTf" fx:id="lenhKHso" onMouseClicked="#lenhso_clicked" prefHeight="38.0" prefWidth="344.0">
                                  <font>
                                     <Font name="Times New Roman" size="16.0" />
                                  </font>
@@ -476,7 +476,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button id="cancelbtn" fx:id="cancelbtn" cancelButton="true" layoutX="618.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #595959; -fx-background-radius: 10;" text="QUAY LẠI" textFill="WHITE">
+      <Button id="cancelbtn" fx:id="cancelbtn" cancelButton="true" layoutX="618.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #595959; -fx-background-radius: 10;" text="ĐÓNG" textFill="WHITE">
          <font>
             <Font name="Cambria Bold" size="14.0" />
          </font>
