@@ -5,12 +5,10 @@ import com.xdf.xd_f371.dto.InvDto3;
 import com.xdf.xd_f371.entity.Ledger;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.entity.NguonNx;
+import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.repo.ReportDAO;
-import com.xdf.xd_f371.service.DinhmucService;
-import com.xdf.xd_f371.service.LedgerService;
-import com.xdf.xd_f371.service.NguonNxService;
-import com.xdf.xd_f371.service.TcnService;
+import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.*;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -59,6 +57,8 @@ public class LedgerController implements Initializable {
     private LedgerService ledgerService;
     @Autowired
     private NguonNxService nguonNxService;
+    @Autowired
+    private PhuongtienService phuongtienService;
     @FXML
     private Button ref_to_root;
     @FXML
@@ -90,6 +90,9 @@ public class LedgerController implements Initializable {
     private ComboBox<NguonNx> dvi_ref_cbb;
     @FXML
     private HBox importBtn;
+
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         all_rd.setSelected(true);
@@ -158,20 +161,15 @@ public class LedgerController implements Initializable {
 
     private void setCellFactoryForTable() {
         cttb_stt.setSortable(false);
-        cttb_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(details.indexOf(column.getValue())+1).asString());
+        cttb_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(chitiet_tb.getItems().indexOf(column.getValue())+1).asString());
         cttb_txd.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
         cttb_loai.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("chung_loai"));
         cttb_dongia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("dongia_str"));
         cttb_nhietdo.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
         cttb_tytrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
         cttb_vcf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
-        if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-            cttb_px.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phainhap_str"));
-            cttb_tx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thucnhap_str"));
-        }else{
-            cttb_px.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phaixuat_str"));
-            cttb_tx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thucxuat_str"));
-        }
+        cttb_px.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("soluongpx_str"));
+        cttb_tx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("soluong_str"));
         cttb_thanhtien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
     }
 
@@ -280,6 +278,8 @@ public class LedgerController implements Initializable {
                 x.setDongia_str(TextToNumber.textToNum_2digits(x.getDon_gia()));
                 x.setThucxuat_str(TextToNumber.textToNum_2digits(x.getThuc_xuat()));
                 x.setPhaixuat_str(TextToNumber.textToNum_2digits(x.getPhai_xuat()));
+                x.setSoluong_str(TextToNumber.textToNum_2digits(x.getSoluong()));
+                x.setSoluongpx_str(TextToNumber.textToNum_2digits(x.getSoluong_px()));
                 x.setThucnhap_str(TextToNumber.textToNum_2digits(x.getThuc_nhap()));
                 x.setPhainhap_str(TextToNumber.textToNum_2digits(x.getPhai_nhap()));
                 x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
@@ -292,8 +292,9 @@ public class LedgerController implements Initializable {
     }
     private void setLEdgerDetailLabel(Ledger l){
         ctnv_lb.setText(l.getNhiemvu());
-        xmt_lb.setText(l.getLpt());
-        loaixmt_lb.setText(l.getLpt_2());
+        Optional<PhuongTien> pt = phuongtienService.findById(l.getPt_id());
+        pt.ifPresent(x->xmt_lb.setText(x.getName()));
+        loaixmt_lb.setText(l.getLpt());
         km_lb.setText(TextToNumber.textToNum(String.valueOf(l.getSo_km())));
         giohd_lb.setText(l.getGiohd_md());
         giohd_md_lb.setText(l.getGiohd_md());
@@ -319,7 +320,10 @@ public class LedgerController implements Initializable {
         if (DialogMessage.callAlertWithMessage(null,null,"Bạn có muốn nhập dữ liệu từ đơn vị tham chiếu cho toàn đơn vị không?", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
             try {
                 refLedgerList.forEach(x->ledgerService.save(x));
-                refLedgerDetailList.forEach(x->ledgerService.save(x));
+                for (Ledger l : refLedgerList) {
+                    List<LedgerDetails> ldl = refLedgerDetailList.stream().filter(x -> x.getLedger_id().equals(l.getId())).toList();
+                    l.setLedgerDetails(ldl);
+                }
             }catch (Exception e){
                 DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
                 e.printStackTrace();
@@ -497,7 +501,10 @@ public class LedgerController implements Initializable {
                 XSSFCell cell = row.createCell(j);
                 XSSFCellStyle style = wb.createCellStyle();
                 setCellBorderStyle(style,cell);
-                if(Common.isLongNumber(val)){
+                if(j==1){
+                    cell.setCellValue(val);
+                }
+                else if(Common.isLongNumber(val)){
                     setDataFormat(wb,style,cell,"#,##0");
                     cell.setCellValue(new BigDecimal(val).longValue());
                 }

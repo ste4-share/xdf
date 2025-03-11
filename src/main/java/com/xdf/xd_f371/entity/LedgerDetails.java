@@ -87,6 +87,10 @@ public class LedgerDetails {
     @Transient
     private String thucxuat_str;
     @Transient
+    private String soluong_str;
+    @Transient
+    private String soluongpx_str;
+    @Transient
     private String phaixuat_str;
     @Transient
     private String dongia_str;

@@ -275,7 +275,7 @@ public class XuatController extends CommonFactory implements Initializable {
         if(!so.getText().trim().isEmpty()){
             so.setStyle(null);
             if (ledgers.stream().anyMatch(l->l.getBill_id().equals(so.getText()))){
-                so.setText(CommonFactory.styleErrorField);
+                so.setStyle(CommonFactory.styleErrorField);
             }
         }else{
             so.setStyle(null);
@@ -477,7 +477,6 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_dongia.getSelectionModel().selectFirst();
     }
     private void setCellValueFactoryXuat(){
-        setcellFactory("phaixuat_str","thucxuat_str");
         tbView.setItems(FXCollections.observableList(ls_socai));
         tbView.refresh();
     }
@@ -613,6 +612,8 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setThanhtien_str(TextToNumber.textToNum_2digits(ledgerDetails.getThanhtien()));
         ledgerDetails.setThucxuat_str(TextToNumber.textToNum_2digits(txuat));
         ledgerDetails.setPhaixuat_str(TextToNumber.textToNum_2digits(pxuat));
+        ledgerDetails.setSoluongpx_str(TextToNumber.textToNum_2digits(ledgerDetails.getSoluong_px()));
+        ledgerDetails.setSoluong_str(TextToNumber.textToNum_2digits(ledgerDetails.getSoluong()));
         ledgerDetails.setDongia_str(TextToNumber.textToNum_2digits(ledgerDetails.getDon_gia()));
         return ledgerDetails;
     }

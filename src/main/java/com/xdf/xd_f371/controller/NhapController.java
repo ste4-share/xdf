@@ -48,6 +48,7 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvnCombobox();
         setUpForSearchCompleteTion();
         setPreInv();
+
     }
 
     private void initLabelValue() {
@@ -132,7 +133,6 @@ public class NhapController extends CommonFactory implements Initializable {
         return ledgerDetails;
     }
     private void setcellFactoryNhap(){
-        setcellFactory("phainhap_str","thucnhap_str");
         tbView.setItems(FXCollections.observableList(ls_socai));
         tbView.refresh();
     }

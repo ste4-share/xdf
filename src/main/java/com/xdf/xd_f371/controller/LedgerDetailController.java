@@ -7,8 +7,10 @@ import com.xdf.xd_f371.cons.TypeCons;
 import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.Ledger;
 import com.xdf.xd_f371.entity.LedgerDetails;
+import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.LedgerService;
+import com.xdf.xd_f371.service.PhuongtienService;
 import com.xdf.xd_f371.service.TcnService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -54,6 +56,8 @@ public class LedgerDetailController implements Initializable {
     private DinhmucService dinhmucService;
     @Autowired
     private TcnService tcnService;
+    @Autowired
+    private PhuongtienService phuongtienService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -69,6 +73,8 @@ public class LedgerDetailController implements Initializable {
             x.setPhainhap_str(TextToNumber.textToNum_2digits(x.getPhai_nhap()));
             x.setThucnhap_str(TextToNumber.textToNum_2digits(x.getThuc_nhap()));
             x.setPhaixuat_str(TextToNumber.textToNum_2digits(x.getPhai_xuat()));
+            x.setSoluong_str(TextToNumber.textToNum_2digits(x.getSoluong()));
+            x.setSoluongpx_str(TextToNumber.textToNum_2digits(x.getSoluong_px()));
             x.setThucxuat_str(TextToNumber.textToNum_2digits(x.getThuc_xuat()));
             x.setDongia_str(TextToNumber.textToNum_2digits(x.getDon_gia()));
             x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
@@ -91,8 +97,10 @@ public class LedgerDetailController implements Initializable {
         }
         loainv.setText(ledger.getLoainv());
         nguoinhan.setText(ledger.getNguoi_nhan());
-        xmt.setText(ledger.getLpt());
-        loai_xmt.setText(ledger.getLpt_2());
+        Optional<PhuongTien> pt = phuongtienService.findById(ledger.getPt_id());
+        pt.ifPresent(x->xmt.setText(x.getName()));
+
+        loai_xmt.setText(ledger.getLpt());
         getDinhmucPhuongtien(ledger);
         so.setText(String.valueOf(ledger.getBill_id()));
         if (tcnService.findById(ledger.getTcn_id()).isPresent()){
@@ -123,20 +131,15 @@ public class LedgerDetailController implements Initializable {
     }
     private void setCellFactoryForTable(){
         stt.setSortable(false);
-        stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(details.indexOf(column.getValue())+1).asString());
+        stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(chitietdonhang_table.getItems().indexOf(column.getValue())+1).asString());
         tenxd.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
         loaixd.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("chung_loai"));
         gia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("dongia_str"));
         nhietdo.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
         tytrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
         vcf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
-        if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-            px.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phainhap_str"));
-            tx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thucnhap_str"));
-        }else{
-            px.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("phaixuat_str"));
-            tx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thucxuat_str"));
-        }
+        px.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("soluongpx_str"));
+        tx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("soluong_str"));
         thanhtien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
     }
 

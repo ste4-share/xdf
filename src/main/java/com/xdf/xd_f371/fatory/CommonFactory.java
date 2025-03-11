@@ -74,6 +74,7 @@ public class CommonFactory implements Initializable {
         initLabelVar();
         initLegersList();
         initInventoryUnit();
+        setcellFactory();
     }
 
     private void initLabelVar() {
@@ -157,13 +158,13 @@ public class CommonFactory implements Initializable {
         ComponentUtil.setItemsToComboBox(cbb,nguonNxList,NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
     }
-    protected void setcellFactory(String pnx, String tnx){
+    protected void setcellFactory(){
         stt.setSortable(false);
         stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tbView.getItems().indexOf(column.getValue())+1).asString());
         tenxd.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ten_xd"));
         dongia.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("dongia_str"));
-        col_phainx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>(pnx));
-        col_thucnx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>(tnx));
+        col_phainx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("soluongpx_str"));
+        col_thucnx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("soluong_str"));
         col_nhietdo.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("nhiet_do_tt"));
         col_vcf.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("he_so_vcf"));
         col_tytrong.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("ty_trong"));
