@@ -7,13 +7,11 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -209,28 +207,6 @@
                            <VBox.margin>
                               <Insets bottom="17.0" />
                            </VBox.margin>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <Label prefHeight="38.0" prefWidth="144.0" text="Cho nhiệm vụ:">
-                                 <font>
-                                    <Font name="Cambria Bold" size="13.0" />
-                                 </font>
-                              </Label>
-                              <RadioButton fx:id="nvdx_rd" mnemonicParsing="false" prefHeight="36.0" prefWidth="91.0" text="NVDX" toggleGroup="$sscd_nvdx_toggle">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="sscd_nvdx_toggle" />
-                                 </toggleGroup>
-                                 <font>
-                                    <Font name="Cambria Bold" size="12.0" />
-                                 </font>
-                              </RadioButton>
-                              <RadioButton fx:id="sscd_rd" layoutX="154.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="91.0" text="SSCD" toggleGroup="$sscd_nvdx_toggle">
-                                 <font>
-                                    <Font name="Cambria Bold" size="12.0" />
-                                 </font>
-                              </RadioButton>
-                           </children>
                         </HBox>
                         <HBox>
                            <children>
@@ -444,7 +420,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <TableView id="billViewTb" fx:id="tbView" layoutX="14.0" layoutY="652.0" onMouseClicked="#select_item" prefHeight="158.0" prefWidth="1172.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;">
+      <TableView id="billViewTb" fx:id="tbView" layoutX="14.0" layoutY="652.0" onMouseClicked="#select_item" prefHeight="158.0" prefWidth="1172.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;" stylesheets="@css/table_style.css">
         <columns>
           <TableColumn fx:id="stt" maxWidth="50.0" minWidth="45.0" prefWidth="31.0" text="TT" />
           <TableColumn fx:id="tenxd" prefWidth="127.0" text="Tên Xăng dầu" />
@@ -466,17 +442,17 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </TableView>
-      <Button id="importbtn" fx:id="importbtn" layoutX="478.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnImport" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #0000b3; -fx-background-radius: 10;" text="NHẬP" textFill="#fffbfb">
+      <Button id="importbtn" fx:id="importbtn" layoutX="478.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnImport" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #0000b3; -fx-background-radius: 10;" text="NHẬP" textFill="#fffbfb">
          <font>
-            <Font name="Cambria Bold" size="14.0" />
+            <Font name="Cambria Bold" size="12.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button id="cancelbtn" fx:id="cancelbtn" cancelButton="true" layoutX="618.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="32.0" prefWidth="104.0" style="-fx-background-color: #595959; -fx-background-radius: 10;" text="ĐÓNG" textFill="WHITE">
+      <Button id="cancelbtn" fx:id="cancelbtn" cancelButton="true" layoutX="618.0" layoutY="825.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #595959; -fx-background-radius: 10;" text="ĐÓNG" textFill="WHITE">
          <font>
-            <Font name="Cambria Bold" size="14.0" />
+            <Font name="Cambria Bold" size="12.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />

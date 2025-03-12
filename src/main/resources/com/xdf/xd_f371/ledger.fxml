@@ -298,12 +298,12 @@
                                                 <Font name="Cambria Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="208.0" layoutY="10.0" prefHeight="30.0" prefWidth="124.0" text="Loại:">
+                                          <Label layoutX="208.0" layoutY="10.0" prefHeight="30.0" prefWidth="61.0" text="Loại:">
                                              <font>
                                                 <Font name="Cambria" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="loaixmt_lb" layoutX="332.0" layoutY="10.0" prefHeight="30.0" prefWidth="99.0" text="---">
+                                          <Label fx:id="loaixmt_lb" layoutX="332.0" layoutY="10.0" prefHeight="30.0" prefWidth="186.0" text="---">
                                              <font>
                                                 <Font name="Cambria Bold" size="14.0" />
                                              </font>
@@ -332,17 +332,17 @@
                                     </HBox>
                                     <HBox layoutX="10.0" layoutY="10.0">
                                        <children>
-                                          <Label layoutX="208.0" layoutY="10.0" prefHeight="30.0" prefWidth="210.0" text="Số giờ H.động T.Không:">
+                                          <Label layoutX="208.0" layoutY="10.0" prefHeight="30.0" prefWidth="171.0" text="Số giờ H.động T.Không:">
                                              <font>
                                                 <Font name="Cambria" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="giohd_tk_lb" layoutX="332.0" layoutY="10.0" prefHeight="30.0" prefWidth="99.0" text="---">
+                                          <Label fx:id="giohd_tk_lb" layoutX="332.0" layoutY="10.0" prefHeight="30.0" prefWidth="120.0" text="---">
                                              <font>
                                                 <Font name="Cambria Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="208.0" layoutY="10.0" prefHeight="30.0" prefWidth="198.0" text="Số giờ H.động M.Đất:">
+                                          <Label layoutX="208.0" layoutY="10.0" prefHeight="30.0" prefWidth="153.0" text="Số giờ H.động M.Đất:">
                                              <font>
                                                 <Font name="Cambria" size="14.0" />
                                              </font>
@@ -357,7 +357,7 @@
                                                 <Font name="Cambria" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="nguoinhan_lb" prefHeight="30.0" prefWidth="124.0" text="---">
+                                          <Label fx:id="nguoinhan_lb" prefHeight="30.0" prefWidth="161.0" text="---">
                                              <font>
                                                 <Font name="Cambria Bold" size="14.0" />
                                              </font>

@@ -2,6 +2,8 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.LoaiNVCons;
 import com.xdf.xd_f371.cons.LoaiPTEnum;
+import com.xdf.xd_f371.cons.TypeCons;
+import com.xdf.xd_f371.dto.AssignmentBillDto;
 import com.xdf.xd_f371.dto.NhiemVuDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
@@ -9,6 +11,7 @@ import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.PhuongtienService;
 import com.xdf.xd_f371.service.UnitXmtService;
 import com.xdf.xd_f371.util.ComponentUtil;
+import com.xdf.xd_f371.util.DialogMessage;
 import com.xdf.xd_f371.util.FxUtilTest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -48,6 +51,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        assignmentBillDto = new AssignmentBillDto();
         xe_rd.setSelected(true);
         md_rd.setSelected(true);
         initXmtCbb(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle(),DashboardController.ref_Dv.getId()));
@@ -55,49 +59,6 @@ public class XuatNVController extends CommonFactory implements Initializable {
         initLicence();
         initDinhmucToolTip();
         initLoaiXmt();
-    }
-    private void initLoaiXmt() {
-        PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
-        if (pt!=null){
-            LoaiPhuongTien lpt = phuongtienService.findLptById(pt.getLoaiphuongtien_id());
-            if (lpt!=null){
-                loai_xmt.setText("Loại xe-máy-tàu:"+lpt.getTypeName());
-            }
-        }
-    }
-    private void initDinhmucToolTip() {
-        UnitXmt u = licenceCbb.getSelectionModel().getSelectedItem();
-        if (u!=null){
-            if (mb_rd.isSelected()){
-                dinhmuc_tooltip.setText("-Đ.mức trên không: "+u.getDm_tk()+"(Lit/h) \n -Đ.mức mặt đất: "+u.getDm_md()+" (Lit/h)");
-            }else{
-                dinhmuc_tooltip.setText("-Đ.mức h.động theo giờ: "+u.getDm_hours()+"(Lit/h) \n -Đ.mức h.động theo km: "+u.getDm_km()+" (Lit/100km)");
-            }
-        }
-    }
-    private void initLicence(){
-        PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
-        if (pt!=null){
-            initLicenceCbb(unitXmtService.findByUnitIdAndPtId(DashboardController.ref_Dv.getId(),pt.getId()));
-        }
-    }
-
-    private void initLicenceCbb(List<UnitXmt> ls) {
-        ComponentUtil.setItemsToComboBox(licenceCbb,ls,UnitXmt::getLicence_plate_number, input -> unitXmtService.findByLicensePlate(input));
-        FxUtilTest.autoCompleteComboBoxPlus(licenceCbb, (typedText, itemToCompare) -> itemToCompare.getLicence_plate_number().toLowerCase().contains(typedText.toLowerCase()));
-        licenceCbb.getSelectionModel().selectFirst();
-    }
-
-    private void initChitietNhiemvu(List<NhiemVuDto> ls) {
-        ComponentUtil.setItemsToComboBox(nv_cbb,ls,NhiemVuDto::getChitiet, input -> chitietNhiemvuService.findAllDtoByTenNv(input));
-        FxUtilTest.autoCompleteComboBoxPlus(nv_cbb, (typedText, itemToCompare) -> itemToCompare.getChitiet().toLowerCase().contains(typedText.toLowerCase()));
-        nv_cbb.getSelectionModel().selectFirst();
-    }
-
-    private void initXmtCbb(List<PhuongTien> phuongTiens) {
-        ComponentUtil.setItemsToComboBox(xmt_cbb,phuongTiens,PhuongTien::getName, input -> phuongtienService.findPhuongTienByName(input).orElse(null));
-        FxUtilTest.autoCompleteComboBoxPlus(xmt_cbb, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
-        xmt_cbb.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -168,12 +129,100 @@ public class XuatNVController extends CommonFactory implements Initializable {
             time_active.setText(getStrInterval());
         }
     }
+    @FXML
+    public void xmtCbbAction(ActionEvent actionEvent) {
+        xmt_cbb.setStyle(null);
+        initLicence();
+        initLoaiXmt();
+    }
+    @FXML
+    public void licenceCbbAction(ActionEvent actionEvent) {
+        initDinhmucToolTip();
+    }
+    protected boolean isValidField(){
+        if (!lenhso.getText().isBlank()){
+            if (!so.getText().isBlank()){
+                return true;
+            }else{
+                DialogMessage.errorShowing("Cần nhập số.");
+                so.setStyle(CommonFactory.styleErrorField);
+            }
+        }else{
+            DialogMessage.errorShowing("Cần nhập lệnh.");
+            lenhso.setStyle(CommonFactory.styleErrorField);
+        }
+        return false;
+    }
+    public AssignmentBillDto getInfor(){
+        PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
+        NhiemVuDto nhiemVuDto = nv_cbb.getSelectionModel().getSelectedItem();
+        UnitXmt u = licenceCbb.getSelectionModel().getSelectedItem();
+        if (pt!=null){
+            if (nhiemVuDto!=null){
+                if (u!=null){
+                    LoaiPhuongTien loaiPhuongTien = phuongtienService.findLptById(pt.getLoaiphuongtien_id());
+                    return new AssignmentBillDto(pt,loaiPhuongTien,u,nhiemVuDto,sokm.getText().isBlank() ? 0 : Integer.parseInt(sokm.getText()),md_rd.isSelected() ? TypeCons.MAT_DAT.getName() : TypeCons.TREN_KHONG.getName(),
+                            getStrInterval(),so.getText(),lenhso.getText(),nguoinhan.getText());
+                }else{
+                    DialogMessage.errorShowing("Dinh muc không xác định");
+                    licenceCbb.setStyle(CommonFactory.styleErrorField);
+                }
+            }else{
+                DialogMessage.errorShowing("Nhiem vu không xác định");
+                nv_cbb.setStyle(CommonFactory.styleErrorField);
+            }
+        }else {
+            DialogMessage.errorShowing("Xe May Tau không xác định");
+            xmt_cbb.setStyle(CommonFactory.styleErrorField);
+        }
+        return null;
+    }
+    private void initLoaiXmt() {
+        PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
+        if (pt!=null){
+            LoaiPhuongTien lpt = phuongtienService.findLptById(pt.getLoaiphuongtien_id());
+            if (lpt!=null){
+                loai_xmt.setText("Loại xe-máy-tàu:"+lpt.getTypeName());
+            }
+        }
+    }
+    private void initDinhmucToolTip() {
+        UnitXmt u = licenceCbb.getSelectionModel().getSelectedItem();
+        if (u!=null){
+            if (mb_rd.isSelected()){
+                dinhmuc_tooltip.setText("-Đ.mức trên không: "+u.getDm_tk()+"(Lit/h) \n -Đ.mức mặt đất: "+u.getDm_md()+" (Lit/h)");
+            }else{
+                dinhmuc_tooltip.setText("-Đ.mức h.động theo giờ: "+u.getDm_hours()+"(Lit/h) \n -Đ.mức h.động theo km: "+u.getDm_km()+" (Lit/100km)");
+            }
+        }
+    }
+    private void initLicence(){
+        PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
+        if (pt!=null){
+            initLicenceCbb(unitXmtService.findByUnitIdAndPtId(DashboardController.ref_Dv.getId(),pt.getId()));
+        }
+    }
+    private void initLicenceCbb(List<UnitXmt> ls) {
+        ComponentUtil.setItemsToComboBox(licenceCbb,ls,UnitXmt::getLicence_plate_number, input -> unitXmtService.findByLicensePlate(input));
+        FxUtilTest.autoCompleteComboBoxPlus(licenceCbb, (typedText, itemToCompare) -> itemToCompare.getLicence_plate_number().toLowerCase().contains(typedText.toLowerCase()));
+        licenceCbb.getSelectionModel().selectFirst();
+    }
+    private void initChitietNhiemvu(List<NhiemVuDto> ls) {
+        ComponentUtil.setItemsToComboBox(nv_cbb,ls,NhiemVuDto::getChitiet, input -> chitietNhiemvuService.findAllDtoByTenNv(input));
+        FxUtilTest.autoCompleteComboBoxPlus(nv_cbb, (typedText, itemToCompare) -> itemToCompare.getChitiet().toLowerCase().contains(typedText.toLowerCase()));
+        nv_cbb.getSelectionModel().selectFirst();
+    }
+    private void initXmtCbb(List<PhuongTien> phuongTiens) {
+        ComponentUtil.setItemsToComboBox(xmt_cbb,phuongTiens,PhuongTien::getName, input -> phuongtienService.findPhuongTienByName(input).orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(xmt_cbb, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
+        xmt_cbb.getSelectionModel().selectFirst();
+    }
     private String getStrInterval(){
-        String hour_str = sogio.getText().trim();
-        String m_str = sophut.getText().trim();
+        String hour_str = sogio.getText().trim().isBlank() ? "0" : sogio.getText();
+        String m_str = sophut.getText().trim().isBlank() ? "0" : sophut.getText();
 
-        int hour1 = getHourMinute(Integer.parseInt(m_str.trim().isBlank() ? "0" : m_str)).get(0);
-        int minute = getHourMinute(Integer.parseInt(m_str.trim().isBlank() ? "0" : m_str)).get(1);
+        int hour1 = getHourMinute(Integer.parseInt(m_str)).get(0);
+        int minute = getHourMinute(Integer.parseInt(m_str)).get(1);
         int sum_hour = Integer.parseInt(hour_str) + hour1;
 
         if (minute <10){
@@ -194,16 +243,5 @@ public class XuatNVController extends CommonFactory implements Initializable {
             return List.of(hour, remainder_minute);
         }
         return List.of();
-    }
-    @FXML
-    public void xmtCbbAction(ActionEvent actionEvent) {
-        initLicence();
-    }
-    @FXML
-    public void nv_cbbAction(ActionEvent actionEvent) {
-    }
-    @FXML
-    public void licenceCbbAction(ActionEvent actionEvent) {
-        initDinhmucToolTip();
     }
 }

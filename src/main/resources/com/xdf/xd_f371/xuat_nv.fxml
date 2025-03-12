@@ -61,7 +61,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <ComboBox onAction="#xmtCbbAction" prefHeight="30.0" prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 2;" fx:id="xmt_cbb">
+            <ComboBox editable="true" onAction="#xmtCbbAction" prefHeight="30.0" prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 2;" fx:id="xmt_cbb">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -132,7 +132,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <ComboBox fx:id="nv_cbb" onAction="#nv_cbbAction" prefHeight="30.0" prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 2;">
+            <ComboBox fx:id="nv_cbb" editable="true" prefHeight="30.0" prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 2;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -169,7 +169,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <ComboBox fx:id="licenceCbb" onAction="#licenceCbbAction" prefHeight="30.0" prefWidth="201.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 2;">
+            <ComboBox fx:id="licenceCbb" editable="true" onAction="#licenceCbbAction" prefHeight="30.0" prefWidth="201.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 2;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

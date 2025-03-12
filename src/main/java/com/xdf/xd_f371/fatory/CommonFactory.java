@@ -97,6 +97,7 @@ public class CommonFactory implements Initializable {
         }
         else ledgers = ledgerService.findAllLedgerActive();
     }
+
     protected void initInventoryUnit(){
         Optional<Configuration> c = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
         c.ifPresent(configuration -> config = configuration);
@@ -141,7 +142,7 @@ public class CommonFactory implements Initializable {
         return in.matches("^([+-]?\\d*\\.?\\d*)$");
     }
     protected boolean outfieldValid(TextField tf, String mes){
-        if (tf.getText().trim().equals("")) {
+        if (tf.getText().isBlank()) {
             DialogMessage.message("Lỗi", mes,
                     "Nhập sai định dạng.", Alert.AlertType.ERROR);
             tf.setStyle(styleErrorField);

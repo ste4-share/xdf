@@ -27,13 +27,10 @@ public class LedgerDetails {
     @Column(name = "phai_xuat")
     private double phai_xuat;
     @Column(name = "nhiet_do_tt")
-    @NotNull
     private double nhiet_do_tt;
     @Column(name = "ty_trong")
-    @NotNull
     private double ty_trong;
     @Column(name = "he_so_vcf")
-    @NotNull
     private double he_so_vcf;
     @Column(name = "don_gia")
     @NotNull

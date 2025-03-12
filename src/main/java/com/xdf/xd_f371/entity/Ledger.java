@@ -19,8 +19,6 @@ public class Ledger {
     @Id
     private String id;
     @Column(name = "bill_id")
-    @NotNull
-    @Min(1)
     private String bill_id;
     @Column(name = "amount")
     private Double amount;
@@ -31,7 +29,6 @@ public class Ledger {
     @Column(name = "status")
     private String status;
     @Column(name = "so_km")
-    @Min(value = 0)
     private int so_km;
     @Column(name = "giohd_md")
     private String giohd_md;

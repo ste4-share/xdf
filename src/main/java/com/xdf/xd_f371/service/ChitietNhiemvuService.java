@@ -27,7 +27,8 @@ public class ChitietNhiemvuService {
 
     public List<NhiemVuDto> findAllDtoBy(String lnv){
         return chitietNhiemvuRepo.findAllDtoBy(lnv);
-    }public NhiemVuDto findAllDtoByTenNv(String ten){
+    }
+    public NhiemVuDto findAllDtoByTenNv(String ten){
         if (chitietNhiemvuRepo.findAllDtoByTenNv(ten).isPresent()){
             chitietNhiemvuRepo.findAllDtoByTenNv(ten).get();
         }

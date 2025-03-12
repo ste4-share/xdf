@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import org.springframework.stereotype.Component;
@@ -68,6 +67,7 @@ public class XuatDVController extends CommonFactory implements Initializable {
     @FXML
     public void soKeyRealed(KeyEvent keyEvent) {
         e_so.setText(null);
+        so.setStyle(null);
         if(!so.getText().isBlank()) {
             if (ledgers.stream().anyMatch(l->l.getBill_id().equals(so.getText()))){
                 e_so.setText("Số phiếu này đã được tạo, vui lòng nhập số khác");
@@ -81,6 +81,7 @@ public class XuatDVController extends CommonFactory implements Initializable {
     @FXML
     public void lenhkhKr(KeyEvent keyEvent) {
         e_lenhkh.setText(null);
+        lenhso.setStyle(null);
         if(!lenhso.getText().isBlank()) {
             if (ledgers.stream().anyMatch(l->l.getBill_id().equals(lenhso.getText()))){
                 e_lenhkh.setText("Lệnh này đã được tạo, vui lòng nhập lệnh khác");
@@ -91,11 +92,24 @@ public class XuatDVController extends CommonFactory implements Initializable {
     public void lenhkhClicked(MouseEvent mouseEvent) {
         lenhso.selectAll();
     }
+    public boolean isValidField(){
+        if (!lenhso.getText().isBlank()){
+            if (!so.getText().isBlank()){
+                return true;
+            }else{
+                DialogMessage.errorShowing("Cần nhập số.");
+                so.setStyle(CommonFactory.styleErrorField);
+            }
+        }else{
+            DialogMessage.errorShowing("Cần nhập lệnh.");
+            lenhso.setStyle(CommonFactory.styleErrorField);
+        }
+        return false;
+    }
     public UnitBillDto getInfo(){
         NguonNx dvn = dvn_cbb.getSelectionModel().getSelectedItem();
         NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
         Tcn tcn = tcx_cbb.getSelectionModel().getSelectedItem();
-
         if (dvn!=null){
             if (dvx!=null){
                 if (tcn!=null){
