@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.XuatLoaiController" fx:id="xdv">
+<VBox xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.XuatDVController" fx:id="xdv">
    <children>
       <HBox fx:id="dvi_nhan">
          <children>
@@ -18,15 +18,29 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <ComboBox fx:id="dvn_cbb" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+            <ComboBox fx:id="dvn_cbb" editable="true" onAction="#dvnAction" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ComboBox>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" />
+            <Insets />
          </VBox.margin>
+      </HBox>
+      <HBox fx:id="dvi_nhan1" layoutX="25.0" layoutY="30.0">
+         <children>
+            <Label fx:id="dvn_lb1" prefHeight="5.0" prefWidth="120.0">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="e_dvn" layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="300.0" textFill="#ff0101">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+         </children>
       </HBox>
       <HBox fx:id="pt1">
          <children>
@@ -35,15 +49,29 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <ComboBox fx:id="dvx_cbb" cache="true" onAction="#dvxAction" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+            <ComboBox fx:id="dvx_cbb" cache="true" editable="true" onAction="#dvxAction" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ComboBox>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" />
+            <Insets />
          </VBox.margin>
+      </HBox>
+      <HBox fx:id="dvi_nhan11" layoutX="25.0" layoutY="60.0">
+         <children>
+            <Label fx:id="dvn_lb11" prefHeight="5.0" prefWidth="120.0">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="e_dvx" layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="300.0" textFill="#ff0101">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+         </children>
       </HBox>
       <HBox>
          <children>
@@ -62,8 +90,22 @@
             </TextField>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" />
+            <Insets />
          </VBox.margin>
+      </HBox>
+      <HBox fx:id="dvi_nhan111" layoutX="25.0" layoutY="106.0">
+         <children>
+            <Label fx:id="dvn_lb111" prefHeight="5.0" prefWidth="120.0">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="e_so" layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="300.0" textFill="#ff0101">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+         </children>
       </HBox>
       <HBox layoutX="10.0" layoutY="170.0">
          <children>
@@ -82,8 +124,22 @@
             </TextField>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" />
+            <Insets />
          </VBox.margin>
+      </HBox>
+      <HBox fx:id="dvi_nhan111111" layoutX="25.0" layoutY="326.0">
+         <children>
+            <Label fx:id="dvn_lb111111" prefHeight="5.0" prefWidth="120.0">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="e_lenhkh" layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="300.0" textFill="#ff0101">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+         </children>
       </HBox>
       <HBox>
          <children>
@@ -92,15 +148,29 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <ComboBox fx:id="tcx_cbb" onAction="#tcx_cbbACtion" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
+            <ComboBox fx:id="tcx_cbb" editable="true" onAction="#tcx_cbbACtion" prefHeight="30.0" prefWidth="326.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ComboBox>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" />
+            <Insets />
          </VBox.margin>
+      </HBox>
+      <HBox fx:id="dvi_nhan1111" layoutX="25.0" layoutY="166.0">
+         <children>
+            <Label fx:id="dvn_lb1111" prefHeight="5.0" prefWidth="120.0">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="e_tcx" layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="300.0" textFill="#ff0101">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+         </children>
       </HBox>
       <HBox>
          <children>
@@ -119,8 +189,22 @@
             </TextField>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" />
+            <Insets />
          </VBox.margin>
+      </HBox>
+      <HBox fx:id="dvi_nhan11111" layoutX="25.0" layoutY="266.0">
+         <children>
+            <Label fx:id="dvn_lb11111" prefHeight="5.0" prefWidth="120.0">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="e_nguoinhan" layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="300.0" textFill="#ff0101">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+         </children>
       </HBox>
       <HBox layoutX="10.0" layoutY="210.0">
          <children>
@@ -141,6 +225,20 @@
          <VBox.margin>
             <Insets />
          </VBox.margin>
+      </HBox>
+      <HBox fx:id="dvi_nhan111112" layoutX="25.0" layoutY="302.0">
+         <children>
+            <Label fx:id="dvn_lb111111" prefHeight="5.0" prefWidth="120.0">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="e_soxe" layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="300.0" textFill="#ff0101">
+               <font>
+                  <Font name="Cambria Italic" size="10.0" />
+               </font>
+            </Label>
+         </children>
       </HBox>
    </children>
    <padding>

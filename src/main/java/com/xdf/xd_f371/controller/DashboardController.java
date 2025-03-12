@@ -134,6 +134,10 @@ public class DashboardController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
         fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
         return fxmlLoader.load();
+    }public static FXMLLoader getFXLoadderBySource(String source) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplicationApp.class.getResource(source));
+        fxmlLoader.setControllerFactory(MainApplicationApp.context::getBean);
+        return fxmlLoader;
     }
     private void setStyleForClickedMEnu(HBox selected, HBox remainder1,HBox remainder2,HBox remainder3,HBox remainder4,HBox remainder5){
         selected.setStyle(setupLayout);

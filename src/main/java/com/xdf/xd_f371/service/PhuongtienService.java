@@ -56,6 +56,11 @@ public class PhuongtienService {
     }
     public LoaiPhuongTien findLptByName(String tn){
         return loaiPhuongTienRepo.findLptByName(tn);
+    }public LoaiPhuongTien findLptById(int tn){
+        if (loaiPhuongTienRepo.findByLptId(tn).isPresent()){
+            return loaiPhuongTienRepo.findByLptId(tn).get();
+        }
+        return null;
     }
 
     public Optional<PhuongTien> findById(int id){

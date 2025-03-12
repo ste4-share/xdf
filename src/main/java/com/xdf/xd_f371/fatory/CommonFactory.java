@@ -3,8 +3,9 @@ package com.xdf.xd_f371.fatory;
 import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.controller.DashboardController;
-import com.xdf.xd_f371.controller.XuatLoaiController;
+import com.xdf.xd_f371.dto.AssignmentBillDto;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
+import com.xdf.xd_f371.dto.UnitBillDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.ComponentUtil;
@@ -34,6 +35,8 @@ import java.util.*;
 
 @Component
 public class CommonFactory implements Initializable {
+    protected static AssignmentBillDto assignmentBillDto = null;
+    protected static UnitBillDto unitBillDto = null;
     public static String pre_path;
     protected static Stage primaryStage;
     protected static double inventory_quantity = 0;
@@ -63,6 +66,8 @@ public class CommonFactory implements Initializable {
     protected TextArea note;
     @FXML
     protected Label lb_tontheoxd;
+    @FXML
+    protected TextField so,nguoinhan,lenhso,soxe;
     @FXML
     protected RadioButton nvdx_rd;
     @FXML
