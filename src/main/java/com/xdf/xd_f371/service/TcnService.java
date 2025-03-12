@@ -16,6 +16,12 @@ public class TcnService {
     public Optional<Tcn> findByName(String name){
         return tcnRepo.findByName(name);
     }
+    public Tcn findByMaTcn(String name){
+        if (tcnRepo.findByMaTcn(name).isPresent()){
+            return tcnRepo.findByMaTcn(name).get();
+        }
+        return null;
+    }
     public List<Tcn> findByLoaiphieu(String loaiphieu){
         return tcnRepo.findByLoaiphieu(loaiphieu);
     }

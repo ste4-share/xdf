@@ -81,6 +81,11 @@ public class Ledger {
     private String note;
     @Column(name = "year")
     private int year;
+    @Column(name = "dvi_baono")
+    private int dvi_baono;
+    @Column(name = "bienso_ds")
+    private String bienso_ds;
+
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LedgerDetails> ledgerDetails;
     @ManyToOne
@@ -118,5 +123,7 @@ public class Ledger {
         this.pt_id = l.pt_id;
         this.note = l.note;
         this.year = l.getYear();
+        this.dvi_baono = l.getDvi_baono();
+        this.bienso_ds = l.getBienso_ds();
     }
 }

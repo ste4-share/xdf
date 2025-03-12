@@ -46,7 +46,6 @@ import java.util.*;
 public class LedgerController implements Initializable {
     private final String file_name = "data.xlsx";
     private List<Ledger> ledgerSelectList = new ArrayList<>();
-    private List<LedgerDetails> details = new ArrayList<>();
     private List<Ledger> refLedgerList = new ArrayList<>();
     private List<LedgerDetails> refLedgerDetailList = new ArrayList<>();
     private LocalDate currentDateSelected;
@@ -83,7 +82,7 @@ public class LedgerController implements Initializable {
     @FXML
     private RadioButton all_rd,nhap_rd,xuat_rd;
     @FXML
-    private CheckBox mucgiaCk;
+    private CheckBox mucgiaCk,tdvChk;
     @FXML
     private TextField search_by_name_tf;
     @FXML
@@ -113,7 +112,6 @@ public class LedgerController implements Initializable {
     private void updateData() {
         initLedgerList();
     }
-
 
     private void initRootLedgerList() {
         LocalDate tungay = tab2_tungay.getValue();
@@ -177,8 +175,13 @@ public class LedgerController implements Initializable {
         LocalDate st = st_time.getValue();
         LocalDate et = lst_time.getValue();
         if (validDate(st,et)){
-            ledgerSelectList = ledgerService.findAllLedgerDto(st,et,DashboardController.ref_Dv.getId());
-            setItemToTableView(ledgerSelectList);
+            if (tdvChk.isSelected()){
+                ledgerSelectList = ledgerService.findAllLedgerDto(st,et);
+                setItemToTableView(ledgerSelectList);
+            }else{
+                ledgerSelectList = ledgerService.findAllLedgerDto(st,et,DashboardController.ref_Dv.getId());
+                setItemToTableView(ledgerSelectList);
+            }
         }
     }
     private void getLedgerByDate(LocalDate d){
@@ -319,10 +322,10 @@ public class LedgerController implements Initializable {
     public void ref_to_rootAction(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage(null,null,"Bạn có muốn nhập dữ liệu từ đơn vị tham chiếu cho toàn đơn vị không?", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
             try {
-                refLedgerList.forEach(x->ledgerService.save(x));
                 for (Ledger l : refLedgerList) {
                     List<LedgerDetails> ldl = refLedgerDetailList.stream().filter(x -> x.getLedger_id().equals(l.getId())).toList();
                     l.setLedgerDetails(ldl);
+                    ledgerService.save(l);
                 }
                 DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
                 initRootLedgerList();
@@ -354,6 +357,11 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void mucgiaCkAction(ActionEvent actionEvent) {
+        if (mucgiaCk.isSelected()){
+
+        }else{
+
+        }
     }
     @FXML
     public void dateLoadingClick(MouseEvent mouseEvent) {
@@ -362,17 +370,11 @@ public class LedgerController implements Initializable {
 
     private void dateLoading() {
         LocalDate st = st_time.getValue();
-        LocalDate et = lst_time.getValue();
-        listDate(st,et);
+        initLedgerList();
+        List<LocalDate> ls = ledgerSelectList.stream().map(Ledger::getFrom_date).filter(fromDate -> fromDate.isAfter(st)).distinct().toList();
+        setLocalDateList(ls.stream().map(x->x.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).toList());
     }
 
-    private void listDate(LocalDate st,LocalDate et){
-        if (validDate(st,et)){
-            initLedgerList();
-            List<LocalDate> ls = ledgerSelectList.stream().map(Ledger::getFrom_date).filter(fromDate -> fromDate.isAfter(st)).distinct().toList();
-            setLocalDateList(ls.stream().map(x->x.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).toList());
-        }
-    }
     private boolean validDate(LocalDate st,LocalDate et){
         if (st!=null){
             if (et!=null){
@@ -414,6 +416,7 @@ public class LedgerController implements Initializable {
                 }
                 setItemsTo_RefTable(refLedgerList);
                 refLedgerDetailList = importDataToListLedger_Detail(file);
+                System.out.println("hi");
             }
         }
     }
@@ -757,5 +760,14 @@ public class LedgerController implements Initializable {
         });
         Common.openNewStage("xuat.fxml", primaryStage,null,StageStyle.UTILITY);
         updateData();
+    }
+    @FXML
+    public void tdvChkAction(ActionEvent actionEvent) {
+        if (tdvChk.isSelected()){
+            tab1_dvi_label.setDisable(true);
+        }else{
+            tab1_dvi_label.setDisable(false);
+        }
+        dateLoading();
     }
 }

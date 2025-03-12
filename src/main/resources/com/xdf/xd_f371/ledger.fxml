@@ -94,6 +94,14 @@
                                           <Font name="Cambria Bold Italic" size="12.0" />
                                        </font>
                                     </Label>
+                                    <CheckBox fx:id="tdvChk" mnemonicParsing="false" onAction="#tdvChkAction" prefHeight="32.0" prefWidth="108.0" text="Toàn đơn vị">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font name="Cambria Bold Italic" size="12.0" />
+                                       </font>
+                                    </CheckBox>
                                  </children>
                                  <VBox.margin>
                                     <Insets top="10.0" />
@@ -191,7 +199,7 @@
                                           <TableView fx:id="ledgers_table" onMouseClicked="#select_ledger_table" prefHeight="216.0" prefWidth="1050.0" stylesheets="@css/table_style.css">
                                             <columns>
                                                 <TableColumn fx:id="ledgers_col_stt" maxWidth="70.0" minWidth="20.0" prefWidth="60.0" text="stt" />
-                                              <TableColumn fx:id="ledgers_col_id" prefWidth="75.0" text="ID" />
+                                              <TableColumn fx:id="ledgers_col_id" maxWidth="300.0" minWidth="200.0" prefWidth="250.0" text="ID" />
                                               <TableColumn fx:id="ledgers_col_so" prefWidth="75.0" text="Số" />
                                                 <TableColumn fx:id="ledgers_col_stdate" prefWidth="114.0" text="Ngày bắt đầu" />
                                                 <TableColumn fx:id="ledgers_col_edate" prefWidth="114.0" text="Ngày kết thúc" />
@@ -363,7 +371,7 @@
                                     <Font name="Cambria Bold Italic" size="10.0" />
                                  </font>
                               </Label>
-                              <TableView fx:id="chitiet_tb">
+                              <TableView fx:id="chitiet_tb" stylesheets="@css/table_style.css">
                                 <columns>
                                   <TableColumn fx:id="cttb_stt" maxWidth="50.0" prefWidth="40.0" text="stt" />
                                   <TableColumn fx:id="cttb_txd" maxWidth="250.0" prefWidth="150.0" text="Tên xăng dầu" />

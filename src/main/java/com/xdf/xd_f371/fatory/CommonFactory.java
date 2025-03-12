@@ -3,6 +3,7 @@ package com.xdf.xd_f371.fatory;
 import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.controller.DashboardController;
+import com.xdf.xd_f371.controller.XuatLoaiController;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
@@ -81,7 +82,6 @@ public class CommonFactory implements Initializable {
         setVi_DatePicker(tungay);
         setVi_DatePicker(denngay);
         ls_socai = new ArrayList<>();
-        nvdx_rd.setSelected(true);
         tungay.setValue(LocalDate.now());
         note.setText(null);
     }
@@ -108,13 +108,8 @@ public class CommonFactory implements Initializable {
     protected void setInvLabel(LoaiXangDauDto lxd){
         i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),lxd.getXd_id());
         if (!i.isEmpty()){
-            if (nvdx_rd.isSelected()){
                 double sum_inventory_nvdx = i.stream().mapToDouble(InventoryUnits::getNvdx_quantity).sum();
                 setTonKhoLabel(sum_inventory_nvdx);
-            } else {
-                double sum_inventory_sscd = i.stream().mapToDouble(InventoryUnits::getSscd_quantity).sum();
-                setTonKhoLabel(sum_inventory_sscd);
-            }
         } else {
             setTonKhoLabel(0);
         }

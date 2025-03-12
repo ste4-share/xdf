@@ -20,6 +20,8 @@ public class Tcn {
     private String loaiphieu;
     @Column(name = "name")
     private String name;
+    @Column(name = "ma_tcn")
+    private String ma_tcn;
 
     public Tcn(String loaiphieu, String name) {
         this.loaiphieu = loaiphieu;

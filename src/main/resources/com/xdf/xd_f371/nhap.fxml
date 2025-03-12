@@ -138,13 +138,11 @@
                                     <Font name="Cambria Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <TextField id="recvTf" fx:id="tcNhap" onMouseClicked="#tcn_clicked" prefHeight="38.0" prefWidth="344.0">
-                                 <font>
-                                    <Font name="Times New Roman" size="16.0" />
-                                 </font>
+                              <ComboBox fx:id="cmb_tcn" editable="true" onAction="#cmb_tcnAction" prefHeight="38.0" prefWidth="344.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                                  <cursor>
-                                    <Cursor fx:constant="TEXT" />
-                                 </cursor></TextField>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ComboBox>
                            </children>
                            <VBox.margin>
                               <Insets bottom="17.0" />

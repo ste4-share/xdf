@@ -5,9 +5,7 @@ import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
-import com.xdf.xd_f371.util.Common;
-import com.xdf.xd_f371.util.DialogMessage;
-import com.xdf.xd_f371.util.TextToNumber;
+import com.xdf.xd_f371.util.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class NhapController extends CommonFactory implements Initializable {
     @FXML
-    private TextField soTf, recvTf,tcNhap,lenhKHso,soXe,
+    private TextField soTf, recvTf,lenhKHso,soXe,
             donGiaTf, thucNhap,phaiNhap,tThucTe, vcf,tyTrong;
     @FXML
     private Label notification,chungloai_lb,text_dongia,text_phainhap,text_thucnhap;
@@ -37,6 +35,8 @@ public class NhapController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<NguonNx> cmb_dvvc, cmb_dvn;
     @FXML
+    private ComboBox<Tcn> cmb_tcn;
+    @FXML
     private ComboBox<LoaiXangDauDto> cmb_tenxd;
 
     @Override
@@ -44,9 +44,9 @@ public class NhapController extends CommonFactory implements Initializable {
         super.initialize(url,resourceBundle);
         initLabelValue();
         setTenXDToCombobox();
+        setItemForTcnCbb();
         setDvvcCombobox();
         setDvnCombobox();
-        setUpForSearchCompleteTion();
         setPreInv();
     }
 
@@ -71,19 +71,10 @@ public class NhapController extends CommonFactory implements Initializable {
             chungloai_lb.setText("Chủng loại: ---");
         }
     }
-
-    private void setUpForSearchCompleteTion(){
-        List<String> search_arr = new ArrayList<>();
-
-        for(int i = 0; i< tcnx_ls.size(); i++){
-            search_arr.add(tcnx_ls.get(i).getName());
-        }
-        TextFields.bindAutoCompletion(tcNhap, t -> {
-            return search_arr.stream().filter(elem
-                    -> {
-                return elem.toLowerCase().startsWith(t.getUserText().toLowerCase().trim());
-            }).collect(Collectors.toList());
-        });
+    private void setItemForTcnCbb(){
+        ComponentUtil.setItemsToComboBox(cmb_tcn,tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName()),Tcn::getName, input -> tcnService.findByName(input).orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(cmb_tcn, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
+        cmb_tcn.getSelectionModel().selectFirst();
     }
     private void setTenXDToCombobox(){
         setXangDauCombobox(cmb_tenxd, loaiXdService);
@@ -142,20 +133,18 @@ public class NhapController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null) {
             LedgerDetails ld = getLedgerDetails(lxd);
-            if (!outfieldValid(tcNhap, MessageCons.NOT_EMPTY_tcn.getName())){
-                if (!outfieldValid(lenhKHso, MessageCons.NOT_EMPTY_lenhKH.getName())){
-                    cmb_tenxd.setStyle(null);
-                    if (validateField(ld).isEmpty()) {
-                        if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
-                            ls_socai.add(ld);
-                        }
-                        setcellFactoryNhap();
-                        setTonKhoLabel(inventory_quantity+ld.getSoluong());
-                        clearHH();
-                    }else{
-                        DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                                "Nhập sai định dạng.", Alert.AlertType.ERROR);
+            if (!outfieldValid(lenhKHso, MessageCons.NOT_EMPTY_lenhKH.getName())){
+                cmb_tenxd.setStyle(null);
+                if (validateField(ld).isEmpty()) {
+                    if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
+                        ls_socai.add(ld);
                     }
+                    setcellFactoryNhap();
+                    setTonKhoLabel(inventory_quantity+ld.getSoluong());
+                    clearHH();
+                }else{
+                    DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                            "Nhập sai định dạng.", Alert.AlertType.ERROR);
                 }
             }
         }else{
@@ -224,9 +213,6 @@ public class NhapController extends CommonFactory implements Initializable {
             } else if (ls.get(0).equals("soluong")){
                 thucNhap.setStyle(styleErrorField);
                 return "thuc nhap phai lon hon 0";
-            }else if (ls.get(0).equals("tcn_id")){
-                tcNhap.setStyle(styleErrorField);
-                return "Tinh chat nhap khong xac dinh.";
             }
         }
         return null;
@@ -251,11 +237,14 @@ public class NhapController extends CommonFactory implements Initializable {
         ledger.setSo_xe(soXe.getText());
         ledger.setLenh_so(lenhKHso.getText());
         ledger.setNote(note.getText());
-        Tcn t = tcnService.findByName(tcNhap.getText().trim()).orElse(null);
-        if (t != null) {
+        Tcn t = cmb_tcn.getSelectionModel().getSelectedItem();
+        if (t!=null){
             ledger.setTcn_id(t.getId());
-        }else{
-            ledger.setTcn_id(tcnService.save(new Tcn(LoaiPhieuCons.PHIEU_XUAT.getName(), tcNhap.getText())).getId());
+            if (t.getMa_tcn().equals(ConfigCons.NBN.getName())){
+                ledger.setDvi_baono(dvx.getId());
+            }
+        }else {
+            ledger.setTcn_id(1);
         }
         ledger.setTructhuoc(tructhuocService.findById(cmb_dvvc.getSelectionModel().getSelectedItem().getTructhuoc_id()).orElseThrow().getType());
         ledger.setYear(tungay.getValue().getYear());
@@ -367,10 +356,6 @@ public class NhapController extends CommonFactory implements Initializable {
         cleanErrorField(recvTf);
     }
     @FXML
-    public void tcn_clicked(MouseEvent mouseEvent) {
-        cleanErrorField(tcNhap);
-    }
-    @FXML
     public void lenhso_clicked(MouseEvent mouseEvent) {
         cleanErrorField(lenhKHso);
     }
@@ -429,5 +414,8 @@ public class NhapController extends CommonFactory implements Initializable {
                 lenhKHso.setStyle(CommonFactory.styleErrorField);
             }
         }
+    }
+    @FXML
+    public void cmb_tcnAction(ActionEvent actionEvent) {
     }
 }
