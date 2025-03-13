@@ -23,10 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 @Component
 public class XuatNVController extends CommonFactory implements Initializable {
+    private List<NhiemVuDto> nhiemvuLs = new ArrayList<>();
     @FXML
     private TextField sokm,sogio, sophut;
     @FXML
@@ -55,7 +57,8 @@ public class XuatNVController extends CommonFactory implements Initializable {
         xe_rd.setSelected(true);
         md_rd.setSelected(true);
         initXmtCbb(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle(),DashboardController.ref_Dv.getId()));
-        initChitietNhiemvu(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_KHAC.getName()));
+        nhiemvuLs = chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_KHAC.getName());
+        initChitietNhiemvu(nhiemvuLs);
         initLicence();
         initDinhmucToolTip();
         initLoaiXmt();
@@ -124,9 +127,11 @@ public class XuatNVController extends CommonFactory implements Initializable {
     }
     @FXML
     public void phut_key(KeyEvent keyEvent) {
-        if (Integer.parseInt(sogio.getText()) <60 && Integer.parseInt(sogio.getText()) >=0){
-            validateToSettingStyle(sophut);
-            time_active.setText(getStrInterval());
+        if (!sophut.getText().isBlank()){
+            if (Integer.parseInt(sophut.getText()) <60 && Integer.parseInt(sophut.getText()) >=0){
+                validateToSettingStyle(sophut);
+                time_active.setText(getStrInterval());
+            }
         }
     }
     @FXML
@@ -134,6 +139,10 @@ public class XuatNVController extends CommonFactory implements Initializable {
         xmt_cbb.setStyle(null);
         initLicence();
         initLoaiXmt();
+    }
+    @FXML
+    public void nv_cbbACation(ActionEvent actionEvent) {
+        nv_cbb.setStyle(null);
     }
     @FXML
     public void licenceCbbAction(ActionEvent actionEvent) {
@@ -163,6 +172,32 @@ public class XuatNVController extends CommonFactory implements Initializable {
                     LoaiPhuongTien loaiPhuongTien = phuongtienService.findLptById(pt.getLoaiphuongtien_id());
                     return new AssignmentBillDto(pt,loaiPhuongTien,u,nhiemVuDto,sokm.getText().isBlank() ? 0 : Integer.parseInt(sokm.getText()),md_rd.isSelected() ? TypeCons.MAT_DAT.getName() : TypeCons.TREN_KHONG.getName(),
                             getStrInterval(),so.getText(),lenhso.getText(),nguoinhan.getText());
+                }else{
+                    DialogMessage.errorShowing("Dinh muc không xác định");
+                    licenceCbb.setStyle(CommonFactory.styleErrorField);
+                }
+            }else{
+                DialogMessage.errorShowing("Nhiem vu không xác định");
+                nv_cbb.setStyle(CommonFactory.styleErrorField);
+            }
+        }else {
+            DialogMessage.errorShowing("Xe May Tau không xác định");
+            xmt_cbb.setStyle(CommonFactory.styleErrorField);
+        }
+        return null;
+    }
+    public AssignmentBillDto getInfor_valid(){
+        PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
+        NhiemVuDto nhiemVuDto = nv_cbb.getSelectionModel().getSelectedItem();
+        UnitXmt u = licenceCbb.getSelectionModel().getSelectedItem();
+        if (pt!=null){
+            if (nhiemVuDto!=null){
+                if (u!=null){
+                    if (isValidField()){
+                        LoaiPhuongTien loaiPhuongTien = phuongtienService.findLptById(pt.getLoaiphuongtien_id());
+                        return new AssignmentBillDto(pt,loaiPhuongTien,u,nhiemVuDto,sokm.getText().isBlank() ? 0 : Integer.parseInt(sokm.getText()),md_rd.isSelected() ? TypeCons.MAT_DAT.getName() : TypeCons.TREN_KHONG.getName(),
+                                getStrInterval(),so.getText(),lenhso.getText(),nguoinhan.getText());
+                    }
                 }else{
                     DialogMessage.errorShowing("Dinh muc không xác định");
                     licenceCbb.setStyle(CommonFactory.styleErrorField);
@@ -208,7 +243,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
         licenceCbb.getSelectionModel().selectFirst();
     }
     private void initChitietNhiemvu(List<NhiemVuDto> ls) {
-        ComponentUtil.setItemsToComboBox(nv_cbb,ls,NhiemVuDto::getChitiet, input -> chitietNhiemvuService.findAllDtoByTenNv(input));
+        ComponentUtil.setItemsToComboBox(nv_cbb,ls,NhiemVuDto::getChitiet, input -> nhiemvuLs.stream().filter(x->x.getChitiet().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(nv_cbb, (typedText, itemToCompare) -> itemToCompare.getChitiet().toLowerCase().contains(typedText.toLowerCase()));
         nv_cbb.getSelectionModel().selectFirst();
     }

@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.dto;
 
-import com.xdf.xd_f371.entity.ChitietNhiemVu;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.entity.UnitXmt;
@@ -19,10 +18,7 @@ public class AssignmentBillDto extends InformationBill{
     private NhiemVuDto ctnv;
     private int sokm;
     private String lgb;
-    private String so;
     private String hours_act;
-    private String lenhso;
-    private String nguoinhan;
 
     public AssignmentBillDto(PhuongTien xmt,LoaiPhuongTien lpt, UnitXmt unit, NhiemVuDto ctnv, int sokm, String lgb, String hours_act,String so,String lenhso,String nguoinhan) {
         this.xmt = xmt;

@@ -132,6 +132,34 @@ public class XuatDVController extends CommonFactory implements Initializable {
         }
         return null;
     }
+    public UnitBillDto getInfo_valid(){
+        NguonNx dvn = dvn_cbb.getSelectionModel().getSelectedItem();
+        NguonNx dvx = dvx_cbb.getSelectionModel().getSelectedItem();
+        Tcn tcn = tcx_cbb.getSelectionModel().getSelectedItem();
+        if (dvn!=null){
+            if (dvx!=null){
+                if (tcn!=null){
+                    if (isValidField()){
+                        unitBillDto = new UnitBillDto(dvn,dvx,tcn,so.getText(),lenhso.getText(),nguoinhan.getText(),soxe.getText());
+                        return unitBillDto;
+                    }
+                }else{
+                    DialogMessage.errorShowing("Tính chất xuất không xác định");
+                    e_tcx.setText("Đơn vị xuất không xác định");
+                    tcx_cbb.setStyle(CommonFactory.styleErrorField);
+                }
+            }else {
+                DialogMessage.errorShowing("Đơn vị xuất không xác định");
+                e_dvx.setText("Đơn vị xuất không xác định");
+                dvx_cbb.setStyle(CommonFactory.styleErrorField);
+            }
+        }else {
+            DialogMessage.errorShowing("Đơn vị nhập không xác định");
+            e_dvn.setText("Đơn vị nhập không xác định");
+            dvn_cbb.setStyle(CommonFactory.styleErrorField);
+        }
+        return null;
+    }
     @FXML
     public void dvnAction(ActionEvent actionEvent) {
         dvx_cbb.setStyle(null);

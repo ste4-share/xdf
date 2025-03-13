@@ -317,7 +317,7 @@ public class XuatController extends CommonFactory implements Initializable {
             if (!xuatNVController.isValidField()){
                 return null;
             }
-            assignmentBillDto = xuatNVController.getInfor();
+            assignmentBillDto = xuatNVController.getInfor_valid();
             if (assignmentBillDto!=null){
                 ledger.setNguoi_nhan(assignmentBillDto.getNguoinhan());
                 ledger.setSo_xe(assignmentBillDto.getSo_xe());
@@ -348,12 +348,11 @@ public class XuatController extends CommonFactory implements Initializable {
             if (!xuatDVController.isValidField()){
                 return null;
             }
-            unitBillDto = xuatDVController.getInfo();
+            unitBillDto = xuatDVController.getInfo_valid();
             if (unitBillDto!=null){
                 ledger.setNguoi_nhan(unitBillDto.getNguoinhan());
                 ledger.setSo_xe(unitBillDto.getSo_xe());
                 ledger.setLenh_so(unitBillDto.getLenhso());
-
                 ledger.setBill_id(unitBillDto.getSo());
                 ledger.setDvi_nhan(unitBillDto.getDvi_nhan().getTen());
                 ledger.setDvi_xuat(unitBillDto.getDvi_xuat().getTen());
@@ -402,7 +401,7 @@ public class XuatController extends CommonFactory implements Initializable {
 
         if (lx.equals(LoaiXuat.NV.getName())){
             if (assignmentBillDto!=null){
-                assignmentBillDto = xuatNVController.getInfor();
+                assignmentBillDto = xuatNVController.getInfor_valid();
                 if (assignmentBillDto.getLgb().equals(TypeCons.TREN_KHONG.getName())){
                     ledgerDetails.setThuc_xuat_tk(txuat);
                     ledgerDetails.setThuc_xuat(0);

@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UnitBillDto extends InformationBill{
     private static UnitBillDto instance;
-
     private NguonNx dvi_nhan;
     private NguonNx dvi_xuat;
     private Tcn tcn;
