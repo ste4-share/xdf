@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.SheetNameCons;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.entity.Accounts;
@@ -21,6 +22,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -30,12 +33,14 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
 public class BaoCaoController implements Initializable {
+    private List<NguonNx> nguonNxList = new ArrayList<>();
     private static List<String> arr_tt = new ArrayList<>();
     private final String file_name = System.getProperty("user.dir")+"\\xlsx_template\\data.xlsx";
     private static String dest_file;
@@ -59,7 +64,8 @@ public class BaoCaoController implements Initializable {
         dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
         rvb.setPrefWidth(DashboardController.screenWidth-300);
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
-        initDviCbb();
+        nguonNxList = nguonNxService.findByAllBy();
+        initDviCbb(nguonNxList);
         dvi_cbb.getSelectionModel().select(DashboardController.ref_Dv);
         initQuarter();
     }
@@ -74,8 +80,8 @@ public class BaoCaoController implements Initializable {
         }
     }
 
-    private void initDviCbb() {
-        ComponentUtil.setItemsToComboBox(dvi_cbb,nguonNxService.findByAllBy(),NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
+    private void initDviCbb(List<NguonNx> ls) {
+        ComponentUtil.setItemsToComboBox(dvi_cbb,ls,NguonNx::getTen, input -> ls.stream().filter(x->x.getTen().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(dvi_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
         dvi_cbb.getSelectionModel().selectFirst();
     }
@@ -169,12 +175,12 @@ public class BaoCaoController implements Initializable {
     }
     @FXML
     public void bc_nxt(ActionEvent actionEvent) {
-            Stage stage_1 = new Stage();
-            Common.getLoading(stage_1);
-            Platform.runLater(()-> {
-                Common.task(this::nxtmap, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-                nxt_lb.setText("UPDATED");
-            });
+        Stage stage_1 = new Stage();
+        Common.getLoading(stage_1);
+        Platform.runLater(()-> {
+            Common.task(this::nxtmap, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+            nxt_lb.setText("UPDATED");
+        });
     }
     private void nxtmap() {
         String sheetName = "bc_nxt_data";
@@ -388,6 +394,106 @@ public class BaoCaoController implements Initializable {
             dvi_cbb.setDisable(true);
         }else{
             dvi_cbb.setDisable(false);
+        }
+    }
+
+    @FXML
+    public void bc_nxt_experiment(ActionEvent actionEvent) {
+        if (DialogMessage.callAlertWithMessage(MessageCons.TITLE_PRINT.getName(), MessageCons.HEADER_PRINT.getName(), MessageCons.CONTENT.getName(), Alert.AlertType.CONFIRMATION)== ButtonType.OK){
+            String currentDir = System.getProperty("user.dir");
+            String temp_file_name=currentDir+"\\xlsx_template\\phieu_mau.xlsx";
+            String file_name_1 = "/baocao.xlsx";
+            if (Common.isDirectory(ConnectLan.pre_path)){
+                try {
+                    String sheet_n = "beta_nxt";
+                    Platform.runLater(()->{
+                        Common.copyFileExcel(temp_file_name, ConnectLan.pre_path+"/"+file_name_1);
+                        StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_path).append("/").append(file_name_1);
+                        Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input.createSheet(sheet_n),true),
+                                (input)->fillDataToPhieuNhap(input.getSheet(sheet_n),false),sheet_n);
+                        if (DialogMessage.callAlertWithMessage(null,"Thanh cong","Click OK để mở thư mục xuất phiếu." , Alert.AlertType.INFORMATION)==ButtonType.OK){
+                            Common.openDesktop();
+                        }
+                    });
+                } catch (Exception e) {
+                    DialogMessage.errorShowing("Có lỗi xảy ra, vui lòng đóng file phieu_nhap_xuat trước khi tạo file mới.");
+                    throw new RuntimeException(e);
+                }
+            }else {
+                DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
+                DashboardController.primaryStage.close();
+            }
+        }
+    }
+    private int fillDataToPhieuNhap(XSSFSheet sheet, boolean isNew){
+        setCEll(sheet, ledger.getDvi_nhan(), 3,3,isNew);
+        setCEll(sheet, ledger.getDvi_xuat(), 4,3,isNew);
+        if (tcnService.findById(ledger.getTcn_id()).orElse(null)==null){
+            setCEll(sheet,ledger.getNhiemvu(), 5,3,isNew);
+        } else {
+            setCEll(sheet, tcnService.findById(ledger.getTcn_id()).orElse(null).getName(), 5,3,isNew);
+        }
+
+        setCEll(sheet, ledger.getLenh_so(), 6,3,isNew);
+        setCEll(sheet, ledger.getNguoi_nhan(), 7,3,isNew);
+        setCEll(sheet, "ABC", 8,3,isNew);
+        setCEll(sheet, ledger.getEnd_date()==null? "" : ledger.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 3,10,isNew);
+        setCEll(sheet, ledger.getSo_xe(), 4,10,isNew);
+        setCEll(sheet, String.valueOf(ledger.getBill_id()), 3,7,isNew);
+        setCEll(sheet, ledger.getFrom_date()==null?  "": ledger.getFrom_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 4,7,isNew);
+        for (int i = 0; i< details.size(); i++) {
+            addNewRow(sheet);
+        }
+        int row_num = 12;
+        double thanh_tien = 0;
+        for (int i = 0; i< details.size(); i++) {
+            setCEll(sheet, String.valueOf(i+1), row_num,1,isNew);
+            setCEll(sheet, details.get(i).getMa_xd(), row_num,2,isNew);
+            setCEll(sheet, details.get(i).getTen_xd(), row_num,3,isNew);
+            setCEll(sheet, details.get(i).getChat_luong(), row_num,4,isNew);
+            setCEll(sheet, String.valueOf(details.get(i).getSoluong_px()), row_num,5,isNew);
+            setCEll(sheet, String.valueOf(details.get(i).getNhiet_do_tt()), row_num,6,isNew);
+            setCEll(sheet, String.valueOf(details.get(i).getTy_trong()), row_num,7,isNew);
+            setCEll(sheet, String.valueOf(details.get(i).getHe_so_vcf()), row_num,8,isNew);
+            setCEll(sheet, String.valueOf(details.get(i).getSoluong()), row_num,9,isNew);
+            setCEll(sheet, String.valueOf(details.get(i).getDon_gia()), row_num,10,isNew);
+            setCEll(sheet, String.valueOf(details.get(i).getSoluong()*details.get(i).getDon_gia()), row_num,11,isNew);
+            row_num = row_num+1;
+            thanh_tien = thanh_tien + (details.get(i).getDon_gia() * details.get(i).getSoluong());
+            if (i == details.size() - 1){
+                setCEll(sheet,String.valueOf(ledger.getAmount()), 14+details.size(),11,isNew);
+            }
+        }
+        return 1;
+    }
+    private void addNewRow(XSSFSheet sheet){
+        if (sheet.getPhysicalNumberOfRows() > 0) {
+            int lastRow = sheet.getLastRowNum();
+            sheet.shiftRows(13, lastRow, 1, true, true);
+            sheet.copyRows(13,14,13,new CellCopyPolicy());
+        } else {
+            System.out.println("The sheet is empty.");
+        }
+    }
+    private void setCEll(XSSFSheet sheet, String value, int row_num, int cell_num,boolean isNew){
+        if (!isNew){
+            XSSFRow row = sheet.getRow(row_num);
+            if (StringUtils.isNumeric(value)){
+                BigDecimal bigDecimal = new BigDecimal(value);
+                bigDecimal.setScale(2, RoundingMode.HALF_UP);
+                NumberFormat numberFormat = NumberFormat.getInstance();
+                numberFormat.setMinimumFractionDigits(2);
+                row.getCell(cell_num).setCellValue(numberFormat.format(bigDecimal));
+            } else {
+                row.getCell(cell_num).setCellValue(value);
+            }
+        }else{
+            XSSFRow row = sheet.createRow(row_num);
+            if (StringUtils.isNumeric(value)){
+                row.createCell(cell_num).setCellValue(new BigDecimal(value).doubleValue());
+            } else {
+                row.createCell(cell_num).setCellValue(value);
+            }
         }
     }
 }

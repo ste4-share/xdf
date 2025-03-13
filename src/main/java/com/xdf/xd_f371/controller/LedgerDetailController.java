@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.SheetNameCons;
 import com.xdf.xd_f371.cons.TypeCons;
@@ -253,5 +252,13 @@ public class LedgerDetailController implements Initializable {
     @FXML
     public void exportFileAction(ActionEvent actionEvent) {
         printBill();
+    }
+    @FXML
+    public void deleteLedgerAction(ActionEvent actionEvent) {
+        if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+            ledgerService.inactiveLedger(ledger.getId());
+            DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
+            DashboardController.primaryStage.close();
+        }
     }
 }

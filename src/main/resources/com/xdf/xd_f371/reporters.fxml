@@ -182,6 +182,23 @@
                               <Insets left="100.0" />
                            </VBox.margin>
                         </HBox>
+                        <HBox layoutX="110.0" layoutY="103.0">
+                           <children>
+                              <Hyperlink onAction="#bc_nxt_experiment" prefHeight="36.0" prefWidth="266.0" text="BÁO CÁO NHẬP - XUẤT - TỒN = experiment">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label fx:id="nxt_lb1" prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
                      </children>
                      <padding>
                         <Insets right="50.0" />

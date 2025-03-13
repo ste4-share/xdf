@@ -1,15 +1,11 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.MessageCons;
-import com.xdf.xd_f371.cons.SheetNameCons;
 import com.xdf.xd_f371.dto.LedgerDto;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
 import com.xdf.xd_f371.service.LedgerService;
 import com.xdf.xd_f371.service.PhuongtienService;
 import com.xdf.xd_f371.service.TcnService;
-import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -19,16 +15,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.CellCopyPolicy;
-import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
-import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,10 +99,6 @@ public class ChiTietSCController implements Initializable {
     }
     @FXML
     public void delClicked(MouseEvent mouseEvent) {
-        if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-            ledgerService.inactiveLedger(ls.get(0).getLedger_id());
-            DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
-            DashboardController.primaryStage.close();
-        }
+
     }
 }
