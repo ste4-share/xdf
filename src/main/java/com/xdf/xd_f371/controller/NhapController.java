@@ -15,14 +15,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.controlsfx.control.textfield.TextFields;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 @Component
 public class NhapController extends CommonFactory implements Initializable {
     @FXML
@@ -45,13 +43,13 @@ public class NhapController extends CommonFactory implements Initializable {
         initLabelValue();
         setTenXDToCombobox();
         setItemForTcnCbb();
-        setDvvcCombobox();
-        setDvnCombobox();
+
+        setDvCombobox(cmb_dvvc,dvvcLs);
+        setDvCombobox(cmb_dvn,dvnLs);
         setPreInv();
     }
 
     private void initLabelValue() {
-        tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
         tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         notification.setText("");
         text_dongia.setText("0 (VND/Lit)");
@@ -72,29 +70,17 @@ public class NhapController extends CommonFactory implements Initializable {
         }
     }
     private void setItemForTcnCbb(){
-        ComponentUtil.setItemsToComboBox(cmb_tcn,tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName()),Tcn::getName, input -> tcnService.findByName(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(cmb_tcn,tcnx_ls,Tcn::getName, input -> tcnx_ls.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(cmb_tcn, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
         cmb_tcn.getSelectionModel().selectFirst();
     }
     private void setTenXDToCombobox(){
-        setXangDauCombobox(cmb_tenxd, loaiXdService);
+        setXangDauCombobox(cmb_tenxd);
     }
 
-    private void setDvvcCombobox(){
-        if (configurationService.findByParam(ConfigCons.ROOT_ID.getName()).isPresent()){
-            setNguonnxCombobox(cmb_dvvc, nguonNxService.findAllByDifrentId(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())));
-        }else{
-            setNguonnxCombobox(cmb_dvvc,new ArrayList<>());
-        }
-        cmb_dvvc.getSelectionModel().selectFirst();
-    }
-    private void setDvnCombobox() {
-        if (configurationService.findByParam(ConfigCons.ROOT_ID.getName()).isPresent()){
-            setNguonnxCombobox(cmb_dvn, nguonNxService.findAllById(Integer.parseInt(configurationService.findByParam(ConfigCons.ROOT_ID.getName()).get().getValue())));
-        }else{
-            setNguonnxCombobox(cmb_dvvc,new ArrayList<>());
-        }
-        cmb_dvn.getSelectionModel().selectFirst();
+    private void setDvCombobox(ComboBox<NguonNx> cmb_dv, List<NguonNx> nguonNxList){
+        setNguonnxCombobox(cmb_dv, nguonNxList);
+        cmb_dv.getSelectionModel().selectFirst();
     }
     private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd){
         double tn = thucNhap.getText().isBlank() ? 0 : Double.parseDouble(thucNhap.getText());
@@ -105,7 +91,7 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setMa_xd(lxd.getMaxd());
         ledgerDetails.setTen_xd(lxd.getTenxd());
         ledgerDetails.setChung_loai(lxd.getChungloai());
-        ledgerDetails.setSscd_nvdx(nvdx_rd.isSelected() ? Purpose.NVDX.getName():Purpose.SSCD.getName());
+        ledgerDetails.setSscd_nvdx(Purpose.NVDX.getName());
         ledgerDetails.setLoaixd_id(lxd.getXd_id());
         ledgerDetails.setDon_gia(p);
         ledgerDetails.setPhai_nhap(pn);
@@ -134,17 +120,19 @@ public class NhapController extends CommonFactory implements Initializable {
         if (lxd!=null) {
             LedgerDetails ld = getLedgerDetails(lxd);
             if (!outfieldValid(lenhKHso, MessageCons.NOT_EMPTY_lenhKH.getName())){
-                cmb_tenxd.setStyle(null);
-                if (validateField(ld).isEmpty()) {
-                    if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
-                        ls_socai.add(ld);
+                if (!outfieldValid(soTf, MessageCons.NOT_EMPTY_lenhKH.getName())){
+                    cmb_tenxd.setStyle(null);
+                    if (validateField(ld).isEmpty()) {
+                        if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
+                            ls_socai.add(ld);
+                        }
+                        setcellFactoryNhap();
+                        setTonKhoLabel(inventory_quantity+ld.getSoluong());
+                        clearHH();
+                    }else{
+                        DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
+                                "Nhập sai định dạng.", Alert.AlertType.ERROR);
                     }
-                    setcellFactoryNhap();
-                    setTonKhoLabel(inventory_quantity+ld.getSoluong());
-                    clearHH();
-                }else{
-                    DialogMessage.message("Lỗi", changeStyleTextFieldByValidation(ld),
-                            "Nhập sai định dạng.", Alert.AlertType.ERROR);
                 }
             }
         }else{
@@ -153,7 +141,6 @@ public class NhapController extends CommonFactory implements Initializable {
                     MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.ERROR);
         }
     }
-
     @FXML
     private void btnImport(ActionEvent actionEvent) {
         if (!ls_socai.isEmpty()){
@@ -173,7 +160,7 @@ public class NhapController extends CommonFactory implements Initializable {
                                 DialogMessage.message(MessageCons.LOI.getName(), changeStyleTextFieldByValidation(l),
                                         MessageCons.SAI_DINH_DANG.getName(), Alert.AlertType.WARNING);
                             }
-                        }else{
+                        } else {
                             cmb_dvn.setStyle(styleErrorField);
                             DialogMessage.errorShowing("Không tìm thấy nguồn nhập xuất, vui lòng thử lại.");
                         }

@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Repository
-public interface LedgerDetailRepo extends JpaRepository<LedgerDetails, Long> {
+public interface LedgerDetailRepo extends JpaRepository<LedgerDetails, String> {
     @Query(value = "select * from ledger_details where ledger_id like :ld_id",nativeQuery = true)
     List<LedgerDetails> findAllById(@Param("ld_id") String id);
 }

@@ -44,7 +44,12 @@ public class CommonFactory implements Initializable {
     protected List<InventoryUnits> i = new ArrayList<>();
     protected static List<Ledger> ledgers = new ArrayList<>();
     protected static List<LedgerDetails> ls_socai;
-    protected static List<Tcn> tcnx_ls = new ArrayList<>();
+
+    protected List<Tcn> tcnx_ls = new ArrayList<>();
+    protected List<NguonNx> dvvcLs = new ArrayList<>();
+    protected List<NguonNx> dvnLs = new ArrayList<>();
+    protected List<LoaiXangDauDto> lxdLs = new ArrayList<>();
+
     public static String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
     @Autowired
     protected LedgerService ledgerService;
@@ -69,8 +74,6 @@ public class CommonFactory implements Initializable {
     @FXML
     protected TextField so,nguoinhan,lenhso,soxe;
     @FXML
-    protected RadioButton nvdx_rd;
-    @FXML
     protected DatePicker tungay, denngay;
     @FXML
     protected TableColumn<LedgerDetails, String> stt, tenxd, dongia,col_phainx,col_nhietdo,col_tytrong,col_vcf,col_thucnx,col_thanhtien;
@@ -81,6 +84,13 @@ public class CommonFactory implements Initializable {
         initLegersList();
         initInventoryUnit();
         setcellFactory();
+        initLocalList();
+    }
+    protected void initLocalList() {
+        dvvcLs = nguonNxService.findAllByDifrentId(DashboardController.ref_Dv.getId());
+        dvnLs = nguonNxService.findAllById(DashboardController.ref_Dv.getId());
+        tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
+        lxdLs = loaiXdService.findAllOrderby();
     }
 
     private void initLabelVar() {
@@ -97,7 +107,6 @@ public class CommonFactory implements Initializable {
         }
         else ledgers = ledgerService.findAllLedgerActive();
     }
-
     protected void initInventoryUnit(){
         Optional<Configuration> c = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
         c.ifPresent(configuration -> config = configuration);
@@ -143,20 +152,20 @@ public class CommonFactory implements Initializable {
     }
     protected boolean outfieldValid(TextField tf, String mes){
         if (tf.getText().isBlank()) {
-            DialogMessage.message("Lỗi", mes,
+            DialogMessage.message(null, mes,
                     "Nhập sai định dạng.", Alert.AlertType.ERROR);
             tf.setStyle(styleErrorField);
             return true;
         }
         return false;
     }
-    protected void setXangDauCombobox(ComboBox<LoaiXangDauDto> cbb, LoaiXdService loaiXdService){
-        ComponentUtil.setItemsToComboBox(cbb,loaiXdService.findAllOrderby(),LoaiXangDauDto::getTenxd, input -> loaiXdService.findAllTenxdDto(input).orElse(null));
+    protected void setXangDauCombobox(ComboBox<LoaiXangDauDto> cbb){
+        ComponentUtil.setItemsToComboBox(cbb,lxdLs,LoaiXangDauDto::getTenxd, input -> lxdLs.stream().filter(x->x.getTenxd().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTenxd().toLowerCase().contains(typedText.toLowerCase()));
         cbb.getSelectionModel().selectFirst();
     }
     protected void setNguonnxCombobox(ComboBox<NguonNx> cbb, List<NguonNx> nguonNxList){
-        ComponentUtil.setItemsToComboBox(cbb,nguonNxList,NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(cbb,nguonNxList,NguonNx::getTen, input -> nguonNxList.stream().filter(x->x.getTen().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
     }
     protected void setcellFactory(){

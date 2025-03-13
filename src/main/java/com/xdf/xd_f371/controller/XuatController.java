@@ -26,7 +26,6 @@ import java.util.*;
 @Slf4j
 @Component
 public class XuatController extends CommonFactory implements Initializable {
-    private static AutoCompletionBinding<String> acbLogin;
     private XuatDVController xuatDVController;
     private XuatNVController xuatNVController;
     @FXML
@@ -253,7 +252,7 @@ public class XuatController extends CommonFactory implements Initializable {
         addNewNode(dv);
     }
     private void mapXdForCombobox(){
-        setXangDauCombobox(cbb_tenxd, loaiXdService);
+        setXangDauCombobox(cbb_tenxd);
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
             chungloai_lb.setText("Chủng loại: "+lxd.getLoai());

@@ -74,7 +74,7 @@ public class LedgerController implements Initializable {
     @FXML
     private TableView<InvDto3> tonkho_tb;
     @FXML
-    private Label tab1_dvi_label,root_unit_lable,unitClickedLable,ctnv_lb,xmt_lb,loaixmt_lb,km_lb,giohd_lb,giohd_tk_lb,giohd_md_lb,nguoinhan_lb;
+    private Label tab1_dvi_label,root_unit_lable,unitClickedLable,ctnv_lb,xmt_lb,loaixmt_lb,km_lb,giohd_lb,giohd_tk_lb,giohd_md_lb,nguoinhan_lb,amount_lb;
     @FXML
     private DatePicker st_time,lst_time,tab2_tungay,tab2_denngay;
     @FXML
@@ -108,11 +108,9 @@ public class LedgerController implements Initializable {
         initLedgerList();
         initRootLedgerList();
     }
-
     private void updateData() {
         initLedgerList();
     }
-
     private void initRootLedgerList() {
         LocalDate tungay = tab2_tungay.getValue();
         LocalDate denngay = tab2_denngay.getValue();
@@ -170,7 +168,6 @@ public class LedgerController implements Initializable {
         cttb_tx.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("soluong_str"));
         cttb_thanhtien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
     }
-
     private void initLedgerList() {
         LocalDate st = st_time.getValue();
         LocalDate et = lst_time.getValue();
@@ -206,6 +203,22 @@ public class LedgerController implements Initializable {
         ledgers_col_nv.setCellValueFactory(new PropertyValueFactory<Ledger, String>("nhiemvu"));
         ledgers_col_note.setCellValueFactory(new PropertyValueFactory<Ledger, String>("note"));
         ledgers_col_createtime.setCellValueFactory(new PropertyValueFactory<Ledger, String>("timestamp"));
+        ledgers_table.setRowFactory(tv -> new TableRow<Ledger>() {
+            @Override
+            protected void updateItem(Ledger ledger, boolean empty) {
+                super.updateItem(ledger, empty);
+
+                if (ledger == null || empty) {
+                    setStyle(null);
+                } else {
+                    if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())) {
+                        setStyle("-fx-background-color: #5f94e8;");
+                    }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                        setStyle("-fx-background-color: #fa4655;");
+                    }
+                }
+            }
+        });
     }
     private void initLocalDateList() {
         dateLoading();
@@ -243,7 +256,7 @@ public class LedgerController implements Initializable {
         ledgers_table.setPrefWidth(DashboardController.screenWidth-500);
         ledgers_table.setPrefHeight(DashboardController.screenHeigh-800);
         chitiet_tb.setPrefWidth(DashboardController.screenWidth-300);
-        chitiet_tb.setPrefHeight(DashboardController.screenHeigh-800);
+        chitiet_tb.setPrefHeight(DashboardController.screenHeigh-1200);
         root_table.setPrefWidth(DashboardController.screenWidth-800);
         root_table.setPrefHeight(DashboardController.screenHeigh-500);
         ref_table.setPrefWidth(DashboardController.screenWidth-800);
@@ -303,6 +316,7 @@ public class LedgerController implements Initializable {
         giohd_md_lb.setText(l.getGiohd_md());
         giohd_tk_lb.setText(l.getGiohd_tk());
         nguoinhan_lb.setText(l.getNguoi_nhan());
+        amount_lb.setText(TextToNumber.textToNum_2digits(l.getAmount()));
     }
     private void setLedgerDetailTable(List<LedgerDetails> ls){
         chitiet_tb.refresh();

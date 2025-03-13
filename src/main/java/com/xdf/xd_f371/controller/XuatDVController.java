@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.dto.UnitBillDto;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Tcn;
@@ -34,25 +33,19 @@ public class XuatDVController extends CommonFactory implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         unitBillDto = new UnitBillDto();
-        initDvnCbb();
-        initDvxCbb();
+        initLocalList();
+        setDvCombobox(dvn_cbb,dvvcLs);
+        setDvCombobox(dvx_cbb,dvnLs);
         initTcx();
     }
-
     private void initTcx() {
-        ComponentUtil.setItemsToComboBox(tcx_cbb, tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName()), Tcn::getName, input -> tcnService.findByName(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(tcx_cbb, tcnx_ls, Tcn::getName, input -> tcnx_ls.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(tcx_cbb, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
         tcx_cbb.getSelectionModel().selectFirst();
     }
-    private void initDvxCbb() {
-        ComponentUtil.setItemsToComboBox(dvx_cbb,List.of(DashboardController.ref_Dv), NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
-        FxUtilTest.autoCompleteComboBoxPlus(dvx_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
-        dvx_cbb.getSelectionModel().selectFirst();
-    }
-    private void initDvnCbb() {
-        ComponentUtil.setItemsToComboBox(dvn_cbb,nguonNxService.findAllByDifrentId(DashboardController.ref_Dv.getId()), NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
-        FxUtilTest.autoCompleteComboBoxPlus(dvn_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
-        dvn_cbb.getSelectionModel().selectFirst();
+    private void setDvCombobox(ComboBox<NguonNx> cmb_dv, List<NguonNx> nguonNxList){
+        setNguonnxCombobox(cmb_dv, nguonNxList);
+        cmb_dv.getSelectionModel().selectFirst();
     }
     @FXML
     public void dvxAction(ActionEvent actionEvent) {

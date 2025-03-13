@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 @Component
 public class XuatNVController extends CommonFactory implements Initializable {
+    private List<PhuongTien> ptls = new ArrayList<>();
     private List<NhiemVuDto> nhiemvuLs = new ArrayList<>();
+    private List<UnitXmt> unitXmts = new ArrayList<>();
     @FXML
     private TextField sokm,sogio, sophut;
     @FXML
@@ -56,7 +58,8 @@ public class XuatNVController extends CommonFactory implements Initializable {
         assignmentBillDto = new AssignmentBillDto();
         xe_rd.setSelected(true);
         md_rd.setSelected(true);
-        initXmtCbb(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle(),DashboardController.ref_Dv.getId()));
+        ptls = phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle(),DashboardController.ref_Dv.getId());
+        initXmtCbb(ptls);
         nhiemvuLs = chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_KHAC.getName());
         initChitietNhiemvu(nhiemvuLs);
         initLicence();
@@ -234,11 +237,12 @@ public class XuatNVController extends CommonFactory implements Initializable {
     private void initLicence(){
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
         if (pt!=null){
-            initLicenceCbb(unitXmtService.findByUnitIdAndPtId(DashboardController.ref_Dv.getId(),pt.getId()));
+            unitXmts = unitXmtService.findByUnitIdAndPtId(DashboardController.ref_Dv.getId(),pt.getId());
+            initLicenceCbb(unitXmts);
         }
     }
     private void initLicenceCbb(List<UnitXmt> ls) {
-        ComponentUtil.setItemsToComboBox(licenceCbb,ls,UnitXmt::getLicence_plate_number, input -> unitXmtService.findByLicensePlate(input));
+        ComponentUtil.setItemsToComboBox(licenceCbb,ls,UnitXmt::getLicence_plate_number, input -> unitXmts.stream().filter(x->x.getLicence_plate_number().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(licenceCbb, (typedText, itemToCompare) -> itemToCompare.getLicence_plate_number().toLowerCase().contains(typedText.toLowerCase()));
         licenceCbb.getSelectionModel().selectFirst();
     }
@@ -248,7 +252,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
         nv_cbb.getSelectionModel().selectFirst();
     }
     private void initXmtCbb(List<PhuongTien> phuongTiens) {
-        ComponentUtil.setItemsToComboBox(xmt_cbb,phuongTiens,PhuongTien::getName, input -> phuongtienService.findPhuongTienByName(input).orElse(null));
+        ComponentUtil.setItemsToComboBox(xmt_cbb,phuongTiens,PhuongTien::getName, input -> ptls.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(xmt_cbb, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
         xmt_cbb.getSelectionModel().selectFirst();
     }

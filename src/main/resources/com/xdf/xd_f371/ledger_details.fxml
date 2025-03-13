@@ -30,7 +30,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="phieu" prefHeight="30.0" prefWidth="456.0" text="Label">
+            <Label fx:id="phieu" prefHeight="30.0" prefWidth="456.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -40,7 +40,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="tungay" layoutX="135.0" layoutY="10.0" prefHeight="30.0" prefWidth="84.0" text="Label">
+            <Label fx:id="tungay" layoutX="135.0" layoutY="10.0" prefHeight="30.0" prefWidth="84.0">
                <font>
                   <Font name="Cambria Italic" size="12.0" />
                </font>
@@ -55,7 +55,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>    
-            <Label fx:id="denngay" layoutX="351.0" layoutY="10.0" prefHeight="30.0" prefWidth="85.0" text="Label">
+            <Label fx:id="denngay" layoutX="351.0" layoutY="10.0" prefHeight="30.0" prefWidth="85.0">
                <font>
                   <Font name="Cambria Italic" size="12.0" />
                </font>
@@ -69,7 +69,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="dvx" prefHeight="30.0" prefWidth="104.0" text="Label">
+            <Label fx:id="dvx" prefHeight="30.0" prefWidth="104.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -84,7 +84,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="dvn" prefHeight="30.0" prefWidth="156.0" text="Label">
+            <Label fx:id="dvn" prefHeight="30.0" prefWidth="156.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -98,7 +98,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="nv" prefHeight="30.0" prefWidth="156.0" text="Label">
+            <Label fx:id="nv" prefHeight="30.0" prefWidth="156.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -108,7 +108,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="loainv" layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="66.0" text="Label">
+            <Label fx:id="loainv" layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="150.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -118,7 +118,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="km" layoutX="135.0" layoutY="10.0" prefHeight="30.0" prefWidth="53.0" text="Label">
+            <Label fx:id="km" layoutX="135.0" layoutY="10.0" prefHeight="30.0" prefWidth="122.0" text="...">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -133,7 +133,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="gio" layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="46.0" text="Label">
+            <Label fx:id="gio" layoutX="335.0" layoutY="10.0" prefHeight="30.0" prefWidth="78.0" text="...">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -157,7 +157,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label prefHeight="30.0" prefWidth="156.0" text="Label" fx:id="xmt">
+            <Label prefHeight="30.0" prefWidth="156.0" fx:id="xmt">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -167,7 +167,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="loai_xmt" prefHeight="30.0" prefWidth="72.0" text="Label">
+            <Label fx:id="loai_xmt" prefHeight="30.0" prefWidth="157.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -177,7 +177,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="dinhmuckm" layoutX="341.0" layoutY="10.0" prefHeight="30.0" prefWidth="44.0" text="Label">
+            <Label fx:id="dinhmuckm" layoutX="341.0" layoutY="10.0" prefHeight="30.0" prefWidth="44.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -187,7 +187,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="dinhmucgio" layoutX="763.0" layoutY="10.0" prefHeight="30.0" prefWidth="42.0" text="Label">
+            <Label fx:id="dinhmucgio" layoutX="763.0" layoutY="10.0" prefHeight="30.0" prefWidth="42.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -197,7 +197,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="dinhmucmd" layoutX="532.0" layoutY="10.0" prefHeight="30.0" prefWidth="45.0" text="Label">
+            <Label fx:id="dinhmucmd" layoutX="532.0" layoutY="10.0" prefHeight="30.0" prefWidth="45.0" text="...">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -207,14 +207,9 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="dinhmuctk" layoutX="733.0" layoutY="10.0" prefHeight="30.0" prefWidth="42.0" text="Label">
+            <Label fx:id="dinhmuctk" layoutX="733.0" layoutY="10.0" prefHeight="30.0" prefWidth="42.0" text="...">
                <font>
                   <Font name="Cambria" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="dinhmuc2" layoutX="511.0" layoutY="10.0" prefHeight="30.0" prefWidth="57.0" text="(Lit/100km)">
-               <font>
-                  <Font name="Cambria Italic" size="10.0" />
                </font>
             </Label>
             <Label fx:id="dinhmuc111" layoutX="795.0" layoutY="10.0" prefHeight="30.0" prefWidth="42.0" text="(Lit/1h)">
@@ -236,7 +231,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="so" prefHeight="30.0" prefWidth="156.0" text="Label">
+            <Label fx:id="so" prefHeight="30.0" prefWidth="156.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -250,7 +245,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="tcnx" prefHeight="30.0" prefWidth="156.0" text="Label">
+            <Label fx:id="tcnx" prefHeight="30.0" prefWidth="156.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -260,7 +255,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="lenhkh" prefHeight="30.0" prefWidth="156.0" text="Label">
+            <Label fx:id="lenhkh" prefHeight="30.0" prefWidth="156.0" text="...">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -275,7 +270,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="nguoinhan" prefHeight="30.0" prefWidth="156.0" text="Label">
+            <Label fx:id="nguoinhan" prefHeight="30.0" prefWidth="156.0">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -285,7 +280,7 @@
                   <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="soxe" prefHeight="30.0" prefWidth="156.0" text="Label">
+            <Label fx:id="soxe" prefHeight="30.0" prefWidth="156.0" text="...">
                <font>
                   <Font name="Cambria" size="12.0" />
                </font>
@@ -309,7 +304,7 @@
                 <TableColumn fx:id="stt" maxWidth="50.0" minWidth="30.0" prefWidth="40.0" text="stt" />
                 <TableColumn fx:id="tenxd" maxWidth="150.0" minWidth="80.0" prefWidth="120.0" text="Tên Xăng dầu" />
                   <TableColumn fx:id="loaixd" maxWidth="120.0" minWidth="50.0" prefWidth="100.0" text="Loại" />
-                  <TableColumn fx:id="gia" maxWidth="100.0" minWidth="50.0" prefWidth="82.0" text="Đơn giá" />
+                  <TableColumn fx:id="gia" maxWidth="120.0" minWidth="50.0" prefWidth="90.0" text="Đơn giá" />
                   <TableColumn prefWidth="82.0" text="Số lượng">
                      <columns>
                         <TableColumn fx:id="nhietdo" maxWidth="100.0" minWidth="70.0" text="nhiệt độ" />
@@ -319,7 +314,7 @@
                         <TableColumn fx:id="tx" maxWidth="100.0" prefWidth="82.0" text="thực xuất" />
                      </columns>
                   </TableColumn>
-                  <TableColumn fx:id="thanhtien" maxWidth="140.0" minWidth="90.0" prefWidth="100.0" text="Thành tiền" />
+                  <TableColumn fx:id="thanhtien" maxWidth="180.0" minWidth="90.0" prefWidth="100.0" text="Thành tiền" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

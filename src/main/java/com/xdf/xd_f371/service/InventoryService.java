@@ -48,7 +48,7 @@ public class InventoryService {
     }
     public List<InventoryDto> mapPreInventoryPetro(List<Object[]> results) {
         return results.stream()
-                .map(row -> new InventoryDto((int) row[0],(Long) row[1],(double) row[2],(double) row[3],
+                .map(row -> new InventoryDto((int) row[0],(String) row[1],(double) row[2],(double) row[3],
                         (double) row[4],(double) row[5],(double) row[6]))
                 .toList();
     }
