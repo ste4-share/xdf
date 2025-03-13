@@ -256,7 +256,7 @@ public class LedgerController implements Initializable {
         ledgers_table.setPrefWidth(DashboardController.screenWidth-500);
         ledgers_table.setPrefHeight(DashboardController.screenHeigh-800);
         chitiet_tb.setPrefWidth(DashboardController.screenWidth-300);
-        chitiet_tb.setPrefHeight(DashboardController.screenHeigh-1200);
+        chitiet_tb.setPrefHeight(DashboardController.screenHeigh-900);
         root_table.setPrefWidth(DashboardController.screenWidth-800);
         root_table.setPrefHeight(DashboardController.screenHeigh-500);
         ref_table.setPrefWidth(DashboardController.screenWidth-800);

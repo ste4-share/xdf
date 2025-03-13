@@ -138,18 +138,34 @@ public class XuatController extends CommonFactory implements Initializable {
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (isCbb(lxd,gia)){
-            LedgerDetails ld = getLedgerDetails(lxd, gia);
-            if (inventory_quantity < ld.getSoluong()) {
-                DialogMessage.message("Error", "so luong xuat > so luong ton kho", "Co loi xay ra", Alert.AlertType.WARNING);
-            }else{
-                if (isNotDuplicate(ld.getLoaixd_id(), ld.getDon_gia(), ld.getThuc_xuat(), ld.getPhai_xuat(), LoaiPhieuCons.PHIEU_XUAT.getName())) {
-                    ls_socai.add(ld);
+            if (validField()){
+                LedgerDetails ld = getLedgerDetails(lxd, gia);
+                if (ld!=null){
+                    if (inventory_quantity < ld.getSoluong()) {
+                        DialogMessage.message(null, "so luong xuat > so luong ton kho", MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
+                    }else{
+                        if (isNotDuplicate(ld.getLoaixd_id(), ld.getDon_gia(), ld.getThuc_xuat(), ld.getPhai_xuat(), LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                            ls_socai.add(ld);
+                        }
+                        setTonKhoLabel(inventory_quantity - ld.getSoluong());
+                        setCellValueFactoryXuat();
+                        clearFields();
+                    }
                 }
-                setTonKhoLabel(inventory_quantity - ld.getSoluong());
-                setCellValueFactoryXuat();
-                clearFields();
             }
         }
+    }
+    private boolean validField(){
+        if (!phaixuat.getText().isBlank()){
+            if (!thucxuat.getText().isBlank()){
+                return true;
+            }else{
+                thucxuat.setStyle(CommonFactory.styleErrorField);
+            }
+        }else{
+            phaixuat.setStyle(CommonFactory.styleErrorField);
+        }
+        return false;
     }
     @FXML
     public void xuat(ActionEvent actionEvent) {
@@ -399,8 +415,8 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setPhai_nhap(0);
 
         if (lx.equals(LoaiXuat.NV.getName())){
+            assignmentBillDto = xuatNVController.getInfor_valid();
             if (assignmentBillDto!=null){
-                assignmentBillDto = xuatNVController.getInfor_valid();
                 if (assignmentBillDto.getLgb().equals(TypeCons.TREN_KHONG.getName())){
                     ledgerDetails.setThuc_xuat_tk(txuat);
                     ledgerDetails.setThuc_xuat(0);
@@ -424,7 +440,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void selected_item(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount()==2){
-            if (DialogMessage.callAlertWithMessage("Delete", "Xoa", "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+            if (DialogMessage.callAlertWithMessage(null, null, "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
                 LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
                     ls_socai.remove(ld);
