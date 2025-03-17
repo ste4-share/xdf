@@ -23,10 +23,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellCopyPolicy;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +44,9 @@ public class BaoCaoController implements Initializable {
     private List<NguonNx> nguonNxList = new ArrayList<>();
     private static List<String> arr_tt = new ArrayList<>();
     private final String file_name = System.getProperty("user.dir")+"\\xlsx_template\\data.xlsx";
+    private final String file_name2 = System.getProperty("user.dir")+"\\xlsx_template\\data_template.xlsx";
     private static String dest_file;
+    private static String dest_file2;
     private static Accounts q = new Accounts();
     private int start_row = 8;
     private int start_col = 6;
@@ -67,6 +67,7 @@ public class BaoCaoController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
+        dest_file2 = ConnectLan.pre_path+"\\baocao_2.xlsx";
         rvb.setPrefWidth(DashboardController.screenWidth-300);
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
         nguonNxList = nguonNxService.findByAllBy();
@@ -193,6 +194,20 @@ public class BaoCaoController implements Initializable {
         Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
+    public void bc_nxt_experiment(ActionEvent actionEvent) {
+        Stage stage_1 = new Stage();
+        Common.getLoading(stage_1);
+        Platform.runLater(()-> {
+            Common.task(this::nxtmap_2, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+            nxt_lb.setText("UPDATED");
+        });
+    }
+    private void nxtmap_2() {
+        String sheetName = "beta_nxt";
+        Common.copyFileExcel(file_name2,dest_file2);
+        Common.mapExcelFile_JustExist(dest_file2,(input) -> fillDataToPhieuNhap(input,sheetName), SheetNameCons.NXT2.getName());
+    }
+    @FXML
     public void bc_lcv(ActionEvent actionEvent) {
         if (q.getSd()!=null){
             Stage stage_1 = new Stage();
@@ -280,8 +295,8 @@ public class BaoCaoController implements Initializable {
     }
     private void pttk(){
         String sheetName = "pttk_data";
+        Common.copyFileExcel(file_name,dest_file2);
         Common.mapExcelFile(file_name,input -> map_pttk_create(input,sheetName),input -> map_pttk_get(input,sheetName),SheetNameCons.PT_TONKHO.getName());
-        Common.copyFileExcel(file_name,dest_file);
     }
     private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
         arr_tt.clear();
@@ -400,37 +415,17 @@ public class BaoCaoController implements Initializable {
         }
     }
 
-    @FXML
-    public void bc_nxt_experiment(ActionEvent actionEvent) {
-        String currentDir = System.getProperty("user.dir");
-        String temp_file_name=currentDir+"\\xlsx_template\\data.xlsx";
-        if (Common.isDirectory(ConnectLan.pre_path)){
-            try {
-                String sheet_n = "beta_nxt";
-                Platform.runLater(()->{
-//                        Common.copyFileExcel(temp_file_name, ConnectLan.pre_path+"/"+file_name_1);
-                    Common.mapExcelFile_JustExist(temp_file_name,(input)->fillDataToPhieuNhap(input,sheet_n),sheet_n);
-                    Common.openDesktop(currentDir+"\\xlsx_template");
-                });
-            } catch (Exception e) {
-                DialogMessage.errorShowing("Có lỗi xảy ra, vui lòng đóng file phieu_nhap_xuat trước khi tạo file mới.");
-                throw new RuntimeException(e);
-            }
-        }else {
-            DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
-            DashboardController.primaryStage.close();
-        }
-    }
+
     private int fillDataToPhieuNhap(XSSFWorkbook wb,String sheet_n){
         XSSFSheet sheet = wb.getSheet(sheet_n);
+        initHeder(sheet,wb);
         initHederColumnFor_nxt(sheet,wb);
-        removeMerger(sheet,8,8,8,10);
-        removeMerger(sheet,8,9,7,7);
-        removeMerger(sheet,8,9,6,6);
-        sheet.addMergedRegion(new CellRangeAddress(8,8,8,10));
-        sheet.addMergedRegion(new CellRangeAddress(8,9,7,7));
-        sheet.addMergedRegion(new CellRangeAddress(8,9,6,6));
+        mergerCell(sheet);
+        fillData(wb,sheet);
+        return -1;
+    }
 
+    private void fillData(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
         int scol = 4;
@@ -438,20 +433,33 @@ public class BaoCaoController implements Initializable {
             int lastRow = sheet.getLastRowNum();
             sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
             XSSFRow row1 = sheet.createRow(start_row+i+2);
+            XSSFCellStyle style = wb.createCellStyle();
             Object[] rows_data = nxtls.get(i);
             for (int j = 0; j<rows_data.length;j++){
                 String val = rows_data[j]==null ? "" : rows_data[j].toString();
+                XSSFCell c = row1.createCell(scol+j);
+                ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+                ExportFactory.setCellAlightmentStyle(style);
                 if (Common.isDoubleNumber(val)){
                     BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
-                    row1.createCell(scol+j).setCellValue(bigDecimal.doubleValue());
+                    c.setCellValue(bigDecimal.doubleValue());
                 } else {
-                    row1.createCell(scol+j).setCellValue(val);
+                    c.setCellValue(val);
                 }
+                c.setCellStyle(style);
             }
         }
-
-        return 1;
     }
+
+    private void mergerCell(XSSFSheet sheet) {
+        removeMerger(sheet,8,8,8,10);
+        removeMerger(sheet,8,9,7,7);
+        removeMerger(sheet,8,9,6,6);
+        sheet.addMergedRegion(new CellRangeAddress(8,8,8,10));
+        sheet.addMergedRegion(new CellRangeAddress(8,9,7,7));
+        sheet.addMergedRegion(new CellRangeAddress(8,9,6,6));
+    }
+
     private void removeMerger(XSSFSheet sheet, int f_row,int l_row,int f_col,int l_col){
         List<CellRangeAddress> mergedRegions = sheet.getMergedRegions();
         int index = IntStream.range(0, mergedRegions.size())
@@ -467,6 +475,25 @@ public class BaoCaoController implements Initializable {
         if (index != -1) {
             sheet.removeMergedRegion(index);
         }
+    }
+    private void initHeder(XSSFSheet sheet, XSSFWorkbook wb) {
+        XSSFRow r1 = sheet.getRow(1);
+        XSSFCellStyle style = wb.createCellStyle();
+        ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+        ExportFactory.setBoldFont(wb,style);
+        ExportFactory.setCellAlightmentStyle(style);
+        removeMerger(sheet,1,1,12,20);
+        Cell cell = r1.createCell(12);
+        cell.setCellValue("BÁO CÁO NHẬP XUẤT TỒN XĂNG DẦU MỠ \n" +
+                "(Từ ngày "+q.getSd().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+" đến "+q.getEd().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+")");
+        for (int i =13;i<=20;i++){
+            Cell ce = r1.createCell(i);
+            ce.setCellStyle(style);
+        }
+        sheet.addMergedRegion(new CellRangeAddress(1,1,12,20));
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(0);
+        r1.setHeightInPoints(25);
     }
     private void initHederColumnFor_nxt(XSSFSheet sheet, XSSFWorkbook wb){
         XSSFRow r1 = sheet.createRow(start_row);

@@ -4,6 +4,7 @@ public enum SheetNameCons {
     PHIEU_NHAP("phieu_nhap"),
     PHIEU_XUAT("phieu_xuat"),
     NXT("NXT"),
+    NXT2("beta_nxt"),
     TTXD("TTXD"),
     NL_BAY_THEO_KH("NL_BAY_THEO_KH"),
     TTXD_XMT("TTXD_XMT"),
