@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -34,15 +35,30 @@ public class InventoryUnits {
     private String status;
     @Column(name = "created_at",insertable = false,updatable = false)
     private LocalDateTime created_at;
+    @Column(name = "tructhuoc")
+    private String tructhuoc;
+    @Column(name = "st_time",insertable = false,updatable = false)
+    private LocalDate st_time;
+    @Column(name = "year")
+    private int year;
+    @Column(name = "bill_type")
+    private String bill_type;
+    @Column(name = "petro_type")
+    private String petro_type;
 
     @Transient
     private String created_at_str;
 
-    public InventoryUnits(LedgerDetails ld,Long rootID) {
+    public InventoryUnits(Ledger l,LedgerDetails ld,Long rootID) {
         this.root_unit_id = rootID;
         this.petro_id = ld.getLoaixd_id();
         this.price = ld.getDon_gia();
         this.status = StatusCons.ACTIVED.getName();
+        this.tructhuoc = l.getTructhuoc();
+        this.st_time = l.getFrom_date();
+        this.year= l.getYear();
+        this.bill_type = l.getLoai_phieu();
+        this.petro_type = ld.getChung_loai();
         if (ld.getSscd_nvdx().equals(Purpose.NVDX.getName())){
             this.nvdx_quantity = ld.getSoluong();
             this.sscd_quantity = 0;
@@ -50,16 +66,5 @@ public class InventoryUnits {
             this.nvdx_quantity = 0;
             this.sscd_quantity = ld.getSoluong();
         }
-    }
-
-    public InventoryUnits(Long root_unit_id, int petro_id, double price, double nvdx_quantity, double sscd_quantity, String status, LocalDateTime created_at) {
-        this.root_unit_id = root_unit_id;
-        this.petro_id = petro_id;
-        this.price = price;
-        this.nvdx_quantity = nvdx_quantity;
-        this.sscd_quantity = sscd_quantity;
-        this.status = status;
-        this.created_at = created_at;
-        this.created_at_str = (created_at == null ? "" : created_at.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
     }
 }

@@ -2,8 +2,10 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.cons.ConfigCons;
+import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.entity.Configuration;
 import com.xdf.xd_f371.entity.NguonNx;
+import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
 import javafx.animation.Animation;
@@ -39,6 +41,7 @@ public class DashboardController implements Initializable {
     public static String so_select = null;
     public static Stage primaryStage;
     public static NguonNx ref_Dv=null;
+    public static Map<String, List<TrucThuoc>> map = new HashMap<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
     public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
     private String resetLayout = "-fx-cursor: hand;\n" +
@@ -60,16 +63,37 @@ public class DashboardController implements Initializable {
     @Autowired
     private ConfigurationService configurationService;
     @Autowired
+    private TructhuocService tructhuocService;
+    @Autowired
     private NguonNxService nguonNxService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initLabel();
         initRefDv();
+        getTructhuocList();
         getCurrentTiming();
         customStyleMenu();
         setStyleForClickedMEnu(ledger_menu,tonkho_menu,dvi_menu,dinhmuc_menu,nhiemvu_menu,report);
         openFxml("ledger.fxml");
+    }
+
+    private Map<String, List<TrucThuoc>> getTructhuocList(){
+        List<TrucThuoc> tt_nhap =  new ArrayList<>();
+        List<TrucThuoc> tt_xuat =  new ArrayList<>();
+        for (int i=0; i<tructhuocService.findAll().size(); i++) {
+            TrucThuoc tt = tructhuocService.findAll().get(i);
+            if (tt.getLoaiphieu().contains(LoaiPhieuCons.X.getName())){
+                tt_xuat.add(tt);
+            }
+            if(tt.getLoaiphieu().contains(LoaiPhieuCons.N.getName())){
+                tt_nhap.add(tt);
+            }
+        }
+        map = new HashMap<>();
+        map.put(LoaiPhieuCons.PHIEU_NHAP.getName(),tt_nhap);
+        map.put(LoaiPhieuCons.PHIEU_XUAT.getName(),tt_xuat);
+        return map;
     }
 
     private void initLabel() {

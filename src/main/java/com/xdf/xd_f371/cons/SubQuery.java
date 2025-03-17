@@ -131,22 +131,13 @@ public class SubQuery {
                 "order by tc_gr desc,tinhchat desc,loai_gr desc,loai,tenxd_gr desc,tenxd,price_gr desc";
     }
     public static String begin_q1(){
-        return "select tinhchat,chungloai,loai,case when grouping(tenxd)=1 and grouping(loai)=0 then loai else tenxd end,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd,sum(cong_tdk) as cong_tdk,";
+        return "select case when tinhchat is null then 'sum' else tinhchat end as tinhchat,case when chungloai is null then 'sum' else chungloai end as chungloai,rank_cl,case when (l=0 and xd=1) then chungloai when l=1 and xd=1 then tinhchat else tenxd end as tenxd,tdk_nvdx,tdk_sscd,cong_tdk,";
     }
     public static String end_q1(){
-        return "max(p1) as p1, max(p2) as p2, max(p3) as p3,grouping(tinhchat) as tc,grouping(loai) as l,grouping(tenxd) as xd from (select lxd.id,tinhchat,cl.chungloai,loai,maxd,tenxd,case when max(tdk_nvdx) is null then 0 else max(tdk_nvdx) end as tdk_nvdx,case when max(tdk_sscd) is null then 0 else max(tdk_sscd) end as tdk_sscd,case when max(tdk_sscd)+max(tdk_nvdx) is null then 0 else max(tdk_sscd)+max(tdk_nvdx) end as cong_tdk,";
+        return "tc,l,xd from (select RANK() OVER (PARTITION BY chungloai ORDER BY tenxd DESC) AS rank_cl,tinhchat,chungloai,tenxd,case when sum(tdk_nvdx) is null then 0 else sum(tdk_nvdx) end as tdk_nvdx,case when sum(tdk_sscd) is null then 0 else sum(tdk_sscd) end as tdk_sscd,case when sum(tdk_sscd)+sum(tdk_nvdx) is null then 0 else sum(tdk_sscd)+sum(tdk_nvdx) end as cong_tdk,";
     }
-    public static String end_q1_1(){
-        return "max(cl.priority_1) as p1,max(cl.priority_2) as p2,max(cl.priority_3) as p3 from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory group by 1) a on a.petro_id=lxd.id";
-    }
-    public static String begin_q2(){
-        return "select tinhchat,chungloai,loai,case when grouping(tenxd)=1 and grouping(loai)=0 then loai else tenxd end,sum(tdk_nvdx) as tdk_nvdx,sum(tdk_sscd) as tdk_sscd,sum(cong_tdk) as cong_tdk,";
-    }
-    public static String end_q2(){
-        return "max(p1) as p1, max(p2) as p2, max(p3) as p3,grouping(tinhchat) as tc,grouping(loai) as l,grouping(tenxd) as xd from (select lxd.id,tinhchat,cl.chungloai,loai,maxd,tenxd,case when max(tdk_nvdx) is null then 0 else max(tdk_nvdx) end as tdk_nvdx,case when max(tdk_sscd) is null then 0 else max(tdk_sscd) end as tdk_sscd,case when max(tdk_sscd)+max(tdk_nvdx) is null then 0 else max(tdk_sscd)+max(tdk_nvdx) end as cong_tdk,";
-    }
-    public static String end_q2_2(int dv_id){
-        return "max(cl.priority_1) as p1,max(cl.priority_2) as p2,max(cl.priority_3) as p3 from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory where dvi_id="+dv_id+" group by 1) a on a.petro_id=lxd.id";
+    public static String end_q1_1(int root_id){
+        return "grouping(tinhchat) as tc,grouping(chungloai) as l,grouping(tenxd) as xd from loaixd2 adm left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory where dvi_id="+root_id+" group by 1) a on a.petro_id=adm.id";
     }
     public static String ttxd_nv(int y){
         return "select max(tt) as tt,max(pri) as pri,n,\n" +

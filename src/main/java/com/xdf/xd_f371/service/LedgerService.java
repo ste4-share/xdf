@@ -71,7 +71,7 @@ public class LedgerService {
                 detail.setId(generateLEdgerDetailId(savedLedger.getId(),i));
                 detail.setLedger(savedLedger);
                 detail.setLedger_id(savedLedger.getId());
-                saveInventoryUnit(detail,ledger.getLoai_phieu());
+                saveInventoryUnit(savedLedger,detail,ledger.getLoai_phieu());
                 saveQuantity(detail,savedLedger);
                 ledgerDetailRepo.save(detail);
             }
@@ -83,7 +83,7 @@ public class LedgerService {
     private String generateLEdgerDetailId(String ledgerid,int index){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+ledgerid).concat("_"+index);
     }
-    private void saveInventoryUnit(LedgerDetails detail,String loaiphieu) {
+    private void saveInventoryUnit(Ledger l,LedgerDetails detail,String loaiphieu) {
         Optional<Configuration> config = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
         if (config.isPresent()){
             Long root_id = Long.parseLong(config.get().getValue());
@@ -98,7 +98,7 @@ public class LedgerService {
                 }
                 inventoryUnitsRepo.save(existInvUnit.get());
             }else{
-                inventoryUnitsRepo.save(new InventoryUnits(detail,root_id));
+                inventoryUnitsRepo.save(new InventoryUnits(l,detail,root_id));
             }
         }else {
             throw new RuntimeException();

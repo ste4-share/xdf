@@ -2,6 +2,7 @@ package com.xdf.xd_f371.util;
 
 
 import com.xdf.xd_f371.MainApplicationApp;
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.controller.ConnectLan;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
@@ -197,6 +198,32 @@ public class Common {
             }
         } catch (IOException e) {
             DialogMessage.message("THÔNG BÁO LỖI", e.getMessage(), "Có lỗi xảy ra!", Alert.AlertType.ERROR);
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+    public static void mapExcelFile_JustExist(String file_name,Function<XSSFWorkbook,Integer> mapData_get,String sheetName){
+        try{
+            File file = new File(file_name);
+            if (!file.exists()){
+                DialogMessage.errorShowing("file Mẫu không tồn tại.");
+            }else{
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook wb = new XSSFWorkbook(fis);
+                mapData_get.apply(wb);
+                fis.close();
+                FileOutputStream fileOutputStream = new FileOutputStream(file_name);
+                wb.setActiveSheet(wb.getSheetIndex(sheetName));
+                wb.setSelectedTab(wb.getSheetIndex(sheetName));
+                XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
+                wb.write(fileOutputStream);
+                fileOutputStream.close();
+                wb.close();
+            }
+        } catch (IOException e) {
+            DialogMessage.message(null, e.getMessage(), MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         } catch (Exception e) {
             e.printStackTrace();

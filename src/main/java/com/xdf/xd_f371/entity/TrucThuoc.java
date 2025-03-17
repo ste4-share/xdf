@@ -24,6 +24,8 @@ public class TrucThuoc {
     private String tennhom_tructhuoc;
     @Column(name = "timestamp")
     private String timestamp;
+    @Column(name = "loaiphieu")
+    private String loaiphieu;
 
     @OneToMany(mappedBy = "trucThuoc", cascade = CascadeType.ALL, orphanRemoval = true)
     List<NguonNx> nxList;

@@ -20,6 +20,10 @@ public class LoaiXangDau {
     private String maxd;
     @Column(name = "tenxd")
     private String tenxd;
+    @Column(name = "tinhchat")
+    private String tinhchat;
+    @Column(name = "chungloai")
+    private String chungloai;
     @Column(name = "petroleum_type_id")
     private int petroleum_type_id;
     @Column(name = "status")

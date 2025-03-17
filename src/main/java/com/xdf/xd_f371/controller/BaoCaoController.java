@@ -1,11 +1,10 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.MessageCons;
-import com.xdf.xd_f371.cons.SheetNameCons;
-import com.xdf.xd_f371.cons.SubQuery;
+import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
+import com.xdf.xd_f371.fatory.ExportFactory;
 import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.service.TructhuocService;
@@ -19,14 +18,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +39,7 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.IntStream;
 
 @Component
 public class BaoCaoController implements Initializable {
@@ -45,6 +48,8 @@ public class BaoCaoController implements Initializable {
     private final String file_name = System.getProperty("user.dir")+"\\xlsx_template\\data.xlsx";
     private static String dest_file;
     private static Accounts q = new Accounts();
+    private int start_row = 8;
+    private int start_col = 6;
     @Autowired
     private TructhuocService tructhuocService;
     @Autowired
@@ -101,11 +106,11 @@ public class BaoCaoController implements Initializable {
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null){
-                return createDataSheet(wb.createSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
+                return createDataSheet(wb.createSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),a.getSd(),a.getEd()));
             }
         }else{
             if (q!=null){
-                return createDataSheet(wb.createSheet(sheetName), getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+                return createDataSheet(wb.createSheet(sheetName), getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId())));
             }
         }
         return null;
@@ -114,11 +119,11 @@ public class BaoCaoController implements Initializable {
         Accounts a = ConnectLan.pre_acc;
         if (a.getSd()!=null){
             if (q!=null) {
-                return createDataSheet(wb.getSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(),a.getSd(),a.getEd()));
+                return createDataSheet(wb.getSheet(sheetName), getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),a.getSd(),a.getEd()));
             }
         }else{
             if (q!=null){
-                return createDataSheet(wb.getSheet(sheetName), getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1()));
+                return createDataSheet(wb.getSheet(sheetName), getCusQueryNlEmpty(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId())));
             }
         }
 
@@ -286,33 +291,31 @@ public class BaoCaoController implements Initializable {
         String sl2="";
         String n_case_1="";
         String x_case_2="";
+        String en = " group by rollup(tinhchat,chungloai,tenxd)) z ORDER BY tc desc,tinhchat desc,l desc,CHUNGLOAI desc,tc desc,rank_cl,xd desc";
+        List<TrucThuoc> tt_list_n = DashboardController.map.get(LoaiPhieuCons.PHIEU_NHAP.getName());
+        List<TrucThuoc> tt_list_x = DashboardController.map.get(LoaiPhieuCons.PHIEU_XUAT.getName());
         if (tdvCk.isSelected()){
-            for (int i=0; i<tructhuocService.findAll().size(); i++) {
-                TrucThuoc tt = tructhuocService.findAll().get(i);
-                arr_tt.add(tt.getType());
-                n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
-                x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-                sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
-                sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
-                n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
-                x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
+            for (int i=0; i<tt_list_n.size(); i++) {
+                n_sum1 = n_sum1.concat("n"+i+" as n"+i+",");
+                sl1=sl1.concat("case when sum(n"+i+".soluong) is null then 0 else sum(n"+i+".soluong) end as n"+i+",");
+                n_case_1 = n_case_1.concat(" left join (SELECT petro_id, sum(nvdx_quantity) as soluong FROM public.inventory_units where bill_type like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and st_time between '"+sd+"' and '"+ed+"' group by 1) n"+i+" on adm.id=n"+i+".petro_id");
+            }for (int i=0; i<tt_list_x.size(); i++) {
+                x_sum2 = x_sum2.concat("x"+i+" as x"+i+",");
+                sl2=sl2.concat("case when sum(x"+i+".soluong) is null then 0 else sum(x"+i+".soluong) end as x"+i+",");
+                x_case_2 = x_case_2.concat(" left join (SELECT petro_id, sum(nvdx_quantity) as soluong FROM public.inventory_units where bill_type like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and st_time between '"+sd+"' and '"+ed+"' group by 1) x"+i+" on adm.id=x"+i+".petro_id");
             }
-            String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
             return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }else{
-            int dv_id =dvi_cbb.getSelectionModel().getSelectedItem().getId();
-            for (int i=0; i<tructhuocService.findAll().size(); i++) {
-                TrucThuoc tt = tructhuocService.findAll().get(i);
-                arr_tt.add(tt.getType());
-                n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
-                x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-                sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
-                sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
-                n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and l.dvi_nhan_id="+dv_id+" group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
-                x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and l.dvi_xuat_id="+dv_id+" group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
+            for (int i=0; i<tt_list_n.size(); i++) {
+                n_sum1 = n_sum1.concat("n"+i+" as n"+i+",");
+                sl1=sl1.concat("case when sum(n"+i+".soluong) is null then 0 else sum(n"+i+".soluong) end as n"+i+",");
+                n_case_1 = n_case_1.concat(" left join (SELECT petro_id, sum(nvdx_quantity) as soluong FROM public.inventory_units where bill_type like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and st_time between '"+sd+"' and '"+ed+"' and root_unit_id="+DashboardController.ref_Dv.getId()+" group by 1) n"+i+" on adm.id=n"+i+".petro_id");
+            }for (int i=0; i<tt_list_x.size(); i++) {
+                x_sum2 = x_sum2.concat("x"+i+" as x"+i+",");
+                sl2=sl2.concat("case when sum(x"+i+".soluong) is null then 0 else sum(x"+i+".soluong) end as x"+i+",");
+                x_case_2 = x_case_2.concat(" left join (SELECT petro_id, sum(nvdx_quantity) as soluong FROM public.inventory_units where bill_type like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and st_time between '"+sd+"' and '"+ed+"' and root_unit_id="+DashboardController.ref_Dv.getId()+" group by 1) x"+i+" on adm.id=x"+i+".petro_id");
             }
-            String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
-            return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(SubQuery.end_q2_2(dv_id)).concat(n_case_1).concat(x_case_2).concat(en);
+            return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }
     }
     private String getCusQueryNlEmpty(String begin_1,String end_q1, String end_q1_1){
@@ -399,101 +402,138 @@ public class BaoCaoController implements Initializable {
 
     @FXML
     public void bc_nxt_experiment(ActionEvent actionEvent) {
-        if (DialogMessage.callAlertWithMessage(MessageCons.TITLE_PRINT.getName(), MessageCons.HEADER_PRINT.getName(), MessageCons.CONTENT.getName(), Alert.AlertType.CONFIRMATION)== ButtonType.OK){
-            String currentDir = System.getProperty("user.dir");
-            String temp_file_name=currentDir+"\\xlsx_template\\phieu_mau.xlsx";
-            String file_name_1 = "/baocao.xlsx";
-            if (Common.isDirectory(ConnectLan.pre_path)){
-                try {
-                    String sheet_n = "beta_nxt";
-                    Platform.runLater(()->{
-                        Common.copyFileExcel(temp_file_name, ConnectLan.pre_path+"/"+file_name_1);
-                        StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_path).append("/").append(file_name_1);
-                        Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input.createSheet(sheet_n),true),
-                                (input)->fillDataToPhieuNhap(input.getSheet(sheet_n),false),sheet_n);
-                        if (DialogMessage.callAlertWithMessage(null,"Thanh cong","Click OK để mở thư mục xuất phiếu." , Alert.AlertType.INFORMATION)==ButtonType.OK){
-                            Common.openDesktop();
-                        }
-                    });
-                } catch (Exception e) {
-                    DialogMessage.errorShowing("Có lỗi xảy ra, vui lòng đóng file phieu_nhap_xuat trước khi tạo file mới.");
-                    throw new RuntimeException(e);
-                }
-            }else {
-                DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
-                DashboardController.primaryStage.close();
+        String currentDir = System.getProperty("user.dir");
+        String temp_file_name=currentDir+"\\xlsx_template\\data.xlsx";
+        if (Common.isDirectory(ConnectLan.pre_path)){
+            try {
+                String sheet_n = "beta_nxt";
+                Platform.runLater(()->{
+//                        Common.copyFileExcel(temp_file_name, ConnectLan.pre_path+"/"+file_name_1);
+                    Common.mapExcelFile_JustExist(temp_file_name,(input)->fillDataToPhieuNhap(input,sheet_n),sheet_n);
+                    Common.openDesktop(currentDir+"\\xlsx_template");
+                });
+            } catch (Exception e) {
+                DialogMessage.errorShowing("Có lỗi xảy ra, vui lòng đóng file phieu_nhap_xuat trước khi tạo file mới.");
+                throw new RuntimeException(e);
             }
+        }else {
+            DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
+            DashboardController.primaryStage.close();
         }
     }
-    private int fillDataToPhieuNhap(XSSFSheet sheet, boolean isNew){
-        setCEll(sheet, ledger.getDvi_nhan(), 3,3,isNew);
-        setCEll(sheet, ledger.getDvi_xuat(), 4,3,isNew);
-        if (tcnService.findById(ledger.getTcn_id()).orElse(null)==null){
-            setCEll(sheet,ledger.getNhiemvu(), 5,3,isNew);
-        } else {
-            setCEll(sheet, tcnService.findById(ledger.getTcn_id()).orElse(null).getName(), 5,3,isNew);
+    private int fillDataToPhieuNhap(XSSFWorkbook wb,String sheet_n){
+        XSSFSheet sheet = wb.getSheet(sheet_n);
+        initHederColumnFor_nxt(sheet,wb);
+        removeMerger(sheet,8,8,8,10);
+        removeMerger(sheet,8,9,7,7);
+        removeMerger(sheet,8,9,6,6);
+        sheet.addMergedRegion(new CellRangeAddress(8,8,8,10));
+        sheet.addMergedRegion(new CellRangeAddress(8,9,7,7));
+        sheet.addMergedRegion(new CellRangeAddress(8,9,6,6));
+
+        ReportDAO reportDAO = new ReportDAO();
+        List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
+        int scol = 4;
+        for (int i = 0; i<nxtls.size();i++){
+            int lastRow = sheet.getLastRowNum();
+            sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
+            XSSFRow row1 = sheet.createRow(start_row+i+2);
+            Object[] rows_data = nxtls.get(i);
+            for (int j = 0; j<rows_data.length;j++){
+                String val = rows_data[j]==null ? "" : rows_data[j].toString();
+                if (Common.isDoubleNumber(val)){
+                    BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
+                    row1.createCell(scol+j).setCellValue(bigDecimal.doubleValue());
+                } else {
+                    row1.createCell(scol+j).setCellValue(val);
+                }
+            }
         }
 
-        setCEll(sheet, ledger.getLenh_so(), 6,3,isNew);
-        setCEll(sheet, ledger.getNguoi_nhan(), 7,3,isNew);
-        setCEll(sheet, "ABC", 8,3,isNew);
-        setCEll(sheet, ledger.getEnd_date()==null? "" : ledger.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 3,10,isNew);
-        setCEll(sheet, ledger.getSo_xe(), 4,10,isNew);
-        setCEll(sheet, String.valueOf(ledger.getBill_id()), 3,7,isNew);
-        setCEll(sheet, ledger.getFrom_date()==null?  "": ledger.getFrom_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 4,7,isNew);
-        for (int i = 0; i< details.size(); i++) {
-            addNewRow(sheet);
-        }
-        int row_num = 12;
-        double thanh_tien = 0;
-        for (int i = 0; i< details.size(); i++) {
-            setCEll(sheet, String.valueOf(i+1), row_num,1,isNew);
-            setCEll(sheet, details.get(i).getMa_xd(), row_num,2,isNew);
-            setCEll(sheet, details.get(i).getTen_xd(), row_num,3,isNew);
-            setCEll(sheet, details.get(i).getChat_luong(), row_num,4,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getSoluong_px()), row_num,5,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getNhiet_do_tt()), row_num,6,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getTy_trong()), row_num,7,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getHe_so_vcf()), row_num,8,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getSoluong()), row_num,9,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getDon_gia()), row_num,10,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getSoluong()*details.get(i).getDon_gia()), row_num,11,isNew);
-            row_num = row_num+1;
-            thanh_tien = thanh_tien + (details.get(i).getDon_gia() * details.get(i).getSoluong());
-            if (i == details.size() - 1){
-                setCEll(sheet,String.valueOf(ledger.getAmount()), 14+details.size(),11,isNew);
-            }
-        }
         return 1;
     }
-    private void addNewRow(XSSFSheet sheet){
-        if (sheet.getPhysicalNumberOfRows() > 0) {
-            int lastRow = sheet.getLastRowNum();
-            sheet.shiftRows(13, lastRow, 1, true, true);
-            sheet.copyRows(13,14,13,new CellCopyPolicy());
-        } else {
-            System.out.println("The sheet is empty.");
+    private void removeMerger(XSSFSheet sheet, int f_row,int l_row,int f_col,int l_col){
+        List<CellRangeAddress> mergedRegions = sheet.getMergedRegions();
+        int index = IntStream.range(0, mergedRegions.size())
+                .filter(i -> {
+                    CellRangeAddress region = mergedRegions.get(i);
+                    return region.getFirstRow() == f_row &&
+                            region.getFirstColumn() == f_col &&
+                            region.getLastRow() == l_row &&
+                            region.getLastColumn() == l_col;
+                })
+                .findFirst()
+                .orElse(-1);
+        if (index != -1) {
+            sheet.removeMergedRegion(index);
         }
     }
-    private void setCEll(XSSFSheet sheet, String value, int row_num, int cell_num,boolean isNew){
-        if (!isNew){
-            XSSFRow row = sheet.getRow(row_num);
-            if (StringUtils.isNumeric(value)){
-                BigDecimal bigDecimal = new BigDecimal(value);
-                bigDecimal.setScale(2, RoundingMode.HALF_UP);
-                NumberFormat numberFormat = NumberFormat.getInstance();
-                numberFormat.setMinimumFractionDigits(2);
-                row.getCell(cell_num).setCellValue(numberFormat.format(bigDecimal));
-            } else {
-                row.getCell(cell_num).setCellValue(value);
+    private void initHederColumnFor_nxt(XSSFSheet sheet, XSSFWorkbook wb){
+        XSSFRow r1 = sheet.createRow(start_row);
+        XSSFCellStyle style = wb.createCellStyle();
+        ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+        ExportFactory.setBoldFont(wb,style);
+        ExportFactory.setCellAlightmentStyle(style);
+        Cell r1_c1 =r1.createCell(start_col);
+        r1_c1.setCellValue("TT");
+        r1_c1.setCellStyle(style);
+        Cell r1_c2 =r1.createCell(start_col+1);
+        r1_c2.setCellValue("Tên Xăng dầu");
+        r1_c2.setCellStyle(style);
+        Cell r1_c3 =r1.createCell(start_col+2);
+        r1_c3.setCellValue("Tồn đầu kỳ");
+        r1_c3.setCellStyle(style);
+        Cell r1_c4 =r1.createCell(start_col+3);
+        r1_c4.setCellStyle(style);
+        Cell r1_c5 =r1.createCell(start_col+4);
+        r1_c5.setCellStyle(style);
+
+        Map<String, List<TrucThuoc>> tt_list = DashboardController.map;
+        List<TrucThuoc> indexs_n = tt_list.get(LoaiPhieuCons.PHIEU_NHAP.getName());
+        List<TrucThuoc> indexs_x = tt_list.get(LoaiPhieuCons.PHIEU_XUAT.getName());
+        XSSFRow r2 = sheet.createRow(start_row+1);
+        Cell c2_r0 = r2.createCell(start_col);
+        c2_r0.setCellStyle(style);
+        Cell c2_r0_1 = r2.createCell(start_col+1);
+        c2_r0_1.setCellStyle(style);
+        Cell c2_r1 = r2.createCell(start_col+2);
+        c2_r1.setCellStyle(style);
+        c2_r1.setCellValue(ConfigCons.NVDX.getName());
+        Cell c2_r2 = r2.createCell(start_col+3);
+        c2_r2.setCellStyle(style);
+        c2_r2.setCellValue(ConfigCons.SSCD.getName());
+        Cell c2_r3 = r2.createCell(start_col+4);
+        c2_r3.setCellStyle(style);
+        c2_r3.setCellValue(ConfigCons.CONG.getName());
+
+        for (int i=0; i<indexs_n.size(); i++) {
+            String tructh = indexs_n.get(i).getName();
+            int ind = start_col+5+i;
+            XSSFCell c1 = r1.createCell(ind);
+            c1.setCellStyle(style);
+            if (i==0){
+                c1.setCellValue(LoaiPhieuCons.PHIEU_NHAP.getName());
             }
-        }else{
-            XSSFRow row = sheet.createRow(row_num);
-            if (StringUtils.isNumeric(value)){
-                row.createCell(cell_num).setCellValue(new BigDecimal(value).doubleValue());
-            } else {
-                row.createCell(cell_num).setCellValue(value);
-            }
+            XSSFCell c2 = r2.createCell(ind);
+            c2.setCellValue(tructh);
+            c2.setCellStyle(style);
         }
+        for (int i=0; i<indexs_x.size(); i++) {
+            String tructh = indexs_x.get(i).getName();
+            int ind = start_col+5+indexs_n.size()+i;
+            XSSFCell c1 = r1.createCell(ind);
+            c1.setCellStyle(style);
+            if (i==0){
+                c1.setCellValue(LoaiPhieuCons.PHIEU_XUAT.getName());
+            }
+            XSSFCell c2 = r2.createCell(ind);
+            c2.setCellStyle(style);
+            c2.setCellValue(tructh);
+        }
+        removeMerger(sheet,8,8,11,indexs_n.size());
+        sheet.addMergedRegion(new CellRangeAddress(8,8,11,10+indexs_n.size()));
+        removeMerger(sheet,8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size());
+        sheet.addMergedRegion(new CellRangeAddress(8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size()));
+
     }
 }

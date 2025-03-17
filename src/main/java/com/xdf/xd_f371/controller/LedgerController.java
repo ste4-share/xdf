@@ -7,6 +7,7 @@ import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.fatory.ExportFactory;
 import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.*;
@@ -482,8 +483,9 @@ public class LedgerController implements Initializable {
         XSSFRow title_row = quy.createRow(0);
         XSSFCell cell = title_row.createCell(0);
         XSSFCellStyle style = wb.createCellStyle();
-        setCellBorderStyle(style,cell);
-        setBoldFont(wb,style,cell);
+        ExportFactory.setCellBorderStyle(style,BorderStyle.THIN);
+        ExportFactory.setBoldFont(wb,style);
+        cell.setCellStyle(style);
         cell.setCellValue("THÔNG TIN QUÝ");
         XSSFCell cell1 = title_row.createCell(1);
         cell1.setCellValue("Từ ngày:");
@@ -496,7 +498,8 @@ public class LedgerController implements Initializable {
 
         XSSFRow dv_row = quy.createRow(1);
         XSSFCell cell_dv1 = dv_row.createCell(0);
-        setBoldFont(wb,style,cell_dv1);
+        ExportFactory.setBoldFont(wb,style);
+        cell_dv1.setCellStyle(style);
         cell_dv1.setCellValue("Đơn vị:");
         XSSFCell cell_dv2 = dv_row.createCell(1);
         cell_dv2.setCellValue(DashboardController.ref_Dv.getTen());
@@ -507,8 +510,9 @@ public class LedgerController implements Initializable {
         for (int i =0; i< titles.size();i++){
             XSSFCell cell = title_row.createCell(i);
             XSSFCellStyle style = wb.createCellStyle();
-            setCellBorderStyle(style,cell);
-            setBoldFont(wb,style,cell);
+            ExportFactory.setCellBorderStyle(style,BorderStyle.THIN);
+            ExportFactory.setBoldFont(wb,style);
+            cell.setCellStyle(style);
             cell.setCellValue(titles.get(i));
         }
         for(int i =0; i< nxtls.size(); i++) {
@@ -519,44 +523,26 @@ public class LedgerController implements Initializable {
                 String val = rows_data[j]==null ?"" : rows_data[j].toString();
                 XSSFCell cell = row.createCell(j);
                 XSSFCellStyle style = wb.createCellStyle();
-                setCellBorderStyle(style,cell);
+                ExportFactory.setCellBorderStyle(style,BorderStyle.THIN);
                 if(j==1){
                     cell.setCellValue(val);
                 }
                 else if(Common.isLongNumber(val)){
-                    setDataFormat(wb,style,cell,"#,##0");
+                    ExportFactory.setDataFormat(wb,style,"#,##0");
                     cell.setCellValue(new BigDecimal(val).longValue());
                 }
                 else if(Common.isDoubleNumber(val)){
-                    setDataFormat(wb,style,cell,"#,##0.00");
+                    ExportFactory.setDataFormat(wb,style,"#,##0.00");
                     BigDecimal bigDecimal = new BigDecimal(val).setScale(2, RoundingMode.HALF_UP);
                     cell.setCellValue(bigDecimal.doubleValue());
                 }else{
                     cell.setCellValue(val);
                 }
+                cell.setCellStyle(style);
             }
         }
     }
-    private void setDataFormat(XSSFWorkbook wb,CellStyle style,XSSFCell cell,String format_text){
-        XSSFDataFormat format = wb.createDataFormat();
-        style.setDataFormat(format.getFormat(format_text));
-        cell.setCellStyle(style);
-    }
-    private void setBoldFont(XSSFWorkbook wb,CellStyle style,XSSFCell cell){
-        XSSFFont font = wb.createFont();
-        font.setBold(true);
-        font.setFontName("Times New Roman");
-        font.setFontHeightInPoints((short) 11);
-        style.setFont(font);
-        cell.setCellStyle(style);
-    }
-    private void setCellBorderStyle(CellStyle style,XSSFCell cell){
-        style.setBorderTop(BorderStyle.THIN);
-        style.setBorderBottom(BorderStyle.THIN);
-        style.setBorderLeft(BorderStyle.THIN);
-        style.setBorderRight(BorderStyle.THIN);
-        cell.setCellStyle(style);
-    }
+
     private Ledger importCellToLEdger(Row row){
         Ledger l =new Ledger();
         if (row!=null){
