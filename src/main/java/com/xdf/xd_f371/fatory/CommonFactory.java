@@ -241,7 +241,6 @@ public class CommonFactory implements Initializable {
     public static File setSelectFileDirectory(Stage stage){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a File");
-        // Add file filters
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx")
         );

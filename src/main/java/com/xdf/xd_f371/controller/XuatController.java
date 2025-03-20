@@ -16,7 +16,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

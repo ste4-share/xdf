@@ -6,7 +6,9 @@ import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.fatory.ExportFactory;
 import com.xdf.xd_f371.repo.ReportDAO;
+import com.xdf.xd_f371.service.LoaiXdService;
 import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.TransactionHistoryService;
 import com.xdf.xd_f371.service.TructhuocService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
@@ -18,11 +20,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -414,8 +413,6 @@ public class BaoCaoController implements Initializable {
             dvi_cbb.setDisable(false);
         }
     }
-
-
     private int fillDataToPhieuNhap(XSSFWorkbook wb,String sheet_n){
         XSSFSheet sheet = wb.getSheet(sheet_n);
         initHeder(sheet,wb);
@@ -424,7 +421,6 @@ public class BaoCaoController implements Initializable {
         fillData(wb,sheet);
         return -1;
     }
-
     private void fillData(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
@@ -450,7 +446,6 @@ public class BaoCaoController implements Initializable {
             }
         }
     }
-
     private void mergerCell(XSSFSheet sheet) {
         removeMerger(sheet,8,8,8,10);
         removeMerger(sheet,8,9,7,7);
@@ -459,7 +454,6 @@ public class BaoCaoController implements Initializable {
         sheet.addMergedRegion(new CellRangeAddress(8,9,7,7));
         sheet.addMergedRegion(new CellRangeAddress(8,9,6,6));
     }
-
     private void removeMerger(XSSFSheet sheet, int f_row,int l_row,int f_col,int l_col){
         List<CellRangeAddress> mergedRegions = sheet.getMergedRegions();
         int index = IntStream.range(0, mergedRegions.size())
@@ -562,5 +556,15 @@ public class BaoCaoController implements Initializable {
         removeMerger(sheet,8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size());
         sheet.addMergedRegion(new CellRangeAddress(8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size()));
 
+    }
+    @Autowired
+    private TransactionHistoryService transactionHistoryService;
+    @Autowired
+    private LoaiXdService loaiXdService;
+    @FXML
+    public void pttk_experiment(ActionEvent actionEvent) {
+        loaiXdService.findAll().forEach(loaiXangDau ->{
+            transactionHistoryService.createNewPartitiontable("XD_"+loaiXangDau.getId(),loaiXangDau.getId());
+        });
     }
 }

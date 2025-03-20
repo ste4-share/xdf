@@ -14,7 +14,8 @@ public class ExportFactory {
         style.setBorderBottom(b);
         style.setBorderLeft(b);
         style.setBorderRight(b);
-    }public static void setCellBorderStyle(CellStyle style,BorderStyle top,BorderStyle bot,BorderStyle lef,BorderStyle rig){
+    }
+    public static void setCellBorderStyle(CellStyle style,BorderStyle top,BorderStyle bot,BorderStyle lef,BorderStyle rig){
         style.setBorderTop(top);
         style.setBorderBottom(bot);
         style.setBorderLeft(lef);

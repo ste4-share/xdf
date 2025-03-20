@@ -89,11 +89,10 @@ public class LedgerService {
             Long root_id = Long.parseLong(config.get().getValue());
             Optional<InventoryUnits> existInvUnit = inventoryUnitService.getInventoryByUnitByPetroByPrice(root_id,detail.getLoaixd_id(),detail.getDon_gia());
             if (existInvUnit.isPresent()){
+                double existnvdx = existInvUnit.get().getNvdx_quantity();
                 if(loaiphieu.equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-                    double existnvdx = existInvUnit.get().getNvdx_quantity();
                     existInvUnit.get().setNvdx_quantity(existnvdx+detail.getSoluong());
                 } else {
-                    double existnvdx = existInvUnit.get().getNvdx_quantity();
                     existInvUnit.get().setNvdx_quantity(existnvdx-detail.getSoluong());
                 }
                 inventoryUnitsRepo.save(existInvUnit.get());

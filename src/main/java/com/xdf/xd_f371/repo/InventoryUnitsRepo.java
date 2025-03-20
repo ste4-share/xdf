@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface InventoryUnitsRepo extends JpaRepository<InventoryUnits,Long> {
     @Query(value = "select * from inventory_units where status like 'ACTIVE' and root_unit_id=:root_id",nativeQuery = true)
     List<InventoryUnits> getInventoryByUnit(@Param("root_id")Long dvn_id);
-    @Query(value = "select * from inventory_units where status like 'ACTIVE' and root_unit_id=:root_id and petro_id=:pid",nativeQuery = true)
-    List<InventoryUnits> getInventoryByUnitByPetro(@Param("root_id")Long dvn_id,@Param("pid")int p_id);
+    @Query(value = "select * from inventory_units where status like 'ACTIVE' and root_unit_id=:root_id and petro_id=:pid and year=:y",nativeQuery = true)
+    List<InventoryUnits> getInventoryByUnitByPetro(@Param("root_id")Long dvn_id,@Param("pid")int p_id,@Param("y") int year);
     @Query(value = "select * from inventory_units where status like 'ACTIVE' and root_unit_id=:root_id and petro_id=:pid and price=:pric",nativeQuery = true)
     Optional<InventoryUnits> getInventoryByUnitByPetroByPrice(@Param("root_id")Long dvn_id, @Param("pid")int p_id, @Param("pric")double price);
     @Modifying
