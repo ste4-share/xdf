@@ -34,10 +34,13 @@ public class TransactionHistory {
     private double tonkhotong;
     @Column(name = "tonkho_gia")
     private double tonkho_gia;
+    @Column(name = "soluong_tt")
+    private double soluong_tt;
     @Column(name = "index")
     private long index;
 
-    public TransactionHistory(String id, int xd_id, String loaiphieu, LocalDate date, double mucgia, double soluong, String tructhuoc, double tonkhotong, double tonkho_gia, long index) {
+    public TransactionHistory(String id, int xd_id, String loaiphieu, LocalDate date, double mucgia,
+                              double soluong, String tructhuoc, double tonkhotong, double tonkho_gia, long index,double soluong_tt) {
         this.id = id;
         this.xd_id = xd_id;
         this.loaiphieu = loaiphieu;
@@ -48,5 +51,6 @@ public class TransactionHistory {
         this.tonkhotong = tonkhotong;
         this.tonkho_gia = tonkho_gia;
         this.index = index;
+        this.soluong_tt = soluong_tt;
     }
 }

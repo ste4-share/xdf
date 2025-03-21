@@ -423,28 +423,29 @@ public class BaoCaoController implements Initializable {
     }
     private void fillData(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
-        List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
-        int scol = 4;
-        for (int i = 0; i<nxtls.size();i++){
-            int lastRow = sheet.getLastRowNum();
-            sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
-            XSSFRow row1 = sheet.createRow(start_row+i+2);
-            XSSFCellStyle style = wb.createCellStyle();
-            Object[] rows_data = nxtls.get(i);
-            for (int j = 0; j<rows_data.length;j++){
-                String val = rows_data[j]==null ? "" : rows_data[j].toString();
-                XSSFCell c = row1.createCell(scol+j);
-                ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
-                ExportFactory.setCellAlightmentStyle(style);
-                if (Common.isDoubleNumber(val)){
-                    BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
-                    c.setCellValue(bigDecimal.doubleValue());
-                } else {
-                    c.setCellValue(val);
-                }
-                c.setCellStyle(style);
-            }
-        }
+        System.out.println("que: "+ getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
+//        List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
+//        int scol = 4;
+//        for (int i = 0; i<nxtls.size();i++){
+//            int lastRow = sheet.getLastRowNum();
+//            sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
+//            XSSFRow row1 = sheet.createRow(start_row+i+2);
+//            XSSFCellStyle style = wb.createCellStyle();
+//            Object[] rows_data = nxtls.get(i);
+//            for (int j = 0; j<rows_data.length;j++){
+//                String val = rows_data[j]==null ? "" : rows_data[j].toString();
+//                XSSFCell c = row1.createCell(scol+j);
+//                ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+//                ExportFactory.setCellAlightmentStyle(style);
+//                if (Common.isDoubleNumber(val)){
+//                    BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
+//                    c.setCellValue(bigDecimal.doubleValue());
+//                } else {
+//                    c.setCellValue(val);
+//                }
+//                c.setCellStyle(style);
+//            }
+//        }
     }
     private void mergerCell(XSSFSheet sheet) {
         removeMerger(sheet,8,8,8,10);

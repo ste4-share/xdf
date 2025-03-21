@@ -297,7 +297,7 @@ public class XuatController extends CommonFactory implements Initializable {
             }else{
                 setTonKhoLabel(0);
             }
-        }else{
+        } else {
             setTonKhoLabel(0);
         }
     }
