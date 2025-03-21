@@ -170,6 +170,7 @@ public class NhapController extends CommonFactory implements Initializable {
                     }
                 }catch (NumberFormatException e){
                     DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 } catch (Exception e) {
                     DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());

@@ -41,7 +41,8 @@ public class CommonFactory implements Initializable {
     protected static Stage primaryStage;
     protected static double inventory_quantity = 0;
     protected Configuration config = null;
-    protected List<InventoryUnits> i = new ArrayList<>();
+//    protected List<InventoryUnits> i = new ArrayList<>();
+    protected List<TransactionHistory> transactionHistories = new ArrayList<>();
     protected static List<Ledger> ledgers = new ArrayList<>();
     protected static List<LedgerDetails> ls_socai;
 
@@ -57,6 +58,8 @@ public class CommonFactory implements Initializable {
     protected NguonNxService nguonNxService;
     @Autowired
     protected InventoryUnitService inventoryUnitService;
+    @Autowired
+    protected TransactionHistoryService transactionHistoryService;
     @Autowired
     protected TructhuocService tructhuocService;
     @Autowired
@@ -121,11 +124,11 @@ public class CommonFactory implements Initializable {
         return new ArrayList<>();
     }
     protected void setInvLabel(LoaiXangDauDto lxd){
-        i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),lxd.getXd_id());
-        if (!i.isEmpty()){
-                double sum_inventory_nvdx = i.stream().mapToDouble(InventoryUnits::getNvdx_quantity).sum();
-                setTonKhoLabel(sum_inventory_nvdx);
-        } else {
+//        i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),lxd.getXd_id());
+        TransactionHistory refTransactionHistory = transactionHistoryService.getInventoryOf_Lxd(lxd.getXd_id()).isPresent() ? transactionHistoryService.getInventoryOf_Lxd(lxd.getXd_id()).get() : null;
+        if (refTransactionHistory!=null){
+            setTonKhoLabel(refTransactionHistory.getTonkhotong());
+        }else{
             setTonKhoLabel(0);
         }
     }

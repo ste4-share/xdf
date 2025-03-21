@@ -563,8 +563,13 @@ public class BaoCaoController implements Initializable {
     private LoaiXdService loaiXdService;
     @FXML
     public void pttk_experiment(ActionEvent actionEvent) {
-        loaiXdService.findAll().forEach(loaiXangDau ->{
-            transactionHistoryService.createNewPartitiontable("XD_"+loaiXangDau.getId(),loaiXangDau.getId());
-        });
+//        try {
+//            loaiXdService.findAll().forEach(loaiXangDau ->{
+//                transactionHistoryService.createNewPartitiontable("XD_"+loaiXangDau.getId(),loaiXangDau.getId());
+//            });
+//            DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
+//        } catch (RuntimeException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

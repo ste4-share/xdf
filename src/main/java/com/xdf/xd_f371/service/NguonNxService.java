@@ -17,9 +17,6 @@ public class NguonNxService {
     private final NguonNxRepo nguonNxRepo;
     private final LedgersRepo ledgersRepo;
 
-    public List<NguonNx> findByStatus(String status){
-        return nguonNxRepo.findByStatus(status);
-    }
     public List<NguonNx> findAllById(int id){
         return nguonNxRepo.findAllById(id);
     }
@@ -32,15 +29,12 @@ public class NguonNxService {
     public List<NguonNx> findByAllBy(){
         return nguonNxRepo.findByAllBy();
     }
-    public Optional<NguonNx> findAllByNguonnxId(int id){
-        return nguonNxRepo.findAllByNguonnxId(id);
-    }
 
     public List<NguonNx> findAll(){
         return nguonNxRepo.findAll();
     }
     public Optional<NguonNx> findById(int id){
-        return Optional.ofNullable(nguonNxRepo.findById(id).orElse(null));
+        return nguonNxRepo.findById(id);
     }
     public NguonNx save(NguonNx nguonNx){
         return nguonNxRepo.save(nguonNx);

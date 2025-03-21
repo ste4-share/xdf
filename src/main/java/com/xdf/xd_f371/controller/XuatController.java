@@ -275,10 +275,11 @@ public class XuatController extends CommonFactory implements Initializable {
         }
     }
     private void mapPrice(int xd_id){
-        i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),xd_id);
-        i = i.stream().filter(x->x.getNvdx_quantity()>0).toList();
-        if (!i.isEmpty()){
-            List<Double> priceList = i.stream().map(InventoryUnits::getPrice).toList();
+//        i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),xd_id);
+        transactionHistories = transactionHistoryService.getLastestTimeForEachPrices(xd_id);
+        transactionHistories = transactionHistories.stream().filter(x->x.getTonkho_gia()>0).toList();
+        if (!transactionHistories.isEmpty()){
+            List<Double> priceList = transactionHistories.stream().map(TransactionHistory::getMucgia).toList();
             setGiaCbbItems(priceList);
             Double pre_price = cbb_dongia.getSelectionModel().getSelectedItem();
             mapLabelPrice(pre_price);
@@ -290,9 +291,9 @@ public class XuatController extends CommonFactory implements Initializable {
     private void mapLabelPrice(Double pre_price){
         if (pre_price!=null){
             cbb_dongia.setStyle(null);
-            InventoryUnits preInventoryUnit = i.stream().filter(x->x.getPrice()==pre_price).findFirst().orElse(null);
-            if (preInventoryUnit!=null){
-                setTonKhoLabel(preInventoryUnit.getNvdx_quantity());
+            TransactionHistory transactionHistory = transactionHistories.stream().filter(x->x.getMucgia()==pre_price).findFirst().orElse(null);
+            if (transactionHistory!=null){
+                setTonKhoLabel(transactionHistory.getTonkho_gia());
             }else{
                 setTonKhoLabel(0);
             }

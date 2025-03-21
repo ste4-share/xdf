@@ -1,14 +1,13 @@
 package com.xdf.xd_f371.service;
 
-import com.xdf.xd_f371.cons.ConfigCons;
-import com.xdf.xd_f371.cons.LoaiPhieuCons;
-import com.xdf.xd_f371.cons.Purpose;
+import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +23,8 @@ public class LedgerService {
     private final LedgersRepo ledgersRepo;
     private final LedgerDetailRepo ledgerDetailRepo;
     private final InventoryUnitsRepo inventoryUnitsRepo;
+    private final TransactionHistoryRepo transactionHistoryRepo;
+
     @Autowired
     private ConfigurationService configurationService;
     @Autowired
@@ -71,7 +72,7 @@ public class LedgerService {
                 detail.setId(generateLEdgerDetailId(savedLedger.getId(),i));
                 detail.setLedger(savedLedger);
                 detail.setLedger_id(savedLedger.getId());
-                saveInventoryUnit(savedLedger,detail,ledger.getLoai_phieu());
+                saveTransactionHistory(savedLedger,detail,i+1);
                 saveQuantity(detail,savedLedger);
                 ledgerDetailRepo.save(detail);
             }
@@ -79,6 +80,31 @@ public class LedgerService {
             e.printStackTrace();
         }
         return savedLedger;
+    }
+    @Transactional
+    private void saveTransactionHistory(Ledger savedLedger, LedgerDetails detail,int index) {
+        try {
+            Optional<TransactionHistory> inv_price = transactionHistoryRepo.getInventoryOfPrice_Lxd(detail.getLoaixd_id(),detail.getDon_gia());
+            Optional<TransactionHistory> inv = transactionHistoryRepo.getInventoryOf_Lxd(detail.getLoaixd_id());
+            List<TransactionHistory> transactionHistoryListByDay = transactionHistoryRepo.getSizeOfTransactionByDay(detail.getLoaixd_id(),savedLedger.getFrom_date());
+            String uid = RandomStringUtils.randomAlphanumeric(10).concat(String.valueOf(detail.getLoaixd_id())).concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"))).concat("_000"+index);
+            if (savedLedger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
+                transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getLoai_phieu(),
+                        savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
+                        inv.map(history -> (history.getTonkhotong() + detail.getSoluong())).orElseGet(detail::getSoluong),
+                        inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() + detail.getSoluong())).orElseGet(detail::getSoluong),
+                        transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1));
+            } else{
+                transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getLoai_phieu(),
+                        savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
+                        inv.map(history -> (history.getTonkhotong() - detail.getSoluong())).orElseGet(detail::getSoluong),
+                        inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - detail.getSoluong())).orElseGet(detail::getSoluong),
+                        transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1));
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
     private String generateLEdgerDetailId(String ledgerid,int index){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+ledgerid).concat("_"+index);

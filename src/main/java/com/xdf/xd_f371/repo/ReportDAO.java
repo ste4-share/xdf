@@ -30,5 +30,20 @@ public class ReportDAO {
             em.close();
         }
 
+    }public void updateDataDAO(String qry){
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createNativeQuery(qry).executeUpdate();
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+
     }
 }
