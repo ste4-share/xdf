@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LedgerDetails {
+public class LedgerDetails extends BaseObject{
     @Id
     private String id;
     @Column(name = "ma_xd")

@@ -22,7 +22,6 @@ import java.util.Optional;
 public class LedgerService {
     private final LedgersRepo ledgersRepo;
     private final LedgerDetailRepo ledgerDetailRepo;
-    private final InventoryUnitsRepo inventoryUnitsRepo;
     private final TransactionHistoryRepo transactionHistoryRepo;
 
     @Autowired
@@ -50,6 +49,8 @@ public class LedgerService {
         return ledgersRepo.getColumnNames_LEDGER();
     }public List<String> getColumnNames_LEDGER_DETAIL(){
         return ledgersRepo.getColumnNames_LEDGER_DETAIL();
+    }public List<String> getColumnNames_TRANSACTION_HISTORY(){
+        return ledgersRepo.getColumnNames_TRANSACTION_HISTORY();
     }
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();
@@ -87,6 +88,8 @@ public class LedgerService {
             Optional<TransactionHistory> inv_price = transactionHistoryRepo.getInventoryOfPrice_Lxd(detail.getLoaixd_id(),detail.getDon_gia());
             Optional<TransactionHistory> inv = transactionHistoryRepo.getInventoryOf_Lxd(detail.getLoaixd_id());
             Optional<TransactionHistory> volumn_tructhuoc = transactionHistoryRepo.getSoluongTructhuoc(detail.getLoaixd_id(),savedLedger.getLoai_phieu(),savedLedger.getTructhuoc());
+            Optional<TransactionHistory> accumulate_task = transactionHistoryRepo.getTaskAccumulate(detail.getLoaixd_id(),savedLedger.getNhiemvu_id());
+            Optional<TransactionHistory> accumulate_xmt_task = transactionHistoryRepo.getXmtAndTaskAccumulate(detail.getLoaixd_id(),savedLedger.getXmt_id(),savedLedger.getNhiemvu_id());
 
             List<TransactionHistory> transactionHistoryListByDay = transactionHistoryRepo.getSizeOfTransactionByDay(detail.getLoaixd_id(),savedLedger.getFrom_date());
             String uid = RandomStringUtils.randomAlphanumeric(10).concat(String.valueOf(detail.getLoaixd_id())).concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"))).concat("_000"+index);
@@ -97,42 +100,25 @@ public class LedgerService {
                         inv.map(history -> (history.getTonkhotong() + detail.getSoluong())).orElseGet(detail::getSoluong),
                         inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() + detail.getSoluong())).orElseGet(detail::getSoluong),
                         transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                        volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() + detail.getSoluong())).orElseGet(detail::getSoluong)));
-            } else{
+                        volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() + detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
+            } else {
                 transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getLoai_phieu(),
                         savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
                         inv.map(history -> (history.getTonkhotong() - detail.getSoluong())).orElseGet(detail::getSoluong),
                         inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - detail.getSoluong())).orElseGet(detail::getSoluong),
                         transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                        volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - detail.getSoluong())).orElseGet(detail::getSoluong)));
+                        volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
+    private void textToInterval(String time){
+        String[] hr = time.split(":");
+    }
     private String generateLEdgerDetailId(String ledgerid,int index){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+ledgerid).concat("_"+index);
-    }
-    private void saveInventoryUnit(Ledger l,LedgerDetails detail,String loaiphieu) {
-        Optional<Configuration> config = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
-        if (config.isPresent()){
-            Long root_id = Long.parseLong(config.get().getValue());
-            Optional<InventoryUnits> existInvUnit = inventoryUnitService.getInventoryByUnitByPetroByPrice(root_id,detail.getLoaixd_id(),detail.getDon_gia());
-            if (existInvUnit.isPresent()){
-                double existnvdx = existInvUnit.get().getNvdx_quantity();
-                if(loaiphieu.equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-                    existInvUnit.get().setNvdx_quantity(existnvdx+detail.getSoluong());
-                } else {
-                    existInvUnit.get().setNvdx_quantity(existnvdx-detail.getSoluong());
-                }
-                inventoryUnitsRepo.save(existInvUnit.get());
-            }else{
-                inventoryUnitsRepo.save(new InventoryUnits(l,detail,root_id));
-            }
-        }else {
-            throw new RuntimeException();
-        }
     }
     private void saveQuantity(LedgerDetails detail, Ledger ledger){
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {

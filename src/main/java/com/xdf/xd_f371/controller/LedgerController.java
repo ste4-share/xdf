@@ -2,10 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.dto.InvDto3;
-import com.xdf.xd_f371.entity.Ledger;
-import com.xdf.xd_f371.entity.LedgerDetails;
-import com.xdf.xd_f371.entity.NguonNx;
-import com.xdf.xd_f371.entity.PhuongTien;
+import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.fatory.ExportFactory;
 import com.xdf.xd_f371.repo.ReportDAO;
@@ -25,7 +22,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +38,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
 
 @Component
 public class LedgerController implements Initializable {
     private final String file_name = "data.xlsx";
     private List<Ledger> ledgerSelectList = new ArrayList<>();
     private List<Ledger> refLedgerList = new ArrayList<>();
+    private List<TransactionHistory> refTransactionHistorysList = new ArrayList<>();
     private List<LedgerDetails> refLedgerDetailList = new ArrayList<>();
     private LocalDate currentDateSelected;
     public static Stage primaryStage;
@@ -419,19 +417,17 @@ public class LedgerController implements Initializable {
     private void importDataToTable() {
         refLedgerList = new ArrayList<>();
         refLedgerDetailList = new ArrayList<>();
+        refTransactionHistorysList = new ArrayList<>();
         File file = CommonFactory.setSelectFileDirectory(DashboardController.primaryStage);
         if (file!=null){
-            refLedgerList = importDataToListLEdger(file);
+            importDataToList(file,refLedgerList, this::importCellToLEdger);
             if (refLedgerList.isEmpty()){
                 DialogMessage.successShowing("Dữ liệu nhập từ file data.xlsx trống.");
             }else{
-                List<NguonNx> n = nguonNxService.findAllById(refLedgerList.get(0).getRoot_id());
-                if (!n.isEmpty()){
-                    dvi_ref_cbb.getSelectionModel().select(n.get(0));
-                }
+                dvi_ref_cbb.getSelectionModel().select(DashboardController.ref_Dv.getId());
                 setItemsTo_RefTable(refLedgerList);
-                refLedgerDetailList = importDataToListLedger_Detail(file);
-                System.out.println("hi");
+                importDataToList(file, refLedgerDetailList,this::importCellToLEdger_detail);
+                importDataToList(file,refTransactionHistorysList,this::importCellToTransactionHistory);
             }
         }
     }
@@ -451,6 +447,7 @@ public class LedgerController implements Initializable {
             mapQuySheet(wb);
             mapLedger(wb,reportDAO);
             mapLedgerDetail(wb,reportDAO);
+            mapTransactionHistory(wb,reportDAO);
 
             fis.close();
             FileOutputStream fileOutputStream = new FileOutputStream(CommonFactory.pre_path+"\\"+file_name);
@@ -465,19 +462,21 @@ public class LedgerController implements Initializable {
             DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
         }
     }
-
     private void mapLedgerDetail(XSSFWorkbook wb,ReportDAO reportDAO) {
         XSSFSheet sheet2 = wb.createSheet("CHITIETSOCAI_DATA");
         List<Object[]> nxtls2 = reportDAO.findByWhatEver("select ld from ledger_details ld join ledgers l on ld.ledger_id=l.id where status like 'ACTIVE' and root_id="+DashboardController.ref_Dv.getId()+" and l.from_date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"'");
         setCellExcel(wb,sheet2,nxtls2,ledgerService.getColumnNames_LEDGER_DETAIL());
     }
-
     private void mapLedger(XSSFWorkbook wb,ReportDAO reportDAO) {
         XSSFSheet sheet = wb.createSheet("SOCAI_DATA");
         List<Object[]> nxtls = reportDAO.findByWhatEver("select * from ledgers l where status like 'ACTIVE' and l.from_date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"' and root_id="+DashboardController.ref_Dv.getId());
         setCellExcel(wb,sheet,nxtls,ledgerService.getColumnNames_LEDGER());
     }
-
+    private void mapTransactionHistory(XSSFWorkbook wb,ReportDAO reportDAO) {
+        XSSFSheet sheet = wb.createSheet("LICHSU_LUANCHUYEN_DATA");
+        List<Object[]> nxtls = reportDAO.findByWhatEver("select * from transaction_history th where th.date between '"+st_time.getValue()+"' and '"+lst_time.getValue()+"'");
+        setCellExcel(wb,sheet,nxtls,ledgerService.getColumnNames_TRANSACTION_HISTORY());
+    }
     private void mapQuySheet(XSSFWorkbook wb) {
         XSSFSheet quy = wb.createSheet("QUY_DATA");
         XSSFRow title_row = quy.createRow(0);
@@ -504,7 +503,6 @@ public class LedgerController implements Initializable {
         XSSFCell cell_dv2 = dv_row.createCell(1);
         cell_dv2.setCellValue(DashboardController.ref_Dv.getTen());
     }
-
     private void setCellExcel(XSSFWorkbook wb,XSSFSheet sheet,List<Object[]> nxtls,List<String> titles){
         XSSFRow title_row = sheet.createRow(0);
         for (int i =0; i< titles.size();i++){
@@ -543,7 +541,7 @@ public class LedgerController implements Initializable {
         }
     }
 
-    private Ledger importCellToLEdger(Row row){
+    private <T extends BaseObject> T importCellToLEdger(Row row){
         Ledger l =new Ledger();
         if (row!=null){
             Cell id = row.getCell(0);
@@ -610,9 +608,9 @@ public class LedgerController implements Initializable {
             l.setNote(note.getStringCellValue());
             l.setYear((int) year.getNumericCellValue());
         }
-        return l;
+        return (T) l;
     }
-    private LedgerDetails importCellToLEdger_detail(Row row){
+    private <T extends BaseObject> T importCellToLEdger_detail(Row row){
         LedgerDetails l =new LedgerDetails();
         if (row!=null){
             Cell maxd = row.getCell(0);
@@ -673,15 +671,53 @@ public class LedgerController implements Initializable {
             l.setXuat_nvdx(xuat_nvdx.getNumericCellValue());
             l.setXuat_sscd(xuat_sscd.getNumericCellValue());
         }
-        return l;
+        return (T) l;
     }
-    private List<Ledger> importDataToListLEdger(File f){
-        List<Ledger> ledgeledgerListrList = new ArrayList<>();
+    private <T extends BaseObject> T importCellToTransactionHistory(Row row){
+        TransactionHistory i =new TransactionHistory();
+        if (row!=null){
+            Cell id = row.getCell(0);
+            Cell xd_id = row.getCell(1);
+            Cell loaiphieu = row.getCell(2);
+            Cell date = row.getCell(3);
+            Cell mucgia = row.getCell(4);
+            Cell soluong = row.getCell(5);
+            Cell tructhuoc = row.getCell(6);
+            Cell tonkhotong = row.getCell(7);
+            Cell tonkhogia = row.getCell(8);
+            Cell index = row.getCell(9);
+            Cell created_at = row.getCell(10);
+            Cell soluong_tt = row.getCell(11);
+            Cell tonkh_sscd = row.getCell(12);
+            Cell tonkh_gia_sscd = row.getCell(13);
+            Cell ledger_id = row.getCell(14);
+
+            i.setId( id.getStringCellValue());
+            i.setXd_id((int)xd_id.getNumericCellValue());
+            i.setLoaiphieu(loaiphieu.getStringCellValue());
+            i.setDate(LocalDate.parse(date.getStringCellValue()));
+            i.setMucgia(mucgia.getNumericCellValue());
+            i.setSoluong(soluong.getNumericCellValue());
+            i.setTructhuoc(tructhuoc.getStringCellValue());
+            i.setTonkhotong(tonkhotong.getNumericCellValue());
+            i.setTonkho_gia(tonkhogia.getNumericCellValue());
+            i.setIndex((long) index.getNumericCellValue());
+            i.setSoluong_tt(soluong_tt.getNumericCellValue());
+            i.setTonkh_sscd(tonkh_sscd.getNumericCellValue());
+            i.setTonkh_gia_sscd(tonkh_gia_sscd.getNumericCellValue());
+            i.setLedger_id(ledger_id.getStringCellValue());
+            i.setCreated_at(LocalDateTime.parse(created_at.getStringCellValue()));
+        }
+        return (T) i;
+    }
+
+    private <T extends BaseObject> List<T>  importDataToList(File f, List<T> ls, Function<Row,T> importCell){
         try (FileInputStream fis = new FileInputStream(f);
              XSSFWorkbook wb = new XSSFWorkbook(fis)) {
-            
+
             XSSFSheet sheet = wb.getSheetAt(1);
             Iterator<Row> rowIterator = sheet.iterator();
+
             boolean isHeader = true;
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
@@ -689,36 +725,12 @@ public class LedgerController implements Initializable {
                     isHeader = false;
                     continue;
                 }
-                ledgeledgerListrList.add(importCellToLEdger(row));
+                ls.add(importCell.apply(row));
             }
         }catch (IOException e) {
             e.printStackTrace();
         }
-        return ledgeledgerListrList;
-
-    }
-
-    private List<LedgerDetails> importDataToListLedger_Detail(File f){
-        List<LedgerDetails> ledgerDetailsList = new ArrayList<>();
-        try (FileInputStream fis = new FileInputStream(f);
-             XSSFWorkbook wb = new XSSFWorkbook(fis)) {
-
-            XSSFSheet sheet = wb.getSheetAt(1);
-            Iterator<Row> rowIterator = sheet.iterator();
-
-            boolean isHeader = true;
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                if (isHeader) {
-                    isHeader = false;
-                    continue;
-                }
-                ledgerDetailsList.add(importCellToLEdger_detail(row));
-            }
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ledgerDetailsList;
+        return ls;
     }
     private LocalDate stringToLocalDate(String date_text){
         if (date_text.isEmpty()){

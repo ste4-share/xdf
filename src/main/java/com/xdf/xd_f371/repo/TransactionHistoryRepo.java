@@ -17,6 +17,12 @@ public interface TransactionHistoryRepo extends JpaRepository<TransactionHistory
     Optional<TransactionHistory> getInventoryOf_Lxd(@Param("xd") int xd_id);
     @Query(value = "select * from transaction_history where xd_id=:xd and loaiphieu like :lp and tructhuoc like :tt order by created_at desc limit 1",nativeQuery = true)
     Optional<TransactionHistory> getSoluongTructhuoc(@Param("xd") int xd_id,@Param("lp") String lp,@Param("tt") String tt);
+    @Query(value = "select * from transaction_history where xd_id=:xd and nhiemvu_id=:nvid order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> getTaskAccumulate(@Param("xd") int xd_id,@Param("nvid") int nvid);
+    @Query(value = "select * from transaction_history where xd_id=:xd and xmt_unit_id like :xmt_id order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> getXmtAccumulate(@Param("xd") int xd_id,@Param("xmt_id") String unit_xmt_id);
+    @Query(value = "select * from transaction_history where xd_id=:xd and xmt_unit_id like :xmt_id and nhiemvu_id=:nvid order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> getXmtAndTaskAccumulate(@Param("xd") int xd_id,@Param("xmt_id") String unit_xmt_id,@Param("nvid") int nv_id);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and mucgia=:gia order by created_at desc limit 1",nativeQuery = true)
     Optional<TransactionHistory> getInventoryOfPrice_Lxd(@Param("xd_id") int xd_id,@Param("gia") double dongia);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and date=:d order by created_at desc",nativeQuery = true)

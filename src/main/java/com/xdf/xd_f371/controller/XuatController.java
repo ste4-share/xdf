@@ -343,6 +343,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setNhiemvu_id(assignmentBillDto.getCtnv().getCtnv_id());
                 ledger.setLoaigiobay(assignmentBillDto.getLgb());
                 ledger.setPt_id(assignmentBillDto.getXmt().getId());
+                ledger.setXmt_id(assignmentBillDto.getUnit().getId());
                 ledger.setLpt(assignmentBillDto.getLpt().getTypeName());
                 ledger.setLpt_2(assignmentBillDto.getLpt().getType());
                 ledger.setSo_km(assignmentBillDto.getSokm());

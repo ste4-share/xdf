@@ -323,11 +323,12 @@ public class BaoCaoController implements Initializable {
             for (int i=0; i<tt_list_n.size(); i++) {
                 n_sum1 = n_sum1.concat("n"+i+" as n"+i+",");
                 sl1=sl1.concat("case when sum(n"+i+".soluong) is null then 0 else sum(n"+i+".soluong) end as n"+i+",");
-                n_case_1 = n_case_1.concat(" left join (SELECT petro_id, sum(nvdx_quantity) as soluong FROM public.inventory_units where bill_type like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and st_time between '"+sd+"' and '"+ed+"' and root_unit_id="+DashboardController.ref_Dv.getId()+" group by 1) n"+i+" on adm.id=n"+i+".petro_id");
-            }for (int i=0; i<tt_list_x.size(); i++) {
+                n_case_1 = n_case_1.concat(" left join (SELECT distinct on (xd_id) xd_id, soluong_tt as soluong FROM public.transaction_history where loaiphieu like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' order by xd_id,created_at desc) n"+i+" on adm.id=n"+i+".xd_id");
+            }
+            for (int i=0; i<tt_list_x.size(); i++) {
                 x_sum2 = x_sum2.concat("x"+i+" as x"+i+",");
                 sl2=sl2.concat("case when sum(x"+i+".soluong) is null then 0 else sum(x"+i+".soluong) end as x"+i+",");
-                x_case_2 = x_case_2.concat(" left join (SELECT petro_id, sum(nvdx_quantity) as soluong FROM public.inventory_units where bill_type like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and st_time between '"+sd+"' and '"+ed+"' and root_unit_id="+DashboardController.ref_Dv.getId()+" group by 1) x"+i+" on adm.id=x"+i+".petro_id");
+                x_case_2 = x_case_2.concat(" left join (SELECT distinct on (xd_id) xd_id, soluong_tt as soluong FROM public.transaction_history where loaiphieu like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' order by xd_id,created_at desc) x"+i+" on adm.id=x"+i+".xd_id");
             }
             return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }
@@ -423,29 +424,28 @@ public class BaoCaoController implements Initializable {
     }
     private void fillData(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
-        System.out.println("que: "+ getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
-//        List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
-//        int scol = 4;
-//        for (int i = 0; i<nxtls.size();i++){
-//            int lastRow = sheet.getLastRowNum();
-//            sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
-//            XSSFRow row1 = sheet.createRow(start_row+i+2);
-//            XSSFCellStyle style = wb.createCellStyle();
-//            Object[] rows_data = nxtls.get(i);
-//            for (int j = 0; j<rows_data.length;j++){
-//                String val = rows_data[j]==null ? "" : rows_data[j].toString();
-//                XSSFCell c = row1.createCell(scol+j);
-//                ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
-//                ExportFactory.setCellAlightmentStyle(style);
-//                if (Common.isDoubleNumber(val)){
-//                    BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
-//                    c.setCellValue(bigDecimal.doubleValue());
-//                } else {
-//                    c.setCellValue(val);
-//                }
-//                c.setCellStyle(style);
-//            }
-//        }
+        List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),q.getSd(),q.getEd()));
+        int scol = 4;
+        for (int i = 0; i<nxtls.size();i++){
+            int lastRow = sheet.getLastRowNum();
+            sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
+            XSSFRow row1 = sheet.createRow(start_row+i+2);
+            XSSFCellStyle style = wb.createCellStyle();
+            Object[] rows_data = nxtls.get(i);
+            for (int j = 0; j<rows_data.length;j++){
+                String val = rows_data[j]==null ? "" : rows_data[j].toString();
+                XSSFCell c = row1.createCell(scol+j);
+                ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+                ExportFactory.setCellAlightmentStyle(style);
+                if (Common.isDoubleNumber(val)){
+                    BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
+                    c.setCellValue(bigDecimal.doubleValue());
+                } else {
+                    c.setCellValue(val);
+                }
+                c.setCellStyle(style);
+            }
+        }
     }
     private void mergerCell(XSSFSheet sheet) {
         removeMerger(sheet,8,8,8,10);

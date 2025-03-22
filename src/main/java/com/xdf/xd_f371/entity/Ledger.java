@@ -1,8 +1,6 @@
 package com.xdf.xd_f371.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,7 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ledger {
+public class Ledger extends BaseObject{
     @Id
     private String id;
     @Column(name = "bill_id")
@@ -74,6 +72,8 @@ public class Ledger {
     private int root_id;
     @Column(name = "pt_id")
     private int pt_id;
+    @Column(name = "xmt_id")
+    private String xmt_id;
     @Column(name = "note")
     private String note;
     @Column(name = "year")
@@ -122,5 +122,6 @@ public class Ledger {
         this.year = l.getYear();
         this.dvi_baono = l.getDvi_baono();
         this.bienso_ds = l.getBienso_ds();
+        this.xmt_id=l.getXmt_id();
     }
 }

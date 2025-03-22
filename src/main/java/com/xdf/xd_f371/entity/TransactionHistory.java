@@ -1,21 +1,19 @@
 package com.xdf.xd_f371.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction_history")
 @Getter
 @Setter
 @NoArgsConstructor
-public class TransactionHistory {
+public class TransactionHistory extends BaseObject{
     @Id
     private String id;
     @Column(name = "xd_id")
@@ -36,11 +34,20 @@ public class TransactionHistory {
     private double tonkho_gia;
     @Column(name = "soluong_tt")
     private double soluong_tt;
+    @Column(name = "tonkh_sscd")
+    private double tonkh_sscd;
+    @Column(name = "tonkh_gia_sscd")
+    private double tonkh_gia_sscd;
     @Column(name = "index")
     private long index;
+    @Column(name = "ledger_id")
+    private String ledger_id;
+    @Transient
+    @Column(name = "created_at")
+    private LocalDateTime created_at;
 
     public TransactionHistory(String id, int xd_id, String loaiphieu, LocalDate date, double mucgia,
-                              double soluong, String tructhuoc, double tonkhotong, double tonkho_gia, long index,double soluong_tt) {
+                              double soluong, String tructhuoc, double tonkhotong, double tonkhogia_nvdx, long index,double soluong_tt,String ledger_id) {
         this.id = id;
         this.xd_id = xd_id;
         this.loaiphieu = loaiphieu;
@@ -49,8 +56,9 @@ public class TransactionHistory {
         this.soluong = soluong;
         this.tructhuoc = tructhuoc;
         this.tonkhotong = tonkhotong;
-        this.tonkho_gia = tonkho_gia;
+        this.tonkho_gia = tonkhogia_nvdx;
         this.index = index;
         this.soluong_tt = soluong_tt;
+        this.ledger_id = ledger_id;
     }
 }
