@@ -88,8 +88,6 @@ public class LedgerService {
             Optional<TransactionHistory> inv_price = transactionHistoryRepo.getInventoryOfPrice_Lxd(detail.getLoaixd_id(),detail.getDon_gia());
             Optional<TransactionHistory> inv = transactionHistoryRepo.getInventoryOf_Lxd(detail.getLoaixd_id());
             Optional<TransactionHistory> volumn_tructhuoc = transactionHistoryRepo.getSoluongTructhuoc(detail.getLoaixd_id(),savedLedger.getLoai_phieu(),savedLedger.getTructhuoc());
-            Optional<TransactionHistory> accumulate_task = transactionHistoryRepo.getTaskAccumulate(detail.getLoaixd_id(),savedLedger.getNhiemvu_id());
-            Optional<TransactionHistory> accumulate_xmt_task = transactionHistoryRepo.getXmtAndTaskAccumulate(detail.getLoaixd_id(),savedLedger.getXmt_id(),savedLedger.getNhiemvu_id());
 
             List<TransactionHistory> transactionHistoryListByDay = transactionHistoryRepo.getSizeOfTransactionByDay(detail.getLoaixd_id(),savedLedger.getFrom_date());
             String uid = RandomStringUtils.randomAlphanumeric(10).concat(String.valueOf(detail.getLoaixd_id())).concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"))).concat("_000"+index);
@@ -113,9 +111,6 @@ public class LedgerService {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }
-    private void textToInterval(String time){
-        String[] hr = time.split(":");
     }
     private String generateLEdgerDetailId(String ledgerid,int index){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+ledgerid).concat("_"+index);

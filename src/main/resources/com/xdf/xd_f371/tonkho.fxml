@@ -6,6 +6,8 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -59,7 +61,7 @@
                <children>
                   <TabPane tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                      <Tab fx:id="inventory_tab" text="Tồn kho hiện tại">
+                      <Tab fx:id="inventory_tab" text="Tồn kho">
                            <content>
                               <VBox>
                                  <children>
@@ -102,7 +104,7 @@
                                              <font>
                                                 <Font name="Cambria" size="16.0" />
                                              </font></TextField>
-                                          <Button fx:id="add_btn" mnemonicParsing="false" onAction="#addnew_petro" prefHeight="21.0" prefWidth="102.0" style="-fx-background-color: #0202ba; -fx-border-color: #a8a8a8; -fx-border-radius: 20; -fx-background-radius: 20;" text="Thêm mới" textFill="WHITE">
+                                          <Button fx:id="add_btn" mnemonicParsing="false" onAction="#addnew_petro" prefHeight="26.0" prefWidth="144.0" style="-fx-background-color: #0202ba; -fx-border-color: #a8a8a8; -fx-border-radius: 20; -fx-background-radius: 20;" text="Thêm loại xăng dầu" textFill="WHITE">
                                              <font>
                                                 <Font name="Cambria Bold" size="12.0" />
                                              </font>
@@ -125,47 +127,182 @@
                                           <Insets bottom="10.0" top="10.0" />
                                        </VBox.margin>
                                     </HBox>
-                                    <TableView fx:id="tb_inventory" layoutX="10.0" layoutY="92.0" onMouseClicked="#setClickToTonTb" stylesheets="@css/table_style.css">
-                                       <columns>
-                                          <TableColumn fx:id="col_stt_i" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
-                                          <TableColumn fx:id="col_tenxd_i" maxWidth="250.0" prefWidth="115.0" text="Tên Xăng Dầu" />
-                                          <TableColumn fx:id="col_cl_i" maxWidth="150.0" prefWidth="91.0" text="Chủng loại" />
-                                          <TableColumn fx:id="col_nvdx_tk111" prefWidth="331.0" text="Tồn đầu kỳ (Lit)">
+                                    <HBox>
+                                       <children>
+                                          <TableView fx:id="tb_inventory" onMouseClicked="#setClickToTonTb" stylesheets="@css/table_style.css">
                                              <columns>
-                                                <TableColumn fx:id="col_nvdx_tdk_i" maxWidth="120.0" prefWidth="70.0" text="NVDX(Lit)" />
-                                                <TableColumn fx:id="col_sscd_tdk_i" maxWidth="120.0" prefWidth="89.0" text="SSCD(Lit)" />
-                                                <TableColumn fx:id="col_cong_tdk_i" maxWidth="170.0" prefWidth="90.0" text="Tổng(Lit)" />
+                                                <TableColumn fx:id="col_stt_i" maxWidth="50.0" minWidth="45.0" prefWidth="50.0" text="TT" />
+                                                <TableColumn fx:id="col_tenxd_i" maxWidth="250.0" prefWidth="115.0" text="Tên Xăng Dầu" />
+                                                <TableColumn fx:id="col_cl_i" maxWidth="150.0" prefWidth="91.0" text="Chủng loại" />
+                                                <TableColumn fx:id="col_nvdx_tk111" prefWidth="331.0" text="Tồn đầu kỳ (Lit)">
+                                                   <columns>
+                                                      <TableColumn fx:id="col_nvdx_tdk_i" maxWidth="120.0" prefWidth="70.0" text="NVDX(Lit)" />
+                                                      <TableColumn fx:id="col_sscd_tdk_i" maxWidth="120.0" prefWidth="89.0" text="SSCD(Lit)" />
+                                                      <TableColumn fx:id="col_cong_tdk_i" maxWidth="170.0" prefWidth="90.0" text="Tổng(Lit)" />
+                                                   </columns>
+                                                </TableColumn>
+                                                <TableColumn fx:id="col_nhap_sscd11" prefWidth="223.0" text="Tồn kho hiện tại(Lit 15 do C)">
+                                                   <columns>
+                                                      <TableColumn fx:id="col_pre_nvdx_i" maxWidth="120.0" prefWidth="75.0" text="NVDX(Lit)" />
+                                                      <TableColumn fx:id="col_pre_sscd_i" maxWidth="120.0" prefWidth="75.0" text="SSCD(Lit)" />
+                                                      <TableColumn fx:id="col_pre_inv_i" maxWidth="170.0" prefWidth="75.0" text="Tổng(Lit)" />
+                                                   </columns>
+                                                </TableColumn>
+                                                <TableColumn fx:id="col_nvdx_tk1211112111" prefWidth="269.0" text="Đã tiêu thụ trong quý(Lit 15 do C)">
+                                                   <columns>
+                                                      <TableColumn fx:id="col_nvdx_datt_i" maxWidth="120.0" prefWidth="100.0" text="NVDX(Lit)" />
+                                                      <TableColumn fx:id="col_sscd_datt_i" maxWidth="120.0" prefWidth="100.0" text="SSCD(Lit)" />
+                                                      <TableColumn fx:id="col_cong_datt_i" maxWidth="170.0" prefWidth="100.0" text="Cộng(Lit)" />
+                                                   </columns>
+                                                </TableColumn>
                                              </columns>
-                                          </TableColumn>
-                                          <TableColumn fx:id="col_nhap_sscd11" prefWidth="223.0" text="Tồn kho hiện tại(Lit 15 do C)">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
+                                          </TableView>
+                                          <VBox prefHeight="373.0" prefWidth="538.0">
+                                             <children>
+                                                <Label prefHeight="20.0" prefWidth="167.0" text="--Các mức giá--">
+                                                   <font>
+                                                      <Font name="Cambria Italic" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ListView fx:id="priceLs" prefHeight="327.0" prefWidth="400.0" />
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="10.0" />
+                                             </HBox.margin>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox layoutX="10.0" layoutY="20.0" prefHeight="20.0" prefWidth="1337.0">
+                                       <children>
+                                          <Label prefHeight="20.0" prefWidth="226.0" text="--Lịch sử luân chuyển--">
+                                             <font>
+                                                <Font name="Cambria Italic" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="10.0" layoutY="10.0" prefHeight="20.0" prefWidth="226.0" text="xd_selected..." fx:id="xd_selected_lb">
+                                             <font>
+                                                <Font name="Cambria Italic" size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <TableView fx:id="transaction_tb" prefHeight="346.0" prefWidth="922.0" stylesheets="@css/table_style.css">
                                              <columns>
-                                                <TableColumn fx:id="col_pre_nvdx_i" maxWidth="120.0" prefWidth="75.0" text="NVDX(Lit)" />
-                                                <TableColumn fx:id="col_pre_sscd_i" maxWidth="120.0" prefWidth="75.0" text="SSCD(Lit)" />
-                                                <TableColumn fx:id="col_pre_inv_i" maxWidth="170.0" prefWidth="75.0" text="Tổng(Lit)" />
+                                                <TableColumn fx:id="stt3" maxWidth="50.0" minWidth="40.0" prefWidth="50.0" text="TT" />
+                                                <TableColumn fx:id="nx" maxWidth="250.0" minWidth="200.0" prefWidth="250.0" text="Nhập/Xuất" />
+                                                <TableColumn fx:id="timexd3" maxWidth="150.0" minWidth="100.0" prefWidth="125.0" text="Thời gian" />
+                                                <TableColumn fx:id="mucgia3" maxWidth="300.0" minWidth="100.0" prefWidth="125.0" text="Mức giá(vnd)" />
+                                                <TableColumn fx:id="danhap3" maxWidth="300.0" minWidth="100.0" prefWidth="125.0" text="Đã Nhập/Xuất(Lit)" />
+                                                <TableColumn fx:id="conton3" maxWidth="300.0" minWidth="100.0" prefWidth="125.0" text="Còn tồn(Lit)" />
                                              </columns>
-                                          </TableColumn>
-                                          <TableColumn fx:id="col_nvdx_tk1211112111" prefWidth="269.0" text="Đã tiêu thụ trong quý(Lit 15 do C)">
-                                             <columns>
-                                                <TableColumn fx:id="col_nvdx_datt_i" maxWidth="120.0" prefWidth="100.0" text="NVDX(Lit)" />
-                                                <TableColumn fx:id="col_sscd_datt_i" maxWidth="120.0" prefWidth="100.0" text="SSCD(Lit)" />
-                                                <TableColumn fx:id="col_cong_datt_i" maxWidth="170.0" prefWidth="100.0" text="Cộng(Lit)" />
-                                             </columns>
-                                          </TableColumn>
-                                       </columns>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
+                                          </TableView>
+                                          <VBox prefHeight="345.0" prefWidth="340.0">
+                                             <children>
+                                                <HBox>
+                                                   <children>
+                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tồn kho tại thời điểm:">
+                                                         <font>
+                                                            <Font name="Cambria Italic" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="time_ref_lb" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0">
+                                                         <font>
+                                                            <Font name="Cambria Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </HBox>
+                                                <Separator prefWidth="200.0" />
+                                                <HBox layoutX="10.0" layoutY="10.0">
+                                                   <children>
+                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tổng tồn cho NVDX (Lit):" textFill="#0d40cd">
+                                                         <font>
+                                                            <Font name="Cambria Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="total_nvdx_lb" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0" text="------------">
+                                                         <font>
+                                                            <Font name="Cambria Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                   <VBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </VBox.margin>
+                                                </HBox>
+                                                <HBox layoutX="10.0" layoutY="43.0" prefHeight="10.0" prefWidth="309.0">
+                                                   <children>
+                                                      <Label prefHeight="30.0" prefWidth="223.0">
+                                                         <font>
+                                                            <Font name="Cambria Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="total_nvdx_lb1" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0" text="+">
+                                                         <font>
+                                                            <Font name="Arial Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </HBox>
+                                                <HBox layoutX="10.0" layoutY="43.0">
+                                                   <children>
+                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tổng tồn cho SSCD (Lit):" textFill="RED">
+                                                         <font>
+                                                            <Font name="Cambria Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="total_sscd_lb" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0" text="------------">
+                                                         <font>
+                                                            <Font name="Cambria Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </HBox>
+                                                <Separator layoutX="10.0" layoutY="40.0" prefWidth="200.0" />
+                                                <HBox layoutX="10.0" layoutY="10.0">
+                                                   <children>
+                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tổng (Lit):" textFill="#5d0099">
+                                                         <font>
+                                                            <Font name="Cambria Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="total_lb" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0" text="------------">
+                                                         <font>
+                                                            <Font name="Cambria Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="10.0" />
+                                             </HBox.margin>
+                                          </VBox>
+                                          <Label layoutX="1027.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0">
+                                             <font>
+                                                <Font name="Cambria Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
                            </content>
                       </Tab>
                         <Tab text="Phân tích tồn kho">
                            <content>
-                              <VBox prefHeight="200.0" prefWidth="100.0">
+                              <VBox>
                                  <children>
                                     <HBox alignment="CENTER_LEFT">
                                        <children>
@@ -198,7 +335,7 @@
                                           <Insets bottom="10.0" top="10.0" />
                                        </VBox.margin>
                                     </HBox>
-                                    <TableView fx:id="pttk_tb" prefHeight="200.0" prefWidth="200.0" stylesheets="@css/table_style.css">
+                                    <TableView fx:id="pttk_tb" stylesheets="@css/table_style.css">
                                       <columns>
                                         <TableColumn fx:id="pttk_stt" maxWidth="50.0" minWidth="40.0" prefWidth="50.0" text="TT" />
                                           <TableColumn fx:id="pttk_loaixd" maxWidth="150.0" minWidth="100.0" prefWidth="125.0" text="Loại" />
@@ -230,7 +367,6 @@
                   </TabPane>
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" prefHeight="72.0" prefWidth="1337.0" />
          </children>
          <HBox.margin>
             <Insets bottom="10.0" right="10.0" />

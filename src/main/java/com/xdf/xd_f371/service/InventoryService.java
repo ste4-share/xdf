@@ -34,18 +34,6 @@ public class InventoryService {
     public Inventory findById(int id){
         return inventoryRepo.findById(id).orElse(null);
     }
-    public List<InventoryUnitDto> getAllInventoryUnitDto(){
-        return mapToInventoryUnitDto(inventoryRepo.getAllInventoryUnit());
-    }public List<InventoryUnitDto> getAllInventoryUnitDtoByUnit(int rid){
-        return mapToInventoryUnitDto(inventoryRepo.getAllInventoryUnitByRootId(rid));
-    }
-    public List<InventoryUnitDto> mapToInventoryUnitDto(List<Object[]> results) {
-        List<InventoryUnitDto> ls = new ArrayList<>();
-        for (Object[] row : results) {
-            ls.add(new InventoryUnitDto((int) row[0], (String) row[1], (String) row[2], (String) row[3],
-                    (double) row[4],(double) row[5], (double) row[6],(double) row[7]));
-        }return ls;
-    }
     public List<InventoryDto> mapPreInventoryPetro(List<Object[]> results) {
         return results.stream()
                 .map(row -> new InventoryDto((int) row[0],(String) row[1],(double) row[2],(double) row[3],

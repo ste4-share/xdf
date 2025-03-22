@@ -431,7 +431,6 @@ public class LedgerController implements Initializable {
             }
         }
     }
-
     private void mapLEdgerDataToFile(){
         try {
             String file_n = CommonFactory.pre_path+"\\"+file_name;

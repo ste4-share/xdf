@@ -46,6 +46,15 @@ public class TransactionHistory extends BaseObject{
     @Column(name = "created_at")
     private LocalDateTime created_at;
 
+    @Transient
+    private String soluong_str;
+    @Transient
+    private String mucgia_str;
+    @Transient
+    private String ton;
+    @Transient
+    private String created_at_str;
+
     public TransactionHistory(String id, int xd_id, String loaiphieu, LocalDate date, double mucgia,
                               double soluong, String tructhuoc, double tonkhotong, double tonkhogia_nvdx, long index,double soluong_tt,String ledger_id) {
         this.id = id;

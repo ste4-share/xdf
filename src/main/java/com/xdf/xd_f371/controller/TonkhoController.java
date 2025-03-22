@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.ConfigCons;
+import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.InventoryUnitDto;
 import com.xdf.xd_f371.dto.PttkDto;
@@ -8,6 +9,7 @@ import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
+import com.xdf.xd_f371.util.TextToNumber;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
 public class TonkhoController implements Initializable {
 
     public static Stage tk_stage;
-    private static List<InventoryUnitDto> inventoryUnitDtoArrayList = new ArrayList<>();
+    private List<InventoryUnitDto> inventoryUnitDtoArrayList = new ArrayList<>();
     public static InventoryUnitDto pickTonKho = new InventoryUnitDto();
     private static List<PttkDto> pttkDtos = new ArrayList<>();
     public static NguonNx ref_unit = null;
@@ -50,17 +52,21 @@ public class TonkhoController implements Initializable {
     @FXML
     private CheckBox tdvChk;
     @FXML
-    private Label sd_lb, ed_lb,dv_lb;
+    private Label sd_lb, ed_lb,dv_lb,time_ref_lb,total_nvdx_lb,total_sscd_lb,total_lb,xd_selected_lb;
+    @FXML
+    private ListView<String> priceLs;
+    @FXML
+    private TableView<TransactionHistory> transaction_tb;
+    @FXML
+    private TableColumn<TransactionHistory,String> stt3,nx,timexd3,mucgia3,danhap3,conton3;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
-    private ConfigurationService configurationService;
-    @Autowired
-    private NguonNxService nguonNxService;
+    private TransactionHistoryService transactionHistoryService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        tb_inventory.setPrefWidth(DashboardController.screenWidth);
+        transaction_tb.setPrefWidth(DashboardController.screenWidth-700);
+        tb_inventory.setPrefWidth(DashboardController.screenWidth-900);
         tb_inventory.setPrefHeight(DashboardController.screenHeigh-350);
         pttk_tb.setPrefWidth(DashboardController.screenWidth);
         pttk_tb.setPrefHeight(DashboardController.screenHeigh-350);
@@ -69,47 +75,85 @@ public class TonkhoController implements Initializable {
         setCellFactoryInventoryTb();
         setCellFactoryPttk();
         initPttkTb();
+        setCellFactoryForTransactionTb();
         searching(inventoryUnitDtoArrayList.stream().map(InventoryUnitDto::getTenxd).toList());
     }
     private void fillDataToTableInventoryUnit() {
-        if (ref_unit!=null){
-            dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
-            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDtoByUnit(ref_unit.getId());
-            setDataToTbInventory(inventoryUnitDtoArrayList);
-        }else{
-            dv_lb.setText("--Tồn kho toàn đơn vị--");
-            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDto();
+        if (DashboardController.ref_Dv!=null){
+            dv_lb.setText("--Tồn kho: " +DashboardController.ref_Dv.getTen());
+            inventoryUnitDtoArrayList = transactionHistoryService.getInventoryOf_Lxd(ConnectLan.pre_acc.getSd(),ConnectLan.pre_acc.getEd());
             setDataToTbInventory(inventoryUnitDtoArrayList);
         }
+//        else{
+//            dv_lb.setText("--Tồn kho toàn đơn vị--");
+//            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDto();
+//            setDataToTbInventory(inventoryUnitDtoArrayList);
+//        }
+    }
+    private void setTransactionHistoryList(int xd_id){
+        List<TransactionHistory> ls = transactionHistoryService.getTransactionHistoryByDate(xd_id,ConnectLan.pre_acc.getEd());
+        ls.forEach(x->{
+            x.setSoluong_str(TextToNumber.textToNum_2digits(x.getSoluong()));
+            x.setTon(TextToNumber.textToNum_2digits(x.getTonkhotong()));
+            x.setMucgia_str(TextToNumber.textToNum_2digits(x.getMucgia()));
+            x.setCreated_at_str(x.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        });
+        setItemsForTransactionTb(ls);
     }
     private void setDataToTbInventory(List<InventoryUnitDto> ls){
         tb_inventory.setItems(FXCollections.observableList(ls));
         tb_inventory.refresh();
     }
+    private void setItemsForListMucgia(List<String> ls){
+        priceLs.setItems(FXCollections.observableList(ls));
+        priceLs.refresh();
+    }
+    private void setCellFactoryForTransactionTb(){
+        stt3.setSortable(false);
+        stt3.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(transaction_tb.getItems().indexOf(column.getValue())+1).asString());
+        nx.setCellValueFactory(new PropertyValueFactory<TransactionHistory, String>("loaiphieu"));
+        timexd3.setCellValueFactory(new PropertyValueFactory<TransactionHistory, String>("created_at_str"));
+        mucgia3.setCellValueFactory(new PropertyValueFactory<TransactionHistory, String>("mucgia_str"));
+        danhap3.setCellValueFactory(new PropertyValueFactory<TransactionHistory, String>("soluong_str"));
+        conton3.setCellValueFactory(new PropertyValueFactory<TransactionHistory, String>("ton"));
+        transaction_tb.setRowFactory(tv -> new TableRow<TransactionHistory>() {
+            @Override
+            protected void updateItem(TransactionHistory transactionHistory, boolean empty) {
+                super.updateItem(transactionHistory, empty);
+
+                if (transactionHistory == null || empty) {
+                    setStyle(null);
+                } else {
+                    if (transactionHistory.getLoaiphieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())) {
+                        setStyle("-fx-background-color: #5f94e8;");
+                    }else if (transactionHistory.getLoaiphieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                        setStyle("-fx-background-color: #fa4655;");
+                    }
+                }
+            }
+        });
+    }
+    private void setItemsForTransactionTb(List<TransactionHistory> ls){
+        transaction_tb.setItems(FXCollections.observableList(ls));
+        transaction_tb.refresh();
+    }
+    private void setItemsForLbTotal(double nvdx,double sscd){
+        total_nvdx_lb.setText(TextToNumber.textToNum_2digits(nvdx));
+        total_sscd_lb.setText(TextToNumber.textToNum_2digits(sscd));
+        total_lb.setText(TextToNumber.textToNum_2digits(nvdx+sscd));
+    }
     private void setLb(){
         Accounts acc = ConnectLan.pre_acc;
         if (acc.getSd()!=null && acc.getEd()!=null){
             sd_lb.setText(acc.getSd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            time_ref_lb.setText(acc.getEd().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             ed_lb.setText(acc.getEd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        } else {
+        }else{
             sd_lb.setText(null);
             ed_lb.setText(null);
         }
-        indentifyNguonnx();
     }
-    private void indentifyNguonnx(){
-        Optional<Configuration> i = configurationService.findByParam(ConfigCons.ROOT_ID.getName());
-        if (i.isPresent()){
-            Optional<NguonNx> nx = nguonNxService.findById(Integer.parseInt(i.get().getValue()));
-            nx.ifPresent(nguonNx -> {
-                ref_unit=nguonNx;
-                dv_lb.setText(nguonNx.getTen());
-            });
-        }else {
-            ref_unit=null;
-            dv_lb.setText(null);
-        }
-    }
+
     private void initPttkTb(){
         Accounts q = ConnectLan.pre_acc;
         if (q.getSd()!=null){
@@ -123,7 +167,7 @@ public class TonkhoController implements Initializable {
         pttk_tb.setItems( FXCollections.observableArrayList(ls));
         pttk_tb.refresh();
     }
-    private void setCellFactoryInventoryTb() {
+    private void setCellFactoryInventoryTb(){
         col_stt_i.setSortable(false);
         col_stt_i.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(tb_inventory.getItems().indexOf(column.getValue())+1).asString());
         col_tenxd_i.setCellValueFactory(new PropertyValueFactory<InventoryUnitDto, String>("tenxd"));
@@ -162,11 +206,14 @@ public class TonkhoController implements Initializable {
             }).collect(Collectors.toList());
         });
     }
-
     @FXML
     public void setClickToTonTb(MouseEvent mouseEvent) {
         InventoryUnitDto spotDto = tb_inventory.getSelectionModel().getSelectedItem();
-        if (mouseEvent.getClickCount() == 2 && spotDto != null) {
+        setListAndLabel(spotDto.getPetro_id());
+        setTransactionHistoryList(spotDto.getPetro_id());
+        xd_selected_lb.setText(spotDto.getTenxd());
+        setCellFactoryForTransactionTb();
+        if (mouseEvent.getClickCount() == 2) {
             pickTonKho = spotDto;
             tk_stage = new Stage();
             List<InventoryDto> list;
@@ -182,6 +229,20 @@ public class TonkhoController implements Initializable {
                 fillDataToTableInventoryUnit();
             }
         }
+    }
+    private void setListAndLabel(int xd_id){
+        List<TransactionHistory> ls = transactionHistoryService.getLastestTimeForEachPrices(xd_id);
+        List<String> strls = new ArrayList<>();
+        double total_nvdx = 0;
+        double total_sscd = 0;
+        for (TransactionHistory x : ls) {
+            strls.add("Mức giá: " + TextToNumber.textToNum_2digits(x.getMucgia()) + " (vnđ), Tồn cho (NVDX): "
+                    + TextToNumber.textToNum_2digits(x.getTonkho_gia()) + " (Lit), Tồn cho (SSCD): " + TextToNumber.textToNum_2digits(x.getTonkh_gia_sscd())+" (Lit)");
+            total_nvdx = total_nvdx + x.getTonkho_gia();
+            total_sscd = total_sscd + x.getTonkh_gia_sscd();
+        }
+        setItemsForListMucgia(strls);
+        setItemsForLbTotal(total_nvdx,total_sscd);
     }
     @FXML
     public void addnew_petro(ActionEvent actionEvent) {
@@ -225,15 +286,9 @@ public class TonkhoController implements Initializable {
     }
     @FXML
     public void tdvChckAction(ActionEvent actionEvent) {
-        if (tdvChk.isSelected()){
-            dv_lb.setText("--Tồn kho toàn đơn vị--");
-            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDto();
-            setDataToTbInventory(inventoryUnitDtoArrayList);
-        }else{
-            dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
-            inventoryUnitDtoArrayList = inventoryService.getAllInventoryUnitDtoByUnit(ref_unit.getId());
-            setDataToTbInventory(inventoryUnitDtoArrayList);
-        }
+        dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
+        inventoryUnitDtoArrayList = transactionHistoryService.getInventoryOf_Lxd(ConnectLan.pre_acc.getSd(),ConnectLan.pre_acc.getEd());
+        setDataToTbInventory(inventoryUnitDtoArrayList);
     }
     @FXML
     public void refreshPttkAction(ActionEvent actionEvent) {
