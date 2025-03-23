@@ -436,12 +436,25 @@ public class BaoCaoController implements Initializable {
                 String val = rows_data[j]==null ? "" : rows_data[j].toString();
                 XSSFCell c = row1.createCell(scol+j);
                 ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
-                ExportFactory.setCellAlightmentStyle(style);
+                if (Integer.parseInt(rows_data[2].toString())==1){
+                    ExportFactory.setBoldFont(wb,style);
+                }
+                if (j!=3){
+                    ExportFactory.setCellAlightmentStyle(style);
+                }
                 if (Common.isDoubleNumber(val)){
                     BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
                     c.setCellValue(bigDecimal.doubleValue());
                 } else {
-                    c.setCellValue(val);
+                    if (j==3){
+                        if (SubQuery.lxdMap().get(val)!=null){
+                            c.setCellValue(SubQuery.lxdMap().get(val));
+                        }else{
+                            c.setCellValue(val);
+                        }
+                    }else{
+                        c.setCellValue(val);
+                    }
                 }
                 c.setCellStyle(style);
             }

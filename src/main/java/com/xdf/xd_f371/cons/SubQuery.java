@@ -1,6 +1,8 @@
 package com.xdf.xd_f371.cons;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SubQuery {
     public static String bc_pttk_q(){
@@ -13,8 +15,8 @@ public class SubQuery {
                 "(case when NHAP_dka.tonkho is null then 0 else NHAP_dka.tonkho end)-(case when XUAT_dka.tonkho is null then 0 else XUAT_dka.tonkho end) as d_kienan,\n" +
                 "(case when NHAP_dvi.tonkho is null then 0 else NHAP_dvi.tonkho end)-(case when XUAT_dvi.tonkho is null then 0 else XUAT_dvi.tonkho end) as d_vinh,\n" +
                 "(case when NHAP_dns.tonkho is null then 0 else NHAP_dns.tonkho end)-(case when XUAT_dns.tonkho is null then 0 else XUAT_dns.tonkho end) as d_nasan,\n" +
-                "(case when NHAP_fb.tonkho is null then 0 else NHAP_fb.tonkho end)-(case when XUAT_fb.tonkho is null then 0 else XUAT_fb.tonkho end) as fb\n" +
-                "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +
+                "case when f_bo.tonkhotong is null then 0 else f_bo.tonkhotong end as fb\n" +
+                "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
                 "left join (select loaixd_id, sum(nhap_nvdx+nhap_sscd) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
                 "where status like 'ACTIVE' and dvi_nhan like 'e916' and loai_phieu like 'NHAP' group by 1) NHAP_e916 on lxd.id=NHAP_e916.loaixd_id\n" +
                 "left join (select loaixd_id, sum(xuat_nvdx+xuat_sscd) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
@@ -47,10 +49,7 @@ public class SubQuery {
                 "where status like 'ACTIVE' and dvi_nhan like 'd Nà Sản' and loai_phieu like 'NHAP' group by 1) NHAP_dns on lxd.id=NHAP_dns.loaixd_id\n" +
                 "left join (select loaixd_id, sum(xuat_nvdx+xuat_sscd) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
                 "where status like 'ACTIVE' and dvi_xuat like 'd Nà Sản' and loai_phieu like 'XUAT' group by 1) XUAT_dns on lxd.id=XUAT_dns.loaixd_id\n" +
-                "left join (select loaixd_id, sum(nhap_nvdx+nhap_sscd) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-                "where status like 'ACTIVE' and dvi_nhan like 'f Bộ' and loai_phieu like 'NHAP' group by 1) NHAP_fb on lxd.id=NHAP_fb.loaixd_id\n" +
-                "left join (select loaixd_id, sum(xuat_nvdx+xuat_sscd) as tonkho from ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-                "where status like 'ACTIVE' and dvi_xuat like 'f Bộ' and loai_phieu like 'XUAT' group by 1) XUAT_fb on lxd.id=XUAT_fb.loaixd_id\n" +
+                "left join (SELECT distinct on (xd_id) * FROM public.transaction_history order by xd_id,created_at desc) f_bo on lxd.id=f_bo.xd_id\n" +
                 "order by priority_1,priority_2,priority_3";
     }
     public static String bc_ttxd_xmt_q(LocalDate sd,LocalDate ed,int year){
@@ -338,5 +337,22 @@ public class SubQuery {
                 "where name_pt is not null\n" +
                 "group by pri,name_pt,ten_nv,nhiemvu\n" +
                 "order by ten_gr desc, name_pt desc,tennv_gr desc,pri asc,ten_nv,nv_gr desc";
+    }
+    public static Map<String,String> lxdMap(){
+        Map<String,String> map = new HashMap<>();
+        map.put(LoaiXDCons.NHIENLIEU.getName(), "Nhiên liệu");
+        map.put(LoaiXDCons.XANG.getName(), "Xăng ô tô");
+        map.put(LoaiXDCons.DAUHACAP.getName(), "Hạ cấp");
+        map.put(LoaiXDCons.DAUBAY.getName(), "Dầu bay");
+        map.put(LoaiXDCons.DMN.getName(), "Dầu mỡ nhờn");
+        map.put(LoaiXDCons.TK_MN.getName(), "Dầu mỡ H.Không");
+        map.put(LoaiXDCons.TK_DTL.getName(), "Dầu thủy lực");
+        map.put(LoaiXDCons.TK_DM.getName(), "Dung môi");
+        map.put(LoaiXDCons.TK_DK.getName(), "Dầu khác");
+        map.put(LoaiXDCons.MD_MGMS.getName(), "Mỡ giảm ma sát");
+        map.put(LoaiXDCons.MD_DTD.getName(), "Dầu truyền động");
+        map.put(LoaiXDCons.MD_DK.getName(), "Dầu M.Đất Dầu khác");
+        map.put(LoaiXDCons.MD_DCOTO.getName(), "Dầu Đ.cơ Ô tô");
+        return map;
     }
 }
