@@ -49,11 +49,11 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
             "group by 1,2) a on lxd.id=a.loaixd_id",nativeQuery = true)
     List<Object[]> findAllInvByRangeBefore(@Param("sd") LocalDate sd);
 
-    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid",nativeQuery = true)
+    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by timestamp desc",nativeQuery = true)
     List<Ledger> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed,@Param("dvid") int dvid);
-    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed",nativeQuery = true)
+    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed order by timestamp desc",nativeQuery = true)
     List<Ledger> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
-    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.root_id=:dvid",nativeQuery = true)
+    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.root_id=:dvid order by timestamp desc",nativeQuery = true)
     List<Ledger> findAllLedgerByUnit(@Param("dvid") int dvid);
     @Query(value = "select * from ledgers l where status like 'ACTIVE'",nativeQuery = true)
     List<Ledger> findAllLedgerActive();

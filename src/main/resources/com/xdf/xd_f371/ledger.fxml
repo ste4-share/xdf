@@ -34,7 +34,7 @@
               <content>
                 <AnchorPane>
                      <children>
-                        <VBox layoutX="14.0" layoutY="14.0" onMouseClicked="#outClick">
+                        <VBox layoutX="14.0" layoutY="14.0">
                            <children>
                               <HBox>
                                  <children>
@@ -196,7 +196,7 @@
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <TableView fx:id="ledgers_table" onMouseClicked="#select_ledger_table" prefHeight="216.0" prefWidth="1050.0" stylesheets="@css/table_style.css">
+                                          <TableView fx:id="ledgers_table" onMouseClicked="#select_ledger_table" prefHeight="216.0" prefWidth="1050.0" style="-fx-border-color: #a8a8a8;" stylesheets="@css/table_style.css">
                                             <columns>
                                                 <TableColumn fx:id="ledgers_col_stt" maxWidth="90.0" minWidth="15.0" text="no" />
                                               <TableColumn fx:id="ledgers_col_id" maxWidth="300.0" minWidth="200.0" prefWidth="250.0" text="ID" />

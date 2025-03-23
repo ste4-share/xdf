@@ -31,10 +31,6 @@ public class Accounts {
     private String status;
     @Column(name = "create_at",insertable = false,updatable = false)
     private LocalDate create_at;
-    @Column(name = "sd")
-    private LocalDate sd;
-    @Column(name = "ed")
-    private LocalDate ed;
 
     @OneToMany(mappedBy = "accounts")
     List<Ledger> ledgerList;

@@ -3,11 +3,14 @@ package com.xdf.xd_f371.controller;
 import com.xdf.xd_f371.MainApplicationApp;
 import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
+import com.xdf.xd_f371.cons.MessageCons;
+import com.xdf.xd_f371.dto.QuarterDto;
 import com.xdf.xd_f371.entity.Configuration;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
+import com.xdf.xd_f371.util.DialogMessage;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -28,10 +31,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -41,6 +46,7 @@ public class DashboardController implements Initializable {
     public static String so_select = null;
     public static Stage primaryStage;
     public static NguonNx ref_Dv=null;
+    public static QuarterDto ref_Quarter=null;
     public static Map<String, List<TrucThuoc>> map = new HashMap<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
     public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
@@ -70,12 +76,24 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initLabel();
+        getQuarterList();
         initRefDv();
         getTructhuocList();
         getCurrentTiming();
         customStyleMenu();
         setStyleForClickedMEnu(ledger_menu,tonkho_menu,dvi_menu,dinhmuc_menu,nhiemvu_menu,report);
         openFxml("ledger.fxml");
+    }
+
+    private void getQuarterList() {
+        try {
+            ref_Quarter = configurationService.getListQuarter(LocalDate.now().getYear()).stream()
+                    .filter(x->x.getStart_date().isBefore(LocalDate.now()) && x.getEnd_date().isAfter(LocalDate.now())).findFirst().orElse(null);
+            System.out.println(ref_Quarter);
+        } catch (RuntimeException e) {
+            DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+            throw new RuntimeException(e);
+        }
     }
 
     private Map<String, List<TrucThuoc>> getTructhuocList(){

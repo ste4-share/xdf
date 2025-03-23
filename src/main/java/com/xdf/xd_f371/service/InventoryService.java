@@ -4,12 +4,12 @@ import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.MucGiaEnum;
 import com.xdf.xd_f371.cons.SubQuery;
 import com.xdf.xd_f371.controller.ConnectLan;
+import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.*;
 import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
-import javafx.scene.control.DatePicker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -90,20 +90,16 @@ public class InventoryService {
         }
     }
     @Transactional
-    public void saveInvWhenSwitchQuarter(DatePicker sd, DatePicker ed,NguonNx nnx,boolean ischecked) {
-        Accounts acc = ConnectLan.pre_acc;
-        acc.setSd(sd.getValue());
-        acc.setEd(ed.getValue());
-        Accounts a = accountRepo.save(acc);
+    public void saveInvWhenSwitchQuarter(NguonNx nnx,boolean ischecked) {
         List<Ledger> previous_invs;
         if (ischecked){
-            previous_invs = ledgersRepo.findAllByBeforeDateRange(a.getSd());
+            previous_invs = ledgersRepo.findAllByBeforeDateRange(DashboardController.ref_Quarter.getStart_date());
         }else{
-            previous_invs = ledgersRepo.findAllByBeforeDateRange2(a.getSd(),nnx.getId());
+            previous_invs = ledgersRepo.findAllByBeforeDateRange2(DashboardController.ref_Quarter.getStart_date(),nnx.getId());
         }
         inventoryRepo.deleteAll();
         if (!previous_invs.isEmpty()){
-            List<InvDto> invDtoList = mapToInvDto(ledgersRepo.findAllInvByRangeBefore(a.getSd()));
+            List<InvDto> invDtoList = mapToInvDto(ledgersRepo.findAllInvByRangeBefore(DashboardController.ref_Quarter.getStart_date()));
             invDtoList.forEach(x -> {
                 if (x.getNhap_nvdx()-x.getXuat_nvdx()<=0 && x.getNhap_sscd()-x.getXuat_sscd()<=0){
                     inventoryRepo.save(new Inventory(x.getPetro_id(),x.getNhap_nvdx()-x.getXuat_nvdx(),

@@ -211,9 +211,13 @@ public class LedgerController implements Initializable {
                     setStyle(null);
                 } else {
                     if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())) {
-                        setStyle("-fx-background-color: #5f94e8;");
+                        setStyle("-fx-background-color: #5f94e8;"+
+                                "-fx-border-color: transparent transparent black transparent; " +
+                                "-fx-border-width: 0px 0px 1px;");
                     }else if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())) {
-                        setStyle("-fx-background-color: #fa4655;");
+                        setStyle("-fx-background-color: #fa4655;"+
+                                "-fx-border-color: transparent transparent black transparent; " +
+                                "-fx-border-width: 0px 0px 1px;");
                     }
                 }
             }
@@ -226,10 +230,10 @@ public class LedgerController implements Initializable {
         date_ls.setItems(FXCollections.observableList(ls));
     }
     private void initStartDate() {
-        st_time.setValue(ConnectLan.pre_acc.getSd());
-        lst_time.setValue(ConnectLan.pre_acc.getEd());
-        tab2_tungay.setValue(ConnectLan.pre_acc.getSd());
-        tab2_denngay.setValue(ConnectLan.pre_acc.getEd());
+        st_time.setValue(DashboardController.ref_Quarter.getStart_date());
+        lst_time.setValue(DashboardController.ref_Quarter.getEnd_date());
+        tab2_tungay.setValue(DashboardController.ref_Quarter.getStart_date());
+        tab2_denngay.setValue(DashboardController.ref_Quarter.getEnd_date());
     }
     private void initNnxCombobox(List<NguonNx> nnxls) {
         ComponentUtil.setItemsToComboBox(dvi_ref_cbb,nnxls,NguonNx::getTen, input -> nguonNxService.findByTen(input).orElse(null));
@@ -271,7 +275,7 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void all_radio_action(ActionEvent actionEvent) {
-        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).toList());
+        setItemToTableView(ledgerSelectList.stream().filter(x->x.getFrom_date().equals(currentDateSelected)).sorted(Comparator.comparing(Ledger::getTimestamp)).toList());
     }
     @FXML
     public void nhap_radio_action(ActionEvent actionEvent) {
@@ -409,10 +413,6 @@ public class LedgerController implements Initializable {
     private LocalDate stringToDate(String date){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName());
         return LocalDate.parse(date,dtf);
-    }
-    @FXML
-    public void outClick(MouseEvent mouseEvent) {
-        setItemToTableView(new ArrayList<>());
     }
     private void importDataToTable() {
         refLedgerList = new ArrayList<>();

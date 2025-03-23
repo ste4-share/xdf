@@ -72,7 +72,6 @@ public class PhuongtienService {
     public Optional<PhuongTien> findPhuongTienByName(String name) {
         return phuongtienRepo.findPhuongTienByName(name);
     }
-
     @Transactional
     public void updateXmtUnit(UnitXmt xmt){
         try {
@@ -85,7 +84,7 @@ public class PhuongtienService {
     @Transactional
     public void createNewXmtUnit(UnitXmt xmt,String pt_name,int lpt_id){
         try {
-            PhuongTien pt= phuongtienRepo.save(new PhuongTien(pt_name,1,xmt.getUnit_id(),lpt_id,StatusCons.ACTIVED.getName()));
+            PhuongTien pt= phuongtienRepo.save(new PhuongTien(pt_name,xmt.getUnit_id(),lpt_id,StatusCons.ACTIVED.getName()));
             xmt.setXmt_id(pt.getId());
             unitXmtRepo.save(xmt);
             DialogMessage.successShowing(MessageCons.THANH_CONG.getName());

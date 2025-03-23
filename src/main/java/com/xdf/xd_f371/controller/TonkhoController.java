@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.InventoryUnitDto;
@@ -65,11 +64,7 @@ public class TonkhoController implements Initializable {
     private TransactionHistoryService transactionHistoryService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        transaction_tb.setPrefWidth(DashboardController.screenWidth-700);
-        tb_inventory.setPrefWidth(DashboardController.screenWidth-900);
-        tb_inventory.setPrefHeight(DashboardController.screenHeigh-350);
-        pttk_tb.setPrefWidth(DashboardController.screenWidth);
-        pttk_tb.setPrefHeight(DashboardController.screenHeigh-350);
+        initSize();
         setLb();
         fillDataToTableInventoryUnit();
         setCellFactoryInventoryTb();
@@ -78,10 +73,20 @@ public class TonkhoController implements Initializable {
         setCellFactoryForTransactionTb();
         searching(inventoryUnitDtoArrayList.stream().map(InventoryUnitDto::getTenxd).toList());
     }
+
+    private void initSize() {
+        transaction_tb.setPrefWidth(DashboardController.screenWidth-700);
+        tb_inventory.setPrefWidth(DashboardController.screenWidth-900);
+        tb_inventory.setPrefHeight(DashboardController.screenHeigh-850);
+        priceLs.setPrefHeight(DashboardController.screenHeigh-850);
+        pttk_tb.setPrefWidth(DashboardController.screenWidth);
+        pttk_tb.setPrefHeight(DashboardController.screenHeigh-350);
+    }
+
     private void fillDataToTableInventoryUnit() {
         if (DashboardController.ref_Dv!=null){
             dv_lb.setText("--Tồn kho: " +DashboardController.ref_Dv.getTen());
-            inventoryUnitDtoArrayList = transactionHistoryService.getInventoryOf_Lxd(ConnectLan.pre_acc.getSd(),ConnectLan.pre_acc.getEd());
+            inventoryUnitDtoArrayList = transactionHistoryService.getInventoryOf_Lxd(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date());
             setDataToTbInventory(inventoryUnitDtoArrayList);
         }
 //        else{
@@ -91,7 +96,7 @@ public class TonkhoController implements Initializable {
 //        }
     }
     private void setTransactionHistoryList(int xd_id){
-        List<TransactionHistory> ls = transactionHistoryService.getTransactionHistoryByDate(xd_id,ConnectLan.pre_acc.getEd());
+        List<TransactionHistory> ls = transactionHistoryService.getTransactionHistoryByDate(xd_id,DashboardController.ref_Quarter.getEnd_date());
         ls.forEach(x->{
             x.setSoluong_str(TextToNumber.textToNum_2digits(x.getSoluong()));
             x.setTon(TextToNumber.textToNum_2digits(x.getTonkhotong()));
@@ -125,9 +130,13 @@ public class TonkhoController implements Initializable {
                     setStyle(null);
                 } else {
                     if (transactionHistory.getLoaiphieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())) {
-                        setStyle("-fx-background-color: #5f94e8;");
+                        setStyle("-fx-background-color: #5f94e8;"+
+                                "-fx-border-color: transparent transparent black transparent; " +
+                                "-fx-border-width: 0px 0px 1px;");
                     }else if (transactionHistory.getLoaiphieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())) {
-                        setStyle("-fx-background-color: #fa4655;");
+                        setStyle("-fx-background-color: #fa4655;"+
+                                "-fx-border-color: transparent transparent black transparent; " +
+                                "-fx-border-width: 0px 0px 1px;");
                     }
                 }
             }
@@ -143,20 +152,13 @@ public class TonkhoController implements Initializable {
         total_lb.setText(TextToNumber.textToNum_2digits(nvdx+sscd));
     }
     private void setLb(){
-        Accounts acc = ConnectLan.pre_acc;
-        if (acc.getSd()!=null && acc.getEd()!=null){
-            sd_lb.setText(acc.getSd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            time_ref_lb.setText(acc.getEd().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            ed_lb.setText(acc.getEd().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        }else{
-            sd_lb.setText(null);
-            ed_lb.setText(null);
-        }
+        sd_lb.setText(DashboardController.ref_Quarter.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        time_ref_lb.setText(DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        ed_lb.setText(DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
     }
 
     private void initPttkTb(){
-        Accounts q = ConnectLan.pre_acc;
-        if (q.getSd()!=null){
+        if (DashboardController.ref_Quarter.getStart_date()!=null){
             pttkDtos = inventoryService.mapPttkPetro();
             mapPttkTb(pttkDtos);
         }else{
@@ -287,7 +289,7 @@ public class TonkhoController implements Initializable {
     @FXML
     public void tdvChckAction(ActionEvent actionEvent) {
         dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
-        inventoryUnitDtoArrayList = transactionHistoryService.getInventoryOf_Lxd(ConnectLan.pre_acc.getSd(),ConnectLan.pre_acc.getEd());
+        inventoryUnitDtoArrayList = transactionHistoryService.getInventoryOf_Lxd(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date());
         setDataToTbInventory(inventoryUnitDtoArrayList);
     }
     @FXML

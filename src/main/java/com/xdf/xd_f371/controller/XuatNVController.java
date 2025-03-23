@@ -247,7 +247,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
         licenceCbb.getSelectionModel().selectFirst();
     }
     private void initChitietNhiemvu(List<NhiemVuDto> ls) {
-        ComponentUtil.setItemsToComboBox(nv_cbb,ls,NhiemVuDto::getChitiet, input -> nhiemvuLs.stream().filter(x->x.getChitiet().equals(input)).findFirst().orElse(null));
+        ComponentUtil.setItemsToComboBox(nv_cbb,ls,NhiemVuDto::getChitiet, input -> ls.stream().filter(x->x.getChitiet().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(nv_cbb, (typedText, itemToCompare) -> itemToCompare.getChitiet().toLowerCase().contains(typedText.toLowerCase()));
         nv_cbb.getSelectionModel().selectFirst();
     }

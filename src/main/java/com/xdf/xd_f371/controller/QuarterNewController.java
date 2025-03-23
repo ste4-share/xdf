@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.InventoryService;
@@ -33,11 +32,10 @@ public class QuarterNewController implements Initializable {
     private NguonNxService nguonNxService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Accounts acc = ConnectLan.pre_acc;
         CommonFactory.setVi_DatePicker(sd);
         CommonFactory.setVi_DatePicker(ed);
-        sd.setValue(acc.getSd());
-        ed.setValue(acc.getEd());
+        sd.setValue(DashboardController.ref_Quarter.getStart_date());
+        ed.setValue(DashboardController.ref_Quarter.getEnd_date());
         initDviCbb();
     }
     private void initDviCbb() {
@@ -51,7 +49,7 @@ public class QuarterNewController implements Initializable {
             if (DialogMessage.callAlertWithMessage(null,"Luu", "Luu thay doi?", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
                 NguonNx nnx = dviCbb.getSelectionModel().getSelectedItem();
                 selectUnit(nnx);
-                inventoryService.saveInvWhenSwitchQuarter(sd,ed,nnx,tdv.isSelected());
+                inventoryService.saveInvWhenSwitchQuarter(nnx,tdv.isSelected());
                 DialogMessage.successShowing("Luu thanh cong!!");
                 TonkhoController.tk_stage.close();
             }

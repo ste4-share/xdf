@@ -125,10 +125,6 @@ public class DinhMucPhuongTienController implements Initializable {
         xmt_unit_tk.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("dm_tk"));
         xmt_unit_status.setCellValueFactory(new PropertyValueFactory<UnitXmt, String>("status"));
     }
-    @FXML
-    public void selectUnit(ActionEvent actionEvent) {
-        selectUnitByType();
-    }
 
     private void selectUnitByType() {
         if (xe_radio.isSelected()){
