@@ -24,6 +24,10 @@ public class PhuongTien {
     private int loaiphuongtien_id;
     @Column(name = "status")
     private String status;
+    @Column(name = "loaipt")
+    private String loaipt;
+    @Column(name = "tinhchat")
+    private String tinhchat;
 
     public PhuongTien(String name, int nguonnx_id, int loaiphuongtien_id, String status) {
         this.name = name;

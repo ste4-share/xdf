@@ -88,20 +88,6 @@ public class BaoCaoController implements Initializable {
                 SubQuery.lcv_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()),1);
     }
 
-    private Integer map_ttnlbtkh_create(XSSFWorkbook wb,String sheetName){
-        return Common.mapDataToSheet(wb.createSheet(sheetName), 8,
-                SubQuery.ttnlbtkh_for_mb(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()),1);
-    }
-    private Integer map_ttnlbtkh_getting(XSSFWorkbook wb,String sheetName){
-        int row_index1 = Common.mapDataToSheet(wb.getSheet(sheetName), 8,
-                SubQuery.ttnlbtkh_for_mb(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()),1);
-        int row_index2 = Common.mapDataToSheet(wb.getSheet(sheetName), 8+row_index1,
-                SubQuery.ttnlbtkh_for_all(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()),1);
-        int row_index3 = Common.mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1,
-                SubQuery.ttnlbtkh_for_dv(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()),1);
-        return Common.mapDataToSheet(wb.getSheet(sheetName), 8+row_index2+row_index1+row_index3,
-                SubQuery.ttnlbtkh_for_tongmaybay(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()),1);
-    }
     private Integer map_ttxdtnv_create(XSSFWorkbook wb,String sheetName){
             return Common.mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.ttxd_nv(LocalDate.now().getYear()), 4);
     }
@@ -129,13 +115,25 @@ public class BaoCaoController implements Initializable {
         Common.getLoading(stage_1);
         Platform.runLater(()-> {
             Common.task(this::nxtmap_2, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-            nxt_lb.setText("UPDATED");
+//            nxt_lb.setText("UPDATED");
         });
     }
     private void nxtmap_2() {
-        String sheetName = "beta_nxt";
         Common.copyFileExcel(file_name2,dest_file2);
-        Common.mapExcelFile_JustExist(dest_file2,(input) -> fillDataToPhieuNhap(input,sheetName), SheetNameCons.NXT2.getName());
+        Common.mapExcelFile_JustExist(dest_file2,(input) -> fillDataToPhieuNhap(input,SheetNameCons.NXT2.getName()), SheetNameCons.NXT2.getName());
+    }
+    @FXML
+    public void bc_ttnlbtkh(ActionEvent actionEvent) {
+        Stage stage_1 = new Stage();
+        Common.getLoading(stage_1);
+        Platform.runLater(()-> {
+            Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
+            ttnlbtkh_lb.setText("UPDATED");
+        });
+    }
+    private void ttnlbtkh(){
+        Common.copyFileExcel(file_name2,dest_file2);
+        Common.mapExcelFile_JustExist(file_name2,input -> fillDataTo_ttnlbtkh(input,SheetNameCons.NL_BAY_THEO_KH.getName()),SheetNameCons.NL_BAY_THEO_KH.getName());
     }
     @FXML
     public void bc_lcv(ActionEvent actionEvent) {
@@ -149,21 +147,6 @@ public class BaoCaoController implements Initializable {
     private void bc_lcv_map() {
         String sheetName = "luan_chuyenvon_data";
         Common.mapExcelFile(file_name,input -> map_bc_lcv_create(input,sheetName),input -> map_bc_lcv_create(input,sheetName),SheetNameCons.LCV.getName());
-        Common.copyFileExcel(file_name,dest_file);
-    }
-    @FXML
-    public void bc_ttnlbtkh(ActionEvent actionEvent) {
-
-        Stage stage_1 = new Stage();
-        Common.getLoading(stage_1);
-        Platform.runLater(()-> {
-            Common.task(this::ttnlbtkh, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-            ttnlbtkh_lb.setText("UPDATED");
-        });
-    }
-    private void ttnlbtkh(){
-        String sheetName = "bc_ttnl_theo_kh_data";
-        Common.mapExcelFile(file_name,input -> map_ttnlbtkh_create(input,sheetName),input -> map_ttnlbtkh_getting(input,sheetName),SheetNameCons.NL_BAY_THEO_KH.getName());
         Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
@@ -245,76 +228,7 @@ public class BaoCaoController implements Initializable {
             return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }
     }
-    private String getCusQueryNlEmpty(String begin_1,String end_q1, String end_q1_1){
-        arr_tt.clear();
-        String n_sum1="";
-        String x_sum2="";
-        String sl1="";
-        String sl2="";
-        String n_case_1="";
-        String x_case_2="";
-        for (int i=0; i<tructhuocService.findAll().size(); i++) {
-            TrucThuoc tt = tructhuocService.findAll().get(i);
-            arr_tt.add(tt.getType());
-            n_sum1 = n_sum1.concat("sum(n"+tt.getType()+") as "+tt.getType()+",");
-            x_sum2 = x_sum2.concat("sum(x"+tt.getType()+") as "+tt.getType()+",");
-            sl1=sl1.concat("case when max(n"+tt.getType()+".soluong) is null then 0 else max(n"+tt.getType()+".soluong) end as n"+tt.getType()+",");
-            sl2=sl2.concat("case when max(x"+tt.getType()+".soluong) is null then 0 else max(x"+tt.getType()+".soluong) end as x"+tt.getType()+",");
-            n_case_1 = n_case_1.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'NHAP' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' group by 1) n"+tt.getType()+" on lxd.id=n"+tt.getType()+".loaixd_id");
-            x_case_2 = x_case_2.concat(" left join (select loaixd_id, sum(so_luong) as soluong from ledgers l join ledger_details ld on l.id=ld.ledger_id where loai_phieu like 'XUAT' and tructhuoc like '"+tt.getType()+"' and status like 'ACTIVE' group by 1) x"+tt.getType()+" on lxd.id=x"+tt.getType()+".loaixd_id");
-        }
-        String en = " group by 1,2,3,4,5,6) z group by rollup(tinhchat,chungloai,loai,tenxd) order by tc desc,tinhchat desc,l desc,p3 asc,xd desc";
-        return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
-    }
 
-    private int createDataSheet(XSSFSheet sheet,String query) {
-        int sizett = arr_tt.size();
-        ReportDAO reportDAO = new ReportDAO();
-        List<Object[]> nxtls = reportDAO.findByWhatEver(query);
-        XSSFRow row_header = sheet.createRow(7);
-        if (row_header==null){
-            row_header = sheet.createRow(7);
-        }
-        XSSFRow row_header_1 = sheet.createRow(6);
-        if (row_header_1==null){
-            row_header_1 = sheet.createRow(6);
-        }
-        for (int i=0;i<arr_tt.size();i++){
-            row_header_1.createCell(8+i).setCellValue("NHAP");
-            row_header_1.createCell(sizett+8+i).setCellValue("XUAT");
-            row_header.createCell(8+i).setCellValue(arr_tt.get(i));
-            row_header.createCell(sizett+8+i).setCellValue(arr_tt.get(i));
-        }
-        for(int i =0; i< nxtls.size(); i++){
-            Object[] rows_data = nxtls.get(i);
-            XSSFRow row = sheet.createRow(8+i);
-            for (int j =0;j<rows_data.length;j++){
-//                row.createCell(j+1).setCellValue(rows_data[j]==null ?"" : rows_data[j].toString());
-                String val = rows_data[j]==null ?"" : rows_data[j].toString();
-                if (row.getCell(j+1)==null){
-                    if (val==null){
-                        row.createCell(j+1).setCellValue(val);
-                    } else if (Common.isDoubleNumber(val)){
-                        BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
-                        row.createCell(j+1).setCellValue(bigDecimal.doubleValue());
-                    } else {
-                        row.createCell(j+1).setCellValue(val);
-                    }
-                }else{
-                    if (val==null){
-                        row.getCell(j+1).setCellValue(val);
-                    } else if (Common.isDoubleNumber(val)){
-                        BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
-                        row.getCell(j+1).setCellValue(bigDecimal.doubleValue());
-                    } else {
-                        row.getCell(j+1).setCellValue(val);
-                    }
-                }
-            }
-        }
-        arr_tt.clear();
-        return nxtls.size()+11;
-    }
     @FXML
     public void dvi_cbbAction(ActionEvent actionEvent) {
     }
@@ -330,7 +244,7 @@ public class BaoCaoController implements Initializable {
         XSSFSheet sheet = wb.getSheet(sheet_n);
         initHeder(sheet,wb);
         initHederColumnFor_nxt(sheet,wb);
-        mergerCell(sheet);
+        ExportFactory.mergerCell(sheet);
         fillData(wb,sheet);
         return -1;
     }
@@ -373,48 +287,23 @@ public class BaoCaoController implements Initializable {
             }
         }
     }
-    private void mergerCell(XSSFSheet sheet) {
-        removeMerger(sheet,8,8,8,10);
-        removeMerger(sheet,8,9,7,7);
-        removeMerger(sheet,8,9,6,6);
-        sheet.addMergedRegion(new CellRangeAddress(8,8,8,10));
-        sheet.addMergedRegion(new CellRangeAddress(8,9,7,7));
-        sheet.addMergedRegion(new CellRangeAddress(8,9,6,6));
-    }
-    private void removeMerger(XSSFSheet sheet, int f_row,int l_row,int f_col,int l_col){
-        List<CellRangeAddress> mergedRegions = sheet.getMergedRegions();
-        int index = IntStream.range(0, mergedRegions.size())
-                .filter(i -> {
-                    CellRangeAddress region = mergedRegions.get(i);
-                    return region.getFirstRow() == f_row &&
-                            region.getFirstColumn() == f_col &&
-                            region.getLastRow() == l_row &&
-                            region.getLastColumn() == l_col;
-                })
-                .findFirst()
-                .orElse(-1);
-        if (index != -1) {
-            sheet.removeMergedRegion(index);
-        }
-    }
     private void initHeder(XSSFSheet sheet, XSSFWorkbook wb) {
         XSSFRow r1 = sheet.getRow(1);
         XSSFCellStyle style = wb.createCellStyle();
         ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
         ExportFactory.setBoldFont(wb,style);
         ExportFactory.setCellAlightmentStyle(style);
-        removeMerger(sheet,1,1,12,20);
+        ExportFactory.removeMerger(sheet,1,1,12,20);
         Cell cell = r1.createCell(12);
         cell.setCellValue("BÁO CÁO NHẬP XUẤT TỒN XĂNG DẦU MỠ \n" +
-                "(Từ ngày "+DashboardController.ref_Quarter.getStart_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+" đến "+DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+")");
+                "(Từ ngày "+DashboardController.ref_Quarter.getStart_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+" đến "+
+                DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+")");
         for (int i =13;i<=20;i++){
             Cell ce = r1.createCell(i);
             ce.setCellStyle(style);
         }
         sheet.addMergedRegion(new CellRangeAddress(1,1,12,20));
         cell.setCellStyle(style);
-        sheet.autoSizeColumn(0);
-        r1.setHeightInPoints(25);
     }
     private void initHederColumnFor_nxt(XSSFSheet sheet, XSSFWorkbook wb){
         XSSFRow r1 = sheet.createRow(start_row);
@@ -478,25 +367,64 @@ public class BaoCaoController implements Initializable {
             c2.setCellStyle(style);
             c2.setCellValue(tructh);
         }
-        removeMerger(sheet,8,8,11,indexs_n.size());
+        ExportFactory.removeMerger(sheet,8,8,11,indexs_n.size());
         sheet.addMergedRegion(new CellRangeAddress(8,8,11,10+indexs_n.size()));
-        removeMerger(sheet,8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size());
+        ExportFactory.removeMerger(sheet,8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size());
         sheet.addMergedRegion(new CellRangeAddress(8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size()));
 
     }
-    @Autowired
-    private TransactionHistoryService transactionHistoryService;
-    @Autowired
-    private LoaiXdService loaiXdService;
-    @FXML
-    public void pttk_experiment(ActionEvent actionEvent) {
-//        try {
-//            loaiXdService.findAll().forEach(loaiXangDau ->{
-//                transactionHistoryService.createNewPartitiontable("XD_"+loaiXangDau.getId(),loaiXangDau.getId());
-//            });
-//            DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
-//        } catch (RuntimeException e) {
-//            throw new RuntimeException(e);
-//        }
+    private int fillDataTo_ttnlbtkh(XSSFWorkbook wb,String sheet_n){
+        XSSFSheet sheet = wb.getSheet(sheet_n);
+        initHederColumnFor_ttnlbtkh(sheet,wb);
+        fillData_ttnlbtkh(wb,sheet);
+        return -1;
+    }
+
+    private void fillData_ttnlbtkh(XSSFWorkbook wb, XSSFSheet sheet) {
+        ReportDAO reportDAO = new ReportDAO();
+//        System.out.println("q: "+ SubQuery.ttnlbtkh_for_mb(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
+        List<Object[]> mb_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_mb(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
+        for (int i = 0; i<mb_ls.size();i++){
+            int lastRow = sheet.getLastRowNum();
+            sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
+            XSSFRow row1 = sheet.createRow(start_row+i+2);
+            XSSFCellStyle style = wb.createCellStyle();
+            Object[] rows_data = mb_ls.get(i);
+            for (int j = 0; j<rows_data.length;j++){
+                String val = rows_data[j]==null ? "" : rows_data[j].toString();
+                XSSFCell c = row1.createCell(j+2);
+                ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+                if (Common.isDoubleNumber(val)){
+                    BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
+                    c.setCellValue(bigDecimal.doubleValue());
+                } else {
+                    c.setCellValue(val);
+                }
+                c.setCellStyle(style);
+            }
+        }
+//        List<Object[]> all_nv_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_all(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
+//        List<Object[]> dv_nv_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_dv(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
+//        List<Object[]> tongmaybay_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_tongmaybay(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
+
+    }
+
+    private void initHederColumnFor_ttnlbtkh(XSSFSheet sheet, XSSFWorkbook wb){
+        XSSFCellStyle style = wb.createCellStyle();
+        ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+        ExportFactory.setBoldFont(wb,style);
+        ExportFactory.setCellAlightmentStyle(style);
+        ExportFactory.removeMerger(sheet,1,1,10,20);
+        XSSFRow row = sheet.getRow(1);
+        Cell cell = row.createCell(10);
+        cell.setCellValue("BÁO CÁO THANH TOÁN NHIÊN LIỆU BAY THEO KẾ HOẠCH \n" +
+                "(Từ ngày "+DashboardController.ref_Quarter.getStart_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+" đến "+
+                DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+")");
+        for (int i =11;i<=20;i++){
+            Cell ce = row.createCell(i);
+            ce.setCellStyle(style);
+        }
+        sheet.addMergedRegion(new CellRangeAddress(1,1,10,20));
+        cell.setCellStyle(style);
     }
 }

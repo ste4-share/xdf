@@ -195,8 +195,8 @@ public class SubQuery {
                 "order by name_gr desc,tt,tennv_gr desc,pri,ten_nv,nv_gr desc\n" +
                 "\n";
     }
-    public static String ttnlbtkh_for_mb(LocalDate sd,LocalDate ed){
-        return "select 'A' as stt,'maybay' as ten,'Cho máy bay' as ten_nv,name_pt as nhiemvu,\n" +
+    public static String ttnlbtkh_for_mb(LocalDate sd,LocalDate ed,int r_id){
+        return "select grouping(name_pt) as ten_gr,RANK() OVER (ORDER BY name_pt DESC) AS rank_cl,name_pt as nhiemvu,\n" +
                 "EXTRACT(epoch FROM sum(tk)) as tk,EXTRACT(epoch FROM sum(md)) as md, EXTRACT(epoch FROM sum(cong_giobay)) as cong_giobay,\n" +
                 "sum(nhienlieu) as nhienlieu,\n" +
                 "case when EXTRACT(epoch FROM sum(giohd_md)) is null then 0 else EXTRACT(epoch FROM sum(giohd_md)) end as giohd_md,\n" +
@@ -206,18 +206,17 @@ public class SubQuery {
                 "case when sum(nltt_tk) is null then 0 else sum(nltt_tk) end as nltt_tk,\n" +
                 "case when sum(cong_nltt) is null then 0 else sum(cong_nltt) end as cong_nltt,\n" +
                 "case when sum(haohut) is null then 0 else sum(haohut) end as haohut,\n" +
-                "case when sum(tongcong) is null then 0 else sum(tongcong) end as tongcong,'1' as pri,\n" +
-                "grouping(name_pt) as ten_gr,'0' as tennv_gr,'0' as nv_gr\n" +
+                "case when sum(tongcong) is null then 0 else sum(tongcong) end as tongcong\n" +
                 "from (select * from (SELECT years,pt_id,pt.name as name_pt,sum(tk::interval) as tk,sum(md::interval) as md,sum(tk::interval+md::interval) as cong_giobay,sum(nhienlieu) as nhienlieu\n" +
                 "FROM hanmuc_nhiemvu_taubay hmnvtb \n" +
                 "left join phuongtien pt on pt.id=hmnvtb.pt_id \n" +
                 "where pt_id <> 0\n" +
                 "group by years,pt_id,name_pt) a\n" +
-                "left join (SELECT phuongtien_id,max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,\n" +
+                "left join (SELECT phuongtien_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,\n" +
                 "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
-                "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
-                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' \n" +
+                "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong \n" +
+                "FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id left join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
+                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' \n" +
                 "group by 1) b on a.pt_id=b.phuongtien_id) c\n" +
                 "group by rollup(name_pt) order by ten_gr desc,name_pt desc";
     }
