@@ -70,7 +70,7 @@ public class HanmucNhiemvuService {
         List<HanmucNhiemvu2> previousDm = findAllByYearHmnv((LocalDate.now().getYear()-1));
         if (!previousDm.isEmpty()){
             previousDm.forEach(x->{
-                hanmucNhiemvu2Repository.save(new HanmucNhiemvu2(x.getDvi_id(),x.getNhiemvu_id(),x.getDiezel(),x.getDaubay(),x.getXang()));
+                hanmucNhiemvu2Repository.save(new HanmucNhiemvu2(x.getDvi_id(),x.getNhiemvu_id(),x.getDiezel(),x.getDaubay(),x.getXang(),x.getHacap()));
             });
             DialogMessage.successShowing("Chuyen doi thanh cong");
         } else {

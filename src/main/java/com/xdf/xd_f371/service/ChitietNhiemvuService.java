@@ -76,7 +76,7 @@ public class ChitietNhiemvuService {
     public Optional<NhiemVu> findByName(String n,String status){
         return nhiemvuRepository.findByName(n,status);
     }
-    public void saveNhiemvu(int ctnv_id,int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d){
+    public void saveNhiemvu(int ctnv_id,int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d,String hacap){
         Optional<NhiemVu> n_v = nhiemvuRepository.findByName(nv,StatusCons.ACTIVED.getName());
         if (n_v.isPresent()){
             Optional<ChitietNhiemVu> ctnv = chitietNhiemvuRepo.findByNhiemvu(ct,n_v.get().getId());
@@ -85,7 +85,7 @@ public class ChitietNhiemvuService {
             }else{
                 ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(ctnv_id,n_v.get().getId(),ct));
                 hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
-                        Long.parseLong(diezel_tf),Long.parseLong(d),Long.parseLong(x)));
+                        Double.parseDouble(diezel_tf),Double.parseDouble(d),Double.parseDouble(x),Double.parseDouble(hacap)));
                 DialogMessage.message(null, "Them thanh cong",
                         null, Alert.AlertType.INFORMATION);
             }
@@ -93,7 +93,7 @@ public class ChitietNhiemvuService {
             NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,lnv.getId(),99,99));
             ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(ctnv_id,n.getId(),ct));
             hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
-                    Long.parseLong(diezel_tf),Long.parseLong(d),Long.parseLong(x)));
+                    Double.parseDouble(diezel_tf),Double.parseDouble(d),Double.parseDouble(x),Double.parseDouble(hacap)));
             DialogMessage.message(null, "Them thanh cong",
                     null, Alert.AlertType.INFORMATION);
         }

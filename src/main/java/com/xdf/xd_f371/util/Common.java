@@ -288,21 +288,27 @@ public class Common {
             throw new RuntimeException(e);
         }
     }
-    public static boolean isDoubleNumber(String number){
+    public static boolean isDoubleNumber(String str){
         try {
-            double i = Double.parseDouble(number);
-            return true;
+            double value = Double.parseDouble(str);
+            return value != Math.floor(value);
         } catch (NumberFormatException e) {
             return false;
         }
     }
     public static boolean isLongNumber(String number){
         try {
-            long i = Long.parseLong(number);
+            double value = Double.parseDouble(number);
+            long i = (long) value;
             return true;
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+    public static String convertSecondsToTime(long totalSeconds) {
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        return String.format("%02d:%02d", hours, minutes);
     }
     public static int mapDataToSheet(XSSFSheet sheet, int begin_data_current, String query, int begin_col){
         ReportDAO reportDAO = new ReportDAO();

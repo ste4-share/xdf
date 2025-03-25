@@ -31,8 +31,15 @@ public class UnitXmt {
     private String licence_plate_number;
     @Column(name = "status")
     private String status;
+    @Column(name = "chitieu_giobaymd")
+    private String chitieu_giobaymd;
+    @Column(name = "chitieu_giobaytk")
+    private String chitieu_giobaytk;
+    @Column(name = "nltieuthu")
+    private double nltieuthu;
 
-    public UnitXmt(String id, int unit_id, int xmt_id, String note, double dm_hours, double dm_km, double dm_md, double dm_tk, String licence_plate_number, String status) {
+    public UnitXmt(String id, int unit_id, int xmt_id, String note, double dm_hours, double dm_km, double dm_md, double dm_tk,
+                   String licence_plate_number, String status,String chitieu_giobaymd,String chitieu_giobaytk,double nltieuthu) {
         this.id = id;
         this.unit_id = unit_id;
         this.xmt_id = xmt_id;
@@ -43,5 +50,8 @@ public class UnitXmt {
         this.dm_tk = dm_tk;
         this.licence_plate_number = licence_plate_number;
         this.status = status;
+        this.chitieu_giobaymd = chitieu_giobaymd;
+        this.chitieu_giobaytk = chitieu_giobaytk;
+        this.nltieuthu = nltieuthu;
     }
 }

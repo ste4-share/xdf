@@ -23,11 +23,17 @@ public class HanmucNhiemvu2 {
     @Column(name = "nhiemvu_id")
     private int nhiemvu_id;
     @Column(name = "diezel")
-    private Long diezel;
+    private double diezel;
     @Column(name = "daubay")
-    private Long daubay;
+    private double daubay;
     @Column(name = "xang")
-    private Long xang;
+    private double xang;
+    @Column(name = "hacap")
+    private double hacap;
+    @Column(name = "hm_md")
+    private String hm_md;
+    @Column(name = "hm_tk")
+    private String hm_tk;
     @Column(name = "years")
     private Integer years= LocalDate.now().getYear();
 
@@ -35,12 +41,13 @@ public class HanmucNhiemvu2 {
     @JoinColumn(name = "nhiemvu_id",insertable = false, updatable = false)
     ChitietNhiemVu chitietNhiemVu;
 
-    public HanmucNhiemvu2(int dvi_id, int nhiemvu_id, Long diezel, Long daubay, Long xang) {
+    public HanmucNhiemvu2(int dvi_id, int nhiemvu_id, double diezel, double daubay, double xang,double hacap) {
         this.dvi_id = dvi_id;
         this.nhiemvu_id = nhiemvu_id;
         this.diezel = diezel;
         this.daubay = daubay;
         this.xang = xang;
+        this.hacap = hacap;
     }
 
     public HanmucNhiemvu2(HanmucNhiemvu2Dto hm) {
@@ -51,5 +58,6 @@ public class HanmucNhiemvu2 {
         this.diezel = hm.getDiezel();
         this.daubay = hm.getDaubay();
         this.xang = hm.getXang();
+        this.hacap = hm.getHacap();
     }
 }

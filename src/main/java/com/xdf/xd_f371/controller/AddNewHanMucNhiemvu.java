@@ -103,7 +103,7 @@ public class AddNewHanMucNhiemvu implements Initializable {
                         hm.setId(exitst.get().getId());
                         hanmucNhiemvuService.save(new HanmucNhiemvu2(hm));
                     } else {
-                        hanmucNhiemvuService.save(new HanmucNhiemvu2(hm.getDvi_id(),hm.getNhiemvu_id(), hm.getDiezel(), hm.getDaubay(), hm.getXang()));
+                        hanmucNhiemvuService.save(new HanmucNhiemvu2(hm.getDvi_id(),hm.getNhiemvu_id(), hm.getDiezel(), hm.getDaubay(), hm.getXang(),hm.getHacap()));
                     }
                 }
             }

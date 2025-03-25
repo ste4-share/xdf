@@ -1,6 +1,5 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.LoaiNhiemVu;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Team;
@@ -27,7 +26,7 @@ public class AddNvController implements Initializable {
     @FXML
     private ComboBox<LoaiNhiemVu> cbb_lnv;
     @FXML
-    private TextField nv,ct,xang,diezel,daubay,id;
+    private TextField nv,ct,xang,diezel,daubay,id,hacap;
     @FXML
     private Button add_btn,cancel_btn;
     @Autowired
@@ -63,10 +62,15 @@ public class AddNvController implements Initializable {
             diezel.setStyle(CommonFactory.styleErrorField);
             DialogMessage.errorShowing("Diezel không chứa ký tự.");
             return false;
+        }else if (!Common.isNumber(hacap.getText())){
+            hacap.setStyle(CommonFactory.styleErrorField);
+            DialogMessage.errorShowing("Hacap không chứa ký tự.");
+            return false;
         }
         xang.setStyle(null);
         daubay.setStyle(null);
         diezel.setStyle(null);
+        hacap.setStyle(null);
         return true;
     }
     private void initLoaiNvCbb() {
@@ -98,7 +102,7 @@ public class AddNvController implements Initializable {
         if (lnv!=null && t!=null && nx!=null){
             if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 if (isValid()){
-                    nhiemvuService.saveNhiemvu(Integer.parseInt(id.getText()),t.getId(),nv.getText(),lnv,ct.getText(),nx,xang.getText(),diezel.getText(),daubay.getText());
+                    nhiemvuService.saveNhiemvu(Integer.parseInt(id.getText()),t.getId(),nv.getText(),lnv,ct.getText(),nx,xang.getText(),diezel.getText(),daubay.getText(),hacap.getText());
                     NhiemvuController.nvStage.close();
                 }
             }

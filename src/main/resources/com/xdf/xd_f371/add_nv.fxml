@@ -154,6 +154,23 @@
             </TextField>
          </children>
       </HBox>
+      <HBox alignment="CENTER" layoutX="20.0" layoutY="372.0" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label alignment="BOTTOM_LEFT" prefHeight="30.0" prefWidth="150.0" text="Hạ cấp:">
+               <font>
+                  <Font name="Cambria Bold" size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="hacap" onMouseClicked="#ct_clicked" prefHeight="30.0" prefWidth="300.0">
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+               <font>
+                  <Font name="Cambria" size="18.0" />
+               </font>
+            </TextField>
+         </children>
+      </HBox>
       <HBox alignment="CENTER" prefHeight="80.0" prefWidth="599.0">
          <children>
             <Button fx:id="add_btn" mnemonicParsing="false" onAction="#addAction" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" text="Thêm">

@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.DefaultVarCons;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.PhuongTien;
@@ -94,13 +95,13 @@ public class AddBtnPt implements Initializable {
                 if (u!=null){
                     phuongtienService.updateXmtUnit(new UnitXmt(pt_id.getText(),DashboardController.ref_Dv.getId(),pt.getId(),note.getText(),
                             Double.parseDouble(h.getText()),Double.parseDouble(km.getText()),Double.parseDouble(md.getText()),Double.parseDouble(tk.getText()),
-                            u.getLicence_plate_number(), StatusCons.ACTIVED.getName()));
+                            u.getLicence_plate_number(), StatusCons.ACTIVED.getName(), DefaultVarCons.GIO_HD.getName(),DefaultVarCons.GIO_HD.getName(),0));
                     DinhMucPhuongTienController.norm_stage.close();
                 }
             }else{
                 phuongtienService.createNewXmtUnit(new UnitXmt(pt_id.getText(),DashboardController.ref_Dv.getId(),0,note.getText(),
                         Double.parseDouble(h.getText()),Double.parseDouble(km.getText()),Double.parseDouble(md.getText()),Double.parseDouble(tk.getText()),
-                        license_plate_number.getEditor().getText(), StatusCons.ACTIVED.getName()),cbb_xmt.getEditor().getText(),cbb_loai.getSelectionModel().getSelectedItem().getId());
+                        license_plate_number.getEditor().getText(), StatusCons.ACTIVED.getName(),DefaultVarCons.GIO_HD.getName(),DefaultVarCons.GIO_HD.getName(),0),cbb_xmt.getEditor().getText(),cbb_loai.getSelectionModel().getSelectedItem().getId());
                 DinhMucPhuongTienController.norm_stage.close();
             }
         }
@@ -161,7 +162,6 @@ public class AddBtnPt implements Initializable {
     public void cbb_xmtAction(ActionEvent actionEvent) {
         actionXmt();
     }
-
     private void actionXmt() {
         PhuongTien pt = cbb_xmt.getSelectionModel().getSelectedItem();
         if (pt!=null){
@@ -173,7 +173,6 @@ public class AddBtnPt implements Initializable {
             }
         }
     }
-
     @FXML
     public void license_plate_numberAction(ActionEvent actionEvent) {
         UnitXmt l = license_plate_number.getSelectionModel().getSelectedItem();
@@ -184,7 +183,7 @@ public class AddBtnPt implements Initializable {
     @FXML
     public void addNewChkAction(ActionEvent actionEvent) {
         if (addNewChk.isSelected()){
-            UnitXmt u = new UnitXmt(null,DashboardController.ref_Dv.getId(),0,null,0,0,0,0,null,null);
+            UnitXmt u = new UnitXmt(null,DashboardController.ref_Dv.getId(),0,null,0,0,0,0,null,null,DefaultVarCons.GIO_HD.getName(),DefaultVarCons.GIO_HD.getName(),0);
             initPt(new ArrayList<>());
             initLicensePlateCbb(new ArrayList<>());
             setDataToField(u);
