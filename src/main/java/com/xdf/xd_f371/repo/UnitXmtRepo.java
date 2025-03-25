@@ -18,6 +18,8 @@ public interface UnitXmtRepo extends JpaRepository<UnitXmt, Long> {
     List<UnitXmt> findByUnitIdPtId(@Param("uid") int id,@Param("pid") int ptid);
     @Query(value = "select * from unit_xmt where licence_plate_number like :l",nativeQuery = true)
     Optional<UnitXmt> findByLicensePlate(@Param("l") String license);
+    @Query(value = "select u.id from unit_xmt u join phuongtien p on u.xmt_id=p.id where p.loaipt like 'MAYBAY'",nativeQuery = true)
+    List<String> findXmtIdList();
     @Modifying
     @Query(value = "update unit_xmt set note=:note,dm_hours=:dmh,dm_km=:dmkm,dm_md=:dmmd,dm_tk=:dmtk,status=:s where unit_id=:uid and xmt_id=:pid and licence_plate_number like :license",nativeQuery = true)
     void updateUnitXmtByPtAndUnit(@Param("note") String note,@Param("uid") int uid,@Param("pid") int pid,@Param("dmh") double dm_hours,@Param("dmkm") double dm_km,

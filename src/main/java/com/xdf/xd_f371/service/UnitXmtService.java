@@ -24,6 +24,8 @@ public class UnitXmtService {
     }
     public List<UnitXmt> findByUnitIdAndPtId(int unit_id, int pt_id){
         return unitXmtRepo.findByUnitIdPtId(unit_id,pt_id);
+    }public List<String> findXmtIdList(){
+        return unitXmtRepo.findXmtIdList();
     }
     public UnitXmt findByLicensePlate(String license){
         if (unitXmtRepo.findByLicensePlate(license).isPresent()){

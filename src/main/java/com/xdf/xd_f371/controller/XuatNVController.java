@@ -242,7 +242,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
         }
     }
     private void initLicenceCbb(List<UnitXmt> ls) {
-        ComponentUtil.setItemsToComboBox(licenceCbb,ls,UnitXmt::getLicence_plate_number, input -> unitXmts.stream().filter(x->x.getLicence_plate_number().equals(input)).findFirst().orElse(null));
+        ComponentUtil.setItemsToComboBox(licenceCbb,ls,UnitXmt::getLicence_plate_number, input -> ls.stream().filter(x->x.getLicence_plate_number().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(licenceCbb, (typedText, itemToCompare) -> itemToCompare.getLicence_plate_number().toLowerCase().contains(typedText.toLowerCase()));
         licenceCbb.getSelectionModel().selectFirst();
     }
@@ -252,7 +252,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
         nv_cbb.getSelectionModel().selectFirst();
     }
     private void initXmtCbb(List<PhuongTien> phuongTiens) {
-        ComponentUtil.setItemsToComboBox(xmt_cbb,phuongTiens,PhuongTien::getName, input -> ptls.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));
+        ComponentUtil.setItemsToComboBox(xmt_cbb,phuongTiens,PhuongTien::getName, input -> phuongTiens.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(xmt_cbb, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
         xmt_cbb.getSelectionModel().selectFirst();
     }

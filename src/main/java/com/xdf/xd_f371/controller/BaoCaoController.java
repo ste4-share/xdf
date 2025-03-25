@@ -4,12 +4,10 @@ import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
+import com.xdf.xd_f371.entity.UnitXmt;
 import com.xdf.xd_f371.fatory.ExportFactory;
 import com.xdf.xd_f371.repo.ReportDAO;
-import com.xdf.xd_f371.service.LoaiXdService;
-import com.xdf.xd_f371.service.NguonNxService;
-import com.xdf.xd_f371.service.TransactionHistoryService;
-import com.xdf.xd_f371.service.TructhuocService;
+import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -49,9 +47,10 @@ public class BaoCaoController implements Initializable {
     private int start_row = 8;
     private int start_col = 6;
     @Autowired
-    private TructhuocService tructhuocService;
+    private UnitXmtService unitXmtService;
     @Autowired
     private NguonNxService nguonNxService;
+
     @FXML
     private TableView<Object> nltb_tb,lsb_tb,ptnnx_tb;
     @FXML
@@ -387,7 +386,15 @@ public class BaoCaoController implements Initializable {
         List<Object[]> all_nv_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_all(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
         map_ttnlbtkh(all_nv_ls,sheet,wb,start_row+mb_ls.size()-1);
 //        List<Object[]> dv_nv_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_dv(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
-//        List<Object[]> tongmaybay_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_tongmaybay(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
+        int mbnv_start = start_row+mb_ls.size()+all_nv_ls.size()-1;
+        if (!unitXmtService.findXmtIdList().isEmpty()){
+            for (int i =0; i<unitXmtService.findXmtIdList().size();i++){
+//                String xmtid = unitXmtService.findXmtIdList().get(i);
+//                List<Object[]> mbls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_tongmaybay(DashboardController.ref_Quarter.getStart_date(),
+//                        DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId(),xmtid));
+//                map_ttnlbtkh(mbls,sheet,wb,mbnv_start+(mbls.size()*i));
+            }
+        }
     }
     private void map_ttnlbtkh(List<Object[]> ls,XSSFSheet sheet,XSSFWorkbook wb,int sr) {
         for (int i = 0; i<ls.size();i++){
