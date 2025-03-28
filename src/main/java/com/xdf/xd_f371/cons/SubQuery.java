@@ -196,47 +196,46 @@ public class SubQuery {
                 "\n";
     }
     public static String ttnlbtkh_for_mb(LocalDate sd,LocalDate ed,int r_id){
-        return "select '1' as ten_gr,RANK() OVER (ORDER BY name_pt DESC) AS rank_cl,case when name_pt is null then 'Cộng máy bay' else name_pt end as nhiemvu,\n" +
-                "CAST(EXTRACT(epoch FROM sum(tk)) AS DOUBLE PRECISION) as tk,cast(EXTRACT(epoch FROM sum(md)) as DOUBLE PRECISION) as md, \n" +
-                "CAST(EXTRACT(epoch FROM sum(cong_giobay)) AS DOUBLE PRECISION) as cong_giobay,\n" +
-                "sum(nhienlieu) as nhienlieu,\n" +
-                "case when EXTRACT(epoch FROM sum(giohd_md)) is null then 0 else EXTRACT(epoch FROM sum(giohd_md)) end as giohd_md,\n" +
-                "case when EXTRACT(epoch FROM sum(giohd_tk)) is null then 0 else EXTRACT(epoch FROM sum(giohd_tk)) end as giohd_tk, \n" +
-                "case when EXTRACT(epoch FROM sum(tong_giohd)) is null then 0 else EXTRACT(epoch FROM sum(tong_giohd)) end as tong_giohd,\n" +
-                "case when sum(nltt_md) is null then 0 else sum(nltt_md) end as nltt_md,\n" +
-                "case when sum(nltt_tk) is null then 0 else sum(nltt_tk) end as nltt_tk,\n" +
-                "case when sum(cong_nltt) is null then 0 else sum(cong_nltt) end as cong_nltt,\n" +
-                "case when sum(haohut) is null then 0 else sum(haohut) end as haohut,\n" +
-                "case when sum(tongcong) is null then 0 else sum(tongcong) end as tongcong\n" +
-                "from (select * from (SELECT xmt.id as idmt,pt.name as name_pt,sum(chitieu_giobaytk::interval) as tk,sum(chitieu_giobaymd::interval) as md,\n" +
-                "sum(chitieu_giobaymd::interval+chitieu_giobaytk::interval) as cong_giobay,sum(nltieuthu) as nhienlieu\n" +
-                "FROM phuongtien pt left join unit_xmt xmt on pt.id=xmt.xmt_id where loaipt like 'MAYBAY' group by 1,2) a\n" +
-                "left join (SELECT xmt_id,max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,\n" +
+        return "select '1' as gr,'-','A' as sign,case when grouping(xmt_id)=1 then 'A' else cast(min(ranks) as text) end, \n" +
+                "case when grouping(xmt_id)=1 then 'Máy bay' else xmt_id end,0 as tk,0 as mk,0 as sum_f,0 as nhienlieu,\n" +
+                "EXTRACT(epoch FROM sum(giohd_md)) as giohd_md,\n" +
+                "EXTRACT(epoch FROM sum(giohd_tk)) as giohd_tk,\n" +
+                "EXTRACT(epoch FROM sum(tong_giohd)) as tong_giohd,\n" +
+                "sum(nltt_md),sum(nltt_tk),sum(cong_nltt),sum(haohut),sum(tongcong)\n" +
+                "from (SELECT RANK() OVER (ORDER BY xmt_id asc) AS ranks,xmt_id,0 as tk,0 as mk,0 as sum_f,0 as nhienlieu,\n" +
+                "sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,\n" +
+                "sum(nltt_md) as nltt_md,sum(nltt_tk) as nltt_tk,sum(cong_nltt) as cong_nltt,\n" +
+                "sum(haohut) as haohut,sum(tongcong) as tongcong from \n" +
+                "(select xmt_id,l.nhiemvu_id as ctnv_id,0 as tk,0 as mk,0 as sum_f,0 as nhienlieu,\n" +
+                "max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,\n" +
                 "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
-                "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong \n" +
-                "FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id left join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id \n" +
-                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' \n" +
-                "group by 1) b on a.idmt=b.xmt_id) c\n" +
-                "group by rollup(name_pt) order by ten_gr desc,name_pt desc";
+                "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong\n" +
+                "FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id\n" +
+                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"'\n" +
+                "group by 1,2) a_1 left join chitiet_nhiemvu ct on ct.id= a_1.ctnv_id group by 2) a\n" +
+                "group by rollup(xmt_id)\n" +
+                "order by grouping(xmt_id) desc";
     }
     public static String ttnlbtkh_for_all(LocalDate sd,LocalDate ed, int root_id){
-        return "select nv_gr,ranks,case when nhiemvu is null then 'Cộng nhiệm vụ' else nhiemvu end as nhiemvu,tk,md,cong_giobay,nhienlieu,giohd_md,giohd_tk,tong_giohd,nltt_md,nltt_tk,cong_nltt,haohut,tongcong from (select ten_nv,case when max(tennv_gr)=0 and max(nv_gr)=1 then 0 else min(ranks) end as ranks, \n" +
+        return "select nv_gr,tennv_gr,ten_nv,ranks,case when nhiemvu is null then 'Cộng nhiệm vụ' else nhiemvu end as nhiemvu,\n" +
+                "tk,md,cong_giobay,nhienlieu,giohd_md,giohd_tk,tong_giohd,nltt_md,nltt_tk,cong_nltt,haohut,tongcong \n" +
+                "from (select ten_nv,case when max(nv_gr)=0 then '-' when max(nv_gr)=1 and max(tennv_gr)=1 then 'B' else cast(max(ranks) as text) end ranks, \n" +
                 "case when max(tennv_gr)=0 and max(nv_gr)=1 then ten_nv else nhiemvu end as nhiemvu, \n" +
-                "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
-                "case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,\n" +
-                "case when EXTRACT(epoch FROM max(cong_giobay)) is null then 0 else EXTRACT(epoch FROM max(cong_giobay)) end as cong_giobay,max(nhienlieu) as nhienlieu, \n" +
-                "case when EXTRACT(epoch FROM max(giohd_md)) is null then 0 else EXTRACT(epoch FROM max(giohd_md)) end as giohd_md,\n" +
-                "case when EXTRACT(epoch FROM max(giohd_tk)) is null then 0 else EXTRACT(epoch FROM max(giohd_tk)) end as giohd_tk,\n" +
-                "case when EXTRACT(epoch FROM max(tong_giohd)) is null then 0 else EXTRACT(epoch FROM max(tong_giohd)) end as tong_giohd,\n" +
+                "EXTRACT(epoch FROM max(tk)) as tk,\n" +
+                "EXTRACT(epoch FROM max(md)) as md,\n" +
+                "EXTRACT(epoch FROM max(cong_giobay)) as cong_giobay,max(nhienlieu) as nhienlieu, \n" +
+                "EXTRACT(epoch FROM max(giohd_md)) as giohd_md,\n" +
+                "EXTRACT(epoch FROM max(giohd_tk)) as giohd_tk,\n" +
+                "EXTRACT(epoch FROM max(tong_giohd)) as tong_giohd,\n" +
                 "case when max(nltt_md) is null then 0 else max(nltt_md) end as nltt_md,\n" +
                 "case when max(nltt_tk) is null then 0 else max(nltt_tk) end as nltt_tk, \n" +
                 "case when max(cong_nltt) is null then 0 else max(cong_nltt) end as cong_nltt, \n" +
                 "case when max(haohut) is null then 0 else max(haohut) end as haohut,\n" +
                 "case when max(tongcong) is null then 0 else max(tongcong) end as tongcong,max(tennv_gr) as tennv_gr,max(nv_gr) as nv_gr\n" +
-                "from (select ten_nv,nhiemvu,min(ranks) as ranks,sum(hm_tk::interval) as tk,sum(hm_md::interval) as md,sum(cong_giobay) as cong_giobay,\n" +
+                "from (select ten_nv,nhiemvu,DENSE_RANK() OVER (ORDER BY ten_nv asc nulls last) as ranks,sum(hm_tk::interval) as tk,sum(hm_md::interval) as md,sum(cong_giobay) as cong_giobay,\n" +
                 "sum(daubay) as nhienlieu,sum(giohd_md) as giohd_md,sum(giohd_tk) as giohd_tk,sum(tong_giohd) as tong_giohd,sum(nltt_md) as nltt_md,\n" +
                 "sum(nltt_tk) as nltt_tk, sum(cong_nltt) as cong_nltt, sum(haohut) as haohut, sum(tongcong) as tongcong,grouping(ten_nv) as tennv_gr, grouping(nhiemvu) as nv_gr\n" +
-                "from (SELECT RANK() OVER (PARTITION BY ten_nv ORDER BY nhiemvu asc) AS ranks,ct.id as ctnv_id,ten_nv,nhiemvu,hm_tk,hm_md,\n" +
+                "from (SELECT ct.id as ctnv_id,ten_nv,nhiemvu,hm_tk,hm_md,\n" +
                 "hm_tk::interval+hm_md::interval as cong_giobay,diezel,daubay,xang,hacap\n" +
                 "FROM public.hanmuc_nhiemvu2 hm \n" +
                 "right join chitiet_nhiemvu ct on hm.nhiemvu_id=ct.id\n" +
@@ -251,81 +250,39 @@ public class SubQuery {
                 "where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and root_id="+root_id+"\n" +
                 "group by 1) b on a.ctnv_id=b.ctnv_id\n" +
                 "group by rollup(ten_nv,nhiemvu)) d\n" +
-                "group by ten_nv,nhiemvu order by tennv_gr desc,ten_nv, nv_gr desc,nhiemvu) e\n";
+                "group by ten_nv,nhiemvu order by tennv_gr desc,ten_nv, nv_gr desc,nhiemvu) e";
     }
-    public static String ttnlbtkh_for_dv(LocalDate sd,LocalDate ed){
-        return "select 'C' as stt,ten,ten_nv,\n" +
-                "case when nhiemvu is null then ten else nhiemvu end as nhiemvu,\n" +
-                "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
-                "case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,\n" +
-                "case when EXTRACT(epoch FROM max(congiobay)) is null then 0 else EXTRACT(epoch FROM max(congiobay)) end as congiobay,\n" +
-                "max(nhienlieu) as nhienlieu,\n" +
-                "case when EXTRACT(epoch FROM max(giohd_md)) is null then 0 else EXTRACT(epoch FROM max(giohd_md)) end as giohd_md,\n" +
-                "case when EXTRACT(epoch FROM max(giohd_tk)) is null then 0 else EXTRACT(epoch FROM max(giohd_tk)) end as giohd_tk,\n" +
-                "case when EXTRACT(epoch FROM max(tonggiohd)) is null then 0 else EXTRACT(epoch FROM max(tonggiohd)) end as tonggiohd,\n" +
-                "case when max(nltt_md) is null then 0 else max(nltt_md) end as nltt_md, \n" +
-                "case when max(nltt_tk) is null then 0 else max(nltt_tk) end as nltt_tk,\n" +
-                "case when max(cong_nltt) is null then 0 else max(cong_nltt) end as cong_nltt,\n" +
-                "case when max(haohut) is null then 0 else max(haohut) end as haohut,\n" +
-                "case when max(tongcong) is null then 0 else max(tongcong) end as tongcong, \n" +
-                "max(dm_tk) as dm_tk, max(dm_md) as dm_md, max(ten_gr) as ten_gr,max(tennv_gr) as tennv_gr,max(nv_gr) as nv_gr,pri\n" +
-                "from (select max(nnx) as pt_id,max(ct_id) as ct_id,max(years) as years,max(pri) as pri,\n" +
-                "ten,ten_nv,case when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end as nhiemvu,sum(tk) as tk,sum(md) as md,sum(cong_giobay) as congiobay,sum(nhienlieu) as nhienlieu,\n" +
-                "sum(giohd_md) as giohd_md,sum(giohd_tk) as giohd_tk,sum(tong_giohd) as tonggiohd,\n" +
-                "sum(nltt_md) as nltt_md,sum(nltt_tk) as nltt_tk,sum(cong_nltt) as cong_nltt,sum(haohut) as haohut,sum(tongcong) as tongcong,\n" +
-                "max(dm_tk) as dm_tk,max(dm_md) as dm_md,\n" +
-                "grouping(ten) as ten_gr, grouping(ten_nv) as tennv_gr,grouping(nhiemvu) as nv_gr\n" +
-                "from (SELECT hmnvtb.dvi_xuat_id as nnx,hmnvtb.ctnv_id as ct_id,hmnvtb.years as years,ten,ten_nv,nhiemvu,max(priority_bc2) as pri,\n" +
-                "sum(tk::interval) as tk,sum(md::interval) as md,sum(tk::interval+md::interval) as cong_giobay,sum(nhienlieu) as nhienlieu,max(dm_tk_gio) as dm_tk,max(dm_md_gio) as dm_md\n" +
-                "FROM hanmuc_nhiemvu_taubay hmnvtb left join nguon_nx n on hmnvtb.dvi_xuat_id=n.id \n" +
-                "left join phuongtien pt on pt.id=hmnvtb.pt_id \n" +
-                "left join chitiet_nhiemvu ct on ct.id=hmnvtb.ctnv_id \n" +
-                "left join nhiemvu nv on nv.id=ct.nhiemvu_id \n" +
-                "left join dinhmuc dm on (dm.phuongtien_id=pt.id and dm.years=hmnvtb.years) \n" +
-                "group by hmnvtb.dvi_xuat_id,hmnvtb.ctnv_id,hmnvtb.years,ten,ten_nv,nhiemvu order by ten) rat \n" +
-                "left join (SELECT dvi_xuat_id,l.nhiemvu_id as ctnv_id,max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,\n" +
-                "max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
-                "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "join ledger_details ld on l.id=ld.ledger_id join chitiet_nhiemvu ct on ct.id= l.nhiemvu_id where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' \n" +
-                "group by 1,2) a on (a.dvi_xuat_id=rat.nnx and a.ctnv_id=rat.ct_id)\n" +
-                "group by rollup(ten,ten_nv,nhiemvu)) b\n" +
-                "group by pri,ten,ten_nv,nhiemvu\n" +
-                "order by ten_gr desc, ten desc,tennv_gr desc,pri asc,ten_nv,nv_gr desc";
-    }
-    public static String ttnlbtkh_for_tongmaybay(LocalDate sd,LocalDate ed, int root_id,String xmt_id){
-        return "select nv_gr,ranks,case when nhiemvu is null then xmt else nhiemvu end as nhiemvu,tk,md,cong_giobay,nhienlieu,giohd_md,giohd_tk,tong_giohd,nltt_md,nltt_tk,cong_nltt,haohut,tongcong \n" +
-                "from (select xmt,ten_nv,case when max(tennv_gr)=0 and max(nv_gr)=1 then 0 else min(ranks) end as ranks, \n" +
-                "case when max(tennv_gr)=0 and max(nv_gr)=1 then ten_nv else nhiemvu end as nhiemvu, \n" +
-                "case when EXTRACT(epoch FROM max(tk)) is null then 0 else EXTRACT(epoch FROM max(tk)) end as tk,\n" +
-                "case when EXTRACT(epoch FROM max(md)) is null then 0 else EXTRACT(epoch FROM max(md)) end as md,\n" +
-                "case when EXTRACT(epoch FROM max(cong_giobay)) is null then 0 else EXTRACT(epoch FROM max(cong_giobay)) end as cong_giobay,max(nhienlieu) as nhienlieu, \n" +
-                "case when EXTRACT(epoch FROM max(giohd_md)) is null then 0 else EXTRACT(epoch FROM max(giohd_md)) end as giohd_md,\n" +
-                "case when EXTRACT(epoch FROM max(giohd_tk)) is null then 0 else EXTRACT(epoch FROM max(giohd_tk)) end as giohd_tk,\n" +
-                "case when EXTRACT(epoch FROM max(tong_giohd)) is null then 0 else EXTRACT(epoch FROM max(tong_giohd)) end as tong_giohd,\n" +
-                "case when max(nltt_md) is null then 0 else max(nltt_md) end as nltt_md,\n" +
-                "case when max(nltt_tk) is null then 0 else max(nltt_tk) end as nltt_tk, \n" +
-                "case when max(cong_nltt) is null then 0 else max(cong_nltt) end as cong_nltt, \n" +
-                "case when max(haohut) is null then 0 else max(haohut) end as haohut,\n" +
-                "case when max(tongcong) is null then 0 else max(tongcong) end as tongcong,max(tennv_gr) as tennv_gr,max(nv_gr) as nv_gr\n" +
-                "from (select max(xmt) as xmt,ten_nv,nhiemvu,min(ranks) as ranks,sum(hm_tk::interval) as tk,sum(hm_md::interval) as md,sum(cong_giobay) as cong_giobay,\n" +
-                "sum(daubay) as nhienlieu,sum(giohd_md) as giohd_md,sum(giohd_tk) as giohd_tk,sum(tong_giohd) as tong_giohd,sum(nltt_md) as nltt_md,\n" +
-                "sum(nltt_tk) as nltt_tk, sum(cong_nltt) as cong_nltt, sum(haohut) as haohut, sum(tongcong) as tongcong,grouping(ten_nv) as tennv_gr, grouping(nhiemvu) as nv_gr\n" +
-                "from (SELECT RANK() OVER (PARTITION BY ten_nv ORDER BY nhiemvu asc) AS ranks,ct.id as ctnv_id,ten_nv,nhiemvu,hm_tk,hm_md,\n" +
-                "hm_tk::interval+hm_md::interval as cong_giobay,diezel,daubay,xang,hacap\n" +
-                "FROM public.hanmuc_nhiemvu2 hm \n" +
-                "right join chitiet_nhiemvu ct on hm.nhiemvu_id=ct.id\n" +
-                "right join nhiemvu nv on ct.nhiemvu_id=nv.id\n" +
-                "right join loai_nhiemvu lnv on lnv.id=nv.assignment_type_id\n" +
-                "where dvi_id="+root_id+" and task_name like 'NV_BAY') a \n" +
+    public static String ttnlbtkh_for_tongmaybay(LocalDate sd,LocalDate ed, int root_id){
+        return "select grouping(nhiemvu) as nv_gr,min(xmt_id) as xmt,ten_nv,\n" +
+                "case when grouping(nhiemvu)=1 and grouping(ten_nv)=1 and grouping(xmt_id)=1 then 'C' \n" +
+                "when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then cast(min(ranks) as text) else '-' end as ranks,\n" +
+                "case when grouping(xmt_id)=1 then 'Cộng máy bay' \n" +
+                "when grouping(nhiemvu)=1 and grouping(ten_nv)=1 and grouping(xmt_id)=0 then xmt_id \n" +
+                "when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end,\n" +
+                "EXTRACT(epoch FROM sum(tk::interval)) as tk,\n" +
+                "EXTRACT(epoch FROM sum(md::interval)) as md,\n" +
+                "EXTRACT(epoch FROM sum(cong_giobay)) as cong_giobay,\n" +
+                "sum(nhienlieu) as nhienlieu,\n" +
+                "EXTRACT(epoch FROM sum(giohd_md)) as giohd_md,\n" +
+                "EXTRACT(epoch FROM sum(giohd_tk)) as giohd_tk,\n" +
+                "EXTRACT(epoch FROM sum(tong_giohd)) as tong_giohd,\n" +
+                "sum(nltt_md) as nltt_md,\n" +
+                "sum(nltt_tk) as nltt_tk, sum(cong_nltt) as cong_nltt, sum(haohut) as haohut, sum(tongcong) as tongcong\n" +
+                "from (SELECT DENSE_RANK() OVER (ORDER BY ten_nv asc) AS ranks,\n" +
+                "xmt_id,ct.id as ctnv_id,ten_nv,nhiemvu,tk,md,tk::interval+md::interval as cong_giobay,nhienlieu\n" +
+                "FROM public.hanmuc_nhiemvu_taubay hm \n" +
+                "left join chitiet_nhiemvu ct on hm.ctnv_id=ct.id\n" +
+                "left join nhiemvu nv on ct.nhiemvu_id=nv.id\n" +
+                "where dvi_xuat_id="+root_id+" and loainv like 'NV_BAY' order by xmt_id) a\n" +
                 "left join (SELECT l.xmt_id as xmt,l.nhiemvu_id as ctnv_id,max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,\n" +
                 "max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,\n" +
                 "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
                 "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
                 "left join ledger_details ld on l.id=ld.ledger_id\n" +
-                "where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and root_id="+root_id+" and xmt_id like '"+xmt_id+"'\n" +
-                "group by 1,2) b on a.ctnv_id=b.ctnv_id\n" +
-                "group by rollup(ten_nv,nhiemvu)) d\n" +
-                "group by xmt,ten_nv,nhiemvu order by tennv_gr desc,ten_nv, nv_gr desc,nhiemvu) e";
+                "where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and root_id="+root_id+"\n" +
+                "group by 1,2) b on (a.ctnv_id=b.ctnv_id AND a.xmt_id=b.xmt)\n" +
+                "group by rollup(xmt_id,ten_nv,nhiemvu)\n" +
+                "order by grouping(xmt_id) desc,xmt,grouping(ten_nv) desc,ten_nv,grouping(nhiemvu) desc,nhiemvu";
     }
     public static Map<String,String> lxdMap(){
         Map<String,String> map = new HashMap<>();

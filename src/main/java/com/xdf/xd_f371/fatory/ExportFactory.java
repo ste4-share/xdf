@@ -1,9 +1,6 @@
 package com.xdf.xd_f371.fatory;
 
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -35,6 +32,13 @@ public class ExportFactory {
         font.setBold(true);
         font.setFontName("Times New Roman");
         font.setFontHeightInPoints((short) 11);
+        style.setFont(font);
+    }public static void setRedFont(XSSFWorkbook wb, CellStyle style){
+        XSSFFont font = wb.createFont();
+        font.setBold(true);
+        font.setFontName("Times New Roman");
+        font.setFontHeightInPoints((short) 11);
+        font.setColor(IndexedColors.RED.getIndex());
         style.setFont(font);
     }
     public static void setDataFormat(XSSFWorkbook wb,CellStyle style,String format_text){

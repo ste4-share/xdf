@@ -191,6 +191,9 @@
                                              </font>
                                           </Label>
                                        </children>
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
                                     </HBox>
                                     <HBox>
                                        <children>

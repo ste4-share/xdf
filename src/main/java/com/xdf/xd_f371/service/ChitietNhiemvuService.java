@@ -73,6 +73,9 @@ public class ChitietNhiemvuService {
     public Optional<NhiemVu> findByName(String n,String status){
         return nhiemvuRepository.findByName(n,status);
     }
+    @Autowired
+    private UnitXmtService unitXmtService;
+
     @Transactional
     public void saveNhiemvu(int ctnv_id,int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d,String hacap){
         Optional<NhiemVu> n_v = nhiemvuRepository.findByName(nv,StatusCons.ACTIVED.getName());
@@ -90,6 +93,7 @@ public class ChitietNhiemvuService {
                 }
                 hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
                         Double.parseDouble(diezel_tf),Double.parseDouble(d),Double.parseDouble(x),Double.parseDouble(hacap)));
+                DashboardController.unitxmt_ls = unitXmtService.findAllByMaybay(DashboardController.ref_Dv.getId());
                 DialogMessage.message(null, MessageCons.THANH_CONG.getName(),
                         null, Alert.AlertType.INFORMATION);
             }
@@ -104,6 +108,7 @@ public class ChitietNhiemvuService {
             }
             hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
                     Double.parseDouble(diezel_tf),Double.parseDouble(d),Double.parseDouble(x),Double.parseDouble(hacap)));
+            DashboardController.unitxmt_ls = unitXmtService.findAllByMaybay(DashboardController.ref_Dv.getId());
             DialogMessage.message(null, MessageCons.THANH_CONG.getName(),
                     null, Alert.AlertType.INFORMATION);
         }
