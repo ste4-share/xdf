@@ -1,11 +1,14 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.LoaiNVCons;
 import com.xdf.xd_f371.entity.LoaiNhiemVu;
 import com.xdf.xd_f371.entity.NguonNx;
+import com.xdf.xd_f371.entity.NhiemvuTaubay;
 import com.xdf.xd_f371.entity.Team;
 import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.repo.HanmucNhiemvuTauBayRepo;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
-import com.xdf.xd_f371.service.NguonNxService;
+import com.xdf.xd_f371.service.HanmucNhiemvuService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -32,7 +35,7 @@ public class AddNvController implements Initializable {
     @Autowired
     private ChitietNhiemvuService nhiemvuService;
     @Autowired
-    private NguonNxService nguonNxService;
+    private HanmucNhiemvuService hanmucNhiemvuService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initVar();
@@ -43,7 +46,7 @@ public class AddNvController implements Initializable {
         xang.setText("0");
         diezel.setText("0");
         daubay.setText("0");
-
+        hacap.setText("0");
     }
     private boolean isValid(){
         if (!Common.isNumber(xang.getText())){

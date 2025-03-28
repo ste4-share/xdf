@@ -1,25 +1,27 @@
 package com.xdf.xd_f371.service;
 
+import com.xdf.xd_f371.cons.DefaultVarCons;
+import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.StatusCons;
-import com.xdf.xd_f371.dto.InventoryDto;
+import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.XmtDto;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
+import com.xdf.xd_f371.entity.NhiemvuTaubay;
 import com.xdf.xd_f371.entity.PhuongTien;
 import com.xdf.xd_f371.entity.UnitXmt;
-import com.xdf.xd_f371.repo.DinhMucRepo;
+import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.repo.HanmucNhiemvuTauBayRepo;
 import com.xdf.xd_f371.repo.LoaiPhuongTienRepo;
 import com.xdf.xd_f371.repo.PhuongtienRepo;
 import com.xdf.xd_f371.repo.UnitXmtRepo;
 import com.xdf.xd_f371.util.DialogMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,7 @@ public class PhuongtienService {
     private final PhuongtienRepo phuongtienRepo;
     private final LoaiPhuongTienRepo loaiPhuongTienRepo;
     private final UnitXmtRepo unitXmtRepo;
+    private final HanmucNhiemvuTauBayRepo hanmucNhiemvuTauBayRepo;
 
     public List<PhuongTien> findPhuongTienByLoaiPhuongTien(String loaiPhuongTien,int dvi_id){
         return phuongtienRepo.findPhuongTienByLoaiPhuongTien(loaiPhuongTien,dvi_id);
@@ -82,11 +85,17 @@ public class PhuongtienService {
         }
     }
     @Transactional
-    public void createNewXmtUnit(UnitXmt xmt,String pt_name,int lpt_id){
+    public void createNewXmtUnit(UnitXmt xmt,String pt_name,int lpt_id,String lpt){
         try {
-            PhuongTien pt= phuongtienRepo.save(new PhuongTien(pt_name,xmt.getUnit_id(),lpt_id,StatusCons.ACTIVED.getName()));
+            PhuongTien pt= phuongtienRepo.save(new PhuongTien(pt_name,xmt.getUnit_id(),lpt_id,StatusCons.ACTIVED.getName(),lpt, CommonFactory.getTypeOFPhuongtien().get(lpt)));
             xmt.setXmt_id(pt.getId());
-            unitXmtRepo.save(xmt);
+            UnitXmt u = unitXmtRepo.save(xmt);
+            if (pt.getTinhchat().equals(LoaiPTEnum.MAYBAY.getNameVehicle())){
+                DashboardController.ctnv_ls.forEach(ctnv->{
+                    hanmucNhiemvuTauBayRepo.save(new NhiemvuTaubay(DashboardController.ref_Dv.getId(),xmt.getXmt_id(),ctnv.getId(),
+                            DefaultVarCons.GIO_HD.getName(),DefaultVarCons.GIO_HD.getName(),0L, LocalDate.now().getYear(),u.getId()));
+                });
+            }
             DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
         } catch (Exception e) {
             throw new RuntimeException(e);

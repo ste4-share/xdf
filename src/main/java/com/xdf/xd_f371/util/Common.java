@@ -158,7 +158,7 @@ public class Common {
         Thread thread = new Thread(loadingTask);
         thread.setDaemon(true);
         thread.start();
-        setTaskTimeout(loadingTask, 30, TimeUnit.SECONDS);
+        setTaskTimeout(loadingTask, 120, TimeUnit.SECONDS);
     }
     private static void setTaskTimeout(Task<?> task, long timeout, TimeUnit unit) {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();

@@ -6,9 +6,7 @@ import com.xdf.xd_f371.entity.ChitietNhiemVu;
 import com.xdf.xd_f371.entity.HanmucNhiemvu2;
 import com.xdf.xd_f371.entity.NhiemVu;
 import com.xdf.xd_f371.service.ChitietNhiemvuService;
-import com.xdf.xd_f371.service.ConfigurationService;
 import com.xdf.xd_f371.service.HanmucNhiemvuService;
-import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.ComponentUtil;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -41,10 +39,6 @@ public class AddNewHanMucNhiemvu implements Initializable {
     ChitietNhiemvuService chitietNhiemvuService;
     @Autowired
     HanmucNhiemvuService hanmucNhiemvuService;
-    @Autowired
-    ConfigurationService configurationService;
-    @Autowired
-    NguonNxService nguonNxService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

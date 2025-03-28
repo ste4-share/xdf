@@ -31,6 +31,8 @@ public class NhiemVu implements Serializable {
     private Integer priority;
     @Column(name = "priority_bc2")
     private Integer priorityBc2;
+    @Column(name = "loainv")
+    private String loainv;
 
     @OneToMany(mappedBy = "nhiemVu", cascade = CascadeType.ALL)
     private List<ChitietNhiemVu> details = new ArrayList<>();
@@ -41,12 +43,13 @@ public class NhiemVu implements Serializable {
     @JoinColumn(name = "assignment_type_id", referencedColumnName = "id" , insertable = false, updatable = false)
     private LoaiNhiemVu loaiNhiemVu;
 
-    public NhiemVu(String tenNv, String status, int teamId, Integer assignmentTypeId, Integer priority, Integer priorityBc2) {
+    public NhiemVu(String tenNv, String status, int teamId, Integer assignmentTypeId, Integer priority, Integer priorityBc2,String loainv) {
         this.tenNv = tenNv;
         this.status = status;
         this.teamId = teamId;
         this.assignmentTypeId = assignmentTypeId;
         this.priority = priority;
         this.priorityBc2 = priorityBc2;
+        this.loainv = loainv;
     }
 }

@@ -5,9 +5,7 @@ import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.dto.QuarterDto;
-import com.xdf.xd_f371.entity.Configuration;
-import com.xdf.xd_f371.entity.NguonNx;
-import com.xdf.xd_f371.entity.TrucThuoc;
+import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.service.*;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -31,7 +29,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -47,6 +44,9 @@ public class DashboardController implements Initializable {
     public static Stage primaryStage;
     public static NguonNx ref_Dv=null;
     public static QuarterDto ref_Quarter=null;
+    public static List<PhuongTien> xmt_ls = new ArrayList<>();
+    public static List<UnitXmt> unitxmt_ls = new ArrayList<>();
+    public static List<ChitietNhiemVu> ctnv_ls = new ArrayList<>();
     public static Map<String, List<TrucThuoc>> map = new HashMap<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
     public static int screenHeigh = (int) Screen.getPrimary().getBounds().getHeight();
@@ -67,24 +67,35 @@ public class DashboardController implements Initializable {
     private AnchorPane main_menu;
 
     @Autowired
+    private PhuongtienService phuongtienService;
+    @Autowired
+    private UnitXmtService unitXmtService;
+    @Autowired
     private ConfigurationService configurationService;
     @Autowired
     private TructhuocService tructhuocService;
     @Autowired
     private NguonNxService nguonNxService;
+    @Autowired
+    private ChitietNhiemvuService chitietNhiemvuService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initLabel();
         getQuarterList();
         initRefDv();
+        initPulbicList();
         getTructhuocList();
         getCurrentTiming();
         customStyleMenu();
         setStyleForClickedMEnu(ledger_menu,tonkho_menu,dvi_menu,dinhmuc_menu,nhiemvu_menu,report);
         openFxml("ledger.fxml");
     }
-
+    private void initPulbicList() {
+        xmt_ls = phuongtienService.findAll();
+        unitxmt_ls = unitXmtService.findAllByMaybay(ref_Dv.getId());
+        ctnv_ls = chitietNhiemvuService.findAllCtnvByTypeMaybay();
+    }
     private void getQuarterList() {
         try {
             ref_Quarter = configurationService.getListQuarter(LocalDate.now().getYear()).stream()
@@ -95,7 +106,6 @@ public class DashboardController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
     private Map<String, List<TrucThuoc>> getTructhuocList(){
         List<TrucThuoc> tt_nhap =  new ArrayList<>();
         List<TrucThuoc> tt_xuat =  new ArrayList<>();

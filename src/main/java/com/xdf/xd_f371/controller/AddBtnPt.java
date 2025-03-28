@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.DefaultVarCons;
+import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.cons.StatusCons;
 import com.xdf.xd_f371.entity.LoaiPhuongTien;
 import com.xdf.xd_f371.entity.PhuongTien;
@@ -101,7 +102,8 @@ public class AddBtnPt implements Initializable {
             }else{
                 phuongtienService.createNewXmtUnit(new UnitXmt(pt_id.getText(),DashboardController.ref_Dv.getId(),0,note.getText(),
                         Double.parseDouble(h.getText()),Double.parseDouble(km.getText()),Double.parseDouble(md.getText()),Double.parseDouble(tk.getText()),
-                        license_plate_number.getEditor().getText(), StatusCons.ACTIVED.getName(),DefaultVarCons.GIO_HD.getName(),DefaultVarCons.GIO_HD.getName(),0),cbb_xmt.getEditor().getText(),cbb_loai.getSelectionModel().getSelectedItem().getId());
+                        license_plate_number.getEditor().getText(), StatusCons.ACTIVED.getName(),DefaultVarCons.GIO_HD.getName(),DefaultVarCons.GIO_HD.getName(),0)
+                        ,cbb_xmt.getEditor().getText(),cbb_loai.getSelectionModel().getSelectedItem().getId(),cbb_loai.getSelectionModel().getSelectedItem().getTypeName());
                 DinhMucPhuongTienController.norm_stage.close();
             }
         }

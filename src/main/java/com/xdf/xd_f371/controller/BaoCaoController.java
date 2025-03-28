@@ -385,16 +385,16 @@ public class BaoCaoController implements Initializable {
         map_ttnlbtkh(mb_ls,sheet,wb,start_row-1);
         List<Object[]> all_nv_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_all(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
         map_ttnlbtkh(all_nv_ls,sheet,wb,start_row+mb_ls.size()-1);
-//        List<Object[]> dv_nv_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_dv(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
         int mbnv_start = start_row+mb_ls.size()+all_nv_ls.size()-1;
-        if (!unitXmtService.findXmtIdList().isEmpty()){
-            for (int i =0; i<unitXmtService.findXmtIdList().size();i++){
-//                String xmtid = unitXmtService.findXmtIdList().get(i);
+        List<String> xmt_idls = unitXmtService.findXmtIdList();
+
+//        if (!xmt_idls.isEmpty()){
+//            for (int i =0; i<xmt_idls.size();i++){
 //                List<Object[]> mbls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_tongmaybay(DashboardController.ref_Quarter.getStart_date(),
-//                        DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId(),xmtid));
+//                        DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId(),xmt_idls.get(i)));
 //                map_ttnlbtkh(mbls,sheet,wb,mbnv_start+(mbls.size()*i));
-            }
-        }
+//            }
+//        }
     }
     private void map_ttnlbtkh(List<Object[]> ls,XSSFSheet sheet,XSSFWorkbook wb,int sr) {
         for (int i = 0; i<ls.size();i++){

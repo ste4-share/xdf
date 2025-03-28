@@ -44,6 +44,15 @@ public class PhuongTien {
         this.status = status;
     }
 
+    public PhuongTien(String name, int nguonnx_id, int loaiphuongtien_id, String status, String loaipt, String tinhchat) {
+        this.name = name;
+        this.nguonnx_id = nguonnx_id;
+        this.loaiphuongtien_id = loaiphuongtien_id;
+        this.status = status;
+        this.loaipt = loaipt;
+        this.tinhchat = tinhchat;
+    }
+
     @OneToMany(mappedBy = "phuongTien", cascade = CascadeType.ALL)
     private List<DinhMuc> dinhmuc;
     @OneToMany(mappedBy = "phuongTien", cascade = CascadeType.ALL)

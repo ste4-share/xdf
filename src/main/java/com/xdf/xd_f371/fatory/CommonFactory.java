@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.fatory;
 
 import com.xdf.xd_f371.cons.ConfigCons;
+import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.AssignmentBillDto;
@@ -41,7 +42,6 @@ public class CommonFactory implements Initializable {
     protected static Stage primaryStage;
     protected static double inventory_quantity = 0;
     protected Configuration config = null;
-//    protected List<InventoryUnits> i = new ArrayList<>();
     protected List<TransactionHistory> transactionHistories = new ArrayList<>();
     protected static List<Ledger> ledgers = new ArrayList<>();
     protected static List<LedgerDetails> ls_socai;
@@ -253,6 +253,16 @@ public class CommonFactory implements Initializable {
             return selectedFile.getAbsoluteFile();
         }
         return null;
+    }
+    public static Map<String,String> getTypeOFPhuongtien(){
+        Map<String,String> map = new HashMap<>();
+        map.put("MB-CD", LoaiPTEnum.MAYBAY.getNameVehicle());
+        map.put("XE_CHAY_DIEZEL", LoaiPTEnum.XE.getNameVehicle());
+        map.put("XE_CHAY_XANG", LoaiPTEnum.XE.getNameVehicle());
+        map.put("MAY_CHAY_DIEZEL", LoaiPTEnum.MAY.getNameVehicle());
+        map.put("MAY_CHAY_XANG", LoaiPTEnum.MAY.getNameVehicle());
+        map.put("MB-TT", LoaiPTEnum.MAYBAY.getNameVehicle());
+        return map;
     }
     protected String generateId(int year, int root_id, String lenh_so,String lp){
         String y = String.valueOf(year);

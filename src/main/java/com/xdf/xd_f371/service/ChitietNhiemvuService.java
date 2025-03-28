@@ -1,6 +1,10 @@
 package com.xdf.xd_f371.service;
 
+import com.xdf.xd_f371.cons.DefaultVarCons;
+import com.xdf.xd_f371.cons.LoaiNVCons;
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.cons.StatusCons;
+import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.NhiemVuDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.repo.ChitietNhiemvuRepo;
@@ -8,10 +12,13 @@ import com.xdf.xd_f371.repo.LoaiNhiemvuRepo;
 import com.xdf.xd_f371.repo.NhiemvuRepository;
 import com.xdf.xd_f371.repo.TeamRepo;
 import com.xdf.xd_f371.util.DialogMessage;
+import jakarta.transaction.Transactional;
 import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,19 +32,6 @@ public class ChitietNhiemvuService {
     @Autowired
     private HanmucNhiemvuService hanmucNhiemvuService;
 
-    public List<NhiemVuDto> findAllDtoBy(String lnv){
-        return chitietNhiemvuRepo.findAllDtoBy(lnv);
-    }
-    public NhiemVuDto findAllDtoByTenNv(String ten){
-        if (chitietNhiemvuRepo.findAllDtoByTenNv(ten).isPresent()){
-            chitietNhiemvuRepo.findAllDtoByTenNv(ten).get();
-        }
-        return null;
-    }
-
-    public List<NhiemVuDto> findAllBy(){
-        return chitietNhiemvuRepo.findAllBy();
-    }
     public Optional<NhiemVuDto> findByTenNhiemvuDto(String tennv){
         return chitietNhiemvuRepo.findByTenNv(tennv);
     }
@@ -59,6 +53,9 @@ public class ChitietNhiemvuService {
     public List<ChitietNhiemVu> findByNhiemvuId(int id){
         return chitietNhiemvuRepo.findByNhiemvuId(id);
     }
+    public List<ChitietNhiemVu> findAllCtnvByTypeMaybay(){
+        return chitietNhiemvuRepo.findAllCtnv();
+    }
     public List<ChitietNhiemVu> findAllCtnv(){
         return chitietNhiemvuRepo.findAll();
     }
@@ -76,25 +73,38 @@ public class ChitietNhiemvuService {
     public Optional<NhiemVu> findByName(String n,String status){
         return nhiemvuRepository.findByName(n,status);
     }
+    @Transactional
     public void saveNhiemvu(int ctnv_id,int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d,String hacap){
         Optional<NhiemVu> n_v = nhiemvuRepository.findByName(nv,StatusCons.ACTIVED.getName());
         if (n_v.isPresent()){
             Optional<ChitietNhiemVu> ctnv = chitietNhiemvuRepo.findByNhiemvu(ct,n_v.get().getId());
             if (ctnv.isPresent()){
-                DialogMessage.errorShowing("Nhiem vu da ton tai.");
+                DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
             }else{
                 ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(ctnv_id,n_v.get().getId(),ct));
+                if (lnv.getTask_name().equals(LoaiNVCons.NV_BAY.getName())){
+                    DashboardController.unitxmt_ls.forEach(xmt -> {
+                        hanmucNhiemvuService.save(new NhiemvuTaubay(DashboardController.ref_Dv.getId(),xmt.getXmt_id(),ct2.getId(),
+                                DefaultVarCons.GIO_HD.getName(),DefaultVarCons.GIO_HD.getName(),0L, LocalDate.now().getYear(),xmt.getId()));
+                    });
+                }
                 hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
                         Double.parseDouble(diezel_tf),Double.parseDouble(d),Double.parseDouble(x),Double.parseDouble(hacap)));
-                DialogMessage.message(null, "Them thanh cong",
+                DialogMessage.message(null, MessageCons.THANH_CONG.getName(),
                         null, Alert.AlertType.INFORMATION);
             }
         }else{
-            NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,lnv.getId(),99,99));
+            NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,lnv.getId(),99,99,lnv.getTask_name()));
             ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(ctnv_id,n.getId(),ct));
+            if (lnv.getTask_name().equals(LoaiNVCons.NV_BAY.getName())){
+                DashboardController.unitxmt_ls.forEach(xmt -> {
+                    hanmucNhiemvuService.save(new NhiemvuTaubay(DashboardController.ref_Dv.getId(),xmt.getXmt_id(),ct2.getId(),
+                            DefaultVarCons.GIO_HD.getName(),DefaultVarCons.GIO_HD.getName(),0L, LocalDate.now().getYear(),xmt.getId()));
+                });
+            }
             hanmucNhiemvuService.save(new HanmucNhiemvu2(nx.getId(),ct2.getId(),
                     Double.parseDouble(diezel_tf),Double.parseDouble(d),Double.parseDouble(x),Double.parseDouble(hacap)));
-            DialogMessage.message(null, "Them thanh cong",
+            DialogMessage.message(null, MessageCons.THANH_CONG.getName(),
                     null, Alert.AlertType.INFORMATION);
         }
 

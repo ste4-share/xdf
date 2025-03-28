@@ -30,6 +30,9 @@ public class NhiemvuTaubay {
     private Long nhienlieu;
     @Column(name = "years")
     private int years = LocalDate.now().getYear();
+    @Column(name = "xmt_id")
+    private String xmt_id;
+
     public NhiemvuTaubay(int dviXuatId, int pt_id, int ctnv_id, String tk, String md, Long nhienlieu) {
         this.dviXuatId = dviXuatId;
         this.pt_id = pt_id;
@@ -46,6 +49,16 @@ public class NhiemvuTaubay {
         this.tk = tk;
         this.md = md;
         this.nhienlieu = nhienlieu;
+    }
+    public NhiemvuTaubay( int dviXuatId, int pt_id, int ctnv_id, String tk, String md, Long nhienlieu, int years, String xmt_id) {
+        this.dviXuatId = dviXuatId;
+        this.pt_id = pt_id;
+        this.ctnv_id = ctnv_id;
+        this.tk = tk;
+        this.md = md;
+        this.nhienlieu = nhienlieu;
+        this.years = years;
+        this.xmt_id = xmt_id;
     }
     @ManyToOne
     @JoinColumn(name = "ctnv_id", referencedColumnName = "id", insertable = false, updatable = false)

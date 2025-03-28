@@ -22,6 +22,9 @@ public class UnitXmtService {
     public List<UnitXmt> findByUnitId(int unit_id){
         return unitXmtRepo.findByUnitId(unit_id);
     }
+    public List<UnitXmt> findAllByMaybay(int unit_id){
+        return unitXmtRepo.findAllByMaybay(unit_id);
+    }
     public List<UnitXmt> findByUnitIdAndPtId(int unit_id, int pt_id){
         return unitXmtRepo.findByUnitIdPtId(unit_id,pt_id);
     }public List<String> findXmtIdList(){
