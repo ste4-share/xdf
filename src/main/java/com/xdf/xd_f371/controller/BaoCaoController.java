@@ -1,10 +1,8 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.*;
-import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
-import com.xdf.xd_f371.entity.UnitXmt;
 import com.xdf.xd_f371.fatory.ExportFactory;
 import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.service.*;
@@ -46,14 +44,7 @@ public class BaoCaoController implements Initializable {
     private int start_row = 8;
     private int start_col = 6;
     @Autowired
-    private UnitXmtService unitXmtService;
-    @Autowired
     private NguonNxService nguonNxService;
-    @Autowired
-    private HanmucNhiemvuService hanmucNhiemvuService;
-
-    @FXML
-    private TableView<Object> nltb_tb,lsb_tb,ptnnx_tb;
     @FXML
     private ComboBox<NguonNx> dvi_cbb;
     @FXML
@@ -195,7 +186,9 @@ public class BaoCaoController implements Initializable {
     private String getCusQueryNl(String begin_1,String end_q1, String end_q1_1,LocalDate sd,LocalDate ed){
         arr_tt.clear();
         String n_sum1="";
+        String n_sum2="";
         String x_sum2="";
+        String x_sum3="";
         String sl1="";
         String sl2="";
         String n_case_1="";
@@ -204,7 +197,7 @@ public class BaoCaoController implements Initializable {
         List<TrucThuoc> tt_list_n = DashboardController.map.get(LoaiPhieuCons.PHIEU_NHAP.getName());
         List<TrucThuoc> tt_list_x = DashboardController.map.get(LoaiPhieuCons.PHIEU_XUAT.getName());
         if (tdvCk.isSelected()){
-            for (int i=0; i<tt_list_n.size(); i++) {
+            for (int i=0; i<tt_list_n.size(); i++){
                 n_sum1 = n_sum1.concat("n"+i+" as n"+i+",");
                 sl1=sl1.concat("case when sum(n"+i+".soluong) is null then 0 else sum(n"+i+".soluong) end as n"+i+",");
                 n_case_1 = n_case_1.concat(" left join (SELECT petro_id, sum(nvdx_quantity) as soluong FROM public.inventory_units where bill_type like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and st_time between '"+sd+"' and '"+ed+"' group by 1) n"+i+" on adm.id=n"+i+".petro_id");
@@ -217,15 +210,25 @@ public class BaoCaoController implements Initializable {
         }else{
             for (int i=0; i<tt_list_n.size(); i++) {
                 n_sum1 = n_sum1.concat("n"+i+" as n"+i+",");
+                if (i==tt_list_n.size()-1){
+                    n_sum2 = n_sum2.concat("n"+i+" as tong_n,");
+                }else{
+                    n_sum2 = n_sum2.concat("n"+i+"+");
+                }
                 sl1=sl1.concat("case when sum(n"+i+".soluong) is null then 0 else sum(n"+i+".soluong) end as n"+i+",");
                 n_case_1 = n_case_1.concat(" left join (SELECT distinct on (xd_id) xd_id, soluong_tt as soluong FROM public.transaction_history where loaiphieu like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' order by xd_id,created_at desc) n"+i+" on adm.id=n"+i+".xd_id");
             }
             for (int i=0; i<tt_list_x.size(); i++) {
                 x_sum2 = x_sum2.concat("x"+i+" as x"+i+",");
+                if (i==tt_list_x.size()-1){
+                    x_sum3 = x_sum3.concat("x"+i+" as tong_x,");
+                }else{
+                    x_sum3 = x_sum3.concat("x"+i+"+");
+                }
                 sl2=sl2.concat("case when sum(x"+i+".soluong) is null then 0 else sum(x"+i+".soluong) end as x"+i+",");
                 x_case_2 = x_case_2.concat(" left join (SELECT distinct on (xd_id) xd_id, soluong_tt as soluong FROM public.transaction_history where loaiphieu like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' order by xd_id,created_at desc) x"+i+" on adm.id=x"+i+".xd_id");
             }
-            return begin_1.concat(n_sum1).concat(x_sum2).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
+            return begin_1.concat(n_sum1).concat(n_sum2).concat(x_sum2).concat(x_sum3).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }
     }
 
@@ -257,21 +260,31 @@ public class BaoCaoController implements Initializable {
             int lastRow = sheet.getLastRowNum();
             sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
             XSSFRow row1 = sheet.createRow(start_row+i+2);
-            XSSFCellStyle style = wb.createCellStyle();
             Object[] rows_data = nxtls.get(i);
             for (int j = 0; j<rows_data.length;j++){
                 String val = rows_data[j]==null ? "" : rows_data[j].toString();
                 XSSFCell c = row1.createCell(scol+j);
+                XSSFCellStyle style = wb.createCellStyle();
                 ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
                 if (Integer.parseInt(rows_data[2].toString())==1){
                     ExportFactory.setBoldFont(wb,style);
                 }
-                if (j!=3){
+                if (j!=3) {
                     ExportFactory.setCellAlightmentStyle(style);
                 }
                 if (Common.isDoubleNumber(val)){
+                    ExportFactory.setDataFormat(wb,style,"#,##0.00");
                     BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
                     c.setCellValue(bigDecimal.doubleValue());
+                } else if(Common.isLongNumber(val)){
+                    long l = (long) Double.parseDouble(val);
+                    if (l==0){
+                        c.setCellValue("");
+                        c.setCellStyle(style);
+                        continue;
+                    }
+                    ExportFactory.setDataFormat(wb,style,"#,##0");
+                    c.setCellValue((long) Double.parseDouble(val));
                 } else {
                     if (j==3){
                         if (SubQuery.lxdMap().get(val)!=null){
@@ -343,11 +356,22 @@ public class BaoCaoController implements Initializable {
         c2_r3.setCellStyle(style);
         c2_r3.setCellValue(ConfigCons.CONG.getName());
 
+        Cell c2_rsum = r2.createCell(indexs_n.size()+start_col+5);
+        c2_rsum.setCellStyle(style);
+        c2_rsum.setCellValue("Tổng nhập");
+        Cell c3_rsum = r2.createCell(start_col+6+indexs_n.size()+indexs_x.size());
+        c3_rsum.setCellStyle(style);
+        c3_rsum.setCellValue("Tổng xuất");
+
         for (int i=0; i<indexs_n.size(); i++) {
             String tructh = indexs_n.get(i).getName();
             int ind = start_col+5+i;
             XSSFCell c1 = r1.createCell(ind);
             c1.setCellStyle(style);
+            if (i==indexs_n.size()-1){
+                XSSFCell c1_1 = r1.createCell(ind+1);
+                c1_1.setCellStyle(style);
+            }
             if (i==0){
                 c1.setCellValue(LoaiPhieuCons.PHIEU_NHAP.getName());
             }
@@ -357,9 +381,13 @@ public class BaoCaoController implements Initializable {
         }
         for (int i=0; i<indexs_x.size(); i++) {
             String tructh = indexs_x.get(i).getName();
-            int ind = start_col+5+indexs_n.size()+i;
+            int ind = start_col+6+indexs_n.size()+i;
             XSSFCell c1 = r1.createCell(ind);
             c1.setCellStyle(style);
+            if (i==indexs_x.size()-1){
+                XSSFCell c1_1 = r1.createCell(ind+1);
+                c1_1.setCellStyle(style);
+            }
             if (i==0){
                 c1.setCellValue(LoaiPhieuCons.PHIEU_XUAT.getName());
             }
@@ -368,10 +396,9 @@ public class BaoCaoController implements Initializable {
             c2.setCellValue(tructh);
         }
         ExportFactory.removeMerger(sheet,8,8,11,indexs_n.size());
-        sheet.addMergedRegion(new CellRangeAddress(8,8,11,10+indexs_n.size()));
-        ExportFactory.removeMerger(sheet,8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size());
-        sheet.addMergedRegion(new CellRangeAddress(8,8,11+indexs_n.size(),10+indexs_n.size()+indexs_x.size()));
-
+        sheet.addMergedRegion(new CellRangeAddress(8,8,11,11+indexs_n.size()));
+        ExportFactory.removeMerger(sheet,8,8,12+indexs_n.size(),11+indexs_n.size()+indexs_x.size());
+        sheet.addMergedRegion(new CellRangeAddress(8,8,12+indexs_n.size(),12+indexs_n.size()+indexs_x.size()));
     }
     private int fillDataTo_ttnlbtkh(XSSFWorkbook wb,String sheet_n){
         XSSFSheet sheet = wb.getSheet(sheet_n);
@@ -379,7 +406,6 @@ public class BaoCaoController implements Initializable {
         fillData_ttnlbtkh(wb,sheet);
         return -1;
     }
-
     private void fillData_ttnlbtkh(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> mb_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_mb(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
