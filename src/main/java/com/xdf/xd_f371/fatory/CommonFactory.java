@@ -3,6 +3,7 @@ package com.xdf.xd_f371.fatory;
 import com.xdf.xd_f371.cons.ConfigCons;
 import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.AssignmentBillDto;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
@@ -33,6 +34,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class CommonFactory implements Initializable {
@@ -50,14 +53,13 @@ public class CommonFactory implements Initializable {
     protected List<NguonNx> dvvcLs = new ArrayList<>();
     protected List<NguonNx> dvnLs = new ArrayList<>();
     protected List<LoaiXangDauDto> lxdLs = new ArrayList<>();
+    protected Ledger last_ledger = null;
 
     public static String styleErrorField = "-fx-border-color: red ; -fx-border-width: 2px ;";
     @Autowired
     protected LedgerService ledgerService;
     @Autowired
     protected NguonNxService nguonNxService;
-    @Autowired
-    protected InventoryUnitService inventoryUnitService;
     @Autowired
     protected TransactionHistoryService transactionHistoryService;
     @Autowired
@@ -73,7 +75,7 @@ public class CommonFactory implements Initializable {
     @FXML
     protected TextArea note;
     @FXML
-    protected Label lb_tontheoxd;
+    protected Label lb_tontheoxd,predict_billid;
     @FXML
     protected TextField so,nguoinhan,lenhso,soxe;
     @FXML
@@ -89,6 +91,118 @@ public class CommonFactory implements Initializable {
         setcellFactory();
         initLocalList();
     }
+    protected void splitBillNumber(String input,Ledger l){
+        int splitIndex = 0;
+        while (splitIndex < input.length() && Character.isDigit(input.charAt(splitIndex))) {
+            splitIndex++;
+        }
+        if (splitIndex > 0 && splitIndex <= input.length()) {
+            String numberPart = input.substring(0, splitIndex);
+            String letterPart = input.substring(splitIndex);
+            try {
+                int number = Integer.parseInt(numberPart);
+                l.setBill_id(String.valueOf(number));
+                l.setBill_id2(letterPart);
+            }catch (NumberFormatException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+        }
+    }
+    protected void initPredictValue(String so) {
+        predict_billid.setText("---Gợi ý số tiếp theo: "+so);
+    }
+    protected String getNextInSequence(String current) {
+        // Check if format is number.dot.letter (e.g., 50.a)
+        if (current.matches("^\\d+\\.([a-zA-Z]+)$")) {
+            return getNextDotSequence(current);
+        }
+        // Check if purely numeric
+        else if (current.matches("^\\d+$")) {
+            return String.valueOf(Integer.parseInt(current) + 1);
+        }
+        // Check if alphanumeric without dot (digits followed by letters)
+        else if (current.matches("^\\d+[a-zA-Z]+$")) {
+            return getNextAlphanumeric(current);
+        }
+        return "Unsupported sequence format";
+    }
+
+    private String getNextDotSequence(String current) {
+        String[] parts = current.split("\\.");
+        if (parts.length != 2) {
+            return "Invalid dotted format";
+        }
+
+        try {
+            int number = Integer.parseInt(parts[0]);
+            String letters = parts[1];
+
+            StringBuilder nextLetters = new StringBuilder();
+            boolean carry = true;
+
+            for (int i = letters.length() - 1; i >= 0; i--) {
+                char c = letters.charAt(i);
+                if (carry) {
+                    if (c == 'z') {
+                        nextLetters.insert(0, 'a');
+                        carry = true;
+                    } else if (c == 'Z') {
+                        nextLetters.insert(0, 'A');
+                        carry = true;
+                    } else {
+                        nextLetters.insert(0, (char)(c + 1));
+                        carry = false;
+                    }
+                } else {
+                    nextLetters.insert(0, c);
+                }
+            }
+
+            if (carry) {
+                nextLetters.insert(0, letters.charAt(0) <= 'Z' ? 'A' : 'a');
+            }
+
+            return number + "." + nextLetters.toString();
+        } catch (NumberFormatException e) {
+            return "Invalid numeric part";
+        }
+    }
+
+    private String getNextAlphanumeric(String current) {
+        String[] parts = current.split("(?<=\\d)(?=\\D)");
+        int number = Integer.parseInt(parts[0]);
+        String letters = parts[1];
+
+        StringBuilder nextLetters = new StringBuilder();
+        boolean carry = true;
+
+        for (int i = letters.length() - 1; i >= 0; i--) {
+            char c = letters.charAt(i);
+            if (carry) {
+                if (c == 'z') {
+                    nextLetters.insert(0, 'a');
+                    carry = true;
+                } else if (c == 'Z') {
+                    nextLetters.insert(0, 'A');
+                    carry = true;
+                } else {
+                    nextLetters.insert(0, (char)(c + 1));
+                    carry = false;
+                }
+            } else {
+                nextLetters.insert(0, c);
+            }
+        }
+
+        if (carry) {
+            nextLetters.insert(0, letters.charAt(0) <= 'Z' ? 'A' : 'a');
+        }
+
+        return number + nextLetters.toString();
+    }
+
     protected void initLocalList() {
         dvvcLs = nguonNxService.findAllByDifrentId(DashboardController.ref_Dv.getId());
         dvnLs = nguonNxService.findAllById(DashboardController.ref_Dv.getId());

@@ -1,10 +1,14 @@
 package com.xdf.xd_f371.entity;
 
+import com.xdf.xd_f371.cons.ConfigCons;
+import com.xdf.xd_f371.cons.DefaultVarCons;
+import com.xdf.xd_f371.cons.TypeCons;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -82,6 +86,17 @@ public class Ledger extends BaseObject{
     private int dvi_baono;
     @Column(name = "bienso_ds")
     private String bienso_ds;
+    @Column(name = "bill_id2")
+    private String bill_id2;
+
+    @Transient
+    private String from_date_str;
+    @Transient
+    private String end_date_str;
+    @Transient
+    private String timestamp_str;
+    @Transient
+    private String billnumber;
 
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
     List<LedgerDetails> ledgerDetails;
@@ -90,6 +105,7 @@ public class Ledger extends BaseObject{
     private Accounts accounts;
 
     public Ledger(Ledger l) {
+        this.id = l.getId();
         this.bill_id = l.bill_id;
         this.amount = l.amount;
         this.from_date = l.from_date;
@@ -123,5 +139,9 @@ public class Ledger extends BaseObject{
         this.dvi_baono = l.getDvi_baono();
         this.bienso_ds = l.getBienso_ds();
         this.xmt_id=l.getXmt_id();
+        this.from_date_str = l.getFrom_date()==null ? "" : l.getFrom_date().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName()));
+        this.end_date_str = l.getEnd_date()==null ? "" : l.getEnd_date().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName()));
+        this.billnumber = l.getBill_id().concat(l.getBill_id2());
+        this.timestamp_str = timestamp.format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE_TIME.getName()));
     }
 }

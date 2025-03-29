@@ -172,10 +172,16 @@ public class LedgerController implements Initializable {
         LocalDate et = lst_time.getValue();
         if (validDate(st,et)){
             if (tdvChk.isSelected()){
-                ledgerSelectList = ledgerService.findAllLedgerDto(st,et);
+                ledgerSelectList = new ArrayList<>();
+                ledgerService.findAllLedgerDto(st,et).forEach(x->{
+                    ledgerSelectList.add(new Ledger(x));
+                });
                 setItemToTableView(ledgerSelectList);
             }else{
-                ledgerSelectList = ledgerService.findAllLedgerDto(st,et,DashboardController.ref_Dv.getId());
+                ledgerSelectList = new ArrayList<>();
+                ledgerService.findAllLedgerDto(st,et,DashboardController.ref_Dv.getId()).forEach(x->{
+                    ledgerSelectList.add(new Ledger(x));
+                });
                 setItemToTableView(ledgerSelectList);
             }
         }
@@ -191,9 +197,9 @@ public class LedgerController implements Initializable {
         ledgers_col_stt.setSortable(false);
         ledgers_col_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ledgers_table.getItems().indexOf(column.getValue())+1).asString());
         ledgers_col_id.setCellValueFactory(new PropertyValueFactory<Ledger, String>("id"));
-        ledgers_col_so.setCellValueFactory(new PropertyValueFactory<Ledger, String>("bill_id"));
-        ledgers_col_stdate.setCellValueFactory(new PropertyValueFactory<Ledger, String>("from_date"));
-        ledgers_col_edate.setCellValueFactory(new PropertyValueFactory<Ledger, String>("end_date"));
+        ledgers_col_so.setCellValueFactory(new PropertyValueFactory<Ledger, String>("billnumber"));
+        ledgers_col_stdate.setCellValueFactory(new PropertyValueFactory<Ledger, String>("from_date_str"));
+        ledgers_col_edate.setCellValueFactory(new PropertyValueFactory<Ledger, String>("end_date_str"));
         ledgers_col_lenhkh.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lenh_so"));
         ledgers_col_loainx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("loai_phieu"));
         ledgers_col_dvn.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_nhan"));
@@ -201,7 +207,7 @@ public class LedgerController implements Initializable {
         ledgers_col_xmt.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lpt"));
         ledgers_col_nv.setCellValueFactory(new PropertyValueFactory<Ledger, String>("nhiemvu"));
         ledgers_col_note.setCellValueFactory(new PropertyValueFactory<Ledger, String>("note"));
-        ledgers_col_createtime.setCellValueFactory(new PropertyValueFactory<Ledger, String>("timestamp"));
+        ledgers_col_createtime.setCellValueFactory(new PropertyValueFactory<Ledger, String>("timestamp_str"));
         ledgers_table.setRowFactory(tv -> new TableRow<Ledger>() {
             @Override
             protected void updateItem(Ledger ledger, boolean empty) {

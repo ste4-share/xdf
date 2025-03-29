@@ -199,18 +199,18 @@
                                           <TableView fx:id="ledgers_table" onMouseClicked="#select_ledger_table" prefHeight="216.0" prefWidth="1050.0" style="-fx-border-color: #a8a8a8;" stylesheets="@css/table_style.css">
                                             <columns>
                                                 <TableColumn fx:id="ledgers_col_stt" maxWidth="90.0" minWidth="15.0" text="no" />
-                                              <TableColumn fx:id="ledgers_col_id" maxWidth="300.0" minWidth="200.0" prefWidth="250.0" text="ID" />
-                                                <TableColumn fx:id="ledgers_col_createtime" maxWidth="350.0" minWidth="100.0" prefWidth="300.0" text="Thời gian tạo" />
+                                              <TableColumn fx:id="ledgers_col_id" maxWidth="250.0" minWidth="180.0" prefWidth="200.0" text="ID" />
                                               <TableColumn fx:id="ledgers_col_so" maxWidth="120.0" text="Số" />
                                                 <TableColumn fx:id="ledgers_col_stdate" maxWidth="200.0" prefWidth="150.0" text="Bắt đầu" />
                                                 <TableColumn fx:id="ledgers_col_edate" maxWidth="200.0" prefWidth="150.0" text="Kết thúc" />
                                                 <TableColumn fx:id="ledgers_col_lenhkh" maxWidth="200.0" prefWidth="170.0" text="Lệnh KH số" />
-                                                <TableColumn fx:id="ledgers_col_loainx" maxWidth="100.0" text="N/X" />
-                                                <TableColumn fx:id="ledgers_col_dvn" maxWidth="200.0" prefWidth="150.0" text="Đ.vị nhập" />
+                                                <TableColumn fx:id="ledgers_col_loainx" maxWidth="100.0" prefWidth="42.0" text="N/X" />
+                                                <TableColumn fx:id="ledgers_col_dvn" maxWidth="200.0" prefWidth="58.0" text="Đ.vị nhập" />
                                                 <TableColumn fx:id="ledgers_col_dvx" maxWidth="200.0" prefWidth="150.0" text="Đ.vị xuất" />
                                                 <TableColumn fx:id="ledgers_col_xmt" maxWidth="230.0" prefWidth="200.0" text="XMT" />
                                                 <TableColumn fx:id="ledgers_col_nv" maxWidth="230.0" prefWidth="200.0" text="Nhiệm vụ" />
                                                 <TableColumn fx:id="ledgers_col_note" maxWidth="300.0" prefWidth="230.0" text="Ghi chú" />
+                                                <TableColumn fx:id="ledgers_col_createtime" maxWidth="350.0" minWidth="100.0" prefWidth="300.0" text="Thời gian tạo" />
                                             </columns>
                                              <columnResizePolicy>
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -371,16 +371,16 @@
                                     <Font name="Cambria Bold Italic" size="10.0" />
                                  </font>
                               </Label>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="23.0" prefWidth="1343.0">
+                              <HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="1343.0">
                                  <children>
-                                    <Label prefHeight="30.0" prefWidth="73.0" text="Tổng:">
+                                    <Label prefHeight="30.0" prefWidth="73.0" text="Tổng giá trị:">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="10.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="amount_lb" layoutX="1229.0" layoutY="10.0" prefHeight="30.0" prefWidth="132.0" text="....">
+                                    <Label fx:id="amount_lb" layoutX="1229.0" layoutY="10.0" prefHeight="29.0" prefWidth="174.0" text="7749" textFill="#fc1010">
                                        <font>
-                                          <Font name="Cambria Bold Italic" size="10.0" />
+                                          <Font name="Cambria Bold Italic" size="14.0" />
                                        </font>
                                     </Label>
                                     <Label layoutX="988.0" layoutY="10.0" prefHeight="30.0" prefWidth="73.0" text="VNĐ">

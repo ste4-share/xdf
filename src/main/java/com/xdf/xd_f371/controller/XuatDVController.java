@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.dto.UnitBillDto;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Tcn;
@@ -37,6 +38,19 @@ public class XuatDVController extends CommonFactory implements Initializable {
         setDvCombobox(dvn_cbb,dvvcLs);
         setDvCombobox(dvx_cbb,dvnLs);
         initTcx();
+        last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_XUAT.getName());
+        if (last_ledger!=null){
+            String num = "";
+            String letter = "";
+            if (last_ledger.getBill_id()!=null){
+                num = last_ledger.getBill_id();
+            }if (last_ledger.getBill_id2()!=null){
+                letter = last_ledger.getBill_id2();
+            }
+            initPredictValue(getNextInSequence(num.concat(letter)));
+        }else{
+            initPredictValue("1");
+        }
     }
     private void initTcx() {
         ComponentUtil.setItemsToComboBox(tcx_cbb, tcnx_ls, Tcn::getName, input -> tcnx_ls.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));

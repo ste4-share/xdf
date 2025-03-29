@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LedgersRepo extends JpaRepository<Ledger, Long> {
@@ -57,6 +58,8 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
     List<Ledger> findAllLedgerByUnit(@Param("dvid") int dvid);
     @Query(value = "select * from ledgers l where status like 'ACTIVE'",nativeQuery = true)
     List<Ledger> findAllLedgerActive();
+    @Query(value = "select * from ledgers l where status like 'ACTIVE' and loai_phieu like :lp order by timestamp desc limit 1",nativeQuery = true)
+    Optional<Ledger> findLastLedgerByBillId(@Param("lp") String lp);
     @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='ledgers';",nativeQuery = true)
     List<String> getColumnNames_LEDGER();
     @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='ledger_details';",nativeQuery = true)

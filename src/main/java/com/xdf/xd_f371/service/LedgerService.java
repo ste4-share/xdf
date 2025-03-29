@@ -51,6 +51,8 @@ public class LedgerService {
         return ledgersRepo.getColumnNames_LEDGER_DETAIL();
     }public List<String> getColumnNames_TRANSACTION_HISTORY(){
         return ledgersRepo.getColumnNames_TRANSACTION_HISTORY();
+    }public Ledger findLastLedgerByBillId(String lp){
+        return ledgersRepo.findLastLedgerByBillId(lp).orElse(null);
     }
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();

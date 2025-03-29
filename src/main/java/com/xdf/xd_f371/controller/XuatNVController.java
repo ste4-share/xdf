@@ -2,6 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.LoaiNVCons;
 import com.xdf.xd_f371.cons.LoaiPTEnum;
+import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.TypeCons;
 import com.xdf.xd_f371.dto.AssignmentBillDto;
 import com.xdf.xd_f371.dto.NhiemVuDto;
@@ -65,6 +66,19 @@ public class XuatNVController extends CommonFactory implements Initializable {
         initLicence();
         initDinhmucToolTip();
         initLoaiXmt();
+        last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_XUAT.getName());
+        if (last_ledger!=null){
+            String num = "";
+            String letter = "";
+            if (last_ledger.getBill_id()!=null){
+                num = last_ledger.getBill_id();
+            }if (last_ledger.getBill_id2()!=null){
+                letter = last_ledger.getBill_id2();
+            }
+            initPredictValue(getNextInSequence(num.concat(letter)));
+        }else{
+            initPredictValue("1");
+        }
     }
 
     @FXML

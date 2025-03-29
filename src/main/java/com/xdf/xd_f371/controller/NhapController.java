@@ -21,13 +21,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 @Component
 public class NhapController extends CommonFactory implements Initializable {
     @FXML
     private TextField soTf, recvTf,lenhKHso,soXe,
             donGiaTf, thucNhap,phaiNhap,tThucTe, vcf,tyTrong;
     @FXML
-    private Label notification,chungloai_lb,text_dongia,text_phainhap,text_thucnhap;
+    private Label notification,chungloai_lb,text_dongia,text_phainhap,text_thucnhap,predict_billid;
     @FXML
     private Button addbtn,importbtn,cancelbtn;
     @FXML
@@ -47,6 +48,19 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvCombobox(cmb_dvvc,dvvcLs);
         setDvCombobox(cmb_dvn,dvnLs);
         setPreInv();
+        last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_NHAP.getName());
+        if (last_ledger!=null){
+            String num = "";
+            String letter = "";
+            if (last_ledger.getBill_id()!=null){
+                num = last_ledger.getBill_id();
+            }if (last_ledger.getBill_id2()!=null){
+                letter = last_ledger.getBill_id2();
+            }
+            initPredictValue(getNextInSequence(num.concat(letter)));
+        }else{
+            initPredictValue("1");
+        }
     }
 
     private void initLabelValue() {
@@ -210,7 +224,7 @@ public class NhapController extends CommonFactory implements Initializable {
         NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
-        ledger.setBill_id(soTf.getText());
+        splitBillNumber(soTf.getText(),ledger);
         ledger.setAmount(ls_socai.stream().mapToDouble(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());

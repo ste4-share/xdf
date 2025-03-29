@@ -10,7 +10,8 @@ public enum ConfigCons {
     NBN("NBN"),
     XBN("XBN"),
     REPORT_PATH("PATH_EXPORT_REPORTERS"),
-    FORMAT_DATE("dd/MM/yyyy");
+    FORMAT_DATE("dd/MM/yyyy"),
+    FORMAT_DATE_TIME("dd/MM/yyyy HH:mm:ss");
 
     public final String name;
 

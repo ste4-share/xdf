@@ -65,13 +65,21 @@
                                     <Font name="Cambria Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <TextField id="soTf" fx:id="soTf" onKeyReleased="#soValid" onMouseClicked="#so_clicked" prefHeight="38.0" prefWidth="344.0">
+                              <TextField id="soTf" fx:id="soTf" onKeyReleased="#soValid" onMouseClicked="#so_clicked" prefHeight="38.0" prefWidth="90.0">
                                  <font>
                                     <Font name="Times New Roman" size="16.0" />
                                  </font>
                                  <cursor>
                                     <Cursor fx:constant="TEXT" />
                                  </cursor></TextField>
+                              <Label fx:id="predict_billid" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="233.0">
+                                 <font>
+                                    <Font name="Cambria Bold" size="13.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Label>
                            </children>
                            <VBox.margin>
                               <Insets />
