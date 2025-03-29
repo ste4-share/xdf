@@ -179,30 +179,6 @@ public class XuatNVController extends CommonFactory implements Initializable {
         }
         return false;
     }
-    public AssignmentBillDto getInfor(){
-        PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
-        NhiemVuDto nhiemVuDto = nv_cbb.getSelectionModel().getSelectedItem();
-        UnitXmt u = licenceCbb.getSelectionModel().getSelectedItem();
-        if (pt!=null){
-            if (nhiemVuDto!=null){
-                if (u!=null){
-                    LoaiPhuongTien loaiPhuongTien = phuongtienService.findLptById(pt.getLoaiphuongtien_id());
-                    return new AssignmentBillDto(pt,loaiPhuongTien,u,nhiemVuDto,sokm.getText().isBlank() ? 0 : Integer.parseInt(sokm.getText()),md_rd.isSelected() ? TypeCons.MAT_DAT.getName() : TypeCons.TREN_KHONG.getName(),
-                            getStrInterval(),so.getText(),lenhso.getText(),nguoinhan.getText());
-                }else{
-                    DialogMessage.errorShowing("Dinh muc không xác định");
-                    licenceCbb.setStyle(CommonFactory.styleErrorField);
-                }
-            }else{
-                DialogMessage.errorShowing("Nhiem vu không xác định");
-                nv_cbb.setStyle(CommonFactory.styleErrorField);
-            }
-        }else {
-            DialogMessage.errorShowing("Xe May Tau không xác định");
-            xmt_cbb.setStyle(CommonFactory.styleErrorField);
-        }
-        return null;
-    }
     public AssignmentBillDto getInfor_valid(){
         PhuongTien pt = xmt_cbb.getSelectionModel().getSelectedItem();
         NhiemVuDto nhiemVuDto = nv_cbb.getSelectionModel().getSelectedItem();

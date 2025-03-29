@@ -337,8 +337,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setNguoi_nhan(assignmentBillDto.getNguoinhan());
                 ledger.setSo_xe(assignmentBillDto.getSo_xe());
                 ledger.setLenh_so(assignmentBillDto.getLenhso());
-
-                ledger.setBill_id(assignmentBillDto.getSo());
+                splitBillNumber(assignmentBillDto.getSo(),ledger);
                 ledger.setNhiemvu(assignmentBillDto.getCtnv().getChitiet());
                 ledger.setNhiemvu_id(assignmentBillDto.getCtnv().getCtnv_id());
                 ledger.setLoaigiobay(assignmentBillDto.getLgb());
@@ -369,7 +368,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setNguoi_nhan(unitBillDto.getNguoinhan());
                 ledger.setSo_xe(unitBillDto.getSo_xe());
                 ledger.setLenh_so(unitBillDto.getLenhso());
-                ledger.setBill_id(unitBillDto.getSo());
+                splitBillNumber(unitBillDto.getSo(),ledger);
                 ledger.setDvi_nhan(unitBillDto.getDvi_nhan().getTen());
                 ledger.setDvi_xuat(unitBillDto.getDvi_xuat().getTen());
                 ledger.setDvi_nhan_id(unitBillDto.getDvi_nhan().getId());

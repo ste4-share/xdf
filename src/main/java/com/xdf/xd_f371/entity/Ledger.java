@@ -1,8 +1,6 @@
 package com.xdf.xd_f371.entity;
 
 import com.xdf.xd_f371.cons.ConfigCons;
-import com.xdf.xd_f371.cons.DefaultVarCons;
-import com.xdf.xd_f371.cons.TypeCons;
 import jakarta.persistence.*;
 import lombok.*;
 

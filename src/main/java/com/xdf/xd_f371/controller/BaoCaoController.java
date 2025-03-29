@@ -164,11 +164,9 @@ public class BaoCaoController implements Initializable {
         });
     }
     private void ttxd_xmt(){
-        String sheetName = "ttxd_xmt_data";
-        Common.mapExcelFile(file_name,input -> map_ttxd_xmt_create(input,sheetName),input -> map_ttxd_xmt_get(input,sheetName),SheetNameCons.TTXD_XMT.getName());
-        Common.copyFileExcel(file_name,dest_file);
+        Common.copyFileExcel(file_name2,dest_file2);
+        Common.mapExcelFile_JustExist(dest_file2,input -> fillDataTo_ttxd_xmt(input,SheetNameCons.TTXD_XMT_BETA.getName()),SheetNameCons.TTXD_XMT_BETA.getName());
     }
-
     @FXML
     public void bc_pttk(ActionEvent actionEvent) {
         Stage stage_1 = new Stage();
@@ -216,7 +214,7 @@ public class BaoCaoController implements Initializable {
                     n_sum2 = n_sum2.concat("n"+i+"+");
                 }
                 sl1=sl1.concat("case when sum(n"+i+".soluong) is null then 0 else sum(n"+i+".soluong) end as n"+i+",");
-                n_case_1 = n_case_1.concat(" left join (SELECT distinct on (xd_id) xd_id, soluong_tt as soluong FROM public.transaction_history where loaiphieu like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' order by xd_id,created_at desc) n"+i+" on adm.id=n"+i+".xd_id");
+                n_case_1 = n_case_1.concat(" left join (SELECT xd_id, sum(soluong) as soluong FROM public.transaction_history where loaiphieu like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' group by 1) n"+i+" on adm.id=n"+i+".xd_id");
             }
             for (int i=0; i<tt_list_x.size(); i++) {
                 x_sum2 = x_sum2.concat("x"+i+" as x"+i+",");
@@ -226,7 +224,7 @@ public class BaoCaoController implements Initializable {
                     x_sum3 = x_sum3.concat("x"+i+"+");
                 }
                 sl2=sl2.concat("case when sum(x"+i+".soluong) is null then 0 else sum(x"+i+".soluong) end as x"+i+",");
-                x_case_2 = x_case_2.concat(" left join (SELECT distinct on (xd_id) xd_id, soluong_tt as soluong FROM public.transaction_history where loaiphieu like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' order by xd_id,created_at desc) x"+i+" on adm.id=x"+i+".xd_id");
+                x_case_2 = x_case_2.concat(" left join (SELECT xd_id, sum(soluong) as soluong FROM public.transaction_history where loaiphieu like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' group by 1) x"+i+" on adm.id=x"+i+".xd_id");
             }
             return begin_1.concat(n_sum1).concat(n_sum2).concat(x_sum2).concat(x_sum3).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }
@@ -243,6 +241,42 @@ public class BaoCaoController implements Initializable {
             dvi_cbb.setDisable(false);
         }
     }
+    private Integer fillDataTo_ttxd_xmt(XSSFWorkbook wb, String name) {
+        XSSFSheet sheet = wb.getSheet(name);
+        initHeder_TTXMT(sheet,wb);
+        fillData_ttxmt(wb,sheet);
+        return -1;
+    }
+
+    private void fillData_ttxmt(XSSFWorkbook wb, XSSFSheet sheet) {
+        ReportDAO reportDAO = new ReportDAO();
+        List<Object[]> mb_ls = reportDAO.findByWhatEver(SubQuery.bc_ttxd_xmt_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
+        map_ttxdxmt(mb_ls,sheet,wb,start_row-1);
+    }
+
+    private void map_ttxdxmt(List<Object[]> mbLs, XSSFSheet sheet, XSSFWorkbook wb, int i) {
+
+    }
+
+    private void initHeder_TTXMT(XSSFSheet sheet, XSSFWorkbook wb) {
+        XSSFRow r1 = sheet.getRow(1);
+        XSSFCellStyle style = wb.createCellStyle();
+        ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+        ExportFactory.setBoldFont(wb,style);
+        ExportFactory.setCellAlightmentStyle(style);
+        ExportFactory.removeMerger(sheet,1,1,7,12);
+        Cell cell = r1.createCell(7);
+        cell.setCellValue("BÁO CÁO TIÊU THỤ XĂNG DẦU CỦA XE - MÁY - TÀU VÀ BQ, BD, SC \n" +
+                "(Từ ngày "+DashboardController.ref_Quarter.getStart_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+" đến "+
+                DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+")");
+        for (int i =8;i<=12;i++){
+            Cell ce = r1.createCell(i);
+            ce.setCellStyle(style);
+        }
+        sheet.addMergedRegion(new CellRangeAddress(1,1,7,12));
+        cell.setCellStyle(style);
+    }
+
     private int fillDataToPhieuNhap(XSSFWorkbook wb,String sheet_n){
         XSSFSheet sheet = wb.getSheet(sheet_n);
         initHeder(sheet,wb);
@@ -413,8 +447,7 @@ public class BaoCaoController implements Initializable {
         List<Object[]> all_nv_ls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_all(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
         map_ttnlbtkh(all_nv_ls,sheet,wb,start_row+mb_ls.size()-1);
         int mbnv_start = start_row+mb_ls.size()+all_nv_ls.size()-1;
-        List<Object[]> mbls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_tongmaybay(DashboardController.ref_Quarter.getStart_date(),
-                DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
+        List<Object[]> mbls = reportDAO.findByWhatEver(SubQuery.ttnlbtkh_for_tongmaybay(DashboardController.ref_Quarter.getStart_date(), DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
         map_ttnlbtkh(mbls,sheet,wb,mbnv_start);
     }
     private void map_ttnlbtkh(List<Object[]> ls,XSSFSheet sheet,XSSFWorkbook wb,int sr) {

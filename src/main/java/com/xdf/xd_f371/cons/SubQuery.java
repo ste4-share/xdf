@@ -206,12 +206,16 @@ public class SubQuery {
                 "sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd,\n" +
                 "sum(nltt_md) as nltt_md,sum(nltt_tk) as nltt_tk,sum(cong_nltt) as cong_nltt,\n" +
                 "sum(haohut) as haohut,sum(tongcong) as tongcong from \n" +
-                "(select xmt_id,l.nhiemvu_id as ctnv_id,0 as tk,0 as mk,0 as sum_f,0 as nhienlieu,\n" +
-                "max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,\n" +
-                "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
-                "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong\n" +
-                "FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id\n" +
-                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"'\n" +
+                "(select xmt_id,nhiemvu_id as ctnv_id,0 as tk,0 as mk,0 as sum_f,0 as nhienlieu,\n" +
+                "sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(tong_giohd::interval) as tong_giohd,\n" +
+                "sum(nltt_md) as nltt_md,sum(nltt_tk) as nltt_tk,sum(cong_nltt) as cong_nltt,sum(haohut) as haohut,sum(tongcong) as tongcong\n" +
+                "from (select id,xmt_id,nhiemvu_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd \n" +
+                "from ledgers l where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2,3) x\n" +
+                "left join (select l.id as lid,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
+                "max(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong\n" +
+                "FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id \n" +
+                "where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1) b\n" +
+                "on x.id=b.lid\n" +
                 "group by 1,2) a_1 left join chitiet_nhiemvu ct on ct.id= a_1.ctnv_id group by 2) a\n" +
                 "group by rollup(xmt_id)\n" +
                 "order by grouping(xmt_id) desc";
@@ -242,22 +246,19 @@ public class SubQuery {
                 "right join nhiemvu nv on ct.nhiemvu_id=nv.id\n" +
                 "right join loai_nhiemvu lnv on lnv.id=nv.assignment_type_id\n" +
                 "where dvi_id="+root_id+" and task_name like 'NV_BAY') a \n" +
-                "left join (SELECT l.nhiemvu_id as ctnv_id,max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,\n" +
-                "max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,\n" +
-                "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
-                "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "left join ledger_details ld on l.id=ld.ledger_id\n" +
-                "where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and root_id="+root_id+"\n" +
-                "group by 1) b on a.ctnv_id=b.ctnv_id\n" +
-                "group by rollup(ten_nv,nhiemvu)) d\n" +
+                "left join (select id,nhiemvu_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd \n" +
+                "from ledgers l where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+root_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) x on a.ctnv_id=x.nhiemvu_id \n" +
+                "left join (select l.id as lid,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,max(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong\n" +
+                "FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+root_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1) b\n" +
+                "on x.id=b.lid group by rollup(ten_nv,nhiemvu)) d\n" +
                 "group by ten_nv,nhiemvu order by tennv_gr desc,ten_nv, nv_gr desc,nhiemvu) e";
     }
     public static String ttnlbtkh_for_tongmaybay(LocalDate sd,LocalDate ed, int root_id){
-        return "select grouping(nhiemvu) as nv_gr,min(xmt_id) as xmt,ten_nv,\n" +
-                "case when grouping(nhiemvu)=1 and grouping(ten_nv)=1 and grouping(xmt_id)=1 then 'C' \n" +
+        return "select grouping(nhiemvu) as nv_gr,min(a.xmt_id) as xmt,ten_nv,\n" +
+                "case when grouping(nhiemvu)=1 and grouping(ten_nv)=1 and grouping(a.xmt_id)=1 then 'C' \n" +
                 "when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then cast(min(ranks) as text) else '-' end as ranks,\n" +
-                "case when grouping(xmt_id)=1 then 'Cộng máy bay' \n" +
-                "when grouping(nhiemvu)=1 and grouping(ten_nv)=1 and grouping(xmt_id)=0 then xmt_id \n" +
+                "case when grouping(a.xmt_id)=1 then 'Cộng máy bay' \n" +
+                "when grouping(nhiemvu)=1 and grouping(ten_nv)=1 and grouping(a.xmt_id)=0 then a.xmt_id \n" +
                 "when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end,\n" +
                 "EXTRACT(epoch FROM sum(tk::interval)) as tk,\n" +
                 "EXTRACT(epoch FROM sum(md::interval)) as md,\n" +
@@ -274,15 +275,12 @@ public class SubQuery {
                 "left join chitiet_nhiemvu ct on hm.ctnv_id=ct.id\n" +
                 "left join nhiemvu nv on ct.nhiemvu_id=nv.id\n" +
                 "where dvi_xuat_id="+root_id+" and loainv like 'NV_BAY' order by xmt_id) a\n" +
-                "left join (SELECT l.xmt_id as xmt,l.nhiemvu_id as ctnv_id,max(giohd_md::interval) as giohd_md,max(giohd_tk::interval) as giohd_tk,\n" +
-                "max(giohd_md::interval)+max(giohd_tk::interval) as tong_giohd,\n" +
-                "sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,\n" +
-                "sum(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong FROM ledgers l \n" +
-                "left join ledger_details ld on l.id=ld.ledger_id\n" +
-                "where l.status like 'ACTIVE' and l.from_date between '"+sd+"' and '"+ed+"' and root_id="+root_id+"\n" +
-                "group by 1,2) b on (a.ctnv_id=b.ctnv_id AND a.xmt_id=b.xmt)\n" +
-                "group by rollup(xmt_id,ten_nv,nhiemvu)\n" +
-                "order by grouping(xmt_id) desc,xmt,grouping(ten_nv) desc,ten_nv,grouping(nhiemvu) desc,nhiemvu";
+                "left join (select id,xmt_id,nhiemvu_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd \n" +
+                "from ledgers l where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+root_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2,3) x on (a.ctnv_id=x.nhiemvu_id AND a.xmt_id=x.xmt_id)\n" +
+                "left join (select l.id as lid,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,max(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong\n" +
+                "FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+root_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1) b\n" +
+                "on x.id=b.lid group by rollup(a.xmt_id,ten_nv,nhiemvu)\n" +
+                "order by grouping(a.xmt_id) desc,xmt,grouping(ten_nv) desc,ten_nv,grouping(nhiemvu) desc,nhiemvu";
     }
     public static Map<String,String> lxdMap(){
         Map<String,String> map = new HashMap<>();

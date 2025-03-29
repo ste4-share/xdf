@@ -439,7 +439,7 @@
                            <children>
                               <TableView fx:id="root_table" onMouseClicked="#root_tableClicked" prefHeight="134.0" prefWidth="646.0" stylesheets="@css/table_style.css" GridPane.rowIndex="2">
                                  <columns>
-                                    <TableColumn fx:id="root_col_stt" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="stt" />
+                                    <TableColumn fx:id="root_col_stt" maxWidth="80.0" minWidth="30.0" prefWidth="50.0" text="stt" />
                                     <TableColumn fx:id="root_col_id" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="ID" />
                                     <TableColumn fx:id="root_col_so" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="Số" />
                                     <TableColumn fx:id="root_col_lenh" maxWidth="100.0" minWidth="30.0" text="Lệnh KH số" />
@@ -529,7 +529,7 @@
                               </HBox>
                               <TableView fx:id="ref_table" layoutX="20.0" layoutY="103.0" onMouseClicked="#ref_tableClick" prefHeight="134.0" prefWidth="646.0" stylesheets="@css/table_style.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                  <columns>
-                                    <TableColumn fx:id="ref_col_stt" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="stt" />
+                                    <TableColumn fx:id="ref_col_stt" maxWidth="80.0" minWidth="30.0" prefWidth="50.0" text="stt" />
                                     <TableColumn fx:id="ref_col_id" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="ID" />
                                     <TableColumn fx:id="ref_col_so" maxWidth="100.0" minWidth="30.0" prefWidth="75.0" text="Số" />
                                     <TableColumn fx:id="ref_col_lenhkh" maxWidth="100.0" minWidth="30.0" text="Lệnh KH số" />
