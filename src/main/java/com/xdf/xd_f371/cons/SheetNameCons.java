@@ -8,6 +8,7 @@ public enum SheetNameCons {
     TTXD("TTXD"),
     NL_BAY_THEO_KH("NL_BAY_THEO_KH_BETA"),
     TTXD_XMT_BETA("ttxd_xmt_beta"),
+    TTXD_BETA("TTXD_BETA"),
     TTXD_XMT("TTXD_XMT"),
     LCV("luan_chuyenvon_data"),
     PT_TONKHO("PT_TONKHO");

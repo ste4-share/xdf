@@ -127,62 +127,47 @@ public class SubQuery {
     public static String end_q1_1(int root_id){
         return "grouping(tinhchat) as tc,grouping(chungloai) as l,grouping(tenxd) as xd from loaixd2 adm left join (SELECT petro_id,sum(nhap_nvdx)-sum(xuat_nvdx) as tdk_nvdx,sum(nhap_sscd)-sum(xuat_sscd) as tdk_sscd FROM public.inventory where dvi_id="+root_id+" group by 1) a on a.petro_id=adm.id";
     }
-    public static String ttxd_nv(int y){
-        return "select max(tt) as tt,max(pri) as pri,n,\n" +
-                "case when grouping(n)=0 and grouping(ten_nv)=1 then n else ten_nv end as ten_nv, \n" +
-                "case when grouping(n)=0 and grouping(ten_nv)=1 then n when grouping(nhiemvu)=1 and grouping(ten_nv)=0 then ten_nv else nhiemvu end as nhiemvu,\n" +
-                "sum(xang) as xang, sum(diezel) as diezel,sum(daubay) as daubay,sum(hm_cong) as hm_cong, sum(xm_xang_km) as xm_xang_km,\n" +
-                "sum(xm_xang_gio) as xm_xang_gio,\n" +
-                "sum(xm_do_km) as xm_do_km,sum(xm_do_gio) as xm_do_gio,sum(nlpl) as nlpl,sum(x_choxe) as x_choxe,sum(x_chomay) as x_chomay,sum(x_cong) as x_cong,sum(do_choxe) as do_choxe,\n" +
-                "sum(do_chomay) as do_chomay,sum(do_cong) as do_cong,sum(nltt_nlpl) as nltt_nlpl, sum(sd_tichluy) as sd_tichluy,\n" +
-                "grouping(n) as name_gr, grouping(ten_nv) as tennv_gr,grouping(nhiemvu) as nv_gr\n" +
-                "from (select max(tt) as tt,max(priority_bc2) as pri,n,ten_nv, \n" +
-                "case when nhiemvu is null then ten_nv else nhiemvu end as nhiemvu,\n" +
-                "sum(xang) as xang, sum(diezel) as diezel,sum(daubay) as daubay,sum(hm_cong) as hm_cong, sum(xm_xang_km) as xm_xang_km,sum(xm_xang_gio) as xm_xang_gio,\n" +
-                "sum(xm_do_km) as xm_do_km,sum(xm_do_gio) as xm_do_gio,sum(nlpl) as nlpl,sum(x_choxe) as x_choxe,sum(x_chomay) as x_chomay,sum(x_cong) as x_cong,sum(do_choxe) as do_choxe,\n" +
-                "sum(do_chomay) as do_chomay,sum(do_cong) as do_cong,sum(nltt_nlpl) as nltt_nlpl, sum(sd_tichluy) as sd_tichluy\n" +
-                "from (select tt,priority_bc2,ct.id as ctnv_id,t.name as n,ten_nv,nhiemvu,\n" +
-                "case when xang is null then 0 else xang end as xang, \n" +
-                "case when diezel is null then 0 else diezel end as diezel,\n" +
-                "case when daubay is null then 0 else daubay end as daubay,\n" +
-                "case when xang is null then 0 else xang end+case when diezel is null then 0 else diezel end+case when daubay is null then 0 else daubay end as hm_cong,\n" +
-                "case when a.km is null then 0 else a.km end as xm_xang_km,\n" +
-                "case when EXTRACT(epoch FROM a.gio) is null then 0 else EXTRACT(epoch FROM a.gio) end as xm_xang_gio,\n" +
-                "case when b.km is null then 0 else b.km end as xm_do_km,\n" +
-                "case when EXTRACT(epoch FROM b.gio) is null then 0 else EXTRACT(epoch FROM b.gio) end as xm_do_gio,\n" +
-                "case when EXTRACT(epoch FROM e.gio) is null then 0 else EXTRACT(epoch FROM e.gio) end as nlpl,\n" +
-                "case when c.choxe is null then 0 else c.choxe end as x_choxe,\n" +
-                "case when d.chomay is null then 0 else d.chomay end as x_chomay,\n" +
-                "case when c.choxe is null then 0 else c.choxe end+case when d.chomay is null then 0 else d.chomay end as x_cong,\n" +
-                "case when f.choxe is null then 0 else f.choxe end as do_choxe,\n" +
-                "case when g.chomay is null then 0 else g.chomay end as do_chomay,\n" +
-                "case when f.choxe is null then 0 else f.choxe end+case when g.chomay is null then 0 else g.chomay end as do_cong,\n" +
-                "case when h.nlpl is null then 0 else h.nlpl end as nltt_nlpl,\n" +
-                "case when c.choxe is null then 0 else c.choxe end+case when d.chomay is null then 0 else d.chomay end+case when f.choxe is null then 0 else f.choxe end+case when g.chomay is null then 0 else g.chomay end+case when h.nlpl is null then 0 else h.nlpl end as sd_tichluy\n" +
-                "from hanmuc_nhiemvu2 hm2 right join chitiet_nhiemvu ct on hm2.nhiemvu_id=ct.id right join nhiemvu n on ct.nhiemvu_id=n.id\n" +
-                "join team t on n.team_id=t.id\n" +
-                "left join (select nhiemvu_id,root_id,max(so_km) as km, max(giohd_md::interval) as gio from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where (l.lpt like 'XE_CHAY_XANG' OR l.lpt like 'MAY_CHAY_XANG') and l.status like 'ACTIVE' group by 1,2) a on (ct.id=a.nhiemvu_id and hm2.dvi_id=a.root_id)\n" +
-                "left join (select nhiemvu_id,root_id,max(so_km) as km, max(giohd_md::interval) as gio from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where (l.lpt like 'XE_CHAY_DIEZEL' OR l.lpt like 'MAY_CHAY_DIEZEL') and l.status like 'ACTIVE' group by 1,2) b on (ct.id=b.nhiemvu_id and hm2.dvi_id=b.root_id)\n" +
-                "left join (select nhiemvu_id,root_id,max(giohd_md::interval + giohd_tk::interval) as gio from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' group by 1,2) e on (ct.id=e.nhiemvu_id and hm2.dvi_id=e.root_id)\n" +
-                "left join (select nhiemvu_id,root_id, sum(so_luong) as choxe from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'XE' and ld.chung_loai like 'Xăng' and l.status like 'ACTIVE' group by 1,2) c on (ct.id=c.nhiemvu_id and hm2.dvi_id=c.root_id) \n" +
-                "left join (select nhiemvu_id,root_id, sum(so_luong) as chomay from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'MAY' and ld.chung_loai like 'Xăng' and l.status like 'ACTIVE' group by 1,2) d on (ct.id=d.nhiemvu_id and hm2.dvi_id=d.root_id)\n" +
-                "left join (select nhiemvu_id,root_id, sum(so_luong) as choxe from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'XE' and ld.chung_loai like 'Diezel' and l.status like 'ACTIVE' group by 1,2) f on (ct.id=f.nhiemvu_id and hm2.dvi_id=f.root_id) \n" +
-                "left join (select nhiemvu_id,root_id, sum(so_luong) as chomay from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'MAY' and ld.chung_loai like 'Diezel' and l.status like 'ACTIVE' group by 1,2) g on (ct.id=g.nhiemvu_id and hm2.dvi_id=g.root_id)\n" +
-                "left join (select nhiemvu_id,root_id, sum(so_luong) as nlpl from ledger_details ld join ledgers l on ld.ledger_id=l.id \n" +
-                "where l.lpt_2 like 'MAYBAY' and (ld.chung_loai like 'Dầu bay' or ld.chung_loai like 'Dầu Hạ cấp') and l.status like 'ACTIVE' group by 1,2) h \n" +
-                "on (ct.id=h.nhiemvu_id and hm2.dvi_id=h.root_id) \n" +
-                "where years="+y+") zz\n" +
-                "group by n,ten_nv,nhiemvu) aaa\n" +
-                "group by rollup(n,ten_nv,nhiemvu)\n" +
-                "order by name_gr desc,tt,tennv_gr desc,pri,ten_nv,nv_gr desc\n" +
-                "\n";
+    public static String ttxd_nv(LocalDate sd,LocalDate ed,int r_id){
+        return "select max(nv_gr),max(ten_nv) as ten_nv,max(ranks_1),case when t_gr=1 and tennv_gr=1 then 'Cộng'\n" +
+                "when t_gr=0 and tennv_gr=1 then team_group when tennv_gr=0 and nv_gr=1 then ten_nv else nhiemvu end as nhiemvu,\n" +
+                "max(xang) as xang,max(diezel) as diezel,max(daubay) as daubay,max(hacap) as hacap,max(cong) as cong,\n" +
+                "max(xx_km) as xx_km,EXTRACT(epoch FROM max(xx_gio)) as xx_gio,max(xdo_km) as xdo_km,EXTRACT(epoch FROM max(xdo_gio)) as xdo_gio,max(nlpl) as nlpl,\n" +
+                "max(case when xtt_xe=0 then null else xtt_xe end) as xtt_xe,max(case when xtt_may=0 then null else xtt_may end) as xtt_may,max(case when xtt_cong=0 then null else xtt_cong end) as xtt_cong,\n" +
+                "max(case when dott_xe=0 then null else dott_xe end) as dott_xe,max(case when dott_may=0 then null else dott_may end) as dott_may,\n" +
+                "max(case when dott_cong=0 then null else dott_cong end) as dott_cong,max(mbtt_daubay) as mbtt_daubay,'','',''\n" +
+                "from (SELECT DENSE_RANK() OVER (order by team_group desc nulls last) as ranks_1,\n" +
+                "DENSE_RANK() OVER (PARTITION BY team_group ORDER BY ten_nv asc nulls last) as ranks_2\n" +
+                ",team_group,ten_nv,nhiemvu,sum(xang) as xang,sum(diezel) as diezel,sum(daubay) as daubay,sum(hacap) as hacap,(sum(xang)+sum(diezel)+sum(daubay)+sum(hacap)) as cong,\n" +
+                "sum(a.km) as xx_km,sum(b.gio) as xx_gio,sum(c.km) as xdo_km,sum(d.gio) as xdo_gio,sum(e.gio) as nlpl,\n" +
+                "sum(case when f.soluong is null then 0 else f.soluong end) as xtt_xe,sum(case when g.soluong is null then 0 else g.soluong end) as xtt_may,\n" +
+                "sum(case when f.soluong is null then 0 else f.soluong end)+sum(case when g.soluong is null then 0 else g.soluong end) as xtt_cong,\n" +
+                "sum(case when h.soluong is null then 0 else h.soluong end) as dott_xe,sum(case when i.soluong is null then 0 else i.soluong end) as dott_may,\n" +
+                "sum(case when h.soluong is null then 0 else h.soluong end)+sum(case when i.soluong is null then 0 else i.soluong end) as dott_cong,\n" +
+                "sum(j.soluong) as mbtt_daubay,grouping(team_group) as t_gr,grouping(ten_nv) as tennv_gr,grouping(nhiemvu) as nv_gr\n" +
+                "FROM nhiemvu nv left join chitiet_nhiemvu ct on nv.id=ct.nhiemvu_id left join hanmuc_nhiemvu2 hmnv on ct.id=hmnv.nhiemvu_id \n" +
+                "left join (select root_id,nhiemvu_id, sum(so_km) as km FROM ledgers l where \n" +
+                "lpt like 'XE_CHAY_XANG' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) a on (a.nhiemvu_id=ct.id and a.root_id=hmnv.dvi_id)\n" +
+                "left join (select root_id,nhiemvu_id, sum(giohd_md::interval) as gio FROM ledgers l where \n" +
+                "lpt like 'MAY_CHAY_XANG' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) b on (b.nhiemvu_id=ct.id and b.root_id=hmnv.dvi_id)\n" +
+                "left join (select root_id,nhiemvu_id, sum(so_km) as km FROM ledgers l where \n" +
+                "lpt like 'XE_CHAY_DIEZEL' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) c on (c.nhiemvu_id=ct.id and c.root_id=hmnv.dvi_id)\n" +
+                "left join (select root_id,nhiemvu_id, sum(giohd_md::interval) as gio FROM ledgers l where \n" +
+                "lpt like 'MAY_CHAY_DIEZEL' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) d on (d.nhiemvu_id=ct.id and d.root_id=hmnv.dvi_id)\n" +
+                "left join (select root_id,nhiemvu_id, sum(giohd_md::interval+giohd_tk::interval) as gio FROM ledgers l where \n" +
+                "lpt_2 like '%MB-%' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) e on (e.nhiemvu_id=ct.id and e.root_id=hmnv.dvi_id)\n" +
+                "left join (select root_id,nhiemvu_id, sum(so_luong) as soluong FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id where \n" +
+                "lpt_2 like 'XE' and chung_loai like 'Xăng' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) f on (f.nhiemvu_id=ct.id and f.root_id=hmnv.dvi_id)\n" +
+                "left join (select root_id,nhiemvu_id, sum(so_luong) as soluong FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id where \n" +
+                "lpt_2 like 'MAY' and chung_loai like 'Xăng' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) g on(g.nhiemvu_id=ct.id and g.root_id=hmnv.dvi_id)\n" +
+                "left join (select root_id,nhiemvu_id, sum(so_luong) as soluong FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id where \n" +
+                "lpt_2 like 'XE' and chung_loai like 'Diezel' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) h on (h.nhiemvu_id=ct.id and h.root_id=hmnv.dvi_id)\n" +
+                "left join(select root_id,nhiemvu_id, sum(so_luong) as soluong FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id where \n" +
+                "lpt_2 like 'MAY' and chung_loai like 'Diezel' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) i on (i.nhiemvu_id=ct.id and i.root_id=hmnv.dvi_id)\n" +
+                "left join (select root_id,nhiemvu_id, sum(so_luong) as soluong FROM ledgers l left join ledger_details ld on l.id=ld.ledger_id where \n" +
+                "lpt_2 like '%MB-%' and chung_loai like 'Dầu bay' and l.status like 'ACTIVE' and root_id="+r_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) j on (j.nhiemvu_id=ct.id and j.root_id=hmnv.dvi_id)\n" +
+                "group by rollup(team_group,ten_nv,nhiemvu)) k\n" +
+                "group by 4\n" +
+                "order by max(t_gr) desc,max(team_group) desc,max(tennv_gr) desc,ten_nv,max(nv_gr) desc";
     }
     public static String ttnlbtkh_for_mb(LocalDate sd,LocalDate ed,int r_id){
         return "select '1' as gr,'-','A' as sign,case when grouping(xmt_id)=1 then 'A' else cast(min(ranks) as text) end, \n" +

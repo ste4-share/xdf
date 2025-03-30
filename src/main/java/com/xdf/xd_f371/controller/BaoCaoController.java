@@ -78,22 +78,6 @@ public class BaoCaoController implements Initializable {
         return Common.mapDataToSheet(wb.getSheet(sheetName), 8,
                 SubQuery.lcv_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()),1);
     }
-
-    private Integer map_ttxdtnv_create(XSSFWorkbook wb,String sheetName){
-            return Common.mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.ttxd_nv(LocalDate.now().getYear()), 4);
-    }
-    private Integer map_ttxdtnv_getting(XSSFWorkbook wb,String sheetName){
-            return Common.mapDataToSheet(wb.getSheet(sheetName), 8,SubQuery.ttxd_nv(LocalDate.now().getYear()),4);
-    }
-    private Integer map_ttxd_xmt_create(XSSFWorkbook wb,String sheetName){
-        return Common.mapDataToSheet(wb.createSheet(sheetName), 8,
-                SubQuery.bc_ttxd_xmt_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),
-                        DashboardController.ref_Quarter.getStart_date().getYear()), 4);
-    }
-    private Integer map_ttxd_xmt_get(XSSFWorkbook wb,String sheetName){
-        return Common.mapDataToSheet(wb.getSheet(sheetName), 8,
-                SubQuery.bc_ttxd_xmt_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Quarter.getStart_date().getYear()), 4);
-    }
     private Integer map_pttk_create(XSSFWorkbook wb,String sheetName){
         return Common.mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_pttk_q(), 4);
     }
@@ -163,9 +147,8 @@ public class BaoCaoController implements Initializable {
         });
     }
     private void ttxdtnv(){
-        String sheetName = "t_thu_xd_theo_n_vu_data";
-        Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName),SheetNameCons.TTXD.getName());
-        Common.copyFileExcel(file_name,dest_file);
+        Common.copyFileExcel(file_name2,dest_file2);
+        Common.mapExcelFile_JustExist(dest_file2,input -> fillDataTo_ttxd_nv(input,SheetNameCons.TTXD_BETA.getName()),SheetNameCons.TTXD_BETA.getName());
     }
 
     @FXML
@@ -242,6 +225,38 @@ public class BaoCaoController implements Initializable {
             dvi_cbb.setDisable(false);
         }
     }
+    private Integer fillDataTo_ttxd_nv(XSSFWorkbook wb, String name) {
+        XSSFSheet sheet = wb.getSheet(name);
+        initHeder_ttxd_nv(sheet,wb);
+        fillData_ttxd_nv(wb,sheet);
+        return -1;
+    }
+
+    private void fillData_ttxd_nv(XSSFWorkbook wb, XSSFSheet sheet) {
+        ReportDAO reportDAO = new ReportDAO();
+        List<Object[]> xmtls = reportDAO.findByWhatEver(SubQuery.ttxd_nv(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
+        fillData(wb,sheet,xmtls,2,start_row-3,10,12,0);
+    }
+
+    private void initHeder_ttxd_nv(XSSFSheet sheet, XSSFWorkbook wb) {
+        XSSFRow r1 = sheet.getRow(1);
+        XSSFCellStyle style = wb.createCellStyle();
+        ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+        ExportFactory.setBoldFont(wb,style);
+        ExportFactory.setCellAlightmentStyle(style);
+        ExportFactory.removeMerger(sheet,1,1,11,16);
+        Cell cell = r1.createCell(11);
+        cell.setCellValue("BÁO CÁO TIÊU THỤ XĂNG DẦU THEO NHIỆM VỤ \n" +
+                "(Từ ngày "+DashboardController.ref_Quarter.getStart_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+" đến "+
+                DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+")");
+        for (int i =12;i<=17;i++){
+            Cell ce = r1.createCell(i);
+            ce.setCellStyle(style);
+        }
+        sheet.addMergedRegion(new CellRangeAddress(1,1,11,17));
+        cell.setCellStyle(style);
+    }
+
     private Integer fillDataTo_ttxd_xmt(XSSFWorkbook wb, String name) {
         XSSFSheet sheet = wb.getSheet(name);
         initHeder_TTXMT(sheet,wb);
@@ -252,7 +267,7 @@ public class BaoCaoController implements Initializable {
     private void fillData_ttxmt(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> xmtls = reportDAO.findByWhatEver(SubQuery.bc_ttxd_xmt_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
-        fillData(wb,sheet,xmtls,1,5,7,4);
+        fillData(wb,sheet,xmtls,1,5,7,0,4);
     }
     private void initHeder_TTXMT(XSSFSheet sheet, XSSFWorkbook wb) {
         XSSFRow r1 = sheet.getRow(1);
@@ -281,10 +296,10 @@ public class BaoCaoController implements Initializable {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),
                 SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
-        fillData(wb,sheet,nxtls,4,start_row,0,3);
+        fillData(wb,sheet,nxtls,4,start_row,0,0,3);
         return -1;
     }
-    private void fillData(XSSFWorkbook wb, XSSFSheet sheet,List<Object[]> nxtls,int scol,int srol, int a,int b) {
+    private void fillData(XSSFWorkbook wb, XSSFSheet sheet,List<Object[]> nxtls,int scol,int srol, int a,int a1,int b) {
         for (int i = 0; i<nxtls.size();i++){
             int lastRow = sheet.getLastRowNum();
             sheet.shiftRows(srol+i+2, lastRow, 1, true, true);
@@ -309,7 +324,7 @@ public class BaoCaoController implements Initializable {
                     c.setCellValue(bigDecimal.doubleValue());
                 } else if(Common.isLongNumber(val)){
                     long l = (long) Double.parseDouble(val);
-                    if (a!=0 && j==a){
+                    if (a!=0 && j==a || a1!=0 && j==a1){
                         ExportFactory.setDataFormat(wb,style,"[h]:mm");
                         c.setCellValue(Common.convertSecondsToTime((long) Double.parseDouble(val)));
                         c.setCellStyle(style);

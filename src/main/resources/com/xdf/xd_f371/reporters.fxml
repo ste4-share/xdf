@@ -99,6 +99,23 @@
                         </HBox>
                         <HBox>
                            <children>
+                              <Hyperlink onAction="#bc_ttxd_xmt" prefHeight="36.0" prefWidth="397.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU CỦA XE - MÁY - TÀU VÀ BQ, BD, SC">
+                                 <font>
+                                    <Font name="Cambria" size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label fx:id="ttxd_xmt_lb" prefHeight="36.0" prefWidth="57.0" text="status">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
                               <Hyperlink onAction="#bc_ttnlbtkh" prefHeight="36.0" prefWidth="336.0" text="BÁO CÁO THANH TOÁN NHIÊN LIỆU BAY THEO KẾ HOẠCH">
                                  <font>
                                     <Font name="Cambria" size="12.0" />
@@ -122,40 +139,6 @@
                                  </font>
                               </Hyperlink>
                               <Label fx:id="ttxdtnv_lb" prefHeight="36.0" prefWidth="79.0" text="status">
-                                 <font>
-                                    <Font name="System Bold Italic" size="12.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="100.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <Hyperlink onAction="#bc_lcv" prefHeight="36.0" prefWidth="361.0" text="BÁO CÁO LUÂN CHUYỂN VỐN XĂNG DẦU">
-                                 <font>
-                                    <Font name="Cambria" size="12.0" />
-                                 </font>
-                              </Hyperlink>
-                              <Label fx:id="lcv_lb" prefHeight="36.0" prefWidth="57.0" text="status">
-                                 <font>
-                                    <Font name="System Bold Italic" size="12.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="100.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <Hyperlink onAction="#bc_ttxd_xmt" prefHeight="36.0" prefWidth="397.0" text="BÁO CÁO TIÊU THỤ XĂNG DẦU CỦA XE - MÁY - TÀU VÀ BQ, BD, SC">
-                                 <font>
-                                    <Font name="Cambria" size="12.0" />
-                                 </font>
-                              </Hyperlink>
-                              <Label fx:id="ttxd_xmt_lb" prefHeight="36.0" prefWidth="57.0" text="status">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
