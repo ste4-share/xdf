@@ -267,7 +267,7 @@
                                     <Insets top="10.0" />
                                  </VBox.margin>
                                  <children>
-                                    <Label prefHeight="30.0" prefWidth="124.0" text="---Chi tiết nhiệm vụ---">
+                                    <Label prefHeight="18.0" prefWidth="124.0" text="---Chi tiết nhiệm vụ---">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="10.0" />
                                        </font>
@@ -366,7 +366,7 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <Label prefHeight="30.0" prefWidth="124.0" text="---Mặt hàng nhập/xuất---">
+                              <Label prefHeight="16.0" prefWidth="124.0" text="---Mặt hàng nhập/xuất---">
                                  <font>
                                     <Font name="Cambria Bold Italic" size="10.0" />
                                  </font>
@@ -378,12 +378,12 @@
                                           <Font name="Cambria Bold Italic" size="10.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="amount_lb" layoutX="1229.0" layoutY="10.0" prefHeight="29.0" prefWidth="174.0" text="7749" textFill="#fc1010">
+                                    <Label fx:id="amount_lb" layoutX="1229.0" layoutY="10.0" prefHeight="29.0" prefWidth="148.0" text="---" textFill="#fc1010">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="988.0" layoutY="10.0" prefHeight="30.0" prefWidth="73.0" text="VNĐ">
+                                    <Label layoutX="988.0" layoutY="10.0" prefHeight="30.0" prefWidth="73.0" text="(VNĐ)">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="10.0" />
                                        </font>

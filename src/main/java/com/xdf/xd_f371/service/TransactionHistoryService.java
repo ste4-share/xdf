@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.service;
 
+import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.InventoryUnitDto;
 import com.xdf.xd_f371.entity.TransactionHistory;
 import com.xdf.xd_f371.repo.ReportDAO;
@@ -36,7 +37,7 @@ public class TransactionHistoryService {
         return transactionHistoryRepo.getInventoryOf_Lxd(xdid);
     }
     public List<InventoryUnitDto> getInventoryOf_Lxd(LocalDate sd,LocalDate ed){
-        return mapToInventoryUnitDto(transactionHistoryRepo.getInvByTime(sd,ed));
+        return mapToInventoryUnitDto(transactionHistoryRepo.getInvByTime(sd,ed, DashboardController.ref_Dv.getId()));
     }
     public List<InventoryUnitDto> mapToInventoryUnitDto(List<Object[]> results) {
         List<InventoryUnitDto> ls = new ArrayList<>();

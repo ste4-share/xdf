@@ -76,7 +76,7 @@ public class XuatDVController extends CommonFactory implements Initializable {
         e_so.setText(null);
         so.setStyle(null);
         if(!so.getText().isBlank()) {
-            if (ledgers.stream().anyMatch(l->l.getBill_id().equals(so.getText()))){
+            if (ledgers.stream().anyMatch(l->l.getBill_id().equals(so.getText()) && l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()))){
                 e_so.setText("Số phiếu này đã được tạo, vui lòng nhập số khác");
             }
         }

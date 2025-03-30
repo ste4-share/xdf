@@ -18,6 +18,8 @@ public class TransactionHistory extends BaseObject{
     private String id;
     @Column(name = "xd_id")
     private int xd_id;
+    @Column(name = "root_id")
+    private int root_id;
     @Column(name = "loaiphieu")
     private String loaiphieu;
     @Column(name = "date")
@@ -55,10 +57,11 @@ public class TransactionHistory extends BaseObject{
     @Transient
     private String created_at_str;
 
-    public TransactionHistory(String id, int xd_id, String loaiphieu, LocalDate date, double mucgia,
+    public TransactionHistory(String id, int xd_id,int root_id, String loaiphieu, LocalDate date, double mucgia,
                               double soluong, String tructhuoc, double tonkhotong, double tonkhogia_nvdx, long index,double soluong_tt,String ledger_id) {
         this.id = id;
         this.xd_id = xd_id;
+        this.root_id = root_id;
         this.loaiphieu = loaiphieu;
         this.date = date;
         this.mucgia = mucgia;

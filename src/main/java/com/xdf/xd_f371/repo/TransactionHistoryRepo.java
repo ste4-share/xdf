@@ -32,7 +32,7 @@ public interface TransactionHistoryRepo extends JpaRepository<TransactionHistory
             "case when pre_sscd is null then 0 else pre_sscd end,\n" +
             "cl.priority_1,cl.priority_2,cl.priority_3\n" +
             "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
-            "left join (SELECT distinct on (xd_id) xd_id,tonkhotong as tdk_nvdx,tonkh_sscd as tdk_sscd FROM transaction_history where date < :s order by xd_id,created_at desc) a on a.xd_id=lxd.id\n" +
-            "left join (SELECT distinct on (xd_id) xd_id,tonkhotong as pre_nvdx,tonkh_sscd as pre_sscd FROM transaction_history where date < :e order by xd_id,created_at desc) b on b.xd_id=lxd.id",nativeQuery = true)
-    List<Object[]> getInvByTime(@Param("s") LocalDate sd,@Param("e") LocalDate ed);
+            "left join (SELECT distinct on (xd_id) xd_id,tonkhotong as tdk_nvdx,tonkh_sscd as tdk_sscd FROM transaction_history where root_id=:rid and date < :s order by xd_id,created_at desc) a on a.xd_id=lxd.id\n" +
+            "left join (SELECT distinct on (xd_id) xd_id,tonkhotong as pre_nvdx,tonkh_sscd as pre_sscd FROM transaction_history where root_id=:rid and date < :e order by xd_id,created_at desc) b on b.xd_id=lxd.id",nativeQuery = true)
+    List<Object[]> getInvByTime(@Param("s") LocalDate sd,@Param("e") LocalDate ed,@Param("rid") int root_id);
 }

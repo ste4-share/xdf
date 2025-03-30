@@ -127,6 +127,19 @@ public class BaoCaoController implements Initializable {
         Common.mapExcelFile_JustExist(dest_file2,input -> fillDataTo_ttnlbtkh(input,SheetNameCons.NL_BAY_THEO_KH.getName()),SheetNameCons.NL_BAY_THEO_KH.getName());
     }
     @FXML
+    public void bc_ttxd_xmt(ActionEvent actionEvent) {
+        Stage stage_1 = new Stage();
+        Common.getLoading(stage_1);
+        Platform.runLater(()-> {
+            Common.task(this::ttxd_xmt,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
+            ttxd_xmt_lb.setText("UPDATED");
+        });
+    }
+    private void ttxd_xmt(){
+        Common.copyFileExcel(file_name2,dest_file2);
+        Common.mapExcelFile_JustExist(dest_file2,input -> fillDataTo_ttxd_xmt(input,SheetNameCons.TTXD_XMT_BETA.getName()),SheetNameCons.TTXD_XMT_BETA.getName());
+    }
+    @FXML
     public void bc_lcv(ActionEvent actionEvent) {
         Stage stage_1 = new Stage();
         Common.getLoading(stage_1);
@@ -154,19 +167,7 @@ public class BaoCaoController implements Initializable {
         Common.mapExcelFile(file_name,input -> map_ttxdtnv_create(input,sheetName),input -> map_ttxdtnv_getting(input,sheetName),SheetNameCons.TTXD.getName());
         Common.copyFileExcel(file_name,dest_file);
     }
-    @FXML
-    public void bc_ttxd_xmt(ActionEvent actionEvent) {
-        Stage stage_1 = new Stage();
-        Common.getLoading(stage_1);
-        Platform.runLater(()-> {
-            Common.task(this::ttxd_xmt,stage_1::close,()->DialogMessage.successShowing("Cap nhat thanh cong"));
-            ttxd_xmt_lb.setText("UPDATED");
-        });
-    }
-    private void ttxd_xmt(){
-        Common.copyFileExcel(file_name2,dest_file2);
-        Common.mapExcelFile_JustExist(dest_file2,input -> fillDataTo_ttxd_xmt(input,SheetNameCons.TTXD_XMT_BETA.getName()),SheetNameCons.TTXD_XMT_BETA.getName());
-    }
+
     @FXML
     public void bc_pttk(ActionEvent actionEvent) {
         Stage stage_1 = new Stage();
@@ -250,14 +251,9 @@ public class BaoCaoController implements Initializable {
 
     private void fillData_ttxmt(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
-        List<Object[]> mb_ls = reportDAO.findByWhatEver(SubQuery.bc_ttxd_xmt_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
-        map_ttxdxmt(mb_ls,sheet,wb,start_row-1);
+        List<Object[]> xmtls = reportDAO.findByWhatEver(SubQuery.bc_ttxd_xmt_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
+        fillData(wb,sheet,xmtls,1,5,7,4);
     }
-
-    private void map_ttxdxmt(List<Object[]> mbLs, XSSFSheet sheet, XSSFWorkbook wb, int i) {
-
-    }
-
     private void initHeder_TTXMT(XSSFSheet sheet, XSSFWorkbook wb) {
         XSSFRow r1 = sheet.getRow(1);
         XSSFCellStyle style = wb.createCellStyle();
@@ -282,29 +278,30 @@ public class BaoCaoController implements Initializable {
         initHeder(sheet,wb);
         initHederColumnFor_nxt(sheet,wb);
         ExportFactory.mergerCell(sheet);
-        fillData(wb,sheet);
-        return -1;
-    }
-    private void fillData(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),
                 SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
-        int scol = 4;
+        fillData(wb,sheet,nxtls,4,start_row,0,3);
+        return -1;
+    }
+    private void fillData(XSSFWorkbook wb, XSSFSheet sheet,List<Object[]> nxtls,int scol,int srol, int a,int b) {
         for (int i = 0; i<nxtls.size();i++){
             int lastRow = sheet.getLastRowNum();
-            sheet.shiftRows(start_row+i+2, lastRow, 1, true, true);
-            XSSFRow row1 = sheet.createRow(start_row+i+2);
+            sheet.shiftRows(srol+i+2, lastRow, 1, true, true);
+            XSSFRow row1 = sheet.createRow(srol+i+2);
             Object[] rows_data = nxtls.get(i);
             for (int j = 0; j<rows_data.length;j++){
                 String val = rows_data[j]==null ? "" : rows_data[j].toString();
                 XSSFCell c = row1.createCell(scol+j);
                 XSSFCellStyle style = wb.createCellStyle();
-                ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
                 if (Integer.parseInt(rows_data[2].toString())==1){
                     ExportFactory.setBoldFont(wb,style);
                 }
-                if (j!=3) {
+                if(b!=0 && j==b){
+                    ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+                }else{
                     ExportFactory.setCellAlightmentStyle(style);
+                    ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
                 }
                 if (Common.isDoubleNumber(val)){
                     ExportFactory.setDataFormat(wb,style,"#,##0.00");
@@ -312,6 +309,12 @@ public class BaoCaoController implements Initializable {
                     c.setCellValue(bigDecimal.doubleValue());
                 } else if(Common.isLongNumber(val)){
                     long l = (long) Double.parseDouble(val);
+                    if (a!=0 && j==a){
+                        ExportFactory.setDataFormat(wb,style,"[h]:mm");
+                        c.setCellValue(Common.convertSecondsToTime((long) Double.parseDouble(val)));
+                        c.setCellStyle(style);
+                        continue;
+                    }
                     if (l==0){
                         c.setCellValue("");
                         c.setCellStyle(style);

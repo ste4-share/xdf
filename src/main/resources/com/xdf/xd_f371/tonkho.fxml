@@ -13,7 +13,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -72,7 +71,7 @@
                                                 <Font name="Cambria Italic" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="dv_lb" layoutX="10.0" layoutY="10.0" prefHeight="20.0" prefWidth="226.0" text="...">
+                                          <Label fx:id="dv_lb" layoutX="10.0" layoutY="10.0" prefHeight="20.0" prefWidth="94.0" text="...">
                                              <font>
                                                 <Font name="Cambria Italic" size="14.0" />
                                              </font>
@@ -85,12 +84,20 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </CheckBox>
+                                          <Hyperlink fx:id="add_btn" onAction="#addnew_petro" text="Thêm xăng dầu mới">
+                                             <font>
+                                                <Font name="Cambria" size="12.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets left="50.0" />
+                                             </HBox.margin>
+                                          </Hyperlink>
                                        </children>
                                        <VBox.margin>
                                           <Insets top="10.0" />
                                        </VBox.margin>
                                     </HBox>
-                                    <HBox alignment="CENTER_LEFT">
+                                    <HBox alignment="BOTTOM_LEFT">
                                        <children>
                                           <Label prefHeight="30.0" prefWidth="118.0" text="Tìm kiếm:">
                                              <font>
@@ -104,24 +111,6 @@
                                              <font>
                                                 <Font name="Cambria" size="16.0" />
                                              </font></TextField>
-                                          <Button fx:id="add_btn" mnemonicParsing="false" onAction="#addnew_petro" prefHeight="26.0" prefWidth="144.0" style="-fx-background-color: #0202ba; -fx-border-color: #a8a8a8; -fx-border-radius: 20; -fx-background-radius: 20;" text="Thêm loại xăng dầu" textFill="WHITE">
-                                             <font>
-                                                <Font name="Cambria Bold" size="12.0" />
-                                             </font>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                             <HBox.margin>
-                                                <Insets left="50.0" />
-                                             </HBox.margin>
-                                             <tooltip>
-                                                <Tooltip text="Thêm mới Xăng dầu tại đây!!">
-                                                   <font>
-                                                      <Font name="Cambria" size="12.0" />
-                                                   </font>
-                                                </Tooltip>
-                                             </tooltip>
-                                          </Button>
                                        </children>
                                        <VBox.margin>
                                           <Insets bottom="10.0" top="10.0" />
@@ -187,7 +176,7 @@
                                           </Label>
                                           <Label layoutX="10.0" layoutY="10.0" prefHeight="20.0" prefWidth="226.0" text="xd_selected..." fx:id="xd_selected_lb">
                                              <font>
-                                                <Font name="Cambria Italic" size="14.0" />
+                                                <Font name="Cambria Bold Italic" size="14.0" />
                                              </font>
                                           </Label>
                                        </children>
