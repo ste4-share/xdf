@@ -231,7 +231,6 @@ public class BaoCaoController implements Initializable {
         fillData_ttxd_nv(wb,sheet);
         return -1;
     }
-
     private void fillData_ttxd_nv(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> xmtls = reportDAO.findByWhatEver(SubQuery.ttxd_nv(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));

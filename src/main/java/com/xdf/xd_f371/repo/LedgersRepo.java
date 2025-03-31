@@ -66,4 +66,8 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
     List<String> getColumnNames_LEDGER_DETAIL();
     @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='transaction_history';",nativeQuery = true)
     List<String> getColumnNames_TRANSACTION_HISTORY();
+    @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='hanmuc_nhiemvu2';",nativeQuery = true)
+    List<String> getColumnNames_HANMUCNHIEMVU();
+    @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='hanmuc_nhiemvu_taubay';",nativeQuery = true)
+    List<String> getColumnNames_HANMUCNHIEMVU_TAUBAY();
 }

@@ -99,8 +99,8 @@ public class DashboardController implements Initializable {
     private void getQuarterList() {
         try {
             ref_Quarter = configurationService.getListQuarter(LocalDate.now().getYear()).stream()
-                    .filter(x->x.getStart_date().isBefore(LocalDate.now()) && x.getEnd_date().isAfter(LocalDate.now())).findFirst().orElse(null);
-            System.out.println(ref_Quarter);
+                    .filter(x->(x.getStart_date().isBefore(LocalDate.now()) || x.getStart_date().isEqual(LocalDate.now())) &&
+                            (x.getEnd_date().isAfter(LocalDate.now()) || x.getEnd_date().isEqual(LocalDate.now()))).findFirst().orElse(null);
         } catch (RuntimeException e) {
             DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
             throw new RuntimeException(e);

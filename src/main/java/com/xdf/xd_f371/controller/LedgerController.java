@@ -453,6 +453,8 @@ public class LedgerController implements Initializable {
             mapLedger(wb,reportDAO);
             mapLedgerDetail(wb,reportDAO);
             mapTransactionHistory(wb,reportDAO);
+            mapHanmucNhiemvu(wb,reportDAO);
+            mapHanmucNhiemvuTaubay(wb,reportDAO);
 
             fis.close();
             FileOutputStream fileOutputStream = new FileOutputStream(CommonFactory.pre_path+"\\"+file_name);
@@ -466,6 +468,18 @@ public class LedgerController implements Initializable {
         } catch (Exception e) {
             DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
         }
+    }
+
+    private void mapHanmucNhiemvuTaubay(XSSFWorkbook wb, ReportDAO reportDAO) {
+        XSSFSheet sheet2 = wb.createSheet("HANMUC_NHIEMVU_TAUBAY_DATA");
+        List<Object[]> nxtls2 = reportDAO.findByWhatEver("select * from hanmuc_nhiemvu_taubay");
+        setCellExcel(wb,sheet2,nxtls2,ledgerService.getColumnNames_HANMUCNHIEMVU_TAUBAY());
+    }
+
+    private void mapHanmucNhiemvu(XSSFWorkbook wb, ReportDAO reportDAO) {
+        XSSFSheet sheet2 = wb.createSheet("HANMUC_NHIEMVU_DATA");
+        List<Object[]> nxtls2 = reportDAO.findByWhatEver("select * from hanmuc_nhiemvu2");
+        setCellExcel(wb,sheet2,nxtls2,ledgerService.getColumnNames_HMNV());
     }
     private void mapLedgerDetail(XSSFWorkbook wb,ReportDAO reportDAO) {
         XSSFSheet sheet2 = wb.createSheet("CHITIETSOCAI_DATA");

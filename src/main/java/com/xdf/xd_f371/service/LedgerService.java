@@ -51,6 +51,10 @@ public class LedgerService {
         return ledgersRepo.getColumnNames_LEDGER_DETAIL();
     }public List<String> getColumnNames_TRANSACTION_HISTORY(){
         return ledgersRepo.getColumnNames_TRANSACTION_HISTORY();
+    }public List<String> getColumnNames_HMNV(){
+        return ledgersRepo.getColumnNames_HANMUCNHIEMVU();
+    }public List<String> getColumnNames_HANMUCNHIEMVU_TAUBAY(){
+        return ledgersRepo.getColumnNames_HANMUCNHIEMVU_TAUBAY();
     }public Ledger findLastLedgerByBillId(String lp){
         return ledgersRepo.findLastLedgerByBillId(lp,DashboardController.ref_Dv.getId()).orElse(null);
     }
