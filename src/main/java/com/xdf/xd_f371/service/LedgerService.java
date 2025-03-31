@@ -23,11 +23,6 @@ public class LedgerService {
     private final LedgersRepo ledgersRepo;
     private final LedgerDetailRepo ledgerDetailRepo;
     private final TransactionHistoryRepo transactionHistoryRepo;
-
-    @Autowired
-    private ConfigurationService configurationService;
-    @Autowired
-    private InventoryUnitService inventoryUnitService;
     public List<LedgerDto> getLedgers() {
         return ledgersRepo.findLedgerByID(DashboardController.so_select);
     }
@@ -39,8 +34,8 @@ public class LedgerService {
     }public List<Ledger> findAllLedgerDto(LocalDate st,LocalDate et){
         return ledgersRepo.findAllLedgerDtoByTime(st,et);
     }
-    public List<Ledger> findAllLedgerByUnit(int id){
-        return ledgersRepo.findAllLedgerByUnit(id);
+    public List<Ledger> findAllLedgerByUnit(int id,int y){
+        return ledgersRepo.findAllLedgerByUnit(id,y);
     }
     public List<Ledger> findAllLedgerActive(){
         return ledgersRepo.findAllLedgerActive();
@@ -135,5 +130,16 @@ public class LedgerService {
     @Transactional
     public void inactiveLedger(String id ) {
         ledgersRepo.inactiveLedgers(id);
+    }
+
+    @Transactional
+    public void updateLedgers(List<Ledger> ls) {
+        ls.forEach(ledger ->
+                ledgersRepo.updateLedger(
+                        ledger.getId(),
+                        ledger.getBill_id(),
+                        ledger.getBill_id2()
+                )
+        );
     }
 }

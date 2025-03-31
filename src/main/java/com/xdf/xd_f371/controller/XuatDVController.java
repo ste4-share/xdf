@@ -1,6 +1,7 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
+import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.dto.UnitBillDto;
 import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.Tcn;
@@ -73,12 +74,12 @@ public class XuatDVController extends CommonFactory implements Initializable {
     }
     @FXML
     public void soKeyRealed(KeyEvent keyEvent) {
-        e_so.setText(null);
-        so.setStyle(null);
         if(!so.getText().isBlank()) {
-            if (ledgers.stream().anyMatch(l->l.getBill_id().equals(so.getText()) && l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName()))){
-                e_so.setText("Số phiếu này đã được tạo, vui lòng nhập số khác");
-            }
+            e_so.setText(null);
+            so.setStyle(null);
+        }else{
+            e_so.setText(MessageCons.NOT_EMPTY_so.getName());
+            so.setStyle(CommonFactory.styleErrorField);
         }
     }
     @FXML

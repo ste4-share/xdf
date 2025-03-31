@@ -5,6 +5,7 @@ import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.fatory.CommonFactory;
+import com.xdf.xd_f371.repo.ReportDAO;
 import com.xdf.xd_f371.util.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -134,7 +135,7 @@ public class NhapController extends CommonFactory implements Initializable {
         if (lxd!=null) {
             LedgerDetails ld = getLedgerDetails(lxd);
             if (!outfieldValid(lenhKHso, MessageCons.NOT_EMPTY_lenhKH.getName())){
-                if (!outfieldValid(soTf, MessageCons.NOT_EMPTY_lenhKH.getName())){
+                if (!outfieldValid(soTf, MessageCons.NOT_EMPTY_so.getName())){
                     cmb_tenxd.setStyle(null);
                     if (validateField(ld).isEmpty()) {
                         if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
@@ -166,6 +167,27 @@ public class NhapController extends CommonFactory implements Initializable {
                         if (dvn!=null) {
                             Ledger l = getLedger();
                             if (validateField(l).isEmpty()) {
+                                if (duplicateBillNumber(soTf.getText(),LoaiPhieuCons.PHIEU_NHAP.getName())){
+                                    if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id().concat(l.getBill_id2())+" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
+                                            null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                                        List<Ledger> ls = ledgers.stream().filter(x-> x.getBill_id().equals(l.getBill_id())
+                                                        && (x.getBill_id().compareTo(l.getBill_id())>=0 && x.getBill_id2().compareTo(l.getBill_id2())>=0)
+                                                        && x.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())).toList();
+                                        if (l.getBill_id().equals(l.getBill_id()) && !l.getBill_id2().isBlank()){
+                                            for (Ledger sl : ls) {
+                                                sl.setBill_id2(nextExcelStyle(sl.getBill_id2()));
+                                            }
+                                            ledgerService.updateLedgers(ls);
+                                        }else{
+                                            List<Ledger> allLs = ledgers.stream().filter(x->(x.getBill_id().compareTo(l.getBill_id())>=0 && x.getBill_id2().compareTo(l.getBill_id2())>=0)
+                                                    && x.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())).toList();
+                                            System.out.println("a");
+                                            allLs.forEach(x->x.setBill_id(String.valueOf(Integer.parseInt(x.getBill_id()) +1)));
+                                            System.out.println("b");
+                                            ledgerService.updateLedgers(allLs);
+                                        }
+                                    }
+                                }
                                 Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
                                 DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
                                         MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
@@ -196,6 +218,8 @@ public class NhapController extends CommonFactory implements Initializable {
                     null, Alert.AlertType.WARNING);
         }
     }
+
+
 
     private String changeStyleTextFieldByValidation(Object o){
         List<String> ls = validateField(o);
@@ -286,14 +310,6 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     @FXML
     public void soValid(KeyEvent keyEvent) {
-        if(!soTf.getText().isBlank()) {
-            soTf.setStyle(null);
-            if (ledgers.stream().anyMatch(l->l.getBill_id().equals(soTf.getText()))){
-                soTf.setStyle(CommonFactory.styleErrorField);
-            }
-        }else{
-            soTf.setStyle(null);
-        }
     }
     @FXML
     public void validate_dongia(KeyEvent keyEvent) {

@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 @Component
@@ -88,12 +89,38 @@ public class CommonFactory implements Initializable {
         setcellFactory();
         initLocalList();
     }
+    protected int compareTimesOnSameDay(LocalDateTime dt1, LocalDateTime dt2) {
+        if (!dt1.toLocalDate().equals(dt2.toLocalDate())) {
+            if (dt1.isAfter(dt2)){
+                return 1;
+            }
+            return -1;
+        }
+        return dt1.toLocalTime().compareTo(dt2.toLocalTime());
+    }
+    public static String nextExcelStyle(String s) {
+        StringBuilder sb = new StringBuilder(s);
+
+        for (int i = sb.length() - 1; i >= 0; i--) {
+            char c = sb.charAt(i);
+            if (c < 'z') {
+                sb.setCharAt(i, (char)(c + 1));
+                return sb.toString();
+            }
+            sb.setCharAt(i, 'a');
+        }
+
+        return "a" + sb.toString();
+    }
     protected void splitBillNumber(String input,Ledger l){
         int splitIndex = 0;
         while (splitIndex < input.length() && Character.isDigit(input.charAt(splitIndex))) {
             splitIndex++;
         }
-        if (splitIndex > 0 && splitIndex <= input.length()) {
+        if (splitIndex==0){
+            DialogMessage.errorShowing("Ký tự đầu tiên phải là số ví dụ:50,5a,50b...");
+            throw new RuntimeException("Ký tự đầu tiên phải là số ví dụ:50,5a,50b...");
+        }else if (splitIndex > 0 && splitIndex <= input.length()) {
             String numberPart = input.substring(0, splitIndex);
             String letterPart = input.substring(splitIndex);
             try {
@@ -111,21 +138,23 @@ public class CommonFactory implements Initializable {
         predict_billid.setText("---Gợi ý số tiếp theo: "+so);
     }
     protected String getNextInSequence(String current) {
-        // Check if format is number.dot.letter (e.g., 50.a)
         if (current.matches("^\\d+\\.([a-zA-Z]+)$")) {
             return getNextDotSequence(current);
         }
-        // Check if purely numeric
         else if (current.matches("^\\d+$")) {
             return String.valueOf(Integer.parseInt(current) + 1);
         }
-        // Check if alphanumeric without dot (digits followed by letters)
         else if (current.matches("^\\d+[a-zA-Z]+$")) {
             return getNextAlphanumeric(current);
         }
         return "Unsupported sequence format";
     }
-
+    protected boolean duplicateBillNumber(String so,String lp) {
+        if (ledgers.stream().anyMatch(x->x.getBill_id().concat(x.getBill_id2()).equals(so) && x.getLoai_phieu().equals(lp))){
+            return true;
+        }
+        return false;
+    }
     private String getNextDotSequence(String current) {
         String[] parts = current.split("\\.");
         if (parts.length != 2) {
@@ -217,7 +246,7 @@ public class CommonFactory implements Initializable {
 
     private void initLegersList() {
         if (DashboardController.ref_Dv!=null){
-            ledgers = ledgerService.findAllLedgerByUnit(DashboardController.ref_Dv.getId());
+            ledgers = ledgerService.findAllLedgerByUnit(DashboardController.ref_Dv.getId(),LocalDate.now().getYear());
         }
         else ledgers = ledgerService.findAllLedgerActive();
     }
@@ -235,7 +264,6 @@ public class CommonFactory implements Initializable {
         return new ArrayList<>();
     }
     protected void setInvLabel(LoaiXangDauDto lxd){
-//        i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),lxd.getXd_id());
         TransactionHistory refTransactionHistory = transactionHistoryService.getInventoryOf_Lxd(lxd.getXd_id()).isPresent() ? transactionHistoryService.getInventoryOf_Lxd(lxd.getXd_id()).get() : null;
         if (refTransactionHistory!=null){
             setTonKhoLabel(refTransactionHistory.getTonkhotong());
@@ -266,8 +294,7 @@ public class CommonFactory implements Initializable {
     }
     protected boolean outfieldValid(TextField tf, String mes){
         if (tf.getText().isBlank()) {
-            DialogMessage.message(null, mes,
-                    "Nhập sai định dạng.", Alert.AlertType.ERROR);
+            DialogMessage.message(null, mes, null, Alert.AlertType.ERROR);
             tf.setStyle(styleErrorField);
             return true;
         }
