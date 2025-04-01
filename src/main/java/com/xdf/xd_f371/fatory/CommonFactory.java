@@ -32,7 +32,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 @Component
@@ -48,8 +47,8 @@ public class CommonFactory implements Initializable {
     protected static List<LedgerDetails> ls_socai;
 
     protected List<Tcn> tcnx_ls = new ArrayList<>();
-    protected List<NguonNx> dvvcLs = new ArrayList<>();
-    protected List<NguonNx> dvnLs = new ArrayList<>();
+    protected static List<NguonNx> dvvcLs = new ArrayList<>();
+    protected static List<NguonNx> dvnLs = new ArrayList<>();
     protected List<LoaiXangDauDto> lxdLs = new ArrayList<>();
     protected Ledger last_ledger = null;
 
@@ -89,15 +88,7 @@ public class CommonFactory implements Initializable {
         setcellFactory();
         initLocalList();
     }
-    protected int compareTimesOnSameDay(LocalDateTime dt1, LocalDateTime dt2) {
-        if (!dt1.toLocalDate().equals(dt2.toLocalDate())) {
-            if (dt1.isAfter(dt2)){
-                return 1;
-            }
-            return -1;
-        }
-        return dt1.toLocalTime().compareTo(dt2.toLocalTime());
-    }
+
     public static String nextExcelStyle(String s) {
         StringBuilder sb = new StringBuilder(s);
 
@@ -244,7 +235,7 @@ public class CommonFactory implements Initializable {
         note.setText(null);
     }
 
-    private void initLegersList() {
+    public void initLegersList() {
         if (DashboardController.ref_Dv!=null){
             ledgers = ledgerService.findAllLedgerByUnit(DashboardController.ref_Dv.getId(),LocalDate.now().getYear());
         }

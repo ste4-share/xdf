@@ -113,11 +113,6 @@ public class XuatController extends CommonFactory implements Initializable {
             return nodeColIndex == 0 && nodeRowIndex == 0;
         });
     }
-    private void clearTb(){
-        ls_socai.clear();
-        setCellValueFactoryXuat();
-    }
-
     private boolean isCbb(LoaiXangDauDto lxd,Double gia){
         if (lxd!=null){
             if (gia!=null){
@@ -173,10 +168,21 @@ public class XuatController extends CommonFactory implements Initializable {
                 try {
                     Ledger l = getLedger();
                     if (l!=null){
-                        Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                        DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
-                                "Thanh cong", Alert.AlertType.INFORMATION);
-                        LedgerController.primaryStage.close();
+                        if (duplicateBillNumber(so.getText(),LoaiPhieuCons.PHIEU_NHAP.getName())){
+                            if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id().concat(l.getBill_id2())+" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
+                                    null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                                ledgerService.updateBillNumber(l,ledgers);
+                                Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                                DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
+                                        "Thanh cong", Alert.AlertType.INFORMATION);
+                                LedgerController.primaryStage.close();
+                            }
+                        }else{
+                            Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
+                            DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
+                                    "Thanh cong", Alert.AlertType.INFORMATION);
+                            LedgerController.primaryStage.close();
+                        }
                     }
                 }catch (NumberFormatException e){
                     DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
@@ -262,7 +268,7 @@ public class XuatController extends CommonFactory implements Initializable {
         cleanErrorField(tytrong);
     }
     private void initLoaiXuatCbb() {
-        loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName(), LoaiXuat.BN.getName())));
+        loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName())));
         loai_xuat_cbb.getSelectionModel().selectFirst();
         addNewNode(dv);
     }
@@ -275,7 +281,6 @@ public class XuatController extends CommonFactory implements Initializable {
         }
     }
     private void mapPrice(int xd_id){
-//        i = inventoryUnitService.getInventoryByUnitByPetro(Long.parseLong(config.getValue()),xd_id);
         transactionHistories = transactionHistoryService.getLastestTimeForEachPrices(xd_id);
         transactionHistories = transactionHistories.stream().filter(x->x.getTonkho_gia()>0).toList();
         if (!transactionHistories.isEmpty()){
@@ -334,6 +339,7 @@ public class XuatController extends CommonFactory implements Initializable {
             }
             assignmentBillDto = xuatNVController.getInfor_valid();
             if (assignmentBillDto!=null){
+                ledger.setDvi_baono(assignmentBillDto.getDvx_bn_id());
                 ledger.setNguoi_nhan(assignmentBillDto.getNguoinhan());
                 ledger.setSo_xe(assignmentBillDto.getSo_xe());
                 ledger.setLenh_so(assignmentBillDto.getLenhso());
@@ -379,6 +385,7 @@ public class XuatController extends CommonFactory implements Initializable {
             }else{
                 return null;
             }
+            ledger.setDvi_baono(DashboardController.ref_Dv.getId());
             ledger.setLoaigiobay(null);
             ledger.setNhiemvu(null);
             ledger.setNhiemvu_id(0);

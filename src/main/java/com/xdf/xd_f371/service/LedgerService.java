@@ -4,6 +4,7 @@ import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
+import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.repo.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,24 @@ public class LedgerService {
     }
     public Ledger save(Ledger ledger) {
         return ledgersRepo.save(ledger);
+    }
+
+    @Transactional
+    public void updateBillNumber(Ledger l,List<Ledger> ledgers) {
+        if (l.getBill_id().equals(l.getBill_id()) && !l.getBill_id2().isBlank()){
+            List<Ledger> ls = ledgers.stream().filter(x-> x.getBill_id().equals(l.getBill_id())
+                    && (x.getBill_id().compareTo(l.getBill_id())>=0 && x.getBill_id2().compareTo(l.getBill_id2())>=0)
+                    && x.getLoai_phieu().equals(l.getLoai_phieu())).toList();
+            for (Ledger sl : ls) {
+                sl.setBill_id2(CommonFactory.nextExcelStyle(sl.getBill_id2()));
+            }
+            this.updateLedgers(ls);
+        }else{
+            List<Ledger> allLs = ledgers.stream().filter(x->(x.getBill_id().compareTo(l.getBill_id())>=0 && x.getBill_id2().compareTo(l.getBill_id2())>=0)
+                    && x.getLoai_phieu().equals(l.getLoai_phieu())).toList();
+            allLs.forEach(x->x.setBill_id(String.valueOf(Integer.parseInt(x.getBill_id()) +1)));
+            this.updateLedgers(allLs);
+        }
     }
     @Transactional
     public Ledger saveLedgerWithDetails(Ledger ledger, List<LedgerDetails> details){

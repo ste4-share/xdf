@@ -55,8 +55,8 @@ public class ChangingController implements Initializable {
     }
 
     private void initListInv_p() {
-        if (TonkhoController.ref_unit!=null){
-            list = inventoryService.findPreInventoryPetroFollowUnit(tonkho_selected.getPetro_id(),TonkhoController.ref_unit.getId());
+        if (DashboardController.ref_Dv!=null){
+            list = inventoryService.findPreInventoryPetroFollowUnit(tonkho_selected.getPetro_id(),DashboardController.ref_Dv.getId());
         }else{
             list = inventoryService.findPreInventoryPetro(tonkho_selected.getPetro_id());
             changeBtn.setDisable(true);
@@ -66,8 +66,8 @@ public class ChangingController implements Initializable {
     }
 
     private void setLabels() {
-        if (TonkhoController.ref_unit!=null){
-            unit_lb.setText(TonkhoController.ref_unit.getTen());
+        if (DashboardController.ref_Dv!=null){
+            unit_lb.setText(DashboardController.ref_Dv.getTen());
         }else{
             unit_lb.setText("Toàn đơn vị");
         }
@@ -124,7 +124,7 @@ public class ChangingController implements Initializable {
     }
     @FXML
     public void changeSScd(ActionEvent actionEvent) {
-        if (DialogMessage.callAlertWithMessage("", "Luu thay doi", "Xac nhan luu thay doi", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+        if (DialogMessage.callAlertWithMessage(null, "Luu thay doi", "Xac nhan luu thay doi", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
             try {
                 list.forEach(x-> {
                     inventoryService.saveInventoryWithLedger(x);

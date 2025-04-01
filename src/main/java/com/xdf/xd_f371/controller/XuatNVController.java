@@ -39,6 +39,10 @@ public class XuatNVController extends CommonFactory implements Initializable {
     @FXML
     private Label loai_xmt,time_active,e_giohd;
     @FXML
+    private CheckBox xbnChk;
+    @FXML
+    private ComboBox<NguonNx> dvx_cbb;
+    @FXML
     private Tooltip dinhmuc_tooltip;
     @FXML
     private ComboBox<PhuongTien> xmt_cbb;
@@ -63,6 +67,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
         initXmtCbb(ptls);
         nhiemvuLs = chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_KHAC.getName());
         initChitietNhiemvu(nhiemvuLs);
+        setItemNxx(dvnLs);
         initLicence();
         initDinhmucToolTip();
         initLoaiXmt();
@@ -189,7 +194,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
                     if (isValidField()){
                         LoaiPhuongTien loaiPhuongTien = phuongtienService.findLptById(pt.getLoaiphuongtien_id());
                         return new AssignmentBillDto(pt,loaiPhuongTien,u,nhiemVuDto,sokm.getText().isBlank() ? 0 : Integer.parseInt(sokm.getText()),md_rd.isSelected() ? TypeCons.MAT_DAT.getName() : TypeCons.TREN_KHONG.getName(),
-                                getStrInterval(),so.getText(),lenhso.getText(),nguoinhan.getText());
+                                getStrInterval(),so.getText(),lenhso.getText(),nguoinhan.getText(),dvx_cbb.getSelectionModel().getSelectedItem().getId());
                     }
                 }else{
                     DialogMessage.errorShowing("Dinh muc không xác định");
@@ -272,5 +277,24 @@ public class XuatNVController extends CommonFactory implements Initializable {
             return List.of(hour, remainder_minute);
         }
         return List.of();
+    }
+    private void setItemNxx(List<NguonNx> nxx){
+        ComponentUtil.setItemsToComboBox(dvx_cbb,nxx,NguonNx::getTen, input -> nxx.stream().filter(x->x.getTen().equals(input)).findFirst().orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(dvx_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
+        dvx_cbb.getSelectionModel().selectFirst();
+    }
+    @FXML
+    public void dvx_cbbAction(ActionEvent actionEvent) {
+
+    }
+    @FXML
+    public void xbnChkAction(ActionEvent actionEvent) {
+        if (xbnChk.isSelected()){
+            dvx_cbb.setDisable(false);
+            setItemNxx(dvvcLs);
+        }else{
+            dvx_cbb.setDisable(true);
+            setItemNxx(dvnLs);
+        }
     }
 }

@@ -294,7 +294,8 @@ public class BaoCaoController implements Initializable {
         ExportFactory.mergerCell(sheet);
         ReportDAO reportDAO = new ReportDAO();
         List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),
-                SubQuery.end_q1_1(DashboardController.ref_Dv.getId()),DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
+                SubQuery.end_q1_1(DashboardController.ref_Dv.getId(),DashboardController.ref_Quarter.getStart_date()),
+                DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
         fillData(wb,sheet,nxtls,4,start_row,0,0,3);
         return -1;
     }

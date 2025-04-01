@@ -32,9 +32,6 @@ public class LoaiXangDau {
     @JoinColumn(name = "petroleum_type_id", referencedColumnName = "id", insertable = false, updatable = false)
     private ChungLoaiXd chungLoaiXd;
 
-    @OneToMany(mappedBy = "loaiXangDau")
-    private List<Inventory> inventory;
-
     public LoaiXangDau(String maxd, String tenxd, int petroleum_type_id, String status) {
         this.maxd = maxd;
         this.tenxd = tenxd;

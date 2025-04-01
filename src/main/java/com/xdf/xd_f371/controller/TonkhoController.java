@@ -36,7 +36,6 @@ public class TonkhoController implements Initializable {
     private List<InventoryUnitDto> inventoryUnitDtoArrayList = new ArrayList<>();
     public static InventoryUnitDto pickTonKho = new InventoryUnitDto();
     private static List<PttkDto> pttkDtos = new ArrayList<>();
-    public static NguonNx ref_unit = null;
     @FXML
     private TableView<InventoryUnitDto> tb_inventory;
     @FXML
@@ -219,11 +218,11 @@ public class TonkhoController implements Initializable {
             pickTonKho = spotDto;
             tk_stage = new Stage();
             List<InventoryDto> list;
-            if (ref_unit!=null){
-                list = inventoryService.findPreInventoryPetroFollowUnit(spotDto.getPetro_id(),ref_unit.getId());
-            }else{
-                list = inventoryService.findPreInventoryPetro(spotDto.getPetro_id());
-            }
+//            if (ref_unit!=null){
+                list = inventoryService.findPreInventoryPetroFollowUnit(spotDto.getPetro_id(),DashboardController.ref_Dv.getId());
+//            }else{
+//                list = inventoryService.findPreInventoryPetro(spotDto.getPetro_id());
+//            }
             if (list==null){
                 DialogMessage.successShowing(spotDto.getTenxd() + " đã hết hàng!! Vui lòng nhập thêm");
             }else{
@@ -288,7 +287,7 @@ public class TonkhoController implements Initializable {
     }
     @FXML
     public void tdvChckAction(ActionEvent actionEvent) {
-        dv_lb.setText("--Tồn kho: " +ref_unit.getTen());
+        dv_lb.setText("--Tồn kho: " +DashboardController.ref_Dv.getTen());
         inventoryUnitDtoArrayList = transactionHistoryService.getInventoryOf_Lxd(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date());
         setDataToTbInventory(inventoryUnitDtoArrayList);
     }

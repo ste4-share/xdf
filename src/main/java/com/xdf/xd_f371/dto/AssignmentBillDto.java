@@ -19,8 +19,9 @@ public class AssignmentBillDto extends InformationBill{
     private int sokm;
     private String lgb;
     private String hours_act;
+    private int dvx_bn_id;
 
-    public AssignmentBillDto(PhuongTien xmt,LoaiPhuongTien lpt, UnitXmt unit, NhiemVuDto ctnv, int sokm, String lgb, String hours_act,String so,String lenhso,String nguoinhan) {
+    public AssignmentBillDto(PhuongTien xmt,LoaiPhuongTien lpt, UnitXmt unit, NhiemVuDto ctnv, int sokm, String lgb, String hours_act,String so,String lenhso,String nguoinhan,int dvx_bn_id) {
         this.xmt = xmt;
         this.unit = unit;
         this.lpt = lpt;
@@ -31,6 +32,7 @@ public class AssignmentBillDto extends InformationBill{
         this.so = so;
         this.lenhso = lenhso;
         this.nguoinhan = nguoinhan;
+        this.dvx_bn_id = dvx_bn_id;
     }
     public static AssignmentBillDto getInstance(){
         if (instance==null){

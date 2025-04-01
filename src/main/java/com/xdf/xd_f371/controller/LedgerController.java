@@ -801,4 +801,22 @@ public class LedgerController implements Initializable {
         }
         dateLoading();
     }
+    @FXML
+    public void editMiAction(ActionEvent actionEvent) {
+        Ledger l = ledgers_table.getSelectionModel().getSelectedItem();
+
+        primaryStage = new Stage();
+        primaryStage.setOnHidden(event -> {
+            ConnectLan.primaryStage.toFront();
+            ConnectLan.primaryStage.requestFocus();
+        });
+        if (l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
+            Common.openNewStage("nhap.fxml", primaryStage,null, StageStyle.UTILITY);
+            updateData();
+        }else{
+            Common.openNewStage("xuat.fxml", primaryStage,null, StageStyle.UTILITY);
+            updateData();
+        }
+
+    }
 }

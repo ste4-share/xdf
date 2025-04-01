@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
@@ -66,6 +67,34 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ComboBox>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox layoutX="25.0" layoutY="80.0" fx:id="xmt_hb1">
+         <children>
+            <Label fx:id="dvn_lb31" prefHeight="30.0" prefWidth="120.0" text="Đơn vị xuất:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="dvx_cbb" disable="true" onAction="#dvx_cbbAction" prefHeight="30.0" prefWidth="202.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 2;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ComboBox>
+            <CheckBox mnemonicParsing="false" onAction="#xbnChkAction" prefHeight="29.0" prefWidth="130.0" text="Xuất báo nợ" fx:id="xbnChk">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="Cambria" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </CheckBox>
          </children>
          <VBox.margin>
             <Insets top="10.0" />
