@@ -16,6 +16,8 @@ public interface ChitietNhiemvuRepo extends JpaRepository<ChitietNhiemVu, Intege
     List<ChitietNhiemVu> findAllCtnv();
     @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where lnv.task_name like :lnv")
     List<NhiemVuDto> findAllDtoById(@Param("lnv") String lnv);
+    @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv")
+    List<NhiemVuDto> findAllDtoById();
     @Query(value = "select * from chitiet_nhiemvu where nhiemvu like :nv and nhiemvu_id=:nv_id",nativeQuery = true)
     Optional<ChitietNhiemVu> findByNhiemvu(@Param("nv") String nhiemvu,@Param("nv_id") int nv_id);
     @Query("select new ChitietNhiemVu(ct.id,ct.nhiemvu_id,ct.nhiemvu) from ChitietNhiemVu ct where ct.nhiemvu_id=:od")

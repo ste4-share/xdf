@@ -39,7 +39,7 @@ import java.util.*;
 @Component
 public class CommonFactory implements Initializable {
     protected Ledger l;
-    protected List<LedgerDetails> ledgerDetails_deteled;
+    protected List<LedgerDetails> deteled_ledDetail;
     protected static AssignmentBillDto assignmentBillDto = null;
     protected static UnitBillDto unitBillDto = null;
     public static String pre_path;
@@ -85,7 +85,7 @@ public class CommonFactory implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ledgerDetails_deteled = new ArrayList<>();
+        deteled_ledDetail = new ArrayList<>();
         l = null;
         initLabelVar();
         initLegersList();
@@ -97,7 +97,7 @@ public class CommonFactory implements Initializable {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+System.currentTimeMillis());
     }
     protected void saveLedger() {
-        DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + ledgerService.saveLedgerWithDetails(l).getBill_id(),
+        DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + ledgerService.saveLedgerWithDetails(l,deteled_ledDetail).getBill_id(),
                 MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
         LedgerController.primaryStage.close();
     }

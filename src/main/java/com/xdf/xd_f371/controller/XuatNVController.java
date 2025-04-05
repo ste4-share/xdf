@@ -80,10 +80,10 @@ public class XuatNVController extends CommonFactory implements Initializable {
             nguoinhan.setText(l.getNguoi_nhan());
             lenhso.setText(l.getLenh_so());
             soxe.setText(l.getSo_xe());
-            nv_cbb.getSelectionModel().select(l.getNhiemvu_id());
+            nv_cbb.getSelectionModel().select(DashboardController.ctnv_ls_all.stream().filter(x->x.getCtnv_id()==l.getNhiemvu_id()).findFirst().orElse(null));
             licenceCbb.getSelectionModel().select(unitXmtService.findById(l.getId()));
             initDinhmucToolTip();
-            xmt_cbb.getSelectionModel().select(l.getPt_id());
+            xmt_cbb.getSelectionModel().select(DashboardController.xmt_ls.stream().filter(x->x.getId()==l.getPt_id()).findFirst().orElse(null));
             if (l.getLoaigiobay().equals(TypeCons.MAT_DAT.getName())){
                 md_rd.setSelected(true);
                 sogio.setText(l.getGiohd_md().split(":")[0]);
@@ -94,10 +94,10 @@ public class XuatNVController extends CommonFactory implements Initializable {
                 sophut.setText(l.getGiohd_tk().split(":")[1]);
             }
             if (l.getDvi_baono()==0){
-                dvx_cbb.getSelectionModel().select(l.getDvi_xuat_id());
+                dvx_cbb.getSelectionModel().select(DashboardController.units_ls.stream().filter(x->x.getId()==l.getDvi_xuat_id()).findFirst().orElse(null));
                 xbnChk.setSelected(false);
             }else{
-                dvx_cbb.getSelectionModel().select(l.getDvi_baono());
+                dvx_cbb.getSelectionModel().select(DashboardController.units_ls.stream().filter(x->x.getId()==l.getDvi_baono()).findFirst().orElse(null));
                 xbnChk.setSelected(true);
             }
             if (l.getLpt_2().equals(LoaiPTEnum.XE.getNameVehicle())){

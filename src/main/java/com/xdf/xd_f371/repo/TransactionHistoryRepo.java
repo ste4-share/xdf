@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface TransactionHistoryRepo extends JpaRepository<TransactionHistory, String> {
     @Query(value = "select * from transaction_history where xd_id=:xd order by created_at desc limit 1",nativeQuery = true)
     Optional<TransactionHistory> getInventoryOf_Lxd(@Param("xd") int xd_id);
+    @Query(value = "select * from transaction_history where ledger_id like :l_id and xd_id=:xd_id and mucgia=:gia and root_id=:rid order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> findLedger_id(@Param("l_id") String lid,@Param("xd_id") int xd_id,@Param("gia") double dongia,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd and loaiphieu like :lp and tructhuoc like :tt order by created_at desc limit 1",nativeQuery = true)
     Optional<TransactionHistory> getSoluongTructhuoc(@Param("xd") int xd_id,@Param("lp") String lp,@Param("tt") String tt);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and mucgia=:gia order by created_at desc limit 1",nativeQuery = true)

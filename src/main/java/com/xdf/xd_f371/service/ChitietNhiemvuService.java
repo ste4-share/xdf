@@ -38,6 +38,9 @@ public class ChitietNhiemvuService {
     public List<NhiemVuDto> findAllDtoById(String lnv){
         return chitietNhiemvuRepo.findAllDtoById(lnv);
     }
+    public List<NhiemVuDto> findAllDtoById(){
+        return chitietNhiemvuRepo.findAllDtoById();
+    }
     public List<Team> findAllTeam(){
         return teamRepo.findAll();
     }

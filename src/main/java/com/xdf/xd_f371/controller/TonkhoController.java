@@ -136,6 +136,10 @@ public class TonkhoController implements Initializable {
                         setStyle("-fx-background-color: #fa4655;"+
                                 "-fx-border-color: transparent transparent black transparent; " +
                                 "-fx-border-width: 0px 0px 1px;");
+                    }else if (transactionHistory.getLoaiphieu().equals(LoaiPhieuCons.PHIEU_THAYDOI.getName())) {
+                        setStyle("-fx-background-color: #f78520;"+
+                                "-fx-border-color: transparent transparent black transparent; " +
+                                "-fx-border-width: 0px 0px 1px;");
                     }
                 }
             }

@@ -62,9 +62,10 @@ public class NhapController extends CommonFactory implements Initializable {
             tungay.setValue(l.getFrom_date());
             denngay.setValue(l.getEnd_date());
             soXe.setText(l.getSo_xe());
-            cmb_dvn.getSelectionModel().select(l.getDvi_nhan_id());
-            cmb_dvvc.getSelectionModel().select(l.getDvi_xuat_id());
-            cmb_tcn.getSelectionModel().select(l.getTcn_id());
+            note.setText(l.getNote());
+            cmb_dvn.getSelectionModel().select(DashboardController.units_ls.stream().filter(x->x.getId()==l.getDvi_nhan_id()).findFirst().orElse(null));
+            cmb_dvvc.getSelectionModel().select(DashboardController.units_ls.stream().filter(x->x.getId()==l.getDvi_xuat_id()).findFirst().orElse(null));
+            cmb_tcn.getSelectionModel().select(DashboardController.tcn_ls.stream().filter(x->x.getId()==l.getTcn_id()).findFirst().orElse(null));
             setItemToList(l.getLedgerDetails());
             importbtn.setText("Lưu thay đổi");
         }
@@ -97,7 +98,6 @@ public class NhapController extends CommonFactory implements Initializable {
             initPredictValue("1");
         }
     }
-
     private void initLabelValue() {
         tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
         notification.setText("");
@@ -108,7 +108,6 @@ public class NhapController extends CommonFactory implements Initializable {
         Common.hoverButton(importbtn,"#0000b3");
         Common.hoverButton(cancelbtn,"#595959");
     }
-
     private void setPreInv() {
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
         if (lxd!=null){
@@ -147,9 +146,9 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setDon_gia(p);
         ledgerDetails.setPhai_nhap(pn);
         ledgerDetails.setThuc_nhap(tn);
-        ledgerDetails.setNhiet_do_tt(tThucTe.getText().isBlank() ? 0 : Double.parseDouble(tThucTe.getText()));
-        ledgerDetails.setHe_so_vcf(vcf.getText().isBlank() ? 0 : Double.parseDouble(vcf.getText()));
-        ledgerDetails.setTy_trong(tyTrong.getText().isBlank() ? 0 : Double.parseDouble(tyTrong.getText()));
+        ledgerDetails.setNhiet_do_tt(tThucTe.getText().isBlank() ? 0 : Double.parseDouble(tThucTe.getText().trim()));
+        ledgerDetails.setHe_so_vcf(vcf.getText().isBlank() ? 0 : Double.parseDouble(vcf.getText().trim()));
+        ledgerDetails.setTy_trong(tyTrong.getText().isBlank() ? 0 : Double.parseDouble(tyTrong.getText().trim()));
         ledgerDetails.setSoluong(tn);
         ledgerDetails.setThanhtien(tn * p);
         ledgerDetails.setSoluong_px(pn);
@@ -319,11 +318,22 @@ public class NhapController extends CommonFactory implements Initializable {
             if (DialogMessage.callAlertWithMessage(null, null, "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
                 LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
+                    deteled_ledDetail.add(ld);
                     l.removeDetail(ld);
                     setTonKhoLabel(inventory_quantity-ld.getSoluong());
                     setcellFactoryNhap(l.getLedgerDetails());
                 }
             }
+        }
+        LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
+        if (ld!=null){
+            cmb_tenxd.getSelectionModel().select(lxdLs.stream().filter(x->x.getXd_id()==ld.getLoaixd_id()).findFirst().orElse(null));
+            donGiaTf.setText(TextToNumber.textToNum_2digits(ld.getDon_gia()));
+            thucNhap.setText(TextToNumber.textToNum_2digits(ld.getThuc_nhap()));
+            phaiNhap.setText(TextToNumber.textToNum_2digits(ld.getPhai_nhap()));
+            tThucTe.setText(TextToNumber.textToNum_2digits(ld.getNhiet_do_tt()));
+            tyTrong.setText(TextToNumber.textToNum_2digits(ld.getTy_trong()));
+            vcf.setText(TextToNumber.textToNum_2digits(ld.getHe_so_vcf()));
         }
     }
     @FXML

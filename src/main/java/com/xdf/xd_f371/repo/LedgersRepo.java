@@ -26,29 +26,12 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
             "l.ledgerDetails ld join l.accounts a where l.status like :s " +
             "group by 1,2,3,4,5,6,7,8 order by l.timestamp desc")
     List<MiniLedgerDto> findAllInterfaceLedger(@Param("s") String s);
-    @Query(value = "select * from ledgers l where l.from_date < :sd and l.status like 'ACTIVE'", nativeQuery = true)
-    List<Ledger> findAllByBeforeDateRange(@Param("sd") LocalDate sd);
-    @Query(value = "select * from ledgers l where (l.from_date < :sd and l.status like 'ACTIVE') and (dvi_nhan_id=:dvid or dvi_xuat_id=:dvid)", nativeQuery = true)
-    List<Ledger> findAllByBeforeDateRange2(@Param("sd") LocalDate sd,@Param("dvid") int dvnid);
     @Modifying
     @Query(value = "update ledgers l set tructhuoc=:c where (dvi_nhan_id=:nid or dvi_xuat_id=:nid)", nativeQuery = true)
     void updateTrucThuocFromNxx(@Param("nid") int nguonnx_id,@Param("c") String code);
     @Modifying
     @Query(value = "update ledgers l set status='IN_ACTIVE' where l.id=:i", nativeQuery = true)
     void inactiveLedgers(@Param("i") String id);
-    @Query(value = "select lxd.id,\n" +
-            "case when don_gia is null then 0 else don_gia end,\n" +
-            "case when nhap_nvdx is null then 0 else nhap_nvdx end,\n" +
-            "case when nhap_sscd is null then 0 else nhap_sscd end,\n" +
-            "case when xuat_nvdx is null then 0 else xuat_nvdx end,\n" +
-            "case when xuat_sscd is null then 0 else xuat_sscd end,from_date,end_date \n" +
-            "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id \n" +
-            "left join (SELECT loaixd_id,don_gia,sum(nhap_nvdx) as nhap_nvdx,sum(nhap_sscd) as nhap_sscd,\n" +
-            "sum(xuat_nvdx) as xuat_nvdx,sum(xuat_sscd) as xuat_sscd, min(from_date) as from_date,max(end_date) as end_date\n" +
-            "FROM ledgers l join ledger_details ld on l.id=ld.ledger_id\n" +
-            "where status like 'ACTIVE' and from_date < :sd\n" +
-            "group by 1,2) a on lxd.id=a.loaixd_id",nativeQuery = true)
-    List<Object[]> findAllInvByRangeBefore(@Param("sd") LocalDate sd);
 
 //    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by bill_id desc,bill_id2 desc",nativeQuery = true)
     @Query("SELECT l FROM Ledger l LEFT JOIN FETCH l.ledgerDetails WHERE l.status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by l.bill_id desc,l.bill_id2 desc")

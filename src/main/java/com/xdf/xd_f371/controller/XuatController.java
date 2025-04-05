@@ -83,7 +83,6 @@ public class XuatController extends CommonFactory implements Initializable {
             x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
         }
     }
-
     private void initLoaderFxml(){
         try {
             FXMLLoader loader_nv =DashboardController.getFXLoadderBySource("xuat_nv.fxml");
@@ -97,7 +96,6 @@ public class XuatController extends CommonFactory implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
     private void initLabel() {
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         gia_vnd.setText("(VND/Lit)");
@@ -105,7 +103,6 @@ public class XuatController extends CommonFactory implements Initializable {
         Common.hoverButton(xuatButton, "#002db3");
         Common.hoverButton(cancelBtn, "#595959");
     }
-
     @FXML
     public void dongiaSelected(ActionEvent actionEvent) {
         Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
@@ -114,7 +111,6 @@ public class XuatController extends CommonFactory implements Initializable {
             gia_vnd.setText(TextToNumber.textToNum_2digits(gia)+" (VND/Lit)");
         }
     }
-
     @FXML
     public void loaixuatAction(ActionEvent actionEvent) {
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
@@ -436,9 +432,9 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setDon_gia(gia);
         ledgerDetails.setPhai_xuat(pxuat);
         ledgerDetails.setThuc_xuat(txuat);
-        ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText().isBlank() ? "0" : nhietdo.getText()));
-        ledgerDetails.setHe_so_vcf(Double.parseDouble(vcf.getText().isBlank() ? "0" : vcf.getText()));
-        ledgerDetails.setTy_trong(Double.parseDouble(tytrong.getText().isBlank() ? "0" : tytrong.getText()));
+        ledgerDetails.setNhiet_do_tt(Double.parseDouble(nhietdo.getText().isBlank() ? "0" : nhietdo.getText().trim()));
+        ledgerDetails.setHe_so_vcf(Double.parseDouble(vcf.getText().isBlank() ? "0" : vcf.getText().trim()));
+        ledgerDetails.setTy_trong(Double.parseDouble(tytrong.getText().isBlank() ? "0" : tytrong.getText().trim()));
         ledgerDetails.setLoaixd_id(lxd.getXd_id());
         ledgerDetails.setSoluong(txuat);
         ledgerDetails.setSoluong_px(pxuat);

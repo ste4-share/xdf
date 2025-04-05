@@ -52,9 +52,9 @@ public class XuatDVController extends CommonFactory implements Initializable {
             nguoinhan.setText(l.getNguoi_nhan());
             lenhso.setText(l.getLenh_so());
             soxe.setText(l.getSo_xe());
-            dvn_cbb.getSelectionModel().select(l.getDvi_nhan_id());
-            dvx_cbb.getSelectionModel().select(l.getDvi_xuat_id());
-            tcx_cbb.getSelectionModel().select(l.getTcn_id());
+            dvn_cbb.getSelectionModel().select(DashboardController.units_ls.stream().filter(x->x.getId()==l.getDvi_nhan_id()).findFirst().orElse(null));
+            dvx_cbb.getSelectionModel().select(DashboardController.units_ls.stream().filter(x->x.getId()==l.getDvi_xuat_id()).findFirst().orElse(null));
+            tcx_cbb.getSelectionModel().select(DashboardController.tcn_ls.stream().filter(x->x.getId()==l.getTcn_id()).findFirst().orElse(null));
         }
     }
 
