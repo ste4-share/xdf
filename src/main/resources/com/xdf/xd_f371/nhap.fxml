@@ -426,6 +426,14 @@
                   <Font name="DejaVu Serif Bold" size="11.0" />
                </font>
             </Label>
+            <Button id="addbtn" fx:id="editBtn" layoutX="885.0" layoutY="562.0" mnemonicParsing="false" onAction="#editBtnAction" prefHeight="25.0" prefWidth="88.0" style="-fx-background-color: #027a20; -fx-background-radius: 10;" text="Cập nhật" textFill="WHITE" visible="false">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
          </children>
       </AnchorPane>
       <TableView id="billViewTb" fx:id="tbView" layoutX="14.0" layoutY="652.0" onMouseClicked="#select_item" prefHeight="158.0" prefWidth="1172.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;" stylesheets="@css/table_style.css">

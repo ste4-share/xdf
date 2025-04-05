@@ -39,6 +39,7 @@ import java.util.*;
 @Component
 public class CommonFactory implements Initializable {
     protected Ledger l;
+    protected String ledger_id;
     protected List<LedgerDetails> deteled_ledDetail;
     protected static AssignmentBillDto assignmentBillDto = null;
     protected static UnitBillDto unitBillDto = null;
@@ -86,7 +87,8 @@ public class CommonFactory implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         deteled_ledDetail = new ArrayList<>();
-        l = null;
+        l = new Ledger();
+        ledger_id = null;
         initLabelVar();
         initLegersList();
         initInventoryUnit();
@@ -96,7 +98,7 @@ public class CommonFactory implements Initializable {
     protected String generateLEdgerDetailId(){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+System.currentTimeMillis());
     }
-    protected void saveLedger() {
+    protected void saveLedger(Ledger l) {
         DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + ledgerService.saveLedgerWithDetails(l,deteled_ledDetail).getBill_id(),
                 MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
         LedgerController.primaryStage.close();
@@ -281,7 +283,8 @@ public class CommonFactory implements Initializable {
         return new ArrayList<>();
     }
     protected void setInvLabel(LoaiXangDauDto lxd){
-        TransactionHistory refTransactionHistory = transactionHistoryService.getInventoryOf_Lxd(lxd.getXd_id()).isPresent() ? transactionHistoryService.getInventoryOf_Lxd(lxd.getXd_id()).get() : null;
+        TransactionHistory refTransactionHistory = transactionHistoryService.getInventoryOf_Lxd(lxd.getXd_id(),DashboardController.ref_Dv.getId()).isPresent() ?
+                transactionHistoryService.getInventoryOf_Lxd(lxd.getXd_id(), DashboardController.ref_Dv.getId()).get() : null;
         if (refTransactionHistory!=null){
             setTonKhoLabel(refTransactionHistory.getTonkhotong());
         }else{
@@ -347,6 +350,8 @@ public class CommonFactory implements Initializable {
                     ld.setPhai_nhap(ld.getPhai_nhap()+px);
                     ld.setSoluong(ld.getThuc_nhap()+tx);
                     ld.setSoluong_px(ld.getPhai_nhap() + px);
+                    ld.setSoluong_str(TextToNumber.textToNum_2digits(ld.getSoluong()));
+                    ld.setSoluongpx_str(TextToNumber.textToNum_2digits(ld.getSoluong_px()));
                     ld.setThucnhap_str(TextToNumber.textToNum_2digits(ld.getThuc_nhap()));
                     ld.setPhainhap_str(TextToNumber.textToNum_2digits(ld.getPhai_nhap()));
                     ld.setThanhtien_str(TextToNumber.textToNum_2digits(ld.getThuc_nhap()*ld.getDon_gia()));
@@ -356,11 +361,14 @@ public class CommonFactory implements Initializable {
                     ld.setPhai_xuat(ld.getPhai_xuat() + px);
                     ld.setSoluong(ld.getThuc_xuat() + tx);
                     ld.setSoluong_px(ld.getPhai_xuat() + px);
+                    ld.setSoluong_str(TextToNumber.textToNum_2digits(ld.getSoluong()));
+                    ld.setSoluongpx_str(TextToNumber.textToNum_2digits(ld.getSoluong_px()));
                     ld.setThucxuat_str(TextToNumber.textToNum_2digits(ld.getThuc_xuat()));
                     ld.setPhaixuat_str(TextToNumber.textToNum_2digits(ld.getPhai_xuat()));
                     ld.setThanhtien_str(TextToNumber.textToNum_2digits(ld.getThuc_xuat()*ld.getDon_gia()));
                     l.getLedgerDetails().set(i, ld);
                 }
+
                 return false;
             }
         }

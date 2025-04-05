@@ -43,7 +43,7 @@ public class LedgerDetailController implements Initializable {
     private List<LedgerDetails> details = new ArrayList<>();
     private Ledger ledger = new Ledger();
     @FXML
-    private Label phieu,tungay,denngay,dvx,dvn,nv,km,gio,loainv,nguoinhan,xmt,loai_xmt,dinhmuckm,dinhmucgio,dinhmucmd,dinhmuctk,so,tcnx,lenhkh,soxe;
+    private Label phieu,tungay,denngay,dvx,dvn,nv,km,gio,loainv,nguoinhan,xmt,loai_xmt,dinhmuckm,dinhmucgio,dinhmucmd,dinhmuctk,so,tcnx,lenhkh,soxe,note;
     @FXML
     private TableView<LedgerDetails> chitietdonhang_table;
     @FXML
@@ -81,6 +81,7 @@ public class LedgerDetailController implements Initializable {
     }
     private void initLabelValues(){
         phieu.setText(ledger.getLoai_phieu());
+        note.setText(ledger.getNote());
         tungay.setText(ledger.getFrom_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         denngay.setText(ledger.getEnd_date()==null ? "..." : ledger.getEnd_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         dvx.setText(ledger.getDvi_xuat());

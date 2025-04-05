@@ -198,7 +198,7 @@ public class BaoCaoController implements Initializable {
                     n_sum2 = n_sum2.concat("n"+i+"+");
                 }
                 sl1=sl1.concat("case when sum(n"+i+".soluong) is null then 0 else sum(n"+i+".soluong) end as n"+i+",");
-                n_case_1 = n_case_1.concat(" left join (SELECT xd_id, sum(soluong) as soluong FROM public.transaction_history where loaiphieu like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' group by 1) n"+i+" on adm.id=n"+i+".xd_id");
+                n_case_1 = n_case_1.concat(" left join (SELECT distinct on (xd_id) xd_id, soluong_tt as soluong FROM public.transaction_history where loaiphieu like 'NHAP' and tructhuoc like '"+tt_list_n.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' order by xd_id, created_at desc) n"+i+" on adm.id=n"+i+".xd_id");
             }
             for (int i=0; i<tt_list_x.size(); i++) {
                 x_sum2 = x_sum2.concat("x"+i+" as x"+i+",");
@@ -208,7 +208,7 @@ public class BaoCaoController implements Initializable {
                     x_sum3 = x_sum3.concat("x"+i+"+");
                 }
                 sl2=sl2.concat("case when sum(x"+i+".soluong) is null then 0 else sum(x"+i+".soluong) end as x"+i+",");
-                x_case_2 = x_case_2.concat(" left join (SELECT xd_id, sum(soluong) as soluong FROM public.transaction_history where loaiphieu like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' group by 1) x"+i+" on adm.id=x"+i+".xd_id");
+                x_case_2 = x_case_2.concat(" left join (SELECT distinct on (xd_id) xd_id, soluong_tt as soluong FROM public.transaction_history where loaiphieu like 'XUAT' and tructhuoc like '"+tt_list_x.get(i).getType()+"' and date between '"+sd+"' and '"+ed+"' order by xd_id, created_at desc) x"+i+" on adm.id=x"+i+".xd_id");
             }
             return begin_1.concat(n_sum1).concat(n_sum2).concat(x_sum2).concat(x_sum3).concat(end_q1).concat(sl1).concat(sl2).concat(end_q1_1).concat(n_case_1).concat(x_case_2).concat(en);
         }

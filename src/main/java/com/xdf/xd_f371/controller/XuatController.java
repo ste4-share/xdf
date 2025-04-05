@@ -190,32 +190,34 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void xuat(ActionEvent actionEvent) {
-        if (!l.getLedgerDetails().isEmpty()) {
-            if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
-                try {
-                    if (l!=null){
-                        l.setAmount(l.getLedgerDetails().stream().mapToDouble(x-> (x.getSoluong() *x.getDon_gia())).sum());
+        Ledger ledger = getLedger();
+        if (ledger!=null){
+            ledger.setLedgerDetails(l.getLedgerDetails());
+            if (!l.getLedgerDetails().isEmpty()) {
+                if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
+                    try {
+                        ledger.setAmount(ledger.getLedgerDetails().stream().mapToDouble(x-> (x.getSoluong() *x.getDon_gia())).sum());
                         if (duplicateBillNumber(so.getText(),LoaiPhieuCons.PHIEU_NHAP.getName())){
-                            if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id().concat(l.getBill_id2())+" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
+                            if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+ledger.getBill_id().concat(ledger.getBill_id2())+" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
                                     null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                                ledgerService.updateBillNumber(l,ledgers);
-                                saveLedger();
+                                ledgerService.updateBillNumber(ledger,ledgers);
+                                saveLedger(ledger);
                             }
                         }else{
-                            saveLedger();
+                            saveLedger(ledger);
                         }
+                    }catch (NumberFormatException e){
+                        DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
+                        throw new RuntimeException(e);
+                    } catch (Exception e) {
+                        DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+                        throw new RuntimeException(e);
                     }
-                }catch (NumberFormatException e){
-                    DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
-                    throw new RuntimeException(e);
-                } catch (Exception e) {
-                    DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
-                    throw new RuntimeException(e);
                 }
+            }else{
+                DialogMessage.message(null, "Phiếu trống!!!",
+                        null, Alert.AlertType.WARNING);
             }
-        }else{
-            DialogMessage.message(null, "Phiếu trống!!!",
-                    null, Alert.AlertType.WARNING);
         }
     }
     @FXML

@@ -51,6 +51,7 @@ public class LedgerController implements Initializable {
     public static Stage primaryStage;
     public static Ledger ledger = new Ledger();
     public static Ledger ledger_edit = null;
+    public static String status;
 
     @Autowired
     private LedgerService ledgerService;
@@ -92,6 +93,7 @@ public class LedgerController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         all_rd.setSelected(true);
+        status = StatusCons.ADD.getName();
         hoverBtn();
         initVietnameseDate();
         initTableSize();
@@ -388,7 +390,7 @@ public class LedgerController implements Initializable {
     private void dateLoading() {
         LocalDate st = st_time.getValue();
         initLedgerList();
-        List<LocalDate> ls = ledgerSelectList.stream().map(Ledger::getFrom_date).filter(fromDate -> fromDate.isAfter(st)).distinct().toList();
+        List<LocalDate> ls = ledgerSelectList.stream().map(Ledger::getFrom_date).filter(fromDate -> fromDate.isAfter(st) || fromDate.isEqual(st)).distinct().toList();
         setLocalDateList(ls.stream().map(x->x.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).toList());
     }
     private boolean validDate(LocalDate st,LocalDate et){
@@ -770,6 +772,7 @@ public class LedgerController implements Initializable {
             ConnectLan.primaryStage.toFront();
             ConnectLan.primaryStage.requestFocus();
         });
+        status = StatusCons.ADD.getName();
         Common.openNewStage("nhap.fxml", primaryStage,null, StageStyle.UTILITY);
         updateData();
     }
@@ -780,6 +783,7 @@ public class LedgerController implements Initializable {
             ConnectLan.primaryStage.toFront();
             ConnectLan.primaryStage.requestFocus();
         });
+        status = StatusCons.ADD.getName();
         Common.openNewStage("xuat.fxml", primaryStage,null,StageStyle.UTILITY);
         updateData();
     }
@@ -795,6 +799,7 @@ public class LedgerController implements Initializable {
     @FXML
     public void editMiAction(ActionEvent actionEvent) {
         ledger_edit = ledgers_table.getSelectionModel().getSelectedItem();
+        status = StatusCons.EDIT.getName();
         ledger_edit.setLedgerDetails(ledgerService.getLedgerDetailById(ledger_edit.getId()));
         primaryStage = new Stage();
         primaryStage.setOnHidden(event -> {

@@ -106,15 +106,13 @@ public class LedgerService {
     @Transactional
     private void saveTransactionHistory(Ledger savedLedger, LedgerDetails detail,int index,String lp) {
         try {
-            Optional<TransactionHistory> sLedger = transactionHistoryRepo.findLedger_id(savedLedger.getId(),detail.getLoaixd_id(),detail.getDon_gia(),savedLedger.getRoot_id());
-            Optional<TransactionHistory> inv_price = transactionHistoryRepo.getInventoryOfPrice_Lxd(detail.getLoaixd_id(),detail.getDon_gia());
-            Optional<TransactionHistory> inv = transactionHistoryRepo.getInventoryOf_Lxd(detail.getLoaixd_id());
-            Optional<TransactionHistory> volumn_tructhuoc = transactionHistoryRepo.getSoluongTructhuoc(detail.getLoaixd_id(),savedLedger.getLoai_phieu(),savedLedger.getTructhuoc());
+            Optional<TransactionHistory> inv_price = transactionHistoryRepo.getInventoryOfPrice_Lxd(detail.getLoaixd_id(),detail.getDon_gia(),savedLedger.getRoot_id());
+            Optional<TransactionHistory> inv = transactionHistoryRepo.getInventoryOf_Lxd(detail.getLoaixd_id(),savedLedger.getRoot_id());
+            Optional<TransactionHistory> volumn_tructhuoc = transactionHistoryRepo.getSoluongTructhuoc(detail.getLoaixd_id(),savedLedger.getLoai_phieu(),detail.getDon_gia(),savedLedger.getTructhuoc(),savedLedger.getRoot_id());
 
-            List<TransactionHistory> transactionHistoryListByDay = transactionHistoryRepo.getSizeOfTransactionByDay(detail.getLoaixd_id(),savedLedger.getFrom_date());
-            if (sLedger.isEmpty()){
+            List<TransactionHistory> transactionHistoryListByDay = transactionHistoryRepo.getSizeOfTransactionByDay(detail.getLoaixd_id(),savedLedger.getFrom_date(),savedLedger.getRoot_id());
+            if (LedgerController.status.equals(StatusCons.ADD.getName())){
                 String uid = RandomStringUtils.randomAlphanumeric(10).concat(String.valueOf(detail.getLoaixd_id())).concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"))).concat("_000"+index);
-
                 if (lp.equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
                     transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getRoot_id(),lp,
                             savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
@@ -122,6 +120,23 @@ public class LedgerService {
                             inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() + detail.getSoluong())).orElseGet(detail::getSoluong),
                             transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
                             volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() + detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
+                } else {
+                    transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getRoot_id(),lp,
+                            savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
+                            inv.map(history -> (history.getTonkhotong() - detail.getSoluong())).orElseGet(detail::getSoluong),
+                            inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - detail.getSoluong())).orElseGet(detail::getSoluong),
+                            transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
+                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
+                }
+            } else {
+                String uid = RandomStringUtils.randomAlphanumeric(10).concat(String.valueOf(detail.getLoaixd_id())).concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"))).concat("_000"+index);
+                if (lp.equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
+                    transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getRoot_id(),lp,
+                            savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
+                            inv.map(history -> (history.getTonkhotong() + (detail.getSoluong() - history.getSoluong()))).orElseGet(detail::getSoluong),
+                            inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() + (detail.getSoluong() - transactionHistory.getSoluong()))).orElseGet(detail::getSoluong),
+                            transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
+                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() + (detail.getSoluong()-volumn.getSoluong()))).orElseGet(detail::getSoluong),savedLedger.getId()));
                 } else if(lp.equals(LoaiPhieuCons.PHIEU_THAYDOI.getName())) {
                     transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getRoot_id(),lp,
                             savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
@@ -132,37 +147,10 @@ public class LedgerService {
                 } else {
                     transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getRoot_id(),lp,
                             savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
-                            inv.map(history -> (history.getTonkhotong() - detail.getSoluong())).orElseGet(detail::getSoluong),
-                            inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - detail.getSoluong())).orElseGet(detail::getSoluong),
+                            inv.map(history -> (history.getTonkhotong() - (detail.getSoluong() - history.getSoluong()))).orElseGet(detail::getSoluong),
+                            inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - (detail.getSoluong()-transactionHistory.getSoluong()))).orElseGet(detail::getSoluong),
                             transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
-                }
-            }else{
-                String uid = RandomStringUtils.randomAlphanumeric(10).concat(String.valueOf(detail.getLoaixd_id())).concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"))).concat("_000"+index);
-                double tk_gia =  sLedger.get().getTonkho_gia() - detail.getSoluong();
-                double tk_tong =  sLedger.get().getTonkhotong() - detail.getSoluong();
-                double v_tt =  sLedger.get().getSoluong_tt() - detail.getSoluong();
-                if (lp.equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
-                    transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getRoot_id(),lp,
-                            savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
-                            inv.map(history -> (history.getTonkhotong() + tk_tong)).orElseGet(detail::getSoluong),
-                            inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() + tk_gia)).orElseGet(detail::getSoluong),
-                            transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() + v_tt)).orElseGet(detail::getSoluong),savedLedger.getId()));
-                } else if(lp.equals(LoaiPhieuCons.PHIEU_THAYDOI.getName())) {
-                    transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getRoot_id(),lp,
-                            savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
-                            inv.map(history -> (history.getTonkhotong() - detail.getSoluong())).orElseGet(detail::getSoluong),
-                            inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - detail.getSoluong())).orElseGet(detail::getSoluong),
-                            transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
-                }else {
-                    transactionHistoryRepo.save(new TransactionHistory(uid,detail.getLoaixd_id(),savedLedger.getRoot_id(),lp,
-                            savedLedger.getFrom_date(),detail.getDon_gia(),detail.getSoluong(),savedLedger.getTructhuoc(),
-                            inv.map(history -> (history.getTonkhotong() - tk_tong)).orElseGet(detail::getSoluong),
-                            inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - tk_gia)).orElseGet(detail::getSoluong),
-                            transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - v_tt)).orElseGet(detail::getSoluong),savedLedger.getId()));
+                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - (detail.getSoluong()-volumn.getSoluong()))).orElseGet(detail::getSoluong),savedLedger.getId()));
                 }
             }
 

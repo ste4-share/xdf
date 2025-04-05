@@ -33,8 +33,8 @@ public class TransactionHistoryService {
     public List<TransactionHistory> getTransactionHistoryByDate(int lxd_id,LocalDate ed){
         return transactionHistoryRepo.getTransactionHistoryByDate(lxd_id,ed);
     }
-    public Optional<TransactionHistory> getInventoryOf_Lxd(int xdid){
-        return transactionHistoryRepo.getInventoryOf_Lxd(xdid);
+    public Optional<TransactionHistory> getInventoryOf_Lxd(int xdid, int root_id){
+        return transactionHistoryRepo.getInventoryOf_Lxd(xdid,root_id);
     }
     public List<InventoryUnitDto> getInventoryOf_Lxd(LocalDate sd,LocalDate ed){
         return mapToInventoryUnitDto(transactionHistoryRepo.getInvByTime(sd,ed, DashboardController.ref_Dv.getId()));

@@ -13,16 +13,14 @@ import java.util.Optional;
 
 @Repository
 public interface TransactionHistoryRepo extends JpaRepository<TransactionHistory, String> {
-    @Query(value = "select * from transaction_history where xd_id=:xd order by created_at desc limit 1",nativeQuery = true)
-    Optional<TransactionHistory> getInventoryOf_Lxd(@Param("xd") int xd_id);
-    @Query(value = "select * from transaction_history where ledger_id like :l_id and xd_id=:xd_id and mucgia=:gia and root_id=:rid order by created_at desc limit 1",nativeQuery = true)
-    Optional<TransactionHistory> findLedger_id(@Param("l_id") String lid,@Param("xd_id") int xd_id,@Param("gia") double dongia,@Param("rid") int root_id);
-    @Query(value = "select * from transaction_history where xd_id=:xd and loaiphieu like :lp and tructhuoc like :tt order by created_at desc limit 1",nativeQuery = true)
-    Optional<TransactionHistory> getSoluongTructhuoc(@Param("xd") int xd_id,@Param("lp") String lp,@Param("tt") String tt);
-    @Query(value = "select * from transaction_history where xd_id=:xd_id and mucgia=:gia order by created_at desc limit 1",nativeQuery = true)
-    Optional<TransactionHistory> getInventoryOfPrice_Lxd(@Param("xd_id") int xd_id,@Param("gia") double dongia);
-    @Query(value = "select * from transaction_history where xd_id=:xd_id and date=:d order by created_at desc",nativeQuery = true)
-    List<TransactionHistory> getSizeOfTransactionByDay(@Param("xd_id") int xd_id, @Param("d")LocalDate date);
+    @Query(value = "select * from transaction_history where xd_id=:xd and root_id=:rid order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> getInventoryOf_Lxd(@Param("xd") int xd_id,@Param("rid") int root_id);
+    @Query(value = "select * from transaction_history where xd_id=:xd and loaiphieu like :lp and mucgia=:gia and tructhuoc like :tt and root_id=:rid  order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> getSoluongTructhuoc(@Param("xd") int xd_id,@Param("lp") String lp,@Param("gia") double dongia,@Param("tt") String tt,@Param("rid") int root_id);
+    @Query(value = "select * from transaction_history where xd_id=:xd_id and mucgia=:gia and root_id=:rid order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> getInventoryOfPrice_Lxd(@Param("xd_id") int xd_id,@Param("gia") double dongia,@Param("rid") int root_id);
+    @Query(value = "select * from transaction_history where xd_id=:xd_id and date=:d and root_id=:rid order by created_at desc",nativeQuery = true)
+    List<TransactionHistory> getSizeOfTransactionByDay(@Param("xd_id") int xd_id, @Param("d")LocalDate date,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and date < :e order by created_at desc",nativeQuery = true)
     List<TransactionHistory> getTransactionHistoryByDate(@Param("xd_id") int xd_id, @Param("e")LocalDate date);
     @Query(value = "SELECT distinct on (mucgia) * FROM public.transaction_history where xd_id=:xd_id order by mucgia,created_at desc",nativeQuery = true)
@@ -35,6 +33,6 @@ public interface TransactionHistoryRepo extends JpaRepository<TransactionHistory
             "cl.priority_1,cl.priority_2,cl.priority_3\n" +
             "from loaixd2 lxd left join chungloaixd cl on lxd.petroleum_type_id=cl.id\n" +
             "left join (SELECT distinct on (xd_id) xd_id,tonkhotong as tdk_nvdx,tonkh_sscd as tdk_sscd FROM transaction_history where root_id=:rid and date < :s order by xd_id,created_at desc) a on a.xd_id=lxd.id\n" +
-            "left join (SELECT distinct on (xd_id) xd_id,tonkhotong as pre_nvdx,tonkh_sscd as pre_sscd FROM transaction_history where root_id=:rid and date < :e order by xd_id,created_at desc) b on b.xd_id=lxd.id",nativeQuery = true)
+            "left join (SELECT distinct on (xd_id) xd_id,tonkhotong as pre_nvdx,tonkh_sscd as pre_sscd FROM transaction_history where root_id=:rid and date <= :e order by xd_id,created_at desc) b on b.xd_id=lxd.id",nativeQuery = true)
     List<Object[]> getInvByTime(@Param("s") LocalDate sd,@Param("e") LocalDate ed,@Param("rid") int root_id);
 }

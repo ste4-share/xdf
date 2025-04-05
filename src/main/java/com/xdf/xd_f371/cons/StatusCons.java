@@ -7,6 +7,8 @@ public enum StatusCons {
     RECORDING("RECORDING"),
     GOOD("GOOD"),
     NORMAL_STATUS("NORMAL"),
+    ADD("ADD"),
+    EDIT("EDIT"),
     ROOT_STATUS("ROOT");
 
     public final String name;
