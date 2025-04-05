@@ -53,7 +53,37 @@ public class XuatController extends CommonFactory implements Initializable {
         initLoaderFxml();
         initLoaiXuatCbb();
         mapXdForCombobox();
+        initEditValue();
     }
+
+    private void initEditValue() {
+        if (LedgerController.ledger_edit!=null){
+            l = LedgerController.ledger_edit;
+            tungay.setValue(l.getFrom_date());
+            denngay.setValue(l.getEnd_date());
+            setItemToList(l.getLedgerDetails());
+
+            removeNode();
+            if (l.getNhiemvu_id()==0){
+                addNewNode(dv);
+            }else{
+                addNewNode(nv);
+            }
+        }
+    }
+    private void setItemToList(List<LedgerDetails> ldLs) {
+        for (LedgerDetails x : ldLs) {
+            x.setPhainhap_str(TextToNumber.textToNum_2digits(x.getPhai_nhap()));
+            x.setThucnhap_str(TextToNumber.textToNum_2digits(x.getThuc_nhap()));
+            x.setPhaixuat_str(TextToNumber.textToNum_2digits(x.getPhai_xuat()));
+            x.setSoluong_str(TextToNumber.textToNum_2digits(x.getSoluong()));
+            x.setSoluongpx_str(TextToNumber.textToNum_2digits(x.getSoluong_px()));
+            x.setThucxuat_str(TextToNumber.textToNum_2digits(x.getThuc_xuat()));
+            x.setDongia_str(TextToNumber.textToNum_2digits(x.getDon_gia()));
+            x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
+        }
+    }
+
     private void initLoaderFxml(){
         try {
             FXMLLoader loader_nv =DashboardController.getFXLoadderBySource("xuat_nv.fxml");
@@ -93,8 +123,6 @@ public class XuatController extends CommonFactory implements Initializable {
             addNewNode(dv);
         } else if (lx.equals(LoaiXuat.NV.getName())){
             addNewNode(nv);
-        } else if (lx.equals(LoaiXuat.BN.getName())) {
-            System.out.println("null");
         }
     }
     private void addNewNode(VBox v) {
@@ -127,28 +155,6 @@ public class XuatController extends CommonFactory implements Initializable {
         }
         return false;
     }
-    @FXML
-    public void add(ActionEvent actionEvent) {
-        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
-        Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
-        if (isCbb(lxd,gia)){
-            if (validField()){
-                LedgerDetails ld = getLedgerDetails(lxd, gia);
-                if (ld!=null){
-                    if (inventory_quantity < ld.getSoluong()) {
-                        DialogMessage.message(null, "so luong xuat > so luong ton kho", MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
-                    }else{
-                        if (isNotDuplicate(ld.getLoaixd_id(), ld.getDon_gia(), ld.getThuc_xuat(), ld.getPhai_xuat(), LoaiPhieuCons.PHIEU_XUAT.getName())) {
-                            ls_socai.add(ld);
-                        }
-                        setTonKhoLabel(inventory_quantity - ld.getSoluong());
-                        setCellValueFactoryXuat();
-                        clearFields();
-                    }
-                }
-            }
-        }
-    }
     private boolean validField(){
         if (!phaixuat.getText().isBlank()){
             if (!thucxuat.getText().isBlank()){
@@ -162,26 +168,45 @@ public class XuatController extends CommonFactory implements Initializable {
         return false;
     }
     @FXML
+    public void add(ActionEvent actionEvent) {
+        if (l==null){
+            l = getLedger();
+        }
+        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
+        if (isCbb(lxd,gia)){
+            if (validField()){
+                LedgerDetails ld = getLedgerDetails(lxd, gia);
+                if (ld!=null){
+                    if (inventory_quantity < ld.getSoluong()) {
+                        DialogMessage.message(null, "so luong xuat > so luong ton kho", MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
+                    }else{
+                        if (isNotDuplicate(ld.getLoaixd_id(), ld.getDon_gia(), ld.getThuc_xuat(), ld.getPhai_xuat(), LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                            l.addDetail(ld);
+                        }
+                        setTonKhoLabel(inventory_quantity - ld.getSoluong());
+                        setCellValueFactoryXuat(l.getLedgerDetails());
+                        clearFields();
+                    }
+                }
+            }
+        }
+    }
+    @FXML
     public void xuat(ActionEvent actionEvent) {
-        if (!ls_socai.isEmpty()) {
+        if (!l.getLedgerDetails().isEmpty()) {
             if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 try {
-                    Ledger l = getLedger();
                     if (l!=null){
+                        l.setAmount(l.getLedgerDetails().stream().mapToDouble(x-> (x.getSoluong() *x.getDon_gia())).sum());
                         if (duplicateBillNumber(so.getText(),LoaiPhieuCons.PHIEU_NHAP.getName())){
                             if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id().concat(l.getBill_id2())+" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
                                     null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
                                 ledgerService.updateBillNumber(l,ledgers);
-                                Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                                DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
-                                        "Thanh cong", Alert.AlertType.INFORMATION);
-                                LedgerController.primaryStage.close();
+                                saveLedger();
                             }
                         }else{
-                            Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                            DialogMessage.message("Thong bao", "Them phieu XUAT thanh cong.. so: " + res.getBill_id(),
-                                    "Thanh cong", Alert.AlertType.INFORMATION);
-                            LedgerController.primaryStage.close();
+                            saveLedger();
                         }
                     }
                 }catch (NumberFormatException e){
@@ -310,8 +335,8 @@ public class XuatController extends CommonFactory implements Initializable {
         cbb_dongia.setItems(FXCollections.observableList(ls));
         cbb_dongia.getSelectionModel().selectFirst();
     }
-    private void setCellValueFactoryXuat(){
-        tbView.setItems(FXCollections.observableList(ls_socai));
+    private void setCellValueFactoryXuat(List<LedgerDetails> ls){
+        tbView.setItems(FXCollections.observableList(ls));
         tbView.refresh();
     }
     private void clearFields(){
@@ -326,7 +351,6 @@ public class XuatController extends CommonFactory implements Initializable {
 
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
-        ledger.setAmount(ls_socai.stream().mapToDouble(x-> (x.getSoluong() *x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
         ledger.setStatus(StatusCons.ACTIVED.getName());
@@ -450,9 +474,9 @@ public class XuatController extends CommonFactory implements Initializable {
             if (DialogMessage.callAlertWithMessage(null, null, "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
                 LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
-                    ls_socai.remove(ld);
+                    l.removeDetail(ld);
                     setTonKhoLabel(inventory_quantity+ld.getSoluong());
-                    tbView.setItems(FXCollections.observableList(ls_socai));
+                    tbView.setItems(FXCollections.observableList(l.getLedgerDetails()));
                     tbView.refresh();
                 }
             }

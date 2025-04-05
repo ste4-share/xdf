@@ -37,10 +37,10 @@ public class NhapController extends CommonFactory implements Initializable {
     private ComboBox<Tcn> cmb_tcn;
     @FXML
     private ComboBox<LoaiXangDauDto> cmb_tenxd;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         super.initialize(url,resourceBundle);
+
         initLabelValue();
         setTenXDToCombobox();
         setItemForTcnCbb();
@@ -48,6 +48,41 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvCombobox(cmb_dvvc,dvvcLs);
         setDvCombobox(cmb_dvn,dvnLs);
         setPreInv();
+        predictBillNumber();
+        initEditValue();
+    }
+    private void initEditValue() {
+        if (LedgerController.ledger_edit!=null){
+            l = LedgerController.ledger_edit;
+            String bid = l.getBill_id()==null ? "" : l.getBill_id();
+            String bid2 = l.getBill_id2()==null ? "" : l.getBill_id2();
+            soTf.setText(bid.concat(bid2));
+            recvTf.setText(l.getNguoi_nhan());
+            lenhKHso.setText(l.getLenh_so());
+            tungay.setValue(l.getFrom_date());
+            denngay.setValue(l.getEnd_date());
+            soXe.setText(l.getSo_xe());
+            cmb_dvn.getSelectionModel().select(l.getDvi_nhan_id());
+            cmb_dvvc.getSelectionModel().select(l.getDvi_xuat_id());
+            cmb_tcn.getSelectionModel().select(l.getTcn_id());
+            setItemToList(l.getLedgerDetails());
+            importbtn.setText("Lưu thay đổi");
+        }
+    }
+    private void setItemToList(List<LedgerDetails> ldLs) {
+        for (LedgerDetails x : ldLs) {
+            x.setPhainhap_str(TextToNumber.textToNum_2digits(x.getPhai_nhap()));
+            x.setThucnhap_str(TextToNumber.textToNum_2digits(x.getThuc_nhap()));
+            x.setPhaixuat_str(TextToNumber.textToNum_2digits(x.getPhai_xuat()));
+            x.setSoluong_str(TextToNumber.textToNum_2digits(x.getSoluong()));
+            x.setSoluongpx_str(TextToNumber.textToNum_2digits(x.getSoluong_px()));
+            x.setThucxuat_str(TextToNumber.textToNum_2digits(x.getThuc_xuat()));
+            x.setDongia_str(TextToNumber.textToNum_2digits(x.getDon_gia()));
+            x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
+        }
+        setcellFactoryNhap(ldLs);
+    }
+    private void predictBillNumber() {
         last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_NHAP.getName());
         if (last_ledger!=null){
             String num = "";
@@ -96,12 +131,14 @@ public class NhapController extends CommonFactory implements Initializable {
         setNguonnxCombobox(cmb_dv, nguonNxList);
         cmb_dv.getSelectionModel().selectFirst();
     }
-    private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd){
+    private LedgerDetails getLedgerDetails(LoaiXangDauDto lxd,String ledger_id){
         double tn = thucNhap.getText().isBlank() ? 0 : Double.parseDouble(thucNhap.getText());
         double pn = phaiNhap.getText().isBlank() ? 0 : Double.parseDouble(phaiNhap.getText());
         double p = donGiaTf.getText().trim().isBlank() ? 0 : Double.parseDouble(donGiaTf.getText());
 
         LedgerDetails ledgerDetails = new LedgerDetails();
+        ledgerDetails.setLedger_id(ledger_id);
+        ledgerDetails.setId(generateLEdgerDetailId());
         ledgerDetails.setMa_xd(lxd.getMaxd());
         ledgerDetails.setTen_xd(lxd.getTenxd());
         ledgerDetails.setChung_loai(lxd.getChungloai());
@@ -124,23 +161,26 @@ public class NhapController extends CommonFactory implements Initializable {
         ledgerDetails.setDongia_str(TextToNumber.textToNum_2digits(p));
         return ledgerDetails;
     }
-    private void setcellFactoryNhap(){
-        tbView.setItems(FXCollections.observableList(ls_socai));
+    private void setcellFactoryNhap(List<LedgerDetails> ls){
+        tbView.setItems(FXCollections.observableList(ls));
         tbView.refresh();
     }
     @FXML
     private void btnInsert(ActionEvent event){
         LoaiXangDauDto lxd = cmb_tenxd.getSelectionModel().getSelectedItem();
+        if (l==null){
+            l = getLedger();
+        }
         if (lxd!=null) {
-            LedgerDetails ld = getLedgerDetails(lxd);
+            LedgerDetails ld = getLedgerDetails(lxd,l.getId());
             if (!outfieldValid(lenhKHso, MessageCons.NOT_EMPTY_lenhKH.getName())){
                 if (!outfieldValid(soTf, MessageCons.NOT_EMPTY_so.getName())){
                     cmb_tenxd.setStyle(null);
                     if (validateField(ld).isEmpty()) {
                         if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_nhap(),ld.getPhai_nhap(),LoaiPhieuCons.PHIEU_NHAP.getName())){
-                            ls_socai.add(ld);
+                            l.addDetail(ld);
                         }
-                        setcellFactoryNhap();
+                        setcellFactoryNhap(l.getLedgerDetails());
                         setTonKhoLabel(inventory_quantity+ld.getSoluong());
                         clearHH();
                     }else{
@@ -157,29 +197,23 @@ public class NhapController extends CommonFactory implements Initializable {
     }
     @FXML
     private void btnImport(ActionEvent actionEvent) {
-        if (!ls_socai.isEmpty()){
-            if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
+        if (!l.getLedgerDetails().isEmpty()) {
+            if (DialogMessage.callAlertWithMessage("NHẬP", "TẠO PHIẾU NHẬP", "Xác nhận tạo phiếu nhập", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 try {
                     NguonNx dvx = cmb_dvvc.getSelectionModel().getSelectedItem();
-                    if (dvx!=null){
+                    if (dvx != null) {
                         NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
-                        if (dvn!=null) {
-                            Ledger l = getLedger();
+                        if (dvn != null) {
                             if (validateField(l).isEmpty()) {
-                                if (duplicateBillNumber(soTf.getText(),LoaiPhieuCons.PHIEU_NHAP.getName())){
-                                    if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id().concat(l.getBill_id2())+" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
-                                            null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                                        ledgerService.updateBillNumber(l,ledgers);
-                                        Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                                        DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
-                                                MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
-                                        LedgerController.primaryStage.close();
+                                l.setAmount(l.getLedgerDetails().stream().mapToDouble(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
+                                if (duplicateBillNumber(soTf.getText(), LoaiPhieuCons.PHIEU_NHAP.getName()) && LedgerController.ledger_edit == null) {
+                                    if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số " + l.getBill_id().concat(l.getBill_id2()) + " đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
+                                            null, Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
+                                        ledgerService.updateBillNumber(l, ledgers);
+                                        saveLedger();
                                     }
                                 }else{
-                                    Ledger res = ledgerService.saveLedgerWithDetails(l, ls_socai);
-                                    DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + res.getBill_id(),
-                                            MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
-                                    LedgerController.primaryStage.close();
+                                    saveLedger();
                                 }
                             } else {
                                 DialogMessage.message(MessageCons.LOI.getName(), changeStyleTextFieldByValidation(l),
@@ -189,11 +223,11 @@ public class NhapController extends CommonFactory implements Initializable {
                             cmb_dvn.setStyle(styleErrorField);
                             DialogMessage.errorShowing("Không tìm thấy nguồn nhập xuất, vui lòng thử lại.");
                         }
-                    }else{
+                    } else {
                         cmb_dvvc.setStyle(styleErrorField);
                         DialogMessage.errorShowing("Không tìm thấy nguồn nhập xuất, vui lòng thử lại.");
                     }
-                }catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
                     e.printStackTrace();
                     throw new RuntimeException(e);
@@ -202,13 +236,11 @@ public class NhapController extends CommonFactory implements Initializable {
                     throw new RuntimeException(e);
                 }
             }
-        }else{
+        } else {
             DialogMessage.message(null, "Phiếu trống!!!",
                     null, Alert.AlertType.WARNING);
         }
     }
-
-
     private String changeStyleTextFieldByValidation(Object o){
         List<String> ls = validateField(o);
         if (!ls.isEmpty()){
@@ -237,7 +269,6 @@ public class NhapController extends CommonFactory implements Initializable {
         Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
         splitBillNumber(soTf.getText(),ledger);
-        ledger.setAmount(ls_socai.stream().mapToDouble(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
         ledger.setStatus(StatusCons.ACTIVED.getName());
@@ -262,7 +293,11 @@ public class NhapController extends CommonFactory implements Initializable {
         }
         ledger.setTructhuoc(tructhuocService.findById(cmb_dvvc.getSelectionModel().getSelectedItem().getTructhuoc_id()).orElseThrow().getType());
         ledger.setYear(tungay.getValue().getYear());
-        ledger.setId(generateId(ledger.getYear(),ledger.getRoot_id(),lenhKHso.getText(),LoaiPhieuCons.PHIEU_NHAP.getName()));
+        if(LedgerController.ledger_edit!=null){
+            ledger.setId(LedgerController.ledger_edit.getId());
+        }else{
+            ledger.setId(generateId(ledger.getYear(),ledger.getRoot_id(),lenhKHso.getText(),LoaiPhieuCons.PHIEU_NHAP.getName()));
+        }
         return ledger;
     }
     private void clearHH(){
@@ -284,10 +319,9 @@ public class NhapController extends CommonFactory implements Initializable {
             if (DialogMessage.callAlertWithMessage(null, null, "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
                 LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
-                    ls_socai.remove(ld);
+                    l.removeDetail(ld);
                     setTonKhoLabel(inventory_quantity-ld.getSoluong());
-                    tbView.setItems(FXCollections.observableList(ls_socai));
-                    tbView.refresh();
+                    setcellFactoryNhap(l.getLedgerDetails());
                 }
             }
         }
@@ -297,8 +331,7 @@ public class NhapController extends CommonFactory implements Initializable {
         LedgerController.primaryStage.close();
     }
     @FXML
-    public void soValid(KeyEvent keyEvent) {
-    }
+    public void soValid(KeyEvent keyEvent) {}
     @FXML
     public void validate_dongia(KeyEvent keyEvent) {
         validateToSettingStyle(donGiaTf);

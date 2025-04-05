@@ -52,7 +52,7 @@ public class ConnectLan implements Initializable {
     @FXML
     private PasswordField passwd;
     @FXML
-    private Button connect,exitbtn,ckbtn;
+    private Button connect,exitbtn;
     @FXML
     private Label conn_status;
     @FXML
@@ -67,7 +67,6 @@ public class ConnectLan implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Common.hoverButton(connect,"#009107");
         Common.hoverButton(exitbtn,"#5b5b5b");
-        Common.hoverButton(ckbtn,"#ffffff");
         conn_status.setText("-----");
         ip_pre = "";
         port_pre = "0";

@@ -5,6 +5,7 @@ import com.xdf.xd_f371.cons.LoaiPTEnum;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.cons.MessageCons;
 import com.xdf.xd_f371.controller.DashboardController;
+import com.xdf.xd_f371.controller.LedgerController;
 import com.xdf.xd_f371.dto.AssignmentBillDto;
 import com.xdf.xd_f371.dto.LoaiXangDauDto;
 import com.xdf.xd_f371.dto.UnitBillDto;
@@ -32,10 +33,13 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 @Component
 public class CommonFactory implements Initializable {
+    protected Ledger l;
+    protected List<LedgerDetails> ledgerDetails_deteled;
     protected static AssignmentBillDto assignmentBillDto = null;
     protected static UnitBillDto unitBillDto = null;
     public static String pre_path;
@@ -44,7 +48,6 @@ public class CommonFactory implements Initializable {
     protected Configuration config = null;
     protected List<TransactionHistory> transactionHistories = new ArrayList<>();
     protected static List<Ledger> ledgers = new ArrayList<>();
-    protected static List<LedgerDetails> ls_socai;
 
     protected List<Tcn> tcnx_ls = new ArrayList<>();
     protected static List<NguonNx> dvvcLs = new ArrayList<>();
@@ -82,13 +85,22 @@ public class CommonFactory implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ledgerDetails_deteled = new ArrayList<>();
+        l = null;
         initLabelVar();
         initLegersList();
         initInventoryUnit();
         setcellFactory();
         initLocalList();
     }
-
+    protected String generateLEdgerDetailId(){
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+System.currentTimeMillis());
+    }
+    protected void saveLedger() {
+        DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + ledgerService.saveLedgerWithDetails(l).getBill_id(),
+                MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
+        LedgerController.primaryStage.close();
+    }
     public static String nextExcelStyle(String s) {
         StringBuilder sb = new StringBuilder(s);
 
@@ -102,6 +114,21 @@ public class CommonFactory implements Initializable {
         }
 
         return "a" + sb.toString();
+    }
+    protected void initPredictBillNumber(){
+        last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_XUAT.getName());
+        if (last_ledger!=null){
+            String num = "";
+            String letter = "";
+            if (last_ledger.getBill_id()!=null){
+                num = last_ledger.getBill_id();
+            }if (last_ledger.getBill_id2()!=null){
+                letter = last_ledger.getBill_id2();
+            }
+            initPredictValue(getNextInSequence(num.concat(letter)));
+        }else{
+            initPredictValue("1");
+        }
     }
     protected void splitBillNumber(String input,Ledger l){
         int splitIndex = 0;
@@ -230,7 +257,6 @@ public class CommonFactory implements Initializable {
     private void initLabelVar() {
         setVi_DatePicker(tungay);
         setVi_DatePicker(denngay);
-        ls_socai = new ArrayList<>();
         tungay.setValue(LocalDate.now());
         note.setText(null);
     }
@@ -313,8 +339,8 @@ public class CommonFactory implements Initializable {
         col_thanhtien.setCellValueFactory(new PropertyValueFactory<LedgerDetails, String>("thanhtien_str"));
     }
     protected boolean isNotDuplicate(int xd_id,double dongia,double tx, double px,String lp){
-        for (int i =0; i< ls_socai.size(); i++){
-            LedgerDetails ld = ls_socai.get(i);
+        for (int i =0; i< l.getLedgerDetails().size(); i++){
+            LedgerDetails ld = l.getLedgerDetails().get(i);
             if (ld.getLoaixd_id() == xd_id && ld.getDon_gia()==dongia){
                 if (lp.equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
                     ld.setThuc_nhap(ld.getThuc_nhap()+tx);
@@ -324,7 +350,7 @@ public class CommonFactory implements Initializable {
                     ld.setThucnhap_str(TextToNumber.textToNum_2digits(ld.getThuc_nhap()));
                     ld.setPhainhap_str(TextToNumber.textToNum_2digits(ld.getPhai_nhap()));
                     ld.setThanhtien_str(TextToNumber.textToNum_2digits(ld.getThuc_nhap()*ld.getDon_gia()));
-                    ls_socai.set(i, ld);
+                    l.getLedgerDetails().set(i, ld);
                 }else{
                     ld.setThuc_xuat(ld.getThuc_xuat() + tx);
                     ld.setPhai_xuat(ld.getPhai_xuat() + px);
@@ -333,7 +359,7 @@ public class CommonFactory implements Initializable {
                     ld.setThucxuat_str(TextToNumber.textToNum_2digits(ld.getThuc_xuat()));
                     ld.setPhaixuat_str(TextToNumber.textToNum_2digits(ld.getPhai_xuat()));
                     ld.setThanhtien_str(TextToNumber.textToNum_2digits(ld.getThuc_xuat()*ld.getDon_gia()));
-                    ls_socai.set(i, ld);
+                    l.getLedgerDetails().set(i, ld);
                 }
                 return false;
             }

@@ -7,6 +7,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -97,7 +98,7 @@ public class Ledger extends BaseObject{
     private String billnumber;
 
     @OneToMany(mappedBy = "ledger", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<LedgerDetails> ledgerDetails;
+    List<LedgerDetails> ledgerDetails = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "create_by",nullable = false,insertable = false,updatable = false)
     private Accounts accounts;
@@ -141,5 +142,17 @@ public class Ledger extends BaseObject{
         this.end_date_str = l.getEnd_date()==null ? "" : l.getEnd_date().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName()));
         this.billnumber = l.getBill_id().concat(l.getBill_id2());
         this.timestamp_str = timestamp.format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE_TIME.getName()));
+        this.bill_id2=l.getBill_id2();
+        this.ledgerDetails = l.ledgerDetails;
+    }
+
+    public void addDetail(LedgerDetails detail) {
+        ledgerDetails.add(detail);
+        detail.setLedger(this);
+    }
+
+    public void removeDetail(LedgerDetails detail) {
+        ledgerDetails.remove(detail);
+        detail.setLedger(null);
     }
 }

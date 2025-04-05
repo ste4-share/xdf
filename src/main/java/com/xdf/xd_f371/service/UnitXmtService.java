@@ -19,6 +19,9 @@ public class UnitXmtService {
     public List<UnitXmt> getAll(){
         return unitXmtRepo.findAll();
     }
+    public UnitXmt findById(String id){
+        return unitXmtRepo.findById(id).orElse(null);
+    }
     public List<UnitXmt> findByUnitId(int unit_id){
         return unitXmtRepo.findByUnitId(unit_id);
     }

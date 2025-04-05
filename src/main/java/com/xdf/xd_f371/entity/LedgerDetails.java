@@ -96,7 +96,7 @@ public class LedgerDetails extends BaseObject{
     @Transient
     private String phainhap_str;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ledger_id", nullable = false,insertable = false,updatable = false)
     private Ledger ledger;
 

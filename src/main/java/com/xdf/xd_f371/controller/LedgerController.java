@@ -50,6 +50,7 @@ public class LedgerController implements Initializable {
     private LocalDate currentDateSelected;
     public static Stage primaryStage;
     public static Ledger ledger = new Ledger();
+    public static Ledger ledger_edit = null;
 
     @Autowired
     private LedgerService ledgerService;
@@ -88,9 +89,6 @@ public class LedgerController implements Initializable {
     private ComboBox<NguonNx> dvi_ref_cbb;
     @FXML
     private HBox importBtn;
-
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         all_rd.setSelected(true);
@@ -116,12 +114,10 @@ public class LedgerController implements Initializable {
         List<Ledger> ls = ledgerService.findAllLedgerDto(tungay,denngay);
         setItemsTo_Roottable(ls);
     }
-
     private void setItemsTo_Roottable(List<Ledger> ls) {
         root_table.setItems(FXCollections.observableList(ls));
         root_table.refresh();
     }
-
     private void setCellFactoryForRootTable() {
         root_col_stt.setSortable(false);
         root_col_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(root_table.getItems().indexOf(column.getValue())+1).asString());
@@ -135,7 +131,6 @@ public class LedgerController implements Initializable {
         root_col_nv.setCellValueFactory(new PropertyValueFactory<Ledger, String>("nhiemvu"));
         root_col_note.setCellValueFactory(new PropertyValueFactory<Ledger, String>("note"));
     }
-
     private void setCellFactoryForRefTable() {
         ref_col_stt.setSortable(false);
         ref_col_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(ref_table.getItems().indexOf(column.getValue())+1).asString());
@@ -153,7 +148,6 @@ public class LedgerController implements Initializable {
         ref_table.refresh();
         ref_table.setItems(FXCollections.observableList(ls));
     }
-
     private void setCellFactoryForTable() {
         cttb_stt.setSortable(false);
         cttb_stt.setCellValueFactory(column-> new ReadOnlyObjectWrapper<>(chitiet_tb.getItems().indexOf(column.getValue())+1).asString());
@@ -397,7 +391,6 @@ public class LedgerController implements Initializable {
         List<LocalDate> ls = ledgerSelectList.stream().map(Ledger::getFrom_date).filter(fromDate -> fromDate.isAfter(st)).distinct().toList();
         setLocalDateList(ls.stream().map(x->x.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).toList());
     }
-
     private boolean validDate(LocalDate st,LocalDate et){
         if (st!=null){
             if (et!=null){
@@ -469,7 +462,6 @@ public class LedgerController implements Initializable {
             DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
         }
     }
-
     private void mapHanmucNhiemvuTaubay(XSSFWorkbook wb, ReportDAO reportDAO) {
         XSSFSheet sheet2 = wb.createSheet("HANMUC_NHIEMVU_TAUBAY_DATA");
         List<Object[]> nxtls2 = reportDAO.findByWhatEver("select * from hanmuc_nhiemvu_taubay");
@@ -559,7 +551,6 @@ public class LedgerController implements Initializable {
             }
         }
     }
-
     private <T extends BaseObject> T importCellToLEdger(Row row){
         Ledger l =new Ledger();
         if (row!=null){
@@ -729,7 +720,6 @@ public class LedgerController implements Initializable {
         }
         return (T) i;
     }
-
     private <T extends BaseObject> List<T>  importDataToList(File f, List<T> ls, Function<Row,T> importCell){
         try (FileInputStream fis = new FileInputStream(f);
              XSSFWorkbook wb = new XSSFWorkbook(fis)) {
@@ -774,6 +764,7 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void importBtnAction(ActionEvent actionEvent) {
+        ledger_edit = null;
         primaryStage = new Stage();
         primaryStage.setOnHidden(event -> {
             ConnectLan.primaryStage.toFront();
@@ -803,14 +794,14 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void editMiAction(ActionEvent actionEvent) {
-        Ledger l = ledgers_table.getSelectionModel().getSelectedItem();
-
+        ledger_edit = ledgers_table.getSelectionModel().getSelectedItem();
+        ledger_edit.setLedgerDetails(ledgerService.getLedgerDetailById(ledger_edit.getId()));
         primaryStage = new Stage();
         primaryStage.setOnHidden(event -> {
             ConnectLan.primaryStage.toFront();
             ConnectLan.primaryStage.requestFocus();
         });
-        if (l.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
+        if (ledger_edit.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())){
             Common.openNewStage("nhap.fxml", primaryStage,null, StageStyle.UTILITY);
             updateData();
         }else{

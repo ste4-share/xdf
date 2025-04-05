@@ -1,9 +1,6 @@
 package com.xdf.xd_f371.controller;
 
-import com.xdf.xd_f371.cons.LoaiNVCons;
-import com.xdf.xd_f371.cons.LoaiPTEnum;
-import com.xdf.xd_f371.cons.LoaiPhieuCons;
-import com.xdf.xd_f371.cons.TypeCons;
+import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.dto.AssignmentBillDto;
 import com.xdf.xd_f371.dto.NhiemVuDto;
 import com.xdf.xd_f371.entity.*;
@@ -35,7 +32,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
     @FXML
     private TextField sokm,sogio, sophut;
     @FXML
-    private RadioButton md_rd, xe_rd,mb_rd;
+    private RadioButton md_rd, xe_rd,mb_rd,may_rd,tk_rd;
     @FXML
     private Label loai_xmt,time_active,e_giohd;
     @FXML
@@ -71,21 +68,49 @@ public class XuatNVController extends CommonFactory implements Initializable {
         initLicence();
         initDinhmucToolTip();
         initLoaiXmt();
-        last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_XUAT.getName());
-        if (last_ledger!=null){
-            String num = "";
-            String letter = "";
-            if (last_ledger.getBill_id()!=null){
-                num = last_ledger.getBill_id();
-            }if (last_ledger.getBill_id2()!=null){
-                letter = last_ledger.getBill_id2();
+        initPredictBillNumber();
+        initEditLedger();
+    }
+    private void initEditLedger() {
+        if (LedgerController.ledger_edit!=null){
+            l = LedgerController.ledger_edit;
+            String bid = l.getBill_id()==null ? "" : l.getBill_id();
+            String bid2 = l.getBill_id2()==null ? "" : l.getBill_id2();
+            so.setText(bid.concat(bid2));
+            nguoinhan.setText(l.getNguoi_nhan());
+            lenhso.setText(l.getLenh_so());
+            soxe.setText(l.getSo_xe());
+            nv_cbb.getSelectionModel().select(l.getNhiemvu_id());
+            licenceCbb.getSelectionModel().select(unitXmtService.findById(l.getId()));
+            initDinhmucToolTip();
+            xmt_cbb.getSelectionModel().select(l.getPt_id());
+            if (l.getLoaigiobay().equals(TypeCons.MAT_DAT.getName())){
+                md_rd.setSelected(true);
+                sogio.setText(l.getGiohd_md().split(":")[0]);
+                sophut.setText(l.getGiohd_md().split(":")[1]);
+            }else{
+                tk_rd.setSelected(true);
+                sogio.setText(l.getGiohd_tk().split(":")[0]);
+                sophut.setText(l.getGiohd_tk().split(":")[1]);
             }
-            initPredictValue(getNextInSequence(num.concat(letter)));
-        }else{
-            initPredictValue("1");
+            if (l.getDvi_baono()==0){
+                dvx_cbb.getSelectionModel().select(l.getDvi_xuat_id());
+                xbnChk.setSelected(false);
+            }else{
+                dvx_cbb.getSelectionModel().select(l.getDvi_baono());
+                xbnChk.setSelected(true);
+            }
+            if (l.getLpt_2().equals(LoaiPTEnum.XE.getNameVehicle())){
+                xe_rd.setSelected(true);
+            } else if (l.getLpt_2().equals(LoaiPTEnum.MAY.getNameVehicle())) {
+                may_rd.setSelected(true);
+            }else{
+                mb_rd.setSelected(true);
+            }
+            loai_xmt.setText("Loại xe-máy-tàu: "+l.getLpt_2());
+            sokm.setText(String.valueOf(l.getSo_km()));
         }
     }
-
     @FXML
     public void soKeyRealed(KeyEvent keyEvent) {
         so.setStyle(null);

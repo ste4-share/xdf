@@ -39,20 +39,25 @@ public class XuatDVController extends CommonFactory implements Initializable {
         setDvCombobox(dvn_cbb,dvvcLs);
         setDvCombobox(dvx_cbb,dvnLs);
         initTcx();
-        last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_XUAT.getName());
-        if (last_ledger!=null){
-            String num = "";
-            String letter = "";
-            if (last_ledger.getBill_id()!=null){
-                num = last_ledger.getBill_id();
-            }if (last_ledger.getBill_id2()!=null){
-                letter = last_ledger.getBill_id2();
-            }
-            initPredictValue(getNextInSequence(num.concat(letter)));
-        }else{
-            initPredictValue("1");
+        initPredictBillNumber();
+        initEditLedger();
+    }
+
+    private void initEditLedger() {
+        if (LedgerController.ledger_edit!=null){
+            l = LedgerController.ledger_edit;
+            String bid = l.getBill_id()==null ? "" : l.getBill_id();
+            String bid2 = l.getBill_id2()==null ? "" : l.getBill_id2();
+            so.setText(bid.concat(bid2));
+            nguoinhan.setText(l.getNguoi_nhan());
+            lenhso.setText(l.getLenh_so());
+            soxe.setText(l.getSo_xe());
+            dvn_cbb.getSelectionModel().select(l.getDvi_nhan_id());
+            dvx_cbb.getSelectionModel().select(l.getDvi_xuat_id());
+            tcx_cbb.getSelectionModel().select(l.getTcn_id());
         }
     }
+
     private void initTcx() {
         ComponentUtil.setItemsToComboBox(tcx_cbb, tcnx_ls, Tcn::getName, input -> tcnx_ls.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(tcx_cbb, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UnitXmtRepo extends JpaRepository<UnitXmt, Long> {
+public interface UnitXmtRepo extends JpaRepository<UnitXmt, String> {
     @Query(value = "select * from unit_xmt where unit_id=:uid",nativeQuery = true)
     List<UnitXmt> findByUnitId(@Param("uid") int id);
     @Query(value = "select ux.* from unit_xmt ux left join phuongtien p on ux.xmt_id=p.id where p.tinhchat like 'MAYBAY' and unit_id=:uid",nativeQuery = true)

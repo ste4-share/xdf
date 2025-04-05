@@ -50,15 +50,17 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
             "group by 1,2) a on lxd.id=a.loaixd_id",nativeQuery = true)
     List<Object[]> findAllInvByRangeBefore(@Param("sd") LocalDate sd);
 
-    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by  bill_id desc,bill_id2 desc",nativeQuery = true)
+//    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by bill_id desc,bill_id2 desc",nativeQuery = true)
+    @Query("SELECT l FROM Ledger l LEFT JOIN FETCH l.ledgerDetails WHERE l.status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by l.bill_id desc,l.bill_id2 desc")
     List<Ledger> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed,@Param("dvid") int dvid);
-    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed order by bill_id desc,bill_id2 desc",nativeQuery = true)
+//    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed order by bill_id desc,bill_id2 desc",nativeQuery = true)
+    @Query("SELECT l FROM Ledger l LEFT JOIN FETCH l.ledgerDetails WHERE l.status like 'ACTIVE' and l.from_date between :sd and :ed")
     List<Ledger> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
     @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.root_id=:dvid and year=:y order by bill_id desc,bill_id2 desc",nativeQuery = true)
     List<Ledger> findAllLedgerByUnit(@Param("dvid") int dvid,@Param("y") int y);
     @Query(value = "select * from ledgers l where status like 'ACTIVE'",nativeQuery = true)
     List<Ledger> findAllLedgerActive();
-    @Query(value = "select * from ledgers l where status like 'ACTIVE' and loai_phieu like :lp and root_id=:rid order by timestamp desc limit 1",nativeQuery = true)
+    @Query(value = "select * from ledgers l where status like 'ACTIVE' and loai_phieu like :lp and root_id=:rid order by bill_id desc,bill_id2 desc limit 1",nativeQuery = true)
     Optional<Ledger> findLastLedgerByBillId(@Param("lp") String lp,@Param("rid") int rootid);
     @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='ledgers';",nativeQuery = true)
     List<String> getColumnNames_LEDGER();

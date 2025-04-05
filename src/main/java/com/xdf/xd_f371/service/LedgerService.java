@@ -2,6 +2,7 @@ package com.xdf.xd_f371.service;
 
 import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.controller.DashboardController;
+import com.xdf.xd_f371.controller.LedgerController;
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
@@ -9,7 +10,6 @@ import com.xdf.xd_f371.repo.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -85,17 +85,13 @@ public class LedgerService {
         }
     }
     @Transactional
-    public Ledger saveLedgerWithDetails(Ledger ledger, List<LedgerDetails> details){
+    public Ledger saveLedgerWithDetails(Ledger ledger){
         Ledger savedLedger = ledgersRepo.save(ledger);
         try {
-            for (int i=0;i<details.size();i++){
-                LedgerDetails detail = details.get(i);
-                detail.setId(generateLEdgerDetailId(savedLedger.getId(),i));
-                detail.setLedger(savedLedger);
-                detail.setLedger_id(savedLedger.getId());
+            for (int i=0;i<savedLedger.getLedgerDetails().size();i++) {
+                LedgerDetails detail = savedLedger.getLedgerDetails().get(i);
                 saveTransactionHistory(savedLedger,detail,i+1);
                 saveQuantity(detail,savedLedger);
-                ledgerDetailRepo.save(detail);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -131,9 +127,6 @@ public class LedgerService {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }
-    private String generateLEdgerDetailId(String ledgerid,int index){
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+ledgerid).concat("_"+index);
     }
     private void saveQuantity(LedgerDetails detail, Ledger ledger){
         if (ledger.getLoai_phieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName()) && detail.getSscd_nvdx().equals(Purpose.NVDX.getName())) {
