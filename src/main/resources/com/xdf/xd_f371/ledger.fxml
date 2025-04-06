@@ -367,14 +367,9 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <Label prefHeight="16.0" prefWidth="124.0" text="---Mặt hàng nhập/xuất---">
-                                 <font>
-                                    <Font name="Cambria Bold Italic" size="10.0" />
-                                 </font>
-                              </Label>
                               <HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="1343.0">
                                  <children>
-                                    <Label prefHeight="30.0" prefWidth="73.0" text="Tổng giá trị:">
+                                    <Label prefHeight="30.0" prefWidth="73.0" text="Tổng giá trị:" underline="true">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="10.0" />
                                        </font>
@@ -384,13 +379,18 @@
                                           <Font name="Cambria Bold Italic" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="988.0" layoutY="10.0" prefHeight="30.0" prefWidth="73.0" text="(VNĐ)">
+                                    <Label layoutX="988.0" layoutY="10.0" prefHeight="30.0" prefWidth="73.0" text="(VNĐ)" underline="true">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="10.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </HBox>
+                              <Label prefHeight="16.0" prefWidth="124.0" text="---Mặt hàng nhập/xuất---">
+                                 <font>
+                                    <Font name="Cambria Bold Italic" size="10.0" />
+                                 </font>
+                              </Label>
                               <TableView fx:id="chitiet_tb" stylesheets="@css/table_style.css">
                                 <columns>
                                   <TableColumn fx:id="cttb_stt" maxWidth="50.0" prefWidth="40.0" text="stt" />

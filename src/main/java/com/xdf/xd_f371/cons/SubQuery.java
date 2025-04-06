@@ -126,7 +126,7 @@ public class SubQuery {
     }
     public static String end_q1_1(int root_id,LocalDate sd){
         return "grouping(tinhchat) as tc,grouping(chungloai) as l,grouping(tenxd) as xd from loaixd2 adm left join (SELECT distinct on (xd_id) xd_id,tonkhotong as tdk_nvdx,tonkh_sscd as tdk_sscd FROM public.transaction_history \n" +
-                "where root_id="+root_id+" and date < '"+sd+"' order by xd_id,created_at desc) a on a.xd_id=adm.id";
+                "where root_id="+root_id+" and date <= '"+sd+"' order by xd_id,created_at desc) a on a.xd_id=adm.id";
     }
     public static String ttxd_nv(LocalDate sd,LocalDate ed,int r_id){
         return "select max(nv_gr),max(ten_nv) as ten_nv,max(ranks_1),case when t_gr=1 and tennv_gr=1 then 'Cộng'\n" +
