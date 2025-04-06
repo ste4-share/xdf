@@ -106,7 +106,7 @@ public class LedgerService {
     @Transactional
     private void saveTransactionHistory(Ledger savedLedger, LedgerDetails detail,int index,String lp) {
         try {
-            Optional<TransactionHistory> inv_price = transactionHistoryRepo.getInventoryOfPrice_Lxd(detail.getLoaixd_id(),detail.getDon_gia(),savedLedger.getRoot_id(),savedLedger.getLoai_phieu());
+            Optional<TransactionHistory> inv_price = transactionHistoryRepo.getInventoryOfPrice_Lxd(detail.getLoaixd_id(),detail.getDon_gia(),savedLedger.getRoot_id());
             Optional<TransactionHistory> inv = transactionHistoryRepo.getInventoryOf_Lxd(detail.getLoaixd_id(),savedLedger.getRoot_id());
             Optional<TransactionHistory> volumn_tructhuoc = transactionHistoryRepo.getSoluongTructhuoc(detail.getLoaixd_id(),savedLedger.getLoai_phieu(),savedLedger.getTructhuoc(),savedLedger.getRoot_id());
 

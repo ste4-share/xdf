@@ -1,5 +1,6 @@
 package com.xdf.xd_f371.service;
 
+import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.controller.DashboardController;
 import com.xdf.xd_f371.dto.InventoryUnitDto;
 import com.xdf.xd_f371.entity.TransactionHistory;
@@ -28,7 +29,7 @@ public class TransactionHistoryService {
         reportDAO.updateDataDAO("CREATE TABLE IF NOT EXISTS "+tbn+" PARTITION OF transaction_history FOR VALUES IN ("+xd_id+");");
     }
     public List<TransactionHistory> getLastestTimeForEachPrices(int lxd_id){
-        return transactionHistoryRepo.getLastestTimeForEachPrices(lxd_id);
+        return transactionHistoryRepo.getLastestTimeForEachPrices(lxd_id, DashboardController.ref_Dv.getId());
     }
     public List<TransactionHistory> getTransactionHistoryByDate(int lxd_id,LocalDate ed){
         return transactionHistoryRepo.getTransactionHistoryByDate(lxd_id,ed);

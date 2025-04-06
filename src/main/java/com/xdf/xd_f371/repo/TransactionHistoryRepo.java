@@ -17,14 +17,14 @@ public interface TransactionHistoryRepo extends JpaRepository<TransactionHistory
     Optional<TransactionHistory> getInventoryOf_Lxd(@Param("xd") int xd_id,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd and loaiphieu like :lp and tructhuoc like :tt and root_id=:rid  order by created_at desc limit 1",nativeQuery = true)
     Optional<TransactionHistory> getSoluongTructhuoc(@Param("xd") int xd_id,@Param("lp") String lp,@Param("tt") String tt,@Param("rid") int root_id);
-    @Query(value = "select * from transaction_history where xd_id=:xd_id and mucgia=:gia and loaiphieu like :lp and root_id=:rid order by created_at desc limit 1",nativeQuery = true)
-    Optional<TransactionHistory> getInventoryOfPrice_Lxd(@Param("xd_id") int xd_id,@Param("gia") double dongia,@Param("rid") int root_id,@Param("lp") String lp);
+    @Query(value = "select * from transaction_history where xd_id=:xd_id and mucgia=:gia and root_id=:rid order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> getInventoryOfPrice_Lxd(@Param("xd_id") int xd_id,@Param("gia") double dongia,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and date=:d and root_id=:rid order by created_at desc",nativeQuery = true)
     List<TransactionHistory> getSizeOfTransactionByDay(@Param("xd_id") int xd_id, @Param("d")LocalDate date,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and date < :e order by created_at desc",nativeQuery = true)
     List<TransactionHistory> getTransactionHistoryByDate(@Param("xd_id") int xd_id, @Param("e")LocalDate date);
-    @Query(value = "SELECT distinct on (mucgia) * FROM public.transaction_history where xd_id=:xd_id order by mucgia,created_at desc",nativeQuery = true)
-    List<TransactionHistory> getLastestTimeForEachPrices(@Param("xd_id") int xd_id);
+    @Query(value = "SELECT distinct on (mucgia) * FROM public.transaction_history where xd_id=:xd_id and root_id=:rid order by mucgia,created_at desc",nativeQuery = true)
+    List<TransactionHistory> getLastestTimeForEachPrices(@Param("xd_id") int xd_id,@Param("rid") int root_id);
     @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +
             "case when tdk_nvdx is null then 0 else tdk_nvdx end,\n" +
             "case when tdk_sscd is null then 0 else tdk_sscd end,\n" +

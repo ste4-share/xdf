@@ -50,6 +50,7 @@ public class XuatController extends CommonFactory implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         super.initialize(url,resourceBundle);
         initLabel();
+        ledger_id = generateId(LoaiPhieuCons.PHIEU_XUAT.getName());
         initLoaderFxml();
         initLoaiXuatCbb();
         mapXdForCombobox();
@@ -165,9 +166,6 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void add(ActionEvent actionEvent) {
-        if (l==null){
-            l = getLedger();
-        }
         LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
         Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
         if (isCbb(lxd,gia)){
@@ -177,7 +175,9 @@ public class XuatController extends CommonFactory implements Initializable {
                     if (inventory_quantity < ld.getSoluong()) {
                         DialogMessage.message(null, "so luong xuat > so luong ton kho", MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
                     }else{
-                        if (isNotDuplicate(ld.getLoaixd_id(), ld.getDon_gia(), ld.getThuc_xuat(), ld.getPhai_xuat(), LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                        if (l.getLedgerDetails().isEmpty()){
+                            l.addDetail(ld);
+                        }else if (isNotDuplicate(ld.getLoaixd_id(),ld.getDon_gia(),ld.getThuc_xuat(),ld.getPhai_xuat(),LoaiPhieuCons.PHIEU_XUAT.getName())){
                             l.addDetail(ld);
                         }
                         setTonKhoLabel(inventory_quantity - ld.getSoluong());
@@ -190,34 +190,33 @@ public class XuatController extends CommonFactory implements Initializable {
     }
     @FXML
     public void xuat(ActionEvent actionEvent) {
-        Ledger ledger = getLedger();
-        if (ledger!=null){
-            ledger.setLedgerDetails(l.getLedgerDetails());
-            if (!l.getLedgerDetails().isEmpty()) {
-                if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
-                    try {
-                        ledger.setAmount(ledger.getLedgerDetails().stream().mapToDouble(x-> (x.getSoluong() *x.getDon_gia())).sum());
-                        if (duplicateBillNumber(so.getText(),LoaiPhieuCons.PHIEU_NHAP.getName())){
-                            if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+ledger.getBill_id().concat(ledger.getBill_id2())+" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
-                                    null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                                ledgerService.updateBillNumber(ledger,ledgers);
-                                saveLedger(ledger);
-                            }
-                        }else{
-                            saveLedger(ledger);
+        getLedger(l);
+        l.setLedgerDetails(l.getLedgerDetails());
+        if (!l.getLedgerDetails().isEmpty()) {
+            if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
+                try {
+                    l.setAmount(l.getLedgerDetails().stream().mapToDouble(x-> (x.getSoluong() *x.getDon_gia())).sum());
+                    if (duplicateBillNumber(l.getBill_id(),LoaiPhieuCons.PHIEU_XUAT.getName())){
+                        if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id().concat(l.getBill_id2())
+                                        +" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
+                                null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+                            ledgerService.updateBillNumber(l,ledgers);
+                            saveLedger(l);
                         }
-                    }catch (NumberFormatException e){
-                        DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
-                        throw new RuntimeException(e);
-                    } catch (Exception e) {
-                        DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
-                        throw new RuntimeException(e);
+                    }else{
+                        saveLedger(l);
                     }
+                }catch (NumberFormatException e){
+                    DialogMessage.errorShowing(MessageCons.SAI_DINH_DANG.getName());
+                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+                    throw new RuntimeException(e);
                 }
-            }else{
-                DialogMessage.message(null, "Phiếu trống!!!",
-                        null, Alert.AlertType.WARNING);
             }
+        }else{
+            DialogMessage.message(null, "Phiếu trống!!!",
+                    null, Alert.AlertType.WARNING);
         }
     }
     @FXML
@@ -344,10 +343,9 @@ public class XuatController extends CommonFactory implements Initializable {
         vcf.setText("0");
         tytrong.setText("0");
     }
-    private Ledger getLedger() {
+    private Ledger getLedger(Ledger ledger) {
         String lx = loai_xuat_cbb.getSelectionModel().getSelectedItem();
 
-        Ledger ledger = new Ledger();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
@@ -374,7 +372,6 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setLpt(assignmentBillDto.getLpt().getTypeName());
                 ledger.setLpt_2(assignmentBillDto.getLpt().getType());
                 ledger.setSo_km(assignmentBillDto.getSokm());
-                ledger.setId(generateId(ledger.getYear(),ledger.getRoot_id(),assignmentBillDto.getLenhso(),LoaiPhieuCons.PHIEU_XUAT.getName()));
                 if (assignmentBillDto.getLgb().equals(TypeCons.TREN_KHONG.getName())){
                     ledger.setGiohd_tk(assignmentBillDto.getHours_act());
                     ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
@@ -403,7 +400,6 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setDvi_xuat_id(unitBillDto.getDvi_xuat().getId());
                 ledger.setTcn_id(unitBillDto.getTcn().getId());
                 ledger.setTructhuoc(tructhuocService.findById(unitBillDto.getDvi_nhan().getTructhuoc_id()).orElseThrow().getType());
-                ledger.setId(generateId(ledger.getYear(),ledger.getRoot_id(),unitBillDto.getLenhso(),LoaiPhieuCons.PHIEU_XUAT.getName()));
             }else{
                 return null;
             }
@@ -415,6 +411,11 @@ public class XuatController extends CommonFactory implements Initializable {
             ledger.setGiohd_tk(DefaultVarCons.GIO_HD.getName());
             ledger.setGiohd_md(DefaultVarCons.GIO_HD.getName());
             ledger.setNote(note.getText());
+        }
+        if(LedgerController.status.equals(StatusCons.EDIT.getName())){
+            ledger.setId(LedgerController.ledger_edit.getId());
+        }else{
+            ledger.setId(ledger_id);
         }
         ledger.setYear(tungay.getValue().getYear());
         return ledger;
@@ -442,6 +443,12 @@ public class XuatController extends CommonFactory implements Initializable {
         ledgerDetails.setSoluong_px(pxuat);
         ledgerDetails.setThuc_nhap(0);
         ledgerDetails.setPhai_nhap(0);
+        if (LedgerController.status.equals(StatusCons.EDIT.getName())){
+            ledgerDetails.setLedger_id(LedgerController.ledger_edit.getId());
+        }else{
+            ledgerDetails.setLedger_id(ledger_id);
+        }
+        ledgerDetails.setId(generateLEdgerDetailId());
 
         if (lx.equals(LoaiXuat.NV.getName())){
             assignmentBillDto = xuatNVController.getInfor_valid();

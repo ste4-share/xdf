@@ -433,4 +433,10 @@ public class CommonFactory implements Initializable {
         Long time = System.currentTimeMillis();
         return y.concat("_"+rid).concat("_"+lenh_so).concat("_"+lp+"_").concat(String.valueOf(time));
     }
+    protected String generateId(String lp){
+        String y = String.valueOf(LocalDate.now().getYear());
+        String rid = String.valueOf(DashboardController.ref_Dv.getId());
+        Long time = System.currentTimeMillis();
+        return y.concat("_"+rid).concat("_"+time).concat("_"+lp+"_");
+    }
 }
