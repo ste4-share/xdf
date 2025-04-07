@@ -17,8 +17,10 @@ public interface TransactionHistoryRepo extends JpaRepository<TransactionHistory
     Optional<TransactionHistory> getInventoryOf_Lxd(@Param("xd") int xd_id,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd and loaiphieu like :lp and tructhuoc like :tt and root_id=:rid  order by created_at desc limit 1",nativeQuery = true)
     Optional<TransactionHistory> getSoluongTructhuoc(@Param("xd") int xd_id,@Param("lp") String lp,@Param("tt") String tt,@Param("rid") int root_id);
+    @Query(value = "select * from transaction_history where xd_id=:xd_id and mucgia=:gia and ledger_id=:lid and root_id=:rid order by created_at desc limit 1",nativeQuery = true)
+    Optional<TransactionHistory> getInventoryOfPrice_Lxd(@Param("xd_id") int xd_id,@Param("gia") double dongia,@Param("rid") int root_id,@Param("lid") String l_id);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and mucgia=:gia and root_id=:rid order by created_at desc limit 1",nativeQuery = true)
-    Optional<TransactionHistory> getInventoryOfPrice_Lxd(@Param("xd_id") int xd_id,@Param("gia") double dongia,@Param("rid") int root_id);
+    Optional<TransactionHistory> getInventoryOfPrice_Lxd2(@Param("xd_id") int xd_id,@Param("gia") double dongia,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and date=:d and root_id=:rid order by created_at desc",nativeQuery = true)
     List<TransactionHistory> getSizeOfTransactionByDay(@Param("xd_id") int xd_id, @Param("d")LocalDate date,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and date < :e order by created_at desc",nativeQuery = true)

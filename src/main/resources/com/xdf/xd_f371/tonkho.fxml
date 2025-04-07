@@ -76,7 +76,7 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </CheckBox>
-                                          <Hyperlink fx:id="add_btn" onAction="#addnew_petro" text="Thêm xăng dầu mới" textFill="#d70000" underline="true">
+                                          <Hyperlink fx:id="add_btn" onAction="#addnew_petro" text="Thêm xăng dầu mới" textFill="#1104d0" underline="true">
                                              <font>
                                                 <Font name="Cambria Bold Italic" size="12.0" />
                                              </font>
@@ -182,7 +182,7 @@
                                              <columns>
                                                 <TableColumn fx:id="stt3" maxWidth="50.0" minWidth="40.0" prefWidth="50.0" text="TT" />
                                                 <TableColumn fx:id="nx" maxWidth="250.0" minWidth="200.0" prefWidth="250.0" text="Nhập/Xuất" />
-                                                <TableColumn fx:id="timexd3" maxWidth="150.0" minWidth="100.0" prefWidth="125.0" text="Thời gian" />
+                                                <TableColumn fx:id="timexd3" maxWidth="150.0" minWidth="100.0" prefWidth="125.0" text="Thời điểm(dd/MM/yyyy)" />
                                                 <TableColumn fx:id="mucgia3" maxWidth="300.0" minWidth="100.0" prefWidth="125.0" text="Mức giá(vnd)" />
                                                 <TableColumn fx:id="danhap3" maxWidth="300.0" minWidth="100.0" prefWidth="125.0" text="Đã Nhập/Xuất(Lit)" />
                                                 <TableColumn fx:id="conton3" maxWidth="300.0" minWidth="100.0" prefWidth="125.0" text="Còn tồn(Lit)" />
@@ -191,11 +191,11 @@
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                              </columnResizePolicy>
                                           </TableView>
-                                          <VBox prefHeight="345.0" prefWidth="340.0">
+                                          <VBox prefHeight="317.0" prefWidth="514.0">
                                              <children>
                                                 <HBox>
                                                    <children>
-                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tồn kho tại thời điểm:">
+                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Trữ lượng tồn hiện tại:">
                                                          <font>
                                                             <Font name="Cambria Italic" size="12.0" />
                                                          </font>
@@ -210,7 +210,7 @@
                                                 <Separator prefWidth="200.0" />
                                                 <HBox layoutX="10.0" layoutY="10.0">
                                                    <children>
-                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tổng tồn cho NVDX (Lit):" textFill="#0d40cd" underline="true">
+                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tổng tồn cho NVDX (Lit):" textFill="#f81111" underline="true">
                                                          <font>
                                                             <Font name="Cambria Bold" size="12.0" />
                                                          </font>
@@ -218,6 +218,11 @@
                                                       <Label fx:id="total_nvdx_lb" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0" text="------------">
                                                          <font>
                                                             <Font name="Cambria Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label prefHeight="32.0" prefWidth="52.0" text="(Lit)">
+                                                         <font>
+                                                            <Font name="Cambria Bold Italic" size="14.0" />
                                                          </font>
                                                       </Label>
                                                    </children>
@@ -241,7 +246,7 @@
                                                 </HBox>
                                                 <HBox layoutX="10.0" layoutY="43.0">
                                                    <children>
-                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tổng tồn cho SSCD (Lit):" textFill="RED" underline="true">
+                                                      <Label prefHeight="30.0" prefWidth="223.0" text="Tổng tồn cho SSCD (Lit):" textFill="#0212ee" underline="true">
                                                          <font>
                                                             <Font name="Cambria Bold" size="12.0" />
                                                          </font>
@@ -249,6 +254,11 @@
                                                       <Label fx:id="total_sscd_lb" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0" text="------------">
                                                          <font>
                                                             <Font name="Cambria Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label prefHeight="32.0" prefWidth="52.0" text="(Lit)">
+                                                         <font>
+                                                            <Font name="Cambria Bold Italic" size="14.0" />
                                                          </font>
                                                       </Label>
                                                    </children>
@@ -264,6 +274,11 @@
                                                       <Label fx:id="total_lb" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="151.0" text="------------">
                                                          <font>
                                                             <Font name="Cambria Bold" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label prefHeight="32.0" prefWidth="52.0" text="(Lit)">
+                                                         <font>
+                                                            <Font name="Cambria Bold Italic" size="14.0" />
                                                          </font>
                                                       </Label>
                                                    </children>

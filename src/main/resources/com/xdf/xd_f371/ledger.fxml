@@ -195,15 +195,12 @@
                                                 <TableColumn fx:id="ledgers_col_stt" maxWidth="90.0" minWidth="15.0" text="no" />
                                               <TableColumn fx:id="ledgers_col_id" maxWidth="250.0" minWidth="180.0" prefWidth="200.0" text="ID" />
                                               <TableColumn fx:id="ledgers_col_so" maxWidth="120.0" text="Số" />
-                                                <TableColumn fx:id="ledgers_col_stdate" maxWidth="200.0" prefWidth="150.0" text="Bắt đầu" />
-                                                <TableColumn fx:id="ledgers_col_edate" maxWidth="200.0" prefWidth="150.0" text="Kết thúc" />
+                                                <TableColumn fx:id="ledgers_col_stdate" maxWidth="200.0" prefWidth="150.0" text="Bắt đầu(dd/MM/yyyy)" />
+                                                <TableColumn fx:id="ledgers_col_edate" maxWidth="200.0" prefWidth="150.0" text="Kết thúc(dd/MM/yyyy)" />
                                                 <TableColumn fx:id="ledgers_col_lenhkh" maxWidth="200.0" prefWidth="170.0" text="Lệnh KH số" />
                                                 <TableColumn fx:id="ledgers_col_loainx" maxWidth="100.0" prefWidth="42.0" text="N/X" />
-                                                <TableColumn fx:id="ledgers_col_dvn" maxWidth="200.0" prefWidth="58.0" text="Đ.vị nhập" />
-                                                <TableColumn fx:id="ledgers_col_dvx" maxWidth="200.0" prefWidth="150.0" text="Đ.vị xuất" />
-                                                <TableColumn fx:id="ledgers_col_xmt" maxWidth="230.0" prefWidth="200.0" text="XMT" />
-                                                <TableColumn fx:id="ledgers_col_nv" maxWidth="230.0" prefWidth="200.0" text="Nhiệm vụ" />
-                                                <TableColumn fx:id="ledgers_col_note" maxWidth="300.0" prefWidth="230.0" text="Ghi chú" />
+                                                <TableColumn fx:id="ledgers_col_dvn" maxWidth="200.0" prefWidth="68.0" text="Đ.vị nhập" />
+                                                <TableColumn fx:id="ledgers_col_dvx" maxWidth="200.0" prefWidth="60.0" text="Đ.vị xuất" />
                                                 <TableColumn fx:id="ledgers_col_createtime" maxWidth="350.0" minWidth="100.0" prefWidth="300.0" text="Thời gian tạo" />
                                             </columns>
                                              <columnResizePolicy>
@@ -216,6 +213,9 @@
                                                 <ContextMenu>
                                                   <items>
                                                     <MenuItem fx:id="editMi" mnemonicParsing="false" onAction="#editMiAction" text="Sửa đổi" />
+                                                  </items>
+                                                   <items>
+                                                    <MenuItem fx:id="delMi" mnemonicParsing="false" onAction="#delMiAction" text="Xóa phiếu" />
                                                   </items>
                                                 </ContextMenu>
                                              </contextMenu>
@@ -314,9 +314,14 @@
                                                 <Font name="Cambria" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="km_lb" layoutX="431.0" layoutY="10.0" prefHeight="30.0" prefWidth="124.0" text="---">
+                                          <Label fx:id="km_lb" layoutX="431.0" layoutY="10.0" prefHeight="30.0" prefWidth="96.0" text="---">
                                              <font>
                                                 <Font name="Cambria Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label prefHeight="30.0" prefWidth="36.0" text="(Km)">
+                                             <font>
+                                                <Font name="Cambria Bold Italic" size="10.0" />
                                              </font>
                                           </Label>
                                           <Label layoutX="431.0" layoutY="10.0" prefHeight="30.0" prefWidth="214.0" text="Số Giờ hoạt động(Cho Xe/Máy):">
@@ -363,15 +368,25 @@
                                                 <Font name="Cambria Bold" size="14.0" />
                                              </font>
                                           </Label>
+                                          <Label layoutX="578.0" layoutY="10.0" prefHeight="30.0" prefWidth="124.0" text="Ghi chú:">
+                                             <font>
+                                                <Font name="Cambria" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="note_lb" layoutX="702.0" layoutY="10.0" prefHeight="30.0" prefWidth="161.0" text="---">
+                                             <font>
+                                                <Font name="Cambria Bold" size="14.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </HBox>
                                  </children>
                               </VBox>
                               <HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="1343.0">
                                  <children>
-                                    <Label prefHeight="30.0" prefWidth="73.0" text="Tổng giá trị:" underline="true">
+                                    <Label prefHeight="29.0" prefWidth="55.0" text="Tổng :" underline="true">
                                        <font>
-                                          <Font name="Cambria Bold Italic" size="10.0" />
+                                          <Font name="Cambria Bold Italic" size="14.0" />
                                        </font>
                                     </Label>
                                     <Label fx:id="amount_lb" layoutX="1229.0" layoutY="10.0" prefHeight="29.0" prefWidth="148.0" text="---" textFill="#fc1010">
@@ -379,7 +394,7 @@
                                           <Font name="Cambria Bold Italic" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="988.0" layoutY="10.0" prefHeight="30.0" prefWidth="73.0" text="(VNĐ)" underline="true">
+                                    <Label layoutX="988.0" layoutY="10.0" prefHeight="30.0" prefWidth="73.0" text="(VNĐ)">
                                        <font>
                                           <Font name="Cambria Bold Italic" size="10.0" />
                                        </font>

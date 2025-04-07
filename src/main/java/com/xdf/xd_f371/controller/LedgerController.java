@@ -75,7 +75,7 @@ public class LedgerController implements Initializable {
     @FXML
     private TableView<InvDto3> tonkho_tb;
     @FXML
-    private Label tab1_dvi_label,root_unit_lable,unitClickedLable,ctnv_lb,xmt_lb,loaixmt_lb,km_lb,giohd_lb,giohd_tk_lb,giohd_md_lb,nguoinhan_lb,amount_lb;
+    private Label tab1_dvi_label,root_unit_lable,unitClickedLable,ctnv_lb,xmt_lb,loaixmt_lb,km_lb,giohd_lb,giohd_tk_lb,giohd_md_lb,nguoinhan_lb,amount_lb,note_lb;
     @FXML
     private DatePicker st_time,lst_time,tab2_tungay,tab2_denngay;
     @FXML
@@ -200,9 +200,6 @@ public class LedgerController implements Initializable {
         ledgers_col_loainx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("loai_phieu"));
         ledgers_col_dvn.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_nhan"));
         ledgers_col_dvx.setCellValueFactory(new PropertyValueFactory<Ledger, String>("dvi_xuat"));
-        ledgers_col_xmt.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lpt"));
-        ledgers_col_nv.setCellValueFactory(new PropertyValueFactory<Ledger, String>("nhiemvu"));
-        ledgers_col_note.setCellValueFactory(new PropertyValueFactory<Ledger, String>("note"));
         ledgers_col_createtime.setCellValueFactory(new PropertyValueFactory<Ledger, String>("timestamp_str"));
         ledgers_table.setRowFactory(tv -> new TableRow<Ledger>() {
             @Override
@@ -321,6 +318,7 @@ public class LedgerController implements Initializable {
         giohd_md_lb.setText(l.getGiohd_md());
         giohd_tk_lb.setText(l.getGiohd_tk());
         nguoinhan_lb.setText(l.getNguoi_nhan());
+        note_lb.setText(l.getNote());
         amount_lb.setText(TextToNumber.textToNum_2digits(l.getAmount()));
     }
     private void setLedgerDetailTable(List<LedgerDetails> ls){
@@ -773,6 +771,7 @@ public class LedgerController implements Initializable {
             ConnectLan.primaryStage.requestFocus();
         });
         status = StatusCons.ADD.getName();
+        ledger_edit=null;
         Common.openNewStage("nhap.fxml", primaryStage,null, StageStyle.UTILITY);
         updateData();
     }
@@ -784,6 +783,7 @@ public class LedgerController implements Initializable {
             ConnectLan.primaryStage.requestFocus();
         });
         status = StatusCons.ADD.getName();
+        ledger_edit = null;
         Common.openNewStage("xuat.fxml", primaryStage,null,StageStyle.UTILITY);
         updateData();
     }
@@ -814,5 +814,9 @@ public class LedgerController implements Initializable {
             updateData();
         }
 
+    }
+    @FXML
+    public void delMiAction(ActionEvent actionEvent) {
+        System.out.println("hêlo");
     }
 }

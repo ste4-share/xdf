@@ -1,5 +1,7 @@
 package com.xdf.xd_f371.controller;
 
+import com.xdf.xd_f371.cons.ConfigCons;
+import com.xdf.xd_f371.cons.DefaultVarCons;
 import com.xdf.xd_f371.cons.LoaiPhieuCons;
 import com.xdf.xd_f371.dto.InventoryDto;
 import com.xdf.xd_f371.dto.InventoryUnitDto;
@@ -26,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -155,9 +159,9 @@ public class TonkhoController implements Initializable {
         total_lb.setText(TextToNumber.textToNum_2digits(nvdx+sscd));
     }
     private void setLb(){
-        sd_lb.setText(DashboardController.ref_Quarter.getStart_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        time_ref_lb.setText(DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        ed_lb.setText(DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        sd_lb.setText(DashboardController.ref_Quarter.getStart_date().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName())));
+        time_ref_lb.setText(LocalDate.now().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName())));
+        ed_lb.setText(DashboardController.ref_Quarter.getEnd_date().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName())));
     }
 
     private void initPttkTb(){
