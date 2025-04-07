@@ -50,6 +50,7 @@ public class DashboardController implements Initializable {
     public static List<NguonNx> units_ls = new ArrayList<>();
     public static List<Tcn> tcn_ls = new ArrayList<>();
     public static List<UnitXmt> unitxmt_ls = new ArrayList<>();
+    public static List<UnitXmt> unitxmt_ls_all = new ArrayList<>();
     public static List<ChitietNhiemVu> ctnv_ls = new ArrayList<>();
     public static List<NhiemVuDto> ctnv_ls_all = new ArrayList<>();
     public static Map<String, List<TrucThuoc>> map = new HashMap<>();
@@ -103,6 +104,7 @@ public class DashboardController implements Initializable {
     private void initPulbicList() {
         xmt_ls = phuongtienService.findAll();
         unitxmt_ls = unitXmtService.findAllByMaybay(ref_Dv.getId());
+        unitxmt_ls_all = unitXmtService.findAll();
         ctnv_ls = chitietNhiemvuService.findAllCtnvByTypeMaybay();
         ctnv_ls_all = chitietNhiemvuService.findAllDtoById();
         units_ls = nguonNxService.findAll();

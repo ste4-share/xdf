@@ -325,6 +325,14 @@
                               </HBox>
                               <HBox alignment="BOTTOM_RIGHT" prefHeight="48.0" prefWidth="520.0">
                                  <children>
+                                    <Button fx:id="editBtn" layoutX="421.0" layoutY="31.0" mnemonicParsing="false" onAction="#editBtnAction" prefHeight="27.0" prefWidth="79.0" style="-fx-background-color: #008000; -fx-background-radius: 10;" text="Cập nhật" textFill="WHITE">
+                                       <font>
+                                          <Font name="Cambria Bold" size="12.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
                                     <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" prefHeight="27.0" prefWidth="79.0" style="-fx-background-color: #008000; -fx-background-radius: 10;" text="Thêm" textFill="WHITE">
                                        <font>
                                           <Font name="Cambria Bold" size="12.0" />

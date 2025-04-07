@@ -27,6 +27,8 @@ public class UnitXmtService {
     }
     public List<UnitXmt> findAllByMaybay(int unit_id){
         return unitXmtRepo.findAllByMaybay(unit_id);
+    }public List<UnitXmt> findAll(){
+        return unitXmtRepo.findAll();
     }
     public List<UnitXmt> findByUnitIdAndPtId(int unit_id, int pt_id){
         return unitXmtRepo.findByUnitIdPtId(unit_id,pt_id);

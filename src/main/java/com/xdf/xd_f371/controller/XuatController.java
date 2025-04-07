@@ -40,7 +40,7 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     private ComboBox<Double> cbb_dongia;
     @FXML
-    private Button addBtn,xuatButton,cancelBtn;
+    private Button addBtn,xuatButton,cancelBtn,editBtn;
     @FXML
     private Label px_lb,tx_lb;
     @FXML
@@ -55,6 +55,14 @@ public class XuatController extends CommonFactory implements Initializable {
         initLoaiXuatCbb();
         mapXdForCombobox();
         initEditValue();
+        if (LedgerController.status.equals(StatusCons.ADD.getName())){
+            editBtn.setVisible(false);
+            addBtn.setVisible(true);
+        }else{
+            editBtn.setVisible(true);
+            addBtn.setVisible(false);
+            xuatButton.setText("Lưu thay đổi");
+        }
     }
 
     private void initEditValue() {
@@ -65,10 +73,24 @@ public class XuatController extends CommonFactory implements Initializable {
             setItemToList(l.getLedgerDetails());
 
             removeNode();
-            if (l.getNhiemvu_id()==0){
-                addNewNode(dv);
-            }else{
-                addNewNode(nv);
+            try{
+                if (l.getNhiemvu_id()==0){
+                    loai_xuat_cbb.getSelectionModel().select(LoaiXuat.X_K.getName());
+                    loai_xuat_cbb.setDisable(true);
+                    FXMLLoader loader =DashboardController.getFXLoadderBySource("xuat_dv.fxml");
+                    dv = (VBox) loader.load();
+                    xuatDVController = loader.getController();
+                    addNewNode(dv);
+                }else{
+                    loai_xuat_cbb.getSelectionModel().select(LoaiXuat.NV.getName());
+                    loai_xuat_cbb.setDisable(true);
+                    FXMLLoader loader_nv =DashboardController.getFXLoadderBySource("xuat_nv.fxml");
+                    nv = (VBox) loader_nv.load();
+                    xuatNVController = loader_nv.getController();
+                    addNewNode(nv);
+                }
+            }catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -83,16 +105,19 @@ public class XuatController extends CommonFactory implements Initializable {
             x.setDongia_str(TextToNumber.textToNum_2digits(x.getDon_gia()));
             x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
         }
+        setCellValueFactoryXuat(l.getLedgerDetails());
     }
     private void initLoaderFxml(){
         try {
-            FXMLLoader loader_nv =DashboardController.getFXLoadderBySource("xuat_nv.fxml");
-            nv = (VBox) loader_nv.load();
-            xuatNVController = loader_nv.getController();
-            FXMLLoader loader =DashboardController.getFXLoadderBySource("xuat_dv.fxml");
-            dv = (VBox) loader.load();
-            xuatDVController = loader.getController();
-            unitBillDto = xuatDVController.getInfo();
+            if (LedgerController.status.equals(StatusCons.ADD.getName())){
+                FXMLLoader loader_nv =DashboardController.getFXLoadderBySource("xuat_nv.fxml");
+                nv = (VBox) loader_nv.load();
+                xuatNVController = loader_nv.getController();
+                FXMLLoader loader =DashboardController.getFXLoadderBySource("xuat_dv.fxml");
+                dv = (VBox) loader.load();
+                xuatDVController = loader.getController();
+                unitBillDto = xuatDVController.getInfo();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -196,7 +221,7 @@ public class XuatController extends CommonFactory implements Initializable {
             if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 try {
                     l.setAmount(l.getLedgerDetails().stream().mapToDouble(x-> (x.getSoluong() *x.getDon_gia())).sum());
-                    if (duplicateBillNumber(l.getBill_id(),LoaiPhieuCons.PHIEU_XUAT.getName())){
+                    if (duplicateBillNumber(l.getBill_id(),LoaiPhieuCons.PHIEU_XUAT.getName())  && LedgerController.ledger_edit == null){
                         if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id().concat(l.getBill_id2())
                                         +" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
                                 null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
@@ -292,7 +317,9 @@ public class XuatController extends CommonFactory implements Initializable {
     private void initLoaiXuatCbb() {
         loai_xuat_cbb.setItems(FXCollections.observableList(List.of(LoaiXuat.X_K.getName(),LoaiXuat.NV.getName())));
         loai_xuat_cbb.getSelectionModel().selectFirst();
-        addNewNode(dv);
+        if (LedgerController.status.equals(StatusCons.ADD.getName())){
+            addNewNode(dv);
+        }
     }
     private void mapXdForCombobox(){
         setXangDauCombobox(cbb_tenxd);
@@ -352,6 +379,7 @@ public class XuatController extends CommonFactory implements Initializable {
         ledger.setStatus(StatusCons.ACTIVED.getName());
         ledger.setLoai_phieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         ledger.setRoot_id(DashboardController.ref_Dv.getId());
+        ledger.setDvi_xuat_id(DashboardController.ref_Dv.getId());
 
         if (lx.equals(LoaiXuat.NV.getName())){
             if (!xuatNVController.isValidField()){
@@ -486,6 +514,16 @@ public class XuatController extends CommonFactory implements Initializable {
                 }
             }
         }
+        LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
+        if (ld!=null){
+            cbb_tenxd.getSelectionModel().select(lxdLs.stream().filter(x->x.getXd_id()==ld.getLoaixd_id()).findFirst().orElse(null));
+            dongia.setText(String.valueOf(ld.getDon_gia()));
+            thucxuat.setText(String.valueOf(ld.getThuc_xuat()));
+            phaixuat.setText(String.valueOf(ld.getPhai_xuat()));
+            nhietdo.setText(String.valueOf(ld.getNhiet_do_tt()));
+            tytrong.setText(String.valueOf(ld.getTy_trong()));
+            vcf.setText(String.valueOf(ld.getHe_so_vcf()));
+        }
     }
     @FXML
     public void chitietExited(MouseEvent mouseEvent) {
@@ -493,5 +531,45 @@ public class XuatController extends CommonFactory implements Initializable {
     @FXML
     public void chitietEnter(MouseEvent mouseEvent) {
     }
-
+    @FXML
+    public void editBtnAction(ActionEvent actionEvent) {
+        LoaiXangDauDto lxd = cbb_tenxd.getSelectionModel().getSelectedItem();
+        Double gia = cbb_dongia.getSelectionModel().getSelectedItem();
+        if (isCbb(lxd,gia)){
+            if (validField()){
+                LedgerDetails ld = getLedgerDetails(lxd, gia);
+                if (ld!=null){
+                    if (inventory_quantity < ld.getSoluong()) {
+                        DialogMessage.message(null, "so luong xuat > so luong ton kho", MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.WARNING);
+                    }else{
+                        boolean a = true;
+                        for (int i =0; i< l.getLedgerDetails().size(); i++){
+                            LedgerDetails ld2 = l.getLedgerDetails().get(i);
+                            if (ld2.getLoaixd_id()==ld.getLoaixd_id() && ld.getDon_gia()==ld.getDon_gia()){
+                                a=false;
+                                ld2.setThuc_xuat(ld.getThuc_xuat());
+                                ld2.setPhai_xuat(ld.getPhai_xuat());
+                                ld2.setSoluong(ld.getThuc_xuat());
+                                ld2.setSoluong_px(ld.getPhai_xuat());
+                                ld2.setSoluong_str(TextToNumber.textToNum_2digits(ld.getSoluong()));
+                                ld2.setSoluongpx_str(TextToNumber.textToNum_2digits(ld.getSoluong_px()));
+                                ld2.setThucxuat_str(TextToNumber.textToNum_2digits(ld.getThuc_xuat()));
+                                ld2.setPhaixuat_str(TextToNumber.textToNum_2digits(ld.getPhai_xuat()));
+                                ld2.setThanhtien_str(TextToNumber.textToNum_2digits(ld.getThuc_xuat()*ld.getDon_gia()));
+                                l.getLedgerDetails().set(i, ld);
+                                inventory_quantity = inventory_quantity-ld.getSoluong();
+                            }
+                        }
+                        if (a){
+                            l.addDetail(ld);
+                        }
+                        setItemToList(l.getLedgerDetails());
+                        setTonKhoLabel(inventory_quantity-ld.getSoluong());
+                        setCellValueFactoryXuat(l.getLedgerDetails());
+                        clearFields();
+                    }
+                }
+            }
+        }
+    }
 }

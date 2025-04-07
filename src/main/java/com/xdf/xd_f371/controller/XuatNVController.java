@@ -80,7 +80,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
             nguoinhan.setText(l.getNguoi_nhan());
             lenhso.setText(l.getLenh_so());
             nv_cbb.getSelectionModel().select(DashboardController.ctnv_ls_all.stream().filter(x->x.getCtnv_id()==l.getNhiemvu_id()).findFirst().orElse(null));
-            licenceCbb.getSelectionModel().select(unitXmtService.findById(l.getId()));
+            licenceCbb.getSelectionModel().select(DashboardController.unitxmt_ls_all.stream().filter(x->x.getId().equals(l.getXmt_id())).findFirst().orElse(null));
             initDinhmucToolTip();
             xmt_cbb.getSelectionModel().select(DashboardController.xmt_ls.stream().filter(x->x.getId()==l.getPt_id()).findFirst().orElse(null));
             if (l.getLoaigiobay().equals(TypeCons.MAT_DAT.getName())){
