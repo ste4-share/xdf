@@ -54,12 +54,13 @@ public class XuatDVController extends CommonFactory implements Initializable {
             soxe.setText(l.getSo_xe());
             dvn_cbb.getSelectionModel().select(DashboardController.units_ls.stream().filter(x->x.getId()==l.getDvi_nhan_id()).findFirst().orElse(null));
             dvx_cbb.getSelectionModel().select(DashboardController.units_ls.stream().filter(x->x.getId()==l.getDvi_xuat_id()).findFirst().orElse(null));
-            tcx_cbb.getSelectionModel().select(DashboardController.tcn_ls.stream().filter(x->x.getId()==l.getTcn_id()).findFirst().orElse(null));
+            tcx_cbb.getSelectionModel().select(tcnx_ls_xuat.stream().filter(x->x.getId()==l.getTcn_id()).findFirst().orElse(null));
         }
     }
 
     private void initTcx() {
-        ComponentUtil.setItemsToComboBox(tcx_cbb, tcnx_ls, Tcn::getName, input -> tcnx_ls.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));
+        ComponentUtil.setItemsToComboBox(tcx_cbb, tcnx_ls_xuat, Tcn::getName, input -> tcnx_ls_xuat.stream()
+                .filter(x->x.getName().equals(input)).findFirst().orElse(null));
         FxUtilTest.autoCompleteComboBoxPlus(tcx_cbb, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
         tcx_cbb.getSelectionModel().selectFirst();
     }

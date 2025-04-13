@@ -51,6 +51,7 @@ public class CommonFactory implements Initializable {
     protected static List<Ledger> ledgers = new ArrayList<>();
 
     protected List<Tcn> tcnx_ls = new ArrayList<>();
+    protected List<Tcn> tcnx_ls_xuat = new ArrayList<>();
     protected static List<NguonNx> dvvcLs = new ArrayList<>();
     protected static List<NguonNx> dvnLs = new ArrayList<>();
     protected List<LoaiXangDauDto> lxdLs = new ArrayList<>();
@@ -253,6 +254,7 @@ public class CommonFactory implements Initializable {
         dvvcLs = nguonNxService.findAllByDifrentId(DashboardController.ref_Dv.getId());
         dvnLs = nguonNxService.findAllById(DashboardController.ref_Dv.getId());
         tcnx_ls = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_NHAP.getName());
+        tcnx_ls_xuat = tcnService.findByLoaiphieu(LoaiPhieuCons.PHIEU_XUAT.getName());
         lxdLs = loaiXdService.findAllOrderby();
     }
 

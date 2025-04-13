@@ -109,8 +109,8 @@ public class LedgerService {
     private void saveTransactionHistory(Ledger savedLedger, LedgerDetails detail,int index,String lp) {
         try {
             Optional<TransactionHistory> inv = transactionHistoryRepo.getInventoryOf_Lxd(detail.getLoaixd_id(),savedLedger.getRoot_id());
-            Optional<TransactionHistory> volumn_tructhuoc = transactionHistoryRepo.getSoluongTructhuoc(detail.getLoaixd_id(),savedLedger.getLoai_phieu(),savedLedger.getTructhuoc(),savedLedger.getRoot_id());
             Optional<TransactionHistory> inv_price = transactionHistoryRepo.getInventoryOfPrice_Lxd2(detail.getLoaixd_id(),detail.getDon_gia(),savedLedger.getRoot_id());
+            Optional<TransactionHistory> volumn_tructhuoc = transactionHistoryRepo.getSoluongTructhuoc(detail.getLoaixd_id(),savedLedger.getLoai_phieu(),savedLedger.getTructhuoc(),savedLedger.getRoot_id());
 
             List<TransactionHistory> transactionHistoryListByDay = transactionHistoryRepo.getSizeOfTransactionByDay(detail.getLoaixd_id(),savedLedger.getFrom_date(),savedLedger.getRoot_id());
             if (LedgerController.status.equals(StatusCons.ADD.getName())){
@@ -128,7 +128,7 @@ public class LedgerService {
                             inv.map(history -> (history.getTonkhotong() - detail.getSoluong())).orElseGet(detail::getSoluong),
                             inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - detail.getSoluong())).orElseGet(detail::getSoluong),
                             transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
+                            volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() + detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
                 }
             } else {
                 String uid = RandomStringUtils.randomAlphanumeric(10).concat(String.valueOf(detail.getLoaixd_id())).concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"))).concat("_000"+index);
@@ -150,11 +150,11 @@ public class LedgerService {
                                         inv.map(history -> (history.getTonkhotong() - (detail.getSoluong() - inv_price_pre.get().getSoluong()))).orElseGet(()->(detail.getSoluong() - inv_price_pre.get().getSoluong())),
                                         inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() - (detail.getSoluong()-inv_price_pre.get().getSoluong()))).orElseGet(()->(detail.getSoluong()-inv_price_pre.get().getSoluong())),
                                         transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                                        volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - (detail.getSoluong()-inv_price_pre.get().getSoluong()))).orElseGet(()->(detail.getSoluong()-inv_price_pre.get().getSoluong())),savedLedger.getId()));
+                                        volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() + (detail.getSoluong()-inv_price_pre.get().getSoluong()))).orElseGet(()->(detail.getSoluong()+inv_price_pre.get().getSoluong())),savedLedger.getId()));
                             }
                         }else{
-                            if (inv_price.get().getTonkho_gia()-detail.getSoluong()<0){
-                                DialogMessage.errorShowing("Không thể thay đổi. Trữ lượng của " + detail.getTen_xd() + " với mức giá "+ TextToNumber.textToNum_2digits(detail.getDon_gia())
+                            if (inv_price.get().getTonkho_gia()-inv_price_pre.get().getTonkho_gia()<0){
+                                DialogMessage.errorShowing("Không thể thay đổi. Trữ lượng của " + detail.getTen_xd() + " với mức giá "+ TextToNumber.textToNum_2digits(inv_price_pre.get().getMucgia())
                                         +" đã được thực hiện trên các phiếu xuất.");
                             }else{
                                 if(lp.equals(LoaiPhieuCons.PHIEU_THAYDOI.getName())) {
@@ -171,7 +171,7 @@ public class LedgerService {
                                                 inv.map(history -> (history.getTonkhotong() + detail.getSoluong())).orElseGet(detail::getSoluong),
                                                 inv_price.map(transactionHistory -> (transactionHistory.getTonkho_gia() + detail.getSoluong())).orElseGet(detail::getSoluong),
                                                 transactionHistoryListByDay.isEmpty() ? 1 : transactionHistoryListByDay.size()+1,
-                                                volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() + detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
+                                                volumn_tructhuoc.map(volumn -> (volumn.getSoluong_tt() - detail.getSoluong())).orElseGet(detail::getSoluong),savedLedger.getId()));
                                     }
                                 }
                             }

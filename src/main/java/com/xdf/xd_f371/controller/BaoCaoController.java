@@ -293,6 +293,9 @@ public class BaoCaoController implements Initializable {
         initHederColumnFor_nxt(sheet,wb);
         ExportFactory.mergerCell(sheet);
         ReportDAO reportDAO = new ReportDAO();
+        System.out.println("q: "+getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),
+                SubQuery.end_q1_1(DashboardController.ref_Dv.getId(),DashboardController.ref_Quarter.getStart_date()),
+                DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
         List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),
                 SubQuery.end_q1_1(DashboardController.ref_Dv.getId(),DashboardController.ref_Quarter.getStart_date()),
                 DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));

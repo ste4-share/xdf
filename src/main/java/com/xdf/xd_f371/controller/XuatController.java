@@ -507,6 +507,7 @@ public class XuatController extends CommonFactory implements Initializable {
             if (DialogMessage.callAlertWithMessage(null, null, "Xác nhận xoa",Alert.AlertType.CONFIRMATION) == ButtonType.OK){
                 LedgerDetails ld = tbView.getSelectionModel().getSelectedItem();
                 if (ld!=null){
+                    deteled_ledDetail.add(ld);
                     l.removeDetail(ld);
                     setTonKhoLabel(inventory_quantity+ld.getSoluong());
                     tbView.setItems(FXCollections.observableList(l.getLedgerDetails()));

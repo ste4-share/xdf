@@ -121,9 +121,9 @@
                                        <children>
                                           <HBox layoutX="10.0" layoutY="43.0">
                                              <children>
-                                                <Button mnemonicParsing="false" onAction="#importBtnAction" prefHeight="30.0" prefWidth="79.0" stylesheets="@css/button.css" text="Nhập">
+                                                <Button mnemonicParsing="false" onAction="#importBtnAction" prefHeight="30.0" prefWidth="79.0" style="-fx-background-color: #010682;" stylesheets="@css/button.css" text="Nhập" textFill="WHITE">
                                                    <font>
-                                                      <Font name="Cambria" size="12.0" />
+                                                      <Font name="Cambria Bold" size="12.0" />
                                                    </font>
                                                    <cursor>
                                                       <Cursor fx:constant="HAND" />
@@ -132,9 +132,9 @@
                                                       <Insets />
                                                    </HBox.margin>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#exportBtnAction" prefHeight="30.0" prefWidth="79.0" stylesheets="@css/button.css" text="Xuất">
+                                                <Button mnemonicParsing="false" onAction="#exportBtnAction" prefHeight="30.0" prefWidth="79.0" style="-fx-background-color: #ad0202;" stylesheets="@css/button.css" text="Xuất" textFill="WHITE">
                                                    <font>
-                                                      <Font name="Cambria" size="12.0" />
+                                                      <Font name="Cambria Bold" size="12.0" />
                                                    </font>
                                                    <cursor>
                                                       <Cursor fx:constant="HAND" />
