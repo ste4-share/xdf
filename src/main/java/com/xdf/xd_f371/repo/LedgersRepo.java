@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface LedgersRepo extends JpaRepository<Ledger, Long> {
@@ -33,18 +32,14 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
     @Query(value = "update ledgers l set status='IN_ACTIVE' where l.id=:i", nativeQuery = true)
     void inactiveLedgers(@Param("i") String id);
 
-//    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by bill_id desc,bill_id2 desc",nativeQuery = true)
-    @Query("SELECT l FROM Ledger l LEFT JOIN FETCH l.ledgerDetails WHERE l.status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by l.bill_id desc,l.bill_id2 desc")
+    @Query("SELECT l FROM Ledger l LEFT JOIN FETCH l.ledgerDetails WHERE l.status like 'ACTIVE' and l.from_date between :sd and :ed and l.root_id=:dvid order by l.bill_id desc")
     List<Ledger> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed,@Param("dvid") int dvid);
-//    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.from_date between :sd and :ed order by bill_id desc,bill_id2 desc",nativeQuery = true)
     @Query("SELECT l FROM Ledger l LEFT JOIN FETCH l.ledgerDetails WHERE l.status like 'ACTIVE' and l.from_date between :sd and :ed")
     List<Ledger> findAllLedgerDtoByTime(@Param("sd") LocalDate sd,@Param("ed") LocalDate ed);
-    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.root_id=:dvid and year=:y order by bill_id desc,bill_id2 desc",nativeQuery = true)
+    @Query(value = "select * from ledgers l where status like 'ACTIVE' and l.root_id=:dvid and year=:y order by bill_id desc",nativeQuery = true)
     List<Ledger> findAllLedgerByUnit(@Param("dvid") int dvid,@Param("y") int y);
     @Query(value = "select * from ledgers l where status like 'ACTIVE'",nativeQuery = true)
     List<Ledger> findAllLedgerActive();
-    @Query(value = "select * from ledgers l where status like 'ACTIVE' and loai_phieu like :lp and root_id=:rid order by bill_id desc,bill_id2 desc limit 1",nativeQuery = true)
-    Optional<Ledger> findLastLedgerByBillId(@Param("lp") String lp,@Param("rid") int rootid);
     @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='ledgers';",nativeQuery = true)
     List<String> getColumnNames_LEDGER();
     @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='ledger_details';",nativeQuery = true)
@@ -56,6 +51,6 @@ public interface LedgersRepo extends JpaRepository<Ledger, Long> {
     @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name ='hanmuc_nhiemvu_taubay';",nativeQuery = true)
     List<String> getColumnNames_HANMUCNHIEMVU_TAUBAY();
     @Modifying
-    @Query(value = "UPDATE ledgers SET bill_id = :b1, bill_id2 = :b2 WHERE id like :id",nativeQuery = true)
-    void updateLedger(@Param("id") String id,@Param("b1") String billId,@Param("b2") String billId2);
+    @Query(value = "UPDATE ledgers SET bill_id = :b1 WHERE id like :id",nativeQuery = true)
+    void updateLedger(@Param("id") String id,@Param("b1") String billId);
 }

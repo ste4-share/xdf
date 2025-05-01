@@ -51,7 +51,7 @@ public class ReportDAO {
         }
     }
     public void updateLedgers(List<Ledger> ledgers) throws SQLException {
-        String sql = "UPDATE ledgers SET bill_id = :billId, bill_id2 = :billId2 WHERE id like :id";
+        String sql = "UPDATE ledgers SET bill_id = :billId WHERE id like :id";
         EntityManager em = null;
         try {
             em =  emf.createEntityManager();
@@ -60,7 +60,6 @@ public class ReportDAO {
             Query query = em.createQuery(sql);
             for (Ledger ledger : ledgers) {
                 query.setParameter("billId", ledger.getBill_id())
-                        .setParameter("billId2", ledger.getBill_id2())
                         .setParameter("id", ledger.getId())
                         .executeUpdate();
             }

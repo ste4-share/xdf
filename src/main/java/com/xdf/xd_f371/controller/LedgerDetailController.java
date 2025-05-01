@@ -254,12 +254,4 @@ public class LedgerDetailController implements Initializable {
     public void exportFileAction(ActionEvent actionEvent) {
         printBill();
     }
-    @FXML
-    public void deleteLedgerAction(ActionEvent actionEvent) {
-        if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-            ledgerService.inactiveLedger(ledger.getId());
-            DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
-            DashboardController.primaryStage.close();
-        }
-    }
 }

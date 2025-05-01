@@ -68,15 +68,14 @@ public class XuatNVController extends CommonFactory implements Initializable {
         initLicence();
         initDinhmucToolTip();
         initLoaiXmt();
-        initPredictBillNumber();
+        predictBillNumber(LoaiPhieuCons.PHIEU_XUAT.getName(), so);
         initEditLedger();
     }
     private void initEditLedger() {
         if (LedgerController.ledger_edit!=null){
             l = LedgerController.ledger_edit;
             String bid = l.getBill_id()==null ? "" : l.getBill_id();
-            String bid2 = l.getBill_id2()==null ? "" : l.getBill_id2();
-            so.setText(bid.concat(bid2));
+            so.setText(bid);
             nguoinhan.setText(l.getNguoi_nhan());
             lenhso.setText(l.getLenh_so());
             nv_cbb.getSelectionModel().select(DashboardController.ctnv_ls_all.stream().filter(x->x.getCtnv_id()==l.getNhiemvu_id()).findFirst().orElse(null));

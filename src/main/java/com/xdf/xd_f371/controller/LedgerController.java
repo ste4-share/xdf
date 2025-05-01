@@ -813,10 +813,13 @@ public class LedgerController implements Initializable {
             Common.openNewStage("xuat.fxml", primaryStage,null, StageStyle.UTILITY);
             updateData();
         }
-
     }
     @FXML
     public void delMiAction(ActionEvent actionEvent) {
-        System.out.println("hêlo");
+        if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
+            ledgerService.inactiveLedger(ledger.getId());
+            DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
+            updateData();
+        }
     }
 }

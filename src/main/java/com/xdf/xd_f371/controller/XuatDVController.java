@@ -39,7 +39,7 @@ public class XuatDVController extends CommonFactory implements Initializable {
         setDvCombobox(dvn_cbb,dvvcLs);
         setDvCombobox(dvx_cbb,dvnLs);
         initTcx();
-        initPredictBillNumber();
+        predictBillNumber(LoaiPhieuCons.PHIEU_XUAT.getName(), so);
         initEditLedger();
     }
 
@@ -47,8 +47,7 @@ public class XuatDVController extends CommonFactory implements Initializable {
         if (LedgerController.ledger_edit!=null){
             l = LedgerController.ledger_edit;
             String bid = l.getBill_id()==null ? "" : l.getBill_id();
-            String bid2 = l.getBill_id2()==null ? "" : l.getBill_id2();
-            so.setText(bid.concat(bid2));
+            so.setText(bid);
             nguoinhan.setText(l.getNguoi_nhan());
             lenhso.setText(l.getLenh_so());
             soxe.setText(l.getSo_xe());

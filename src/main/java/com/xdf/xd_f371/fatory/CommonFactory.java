@@ -36,6 +36,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Component
 public class CommonFactory implements Initializable {
     protected Ledger l;
@@ -100,65 +103,25 @@ public class CommonFactory implements Initializable {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")).concat("_"+System.currentTimeMillis());
     }
     protected void saveLedger(Ledger l) {
-        DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " + ledgerService.saveLedgerWithDetails(l,deteled_ledDetail).getBill_id(),
+        DialogMessage.message(MessageCons.THONGBAO.getName(), "Them phieu NHAP thanh cong.. so: " +
+                        ledgerService.saveLedgerWithDetails(l,deteled_ledDetail).getBill_id(),
                 MessageCons.THANH_CONG.getName(), Alert.AlertType.INFORMATION);
         LedgerController.primaryStage.close();
     }
-    public static String nextExcelStyle(String s) {
-        StringBuilder sb = new StringBuilder(s);
-
-        for (int i = sb.length() - 1; i >= 0; i--) {
-            char c = sb.charAt(i);
-            if (c < 'z') {
-                sb.setCharAt(i, (char)(c + 1));
-                return sb.toString();
-            }
-            sb.setCharAt(i, 'a');
-        }
-
-        return "a" + sb.toString();
-    }
-    protected void initPredictBillNumber(){
-        last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_XUAT.getName());
+    protected void predictBillNumber(String lp,TextField tf) {
+        last_ledger = ledgers.stream().filter(x->x.getLoai_phieu().equals(lp))
+                .max(Comparator.comparingInt(s -> Integer.parseInt(s.getBill_id().replaceAll("[^0-9]", ""))))
+                .orElse(null);
         if (last_ledger!=null){
-            String num = "";
-            String letter = "";
-            if (last_ledger.getBill_id()!=null){
-                num = last_ledger.getBill_id();
-            }if (last_ledger.getBill_id2()!=null){
-                letter = last_ledger.getBill_id2();
-            }
-            initPredictValue(getNextInSequence(num.concat(letter)));
+            initPredictValue(getNextInSequence(last_ledger.getBill_id()),tf);
         }else{
-            initPredictValue("1");
+            initPredictValue(String.valueOf(1),tf);
         }
     }
-    protected void splitBillNumber(String input,Ledger l){
-        int splitIndex = 0;
-        while (splitIndex < input.length() && Character.isDigit(input.charAt(splitIndex))) {
-            splitIndex++;
-        }
-        if (splitIndex==0){
-            DialogMessage.errorShowing("Ký tự đầu tiên phải là số ví dụ:50,5a,50b...");
-            throw new RuntimeException("Ký tự đầu tiên phải là số ví dụ:50,5a,50b...");
-        }else if (splitIndex > 0 && splitIndex <= input.length()) {
-            String numberPart = input.substring(0, splitIndex);
-            String letterPart = input.substring(splitIndex);
-            try {
-                int number = Integer.parseInt(numberPart);
-                l.setBill_id(String.valueOf(number));
-                l.setBill_id2(letterPart);
-            }catch (NumberFormatException e) {
-                throw new RuntimeException(e);
-            }
-        }else{
-            DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
-        }
+    protected void initPredictValue(String so,TextField tf) {
+        tf.setText(so);
     }
-    protected void initPredictValue(String so) {
-        predict_billid.setText("---Gợi ý số tiếp theo: "+so);
-    }
-    protected String getNextInSequence(String current) {
+    public static String getNextInSequence(String current) {
         if (current.matches("^\\d+\\.([a-zA-Z]+)$")) {
             return getNextDotSequence(current);
         }
@@ -170,13 +133,29 @@ public class CommonFactory implements Initializable {
         }
         return "Unsupported sequence format";
     }
-    protected boolean duplicateBillNumber(String so,String lp) {
-        if (ledgers.stream().anyMatch(x->x.getBill_id().concat(x.getBill_id2()).equals(so) && x.getLoai_phieu().equals(lp))){
+    public static String incrementOrdinal(String input) {
+        // Regex pattern to match the numeric part and optional letter suffix
+        Pattern pattern = Pattern.compile("^(\\d+)([a-zA-Z]*)$");
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            int number = Integer.parseInt(matcher.group(1));
+            String suffix = matcher.group(2);
+
+            // Increment the number part
+            return (number + 1) + suffix;
+        }
+
+        // Return original if pattern doesn't match
+        return input;
+    }
+    public static boolean duplicateBillNumber(String so,String lp) {
+        if (ledgers.stream().anyMatch(x->x.getBill_id().equals(so) && x.getLoai_phieu().equals(lp))){
             return true;
         }
         return false;
     }
-    private String getNextDotSequence(String current) {
+    public static String getNextDotSequence(String current) {
         String[] parts = current.split("\\.");
         if (parts.length != 2) {
             return "Invalid dotted format";
@@ -217,7 +196,7 @@ public class CommonFactory implements Initializable {
         }
     }
 
-    private String getNextAlphanumeric(String current) {
+    public static String getNextAlphanumeric(String current) {
         String[] parts = current.split("(?<=\\d)(?=\\D)");
         int number = Integer.parseInt(parts[0]);
         String letters = parts[1];

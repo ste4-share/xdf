@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -49,7 +50,7 @@ public class NhapController extends CommonFactory implements Initializable {
         setDvCombobox(cmb_dvvc,dvvcLs);
         setDvCombobox(cmb_dvn,dvnLs);
         setPreInv();
-        predictBillNumber();
+        predictBillNumber(LoaiPhieuCons.PHIEU_NHAP.getName(), soTf);
         initEditValue();
 
     }
@@ -57,8 +58,7 @@ public class NhapController extends CommonFactory implements Initializable {
         if (LedgerController.ledger_edit!=null){
             l = LedgerController.ledger_edit;
             String bid = l.getBill_id()==null ? "" : l.getBill_id();
-            String bid2 = l.getBill_id2()==null ? "" : l.getBill_id2();
-            soTf.setText(bid.concat(bid2));
+            soTf.setText(bid);
             recvTf.setText(l.getNguoi_nhan());
             lenhKHso.setText(l.getLenh_so());
             tungay.setValue(l.getFrom_date());
@@ -86,22 +86,6 @@ public class NhapController extends CommonFactory implements Initializable {
             x.setThanhtien_str(TextToNumber.textToNum_2digits(x.getThanhtien()));
         }
         setcellFactoryNhap(ldLs);
-    }
-
-    private void predictBillNumber() {
-        last_ledger =ledgerService.findLastLedgerByBillId(LoaiPhieuCons.PHIEU_NHAP.getName());
-        if (last_ledger!=null){
-            String num = "";
-            String letter = "";
-            if (last_ledger.getBill_id()!=null){
-                num = last_ledger.getBill_id();
-            }if (last_ledger.getBill_id2()!=null){
-                letter = last_ledger.getBill_id2();
-            }
-            initPredictValue(getNextInSequence(num.concat(letter)));
-        }else{
-            initPredictValue("1");
-        }
     }
     private void initLabelValue() {
         tbView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
@@ -215,14 +199,15 @@ public class NhapController extends CommonFactory implements Initializable {
                         if (dvn != null) {
                             if (validateField(l).isEmpty()) {
                                 l.setAmount(l.getLedgerDetails().stream().mapToDouble(x->(x.getThuc_nhap()*x.getDon_gia())).sum());
-                                if (duplicateBillNumber(soTf.getText(), LoaiPhieuCons.PHIEU_NHAP.getName()) && LedgerController.ledger_edit == null) {
-                                    if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số " + l.getBill_id().concat(l.getBill_id2())
-                                                    + " đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
+                                if (duplicateBillNumber(soTf.getText(), LoaiPhieuCons.PHIEU_NHAP.getName())) {
+                                    if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số " + l.getBill_id()
+                                                    + " đã được tạo, thứ tự các phiếu sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
                                             null, Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
-                                        ledgerService.updateBillNumber(l, ledgers);
+                                        ledgerService.updateBillNumber(l, ledgers,true);
                                         saveLedger(l);
                                     }
                                 }else{
+                                    ledgerService.updateBillNumber(l, ledgers,false);
                                     saveLedger(l);
                                 }
                             } else {
@@ -277,7 +262,7 @@ public class NhapController extends CommonFactory implements Initializable {
         NguonNx dvx = cmb_dvvc.getSelectionModel().getSelectedItem();
         NguonNx dvn = cmb_dvn.getSelectionModel().getSelectedItem();
         ledger.setCreate_by(ConnectLan.pre_acc.getId());
-        splitBillNumber(soTf.getText(),ledger);
+        l.setBill_id(soTf.getText());
         ledger.setFrom_date(tungay.getValue());
         ledger.setEnd_date(denngay.getValue());
         ledger.setStatus(StatusCons.ACTIVED.getName());
@@ -519,5 +504,8 @@ public class NhapController extends CommonFactory implements Initializable {
             cmb_tenxd.setStyle(styleErrorField);
             DialogMessage.message(null, null, MessageCons.CO_LOI_XAY_RA.getName(), Alert.AlertType.ERROR);
         }
+    }
+    @FXML
+    public void groupCodeAction(ActionEvent actionEvent) {
     }
 }

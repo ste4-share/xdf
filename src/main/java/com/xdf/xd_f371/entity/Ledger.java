@@ -85,8 +85,8 @@ public class Ledger extends BaseObject{
     private int dvi_baono;
     @Column(name = "bienso_ds")
     private String bienso_ds;
-    @Column(name = "bill_id2")
-    private String bill_id2;
+    @Column(name = "group_code")
+    private String group_code;
 
     @Transient
     private String from_date_str;
@@ -140,10 +140,10 @@ public class Ledger extends BaseObject{
         this.xmt_id=l.getXmt_id();
         this.from_date_str = l.getFrom_date()==null ? "" : l.getFrom_date().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName()));
         this.end_date_str = l.getEnd_date()==null ? "" : l.getEnd_date().format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE.getName()));
-        this.billnumber = l.getBill_id().concat(l.getBill_id2());
+        this.billnumber = l.getBill_id();
         this.timestamp_str = timestamp.format(DateTimeFormatter.ofPattern(ConfigCons.FORMAT_DATE_TIME.getName()));
-        this.bill_id2=l.getBill_id2();
         this.ledgerDetails = l.ledgerDetails;
+        this.group_code = l.getGroup_code();
     }
 
     public void addDetail(LedgerDetails detail) {

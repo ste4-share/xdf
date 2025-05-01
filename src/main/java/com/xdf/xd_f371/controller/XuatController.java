@@ -221,14 +221,15 @@ public class XuatController extends CommonFactory implements Initializable {
             if (DialogMessage.callAlertWithMessage("XUẤT", "TẠO PHIẾU XUẤT", "Xác nhận tạo phiếu XUẤT", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
                 try {
                     l.setAmount(l.getLedgerDetails().stream().mapToDouble(x-> (x.getSoluong() *x.getDon_gia())).sum());
-                    if (duplicateBillNumber(l.getBill_id(),LoaiPhieuCons.PHIEU_XUAT.getName())  && LedgerController.ledger_edit == null){
-                        if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id().concat(l.getBill_id2())
-                                        +" đã được tạo, số phiếu hiện tại sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
+                    if (duplicateBillNumber(l.getBill_id(),LoaiPhieuCons.PHIEU_XUAT.getName())){
+                        if (DialogMessage.callAlertWithMessage(MessageCons.THONGBAO.getName(), "Số "+l.getBill_id()
+                                        +" đã được tạo, thứ tự các phiếu sẽ dời sang 1 đơn vị. Bạn có muốn tiếp tục tạo phiếu?",
                                 null, Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-                            ledgerService.updateBillNumber(l,ledgers);
+                            ledgerService.updateBillNumber(l,ledgers,true);
                             saveLedger(l);
                         }
                     }else{
+                        ledgerService.updateBillNumber(l,ledgers,false);
                         saveLedger(l);
                     }
                 }catch (NumberFormatException e){
@@ -391,7 +392,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setNguoi_nhan(assignmentBillDto.getNguoinhan());
                 ledger.setSo_xe(assignmentBillDto.getSo_xe());
                 ledger.setLenh_so(assignmentBillDto.getLenhso());
-                splitBillNumber(assignmentBillDto.getSo(),ledger);
+                ledger.setBill_id(assignmentBillDto.getSo());
                 ledger.setNhiemvu(assignmentBillDto.getCtnv().getChitiet());
                 ledger.setNhiemvu_id(assignmentBillDto.getCtnv().getCtnv_id());
                 ledger.setLoaigiobay(assignmentBillDto.getLgb());
@@ -421,7 +422,7 @@ public class XuatController extends CommonFactory implements Initializable {
                 ledger.setNguoi_nhan(unitBillDto.getNguoinhan());
                 ledger.setSo_xe(unitBillDto.getSo_xe());
                 ledger.setLenh_so(unitBillDto.getLenhso());
-                splitBillNumber(unitBillDto.getSo(),ledger);
+                ledger.setBill_id(unitBillDto.getSo());
                 ledger.setDvi_nhan(unitBillDto.getDvi_nhan().getTen());
                 ledger.setDvi_xuat(unitBillDto.getDvi_xuat().getTen());
                 ledger.setDvi_nhan_id(unitBillDto.getDvi_nhan().getId());

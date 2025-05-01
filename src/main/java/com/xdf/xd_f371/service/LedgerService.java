@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,8 +54,6 @@ public class LedgerService {
         return ledgersRepo.getColumnNames_HANMUCNHIEMVU();
     }public List<String> getColumnNames_HANMUCNHIEMVU_TAUBAY(){
         return ledgersRepo.getColumnNames_HANMUCNHIEMVU_TAUBAY();
-    }public Ledger findLastLedgerByBillId(String lp){
-        return ledgersRepo.findLastLedgerByBillId(lp,DashboardController.ref_Dv.getId()).orElse(null);
     }
     public List<Ledger> getAll(){
         return ledgersRepo.findAll();
@@ -69,21 +68,77 @@ public class LedgerService {
         return ledgersRepo.save(ledger);
     }
 
-    @Transactional
-    public void updateBillNumber(Ledger l,List<Ledger> ledgers) {
-        if (l.getBill_id().equals(l.getBill_id()) && !l.getBill_id2().isBlank()){
-            List<Ledger> ls = ledgers.stream().filter(x-> x.getBill_id().equals(l.getBill_id())
-                    && (x.getBill_id().compareTo(l.getBill_id())>=0 && x.getBill_id2().compareTo(l.getBill_id2())>=0)
-                    && x.getLoai_phieu().equals(l.getLoai_phieu())).toList();
-            for (Ledger sl : ls) {
-                sl.setBill_id2(CommonFactory.nextExcelStyle(sl.getBill_id2()));
+    private String splitBillNumber(String billNum){
+        String numberPart = billNum.replaceAll("[^0-9]", "");
+        try {
+            int number = Integer.parseInt(numberPart);
+            return String.valueOf(number);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private String findDuplicateBillNumber(String billn, List<Ledger> ls,String lp){
+        String pre_bnum = splitBillNumber(billn);
+        for (Ledger l : ls) {
+            String b_num = splitBillNumber(l.getBill_id());
+            if (b_num.equals(pre_bnum) && l.getLoai_phieu().equals(lp)){
+                return l.getGroup_code();
             }
-            this.updateLedgers(ls);
+        }
+        return null;
+    }
+    private int findCountGroup(String billn, List<Ledger> ls,String lp){
+        int i = 0;
+        String pre_bnum = splitBillNumber(billn);
+        for (Ledger l : ls) {
+            String b_num = splitBillNumber(l.getBill_id());
+            if (b_num.equals(pre_bnum) && l.getLoai_phieu().equals(lp)){
+                i= i+1;
+            }
+        }
+        return i;
+    }
+    @Transactional
+    public void updateBillNumber(Ledger l,List<Ledger> ledgers, boolean isDup) {
+        String group = findDuplicateBillNumber(l.getBill_id(), ledgers,l.getLoai_phieu());
+        if (group!=null){
+            l.setGroup_code(group);
+            if (isDup){
+                boolean inc = false;
+                List<Ledger> ls;
+                if (findCountGroup(l.getBill_id(),ledgers,l.getLoai_phieu())==1){
+                    inc = true;
+                    ls = new java.util.ArrayList<>(ledgers.stream().filter(x -> x.getBill_id().compareTo(l.getBill_id()) >= 0).toList());
+                }else{
+                    ls = new java.util.ArrayList<>(ledgers.stream().filter(x -> x.getGroup_code().equals(group) && x.getBill_id().compareTo(l.getBill_id()) >= 0).toList());
+                }
+                ls.sort((a, b) -> {
+                    int numA = Integer.parseInt(a.getBill_id().replaceAll("[^0-9]", ""));
+                    int numB = Integer.parseInt(b.getBill_id().replaceAll("[^0-9]", ""));
+                    if (numA != numB) {
+                        return Integer.compare(numA, numB);
+                    } else {
+                        String charA = a.getBill_id().replaceAll("[0-9]", "");
+                        String charB = b.getBill_id().replaceAll("[0-9]", "");
+                        return charA.compareTo(charB);
+                    }
+                });
+                for (int i = 0; i<  ls.size();i++){
+                    Ledger sl = ls.get(i);
+                    if (inc){
+                        sl.setBill_id(CommonFactory.incrementOrdinal(sl.getBill_id()));
+                    }else{
+                        if (i==ls.size()-1){
+                            sl.setBill_id(CommonFactory.getNextInSequence(sl.getBill_id()));
+                        }else{
+                            sl.setBill_id(ls.get(i+1).getBill_id());
+                        }
+                    }
+                }
+                this.updateLedgers(ls);
+            }
         }else{
-            List<Ledger> allLs = ledgers.stream().filter(x->(x.getBill_id().compareTo(l.getBill_id())>=0 && x.getBill_id2().compareTo(l.getBill_id2())>=0)
-                    && x.getLoai_phieu().equals(l.getLoai_phieu())).toList();
-            allLs.forEach(x->x.setBill_id(String.valueOf(Integer.parseInt(x.getBill_id()) +1)));
-            this.updateLedgers(allLs);
+            l.setGroup_code(RandomStringUtils.randomAlphanumeric(10).concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"))));
         }
     }
     @Transactional
@@ -222,8 +277,7 @@ public class LedgerService {
         ls.forEach(ledger ->
                 ledgersRepo.updateLedger(
                         ledger.getId(),
-                        ledger.getBill_id(),
-                        ledger.getBill_id2()
+                        ledger.getBill_id()
                 )
         );
     }
