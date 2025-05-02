@@ -73,6 +73,9 @@ public class ChitietNhiemvuService {
     public List<NhiemVu> findAll(){
         return nhiemvuRepository.findAll();
     }
+    public NhiemVu savenv(NhiemVu nv){
+        return nhiemvuRepository.save(nv);
+    }
     public Optional<NhiemVu> findByName(String n,String status){
         return nhiemvuRepository.findByName(n,status);
     }
@@ -80,7 +83,7 @@ public class ChitietNhiemvuService {
     private UnitXmtService unitXmtService;
 
     @Transactional
-    public void saveNhiemvu(int ctnv_id,int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d,String hacap){
+    public void saveNhiemvu(String teamCode,int ctnv_id,int team_id, String nv, LoaiNhiemVu lnv,String ct,NguonNx nx,String x,String diezel_tf,String d,String hacap){
         Optional<NhiemVu> n_v = nhiemvuRepository.findByName(nv,StatusCons.ACTIVED.getName());
         if (n_v.isPresent()){
             Optional<ChitietNhiemVu> ctnv = chitietNhiemvuRepo.findByNhiemvu(ct,n_v.get().getId());
@@ -101,7 +104,7 @@ public class ChitietNhiemvuService {
                         null, Alert.AlertType.INFORMATION);
             }
         }else{
-            NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,lnv.getId(),99,99,lnv.getTask_name()));
+            NhiemVu n = nhiemvuRepository.save(new NhiemVu(nv, StatusCons.ACTIVED.getName(),team_id,lnv.getId(),99,99,lnv.getTask_name(),teamCode));
             ChitietNhiemVu ct2 = chitietNhiemvuRepo.save(new ChitietNhiemVu(ctnv_id,n.getId(),ct));
             if (lnv.getTask_name().equals(LoaiNVCons.NV_BAY.getName())){
                 DashboardController.unitxmt_ls.forEach(xmt -> {

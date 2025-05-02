@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="503.0" prefWidth="546.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.AddNvController">
+<VBox prefHeight="503.0" prefWidth="586.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.AddNvController">
    <children>
       <VBox alignment="CENTER" prefHeight="42.0" prefWidth="555.0" style="-fx-background-color: #030303;">
          <children>
@@ -77,14 +76,19 @@
                   <Font name="Cambria Bold" size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="nv" onMouseClicked="#nv_clicked" prefHeight="30.0" prefWidth="300.0">
+            <ComboBox fx:id="nv_cbb" onAction="#nv_cbbAct" prefHeight="30.0" prefWidth="235.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;">
                <cursor>
-                  <Cursor fx:constant="TEXT" />
+                  <Cursor fx:constant="HAND" />
                </cursor>
-               <font>
-                  <Font name="Cambria" size="18.0" />
-               </font>
-            </TextField>
+            </ComboBox>
+            <Button mnemonicParsing="false" onAction="#add_nvAction" prefHeight="33.0" prefWidth="53.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8;" text="Thêm">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">

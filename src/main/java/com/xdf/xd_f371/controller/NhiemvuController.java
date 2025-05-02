@@ -2,7 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.dto.*;
 import com.xdf.xd_f371.entity.*;
-import com.xdf.xd_f371.service.ChitietNhiemvuService;
+
 import com.xdf.xd_f371.service.HanmucNhiemvuService;
 import com.xdf.xd_f371.service.NguonNxService;
 import com.xdf.xd_f371.util.Common;
@@ -36,8 +36,6 @@ public class NhiemvuController implements Initializable {
     public static List<HanmucNhiemvu2Dto> hm2_ls = new ArrayList<>();
     public static HanmucNhiemvu2Dto hm2 = new HanmucNhiemvu2Dto();
     @Autowired
-    private ChitietNhiemvuService chitietNhiemvuService;
-    @Autowired
     private NguonNxService nguonNxService;
     @Autowired
     private HanmucNhiemvuService hanmucNhiemvuService;
@@ -63,7 +61,6 @@ public class NhiemvuController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setScreen();
         initDviTb();
-
         initYearCbb();
         initHanmucTb();
         inithanmucCellFactory();
@@ -150,6 +147,7 @@ public class NhiemvuController implements Initializable {
         nvStage = new Stage();
         nvStage.initStyle(StageStyle.UTILITY);
         Common.openNewStage("add_nv.fxml", nvStage,null, StageStyle.DECORATED);
+        initHanmucTb();
     }
     private void openAddChitieuForm(){
         nvStage = new Stage();

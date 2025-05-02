@@ -46,6 +46,7 @@ public class DashboardController implements Initializable {
     public static NguonNx ref_Dv=null;
     public static QuarterDto ref_Quarter=null;
     public static List<PhuongTien> xmt_ls = new ArrayList<>();
+    public static List<NhiemVu> nv_ls = new ArrayList<>();
     public static List<LoaiXangDau> xd_ls = new ArrayList<>();
     public static List<NguonNx> units_ls = new ArrayList<>();
     public static List<Tcn> tcn_ls = new ArrayList<>();
@@ -110,6 +111,7 @@ public class DashboardController implements Initializable {
         units_ls = nguonNxService.findAll();
         tcn_ls = tcnService.findAll();
         xd_ls = loaiXdService.findAll();
+        nv_ls = chitietNhiemvuService.findAll();
     }
     private void getQuarterList() {
         try {

@@ -58,7 +58,7 @@ public class TransactionHistory extends BaseObject{
     private String created_at_str;
 
     public TransactionHistory(String id, int xd_id,int root_id, String loaiphieu, LocalDate date, double mucgia,
-                              double soluong, String tructhuoc, double tonkhotong, double tonkhogia_nvdx, long index,double soluong_tt,String ledger_id) {
+                              double soluong, String tructhuoc, double tonkhotong, double tonkhogia_nvdx, long index,double soluong_tt,String ledger_id,double tonkh_sscd,double tonkh_gia_sscd) {
         this.id = id;
         this.xd_id = xd_id;
         this.root_id = root_id;
@@ -72,5 +72,7 @@ public class TransactionHistory extends BaseObject{
         this.index = index;
         this.soluong_tt = soluong_tt;
         this.ledger_id = ledger_id;
+        this.tonkh_sscd = tonkh_sscd;
+        this.tonkh_gia_sscd = tonkh_gia_sscd;
     }
 }
