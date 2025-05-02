@@ -8,14 +8,18 @@ import lombok.Setter;
 @Setter
 public class PriceAndQuantityDto {
     private double price;
-    private double quantity;
+    private double quantity_nvdx;
+    private double quantity_sscd;
     private String price_str;
-    private String quantity_str;
+    private String quantitynvdx_str;
+    private String quantitysscd_str;
 
-    public PriceAndQuantityDto(double price, double quantity) {
+    public PriceAndQuantityDto(double price, double quantity_nvdx,double quantity_sscd) {
         this.price = price;
-        this.quantity = quantity;
+        this.quantity_nvdx = quantity_nvdx;
+        this.quantity_sscd = quantity_sscd;
         this.price_str = TextToNumber.textToNum_2digits(price);
-        this.quantity_str = TextToNumber.textToNum_2digits(quantity);
+        this.quantitynvdx_str = TextToNumber.textToNum_2digits(quantity_nvdx);
+        this.quantitysscd_str = TextToNumber.textToNum_2digits(quantity_sscd);
     }
 }

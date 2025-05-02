@@ -9,7 +9,7 @@ import java.util.Optional;
 public class DialogMessage {
     public static void message(String title, String content, String header, Alert.AlertType alertType){
         Alert a = new Alert(alertType);
-        a.initModality(Modality.WINDOW_MODAL);
+        a.initModality(Modality.APPLICATION_MODAL);
         a.setTitle(title);
         a.setContentText(content);
         a.setHeaderText(header);

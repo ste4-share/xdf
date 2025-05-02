@@ -27,6 +27,10 @@ public class TransactionHistoryService {
         ReportDAO reportDAO = new ReportDAO();
         reportDAO.updateDataDAO("CREATE TABLE IF NOT EXISTS "+tbn+" PARTITION OF transaction_history FOR VALUES IN ("+xd_id+");");
     }
+    @Transactional
+    public void saveTransactionHistory(List<TransactionHistory> ls){
+        transactionHistoryRepo.saveAll(ls);
+    }
     public List<TransactionHistory> getLastestTimeForEachPrices(int lxd_id){
         return transactionHistoryRepo.getLastestTimeForEachPrices(lxd_id, DashboardController.ref_Dv.getId());
     }

@@ -12,10 +12,6 @@ import java.util.List;
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
     @Query(value = "SELECT loaixd_id,ld.id as id,don_gia,sum(nhap_nvdx),sum(xuat_nvdx),sum(nhap_sscd),sum(xuat_sscd)\n" +
             "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id \n" +
-            "where l.status like 'ACTIVE' and loaixd_id=:lxd_id group by 1,2,3",nativeQuery = true)
-    List<Object[]> findPreInventoryPetro(@Param("lxd_id") int lxd_id);
-    @Query(value = "SELECT loaixd_id,ld.id as id,don_gia,sum(nhap_nvdx),sum(xuat_nvdx),sum(nhap_sscd),sum(xuat_sscd)\n" +
-            "FROM ledger_details ld join ledgers l on l.id=ld.ledger_id \n" +
             "where l.status like 'ACTIVE' and loaixd_id=:lxd_id and dvi_nhan_id=:dvi_id group by 1,2,3",nativeQuery = true)
     List<Object[]> findPreInventoryPetro(@Param("lxd_id") int lxd_id,@Param("dvi_id") int dvid);
 }

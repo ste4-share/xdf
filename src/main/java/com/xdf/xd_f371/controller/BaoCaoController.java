@@ -74,10 +74,6 @@ public class BaoCaoController implements Initializable {
         FxUtilTest.autoCompleteComboBoxPlus(dvi_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
         dvi_cbb.getSelectionModel().selectFirst();
     }
-    private Integer map_bc_lcv_create(XSSFWorkbook wb,String sheetName){
-        return Common.mapDataToSheet(wb.getSheet(sheetName), 8,
-                SubQuery.lcv_q(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()),1);
-    }
     private Integer map_pttk_create(XSSFWorkbook wb,String sheetName){
         return Common.mapDataToSheet(wb.createSheet(sheetName), 8, SubQuery.bc_pttk_q(), 4);
     }
@@ -122,20 +118,6 @@ public class BaoCaoController implements Initializable {
     private void ttxd_xmt(){
         Common.copyFileExcel(file_name2,dest_file2);
         Common.mapExcelFile_JustExist(dest_file2,input -> fillDataTo_ttxd_xmt(input,SheetNameCons.TTXD_XMT_BETA.getName()),SheetNameCons.TTXD_XMT_BETA.getName());
-    }
-    @FXML
-    public void bc_lcv(ActionEvent actionEvent) {
-        Stage stage_1 = new Stage();
-        Common.getLoading(stage_1);
-        Platform.runLater(()-> {
-            Common.task(this::bc_lcv_map, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-            lcv_lb.setText("UPDATED");
-        });
-    }
-    private void bc_lcv_map() {
-        String sheetName = "luan_chuyenvon_data";
-        Common.mapExcelFile(file_name,input -> map_bc_lcv_create(input,sheetName),input -> map_bc_lcv_create(input,sheetName),SheetNameCons.LCV.getName());
-        Common.copyFileExcel(file_name,dest_file);
     }
     @FXML
     public void bc_ttxdtnv(ActionEvent actionEvent) {
@@ -233,8 +215,9 @@ public class BaoCaoController implements Initializable {
     }
     private void fillData_ttxd_nv(XSSFWorkbook wb, XSSFSheet sheet) {
         ReportDAO reportDAO = new ReportDAO();
-        List<Object[]> xmtls = reportDAO.findByWhatEver(SubQuery.ttxd_nv(DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
-        fillData(wb,sheet,xmtls,2,start_row-3,10,12,0);
+        List<Object[]> xmtls = reportDAO.findByWhatEver(SubQuery.ttxd_nv(DashboardController.ref_Quarter.getStart_date(),
+                DashboardController.ref_Quarter.getEnd_date(),DashboardController.ref_Dv.getId()));
+        fillData_forttxdnv(wb,sheet,xmtls,2,start_row-3,10,12,3);
     }
 
     private void initHeder_ttxd_nv(XSSFSheet sheet, XSSFWorkbook wb) {
@@ -301,6 +284,59 @@ public class BaoCaoController implements Initializable {
                 DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
         fillData(wb,sheet,nxtls,4,start_row,0,0,3);
         return -1;
+    }
+    private void fillData_forttxdnv(XSSFWorkbook wb, XSSFSheet sheet,List<Object[]> nxtls,int scol,int srol, int a,int a1,int b) {
+        for (int i = 0; i<nxtls.size();i++){
+            int lastRow = sheet.getLastRowNum();
+            sheet.shiftRows(srol+i+2, lastRow, 1, true, true);
+            XSSFRow row1 = sheet.createRow(srol+i+2);
+            Object[] rows_data = nxtls.get(i);
+            for (int j = 0; j<rows_data.length;j++){
+                String val = rows_data[j]==null ? "" : rows_data[j].toString();
+                XSSFCell c = row1.createCell(scol+j);
+                XSSFCellStyle style = wb.createCellStyle();
+                if (rows_data[1]==null){
+                    ExportFactory.setBoldFont(wb,style);
+                }
+                if(b!=0 && j==b){
+                    ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+                }else{
+                    ExportFactory.setCellAlightmentStyle(style);
+                    ExportFactory.setCellBorderStyle(style, BorderStyle.THIN);
+                }
+                if (Common.isDoubleNumber(val)){
+                    ExportFactory.setDataFormat(wb,style,"#,##0.00");
+                    BigDecimal bigDecimal = new BigDecimal(val).setScale(1, RoundingMode.HALF_UP);
+                    c.setCellValue(bigDecimal.doubleValue());
+                } else if(Common.isLongNumber(val)){
+                    long l = (long) Double.parseDouble(val);
+                    if (a!=0 && j==a || a1!=0 && j==a1){
+                        ExportFactory.setDataFormat(wb,style,"[h]:mm");
+                        c.setCellValue(Common.convertSecondsToTime((long) Double.parseDouble(val)));
+                        c.setCellStyle(style);
+                        continue;
+                    }
+                    if (l==0){
+                        c.setCellValue("");
+                        c.setCellStyle(style);
+                        continue;
+                    }
+                    ExportFactory.setDataFormat(wb,style,"#,##0");
+                    c.setCellValue((long) Double.parseDouble(val));
+                } else {
+                    if (j==3){
+                        if (SubQuery.lxdMap().get(val)!=null){
+                            c.setCellValue(SubQuery.lxdMap().get(val));
+                        }else{
+                            c.setCellValue(val);
+                        }
+                    }else{
+                        c.setCellValue(val);
+                    }
+                }
+                c.setCellStyle(style);
+            }
+        }
     }
     private void fillData(XSSFWorkbook wb, XSSFSheet sheet,List<Object[]> nxtls,int scol,int srol, int a,int a1,int b) {
         for (int i = 0; i<nxtls.size();i++){

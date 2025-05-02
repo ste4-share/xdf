@@ -226,11 +226,7 @@ public class TonkhoController implements Initializable {
             pickTonKho = spotDto;
             tk_stage = new Stage();
             List<InventoryDto> list;
-//            if (ref_unit!=null){
-                list = inventoryService.findPreInventoryPetroFollowUnit(spotDto.getPetro_id(),DashboardController.ref_Dv.getId());
-//            }else{
-//                list = inventoryService.findPreInventoryPetro(spotDto.getPetro_id());
-//            }
+            list = inventoryService.findPreInventoryPetroFollowUnit(spotDto.getPetro_id(),DashboardController.ref_Dv.getId());
             if (list==null){
                 DialogMessage.successShowing(spotDto.getTenxd() + " đã hết hàng!! Vui lòng nhập thêm");
             }else{

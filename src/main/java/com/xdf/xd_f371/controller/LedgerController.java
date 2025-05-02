@@ -64,6 +64,10 @@ public class LedgerController implements Initializable {
     @FXML
     private TableView<Ledger> ledgers_table,root_table,ref_table;
     @FXML
+    private TableView<TransactionHistory> history_tb;
+    @FXML
+    private TableColumn<TransactionHistory, String> h_stt,h_phieu,h_sophieu,h_createTime,h_dvx,h_dvn,h_tructhuoc,h_tenxd,h_loaixd,h_soluong,h_gia;
+    @FXML
     private TableColumn<Ledger,String> ledgers_col_stt,ledgers_col_id,ledgers_col_so,ledgers_col_stdate,ledgers_col_edate,ledgers_col_lenhkh,ledgers_col_loainx,
             ledgers_col_dvn,ledgers_col_dvx,ledgers_col_xmt,ledgers_col_nv,ledgers_col_note,ledgers_col_createtime,
             root_col_stt,root_col_id,root_col_so,root_col_lenh,root_col_loainx,root_col_dvnhap,root_col_dvx,root_col_xmt,root_col_nv,root_col_note,
@@ -75,7 +79,8 @@ public class LedgerController implements Initializable {
     @FXML
     private TableView<InvDto3> tonkho_tb;
     @FXML
-    private Label tab1_dvi_label,root_unit_lable,unitClickedLable,ctnv_lb,xmt_lb,loaixmt_lb,km_lb,giohd_lb,giohd_tk_lb,giohd_md_lb,nguoinhan_lb,amount_lb,note_lb;
+    private Label tab1_dvi_label,root_unit_lable,unitClickedLable,ctnv_lb,xmt_lb,loaixmt_lb,km_lb,giohd_lb,giohd_tk_lb,giohd_md_lb,nguoinhan_lb,amount_lb,note_lb,
+            inv_price,inv_total,tenxmt,loaixmt,nv,ctnv2;
     @FXML
     private DatePicker st_time,lst_time,tab2_tungay,tab2_denngay;
     @FXML
@@ -311,7 +316,7 @@ public class LedgerController implements Initializable {
     private void setLEdgerDetailLabel(Ledger l){
         ctnv_lb.setText(l.getNhiemvu());
         Optional<PhuongTien> pt = phuongtienService.findById(l.getPt_id());
-        pt.ifPresent(x->xmt_lb.setText(x.getName()));
+        pt.ifPresentOrElse(x->xmt_lb.setText(x.getName()),()->{xmt_lb.setText("---");});
         loaixmt_lb.setText(l.getLpt());
         km_lb.setText(TextToNumber.textToNum(String.valueOf(l.getSo_km())));
         giohd_lb.setText(l.getGiohd_md());
@@ -821,5 +826,8 @@ public class LedgerController implements Initializable {
             DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
             updateData();
         }
+    }
+    @FXML
+    public void history_tb_clicked(MouseEvent mouseEvent) {
     }
 }

@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,8 @@ public class XuatNVController extends CommonFactory implements Initializable {
     private ComboBox<NhiemVuDto> nv_cbb;
     @FXML
     private ComboBox<UnitXmt> licenceCbb;
+    @FXML
+    private HBox lgb_hb;
 
     @Autowired
     private PhuongtienService phuongtienService;
@@ -60,6 +63,7 @@ public class XuatNVController extends CommonFactory implements Initializable {
         assignmentBillDto = new AssignmentBillDto();
         xe_rd.setSelected(true);
         md_rd.setSelected(true);
+        lgb_hb.setDisable(true);
         ptls = phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle(),DashboardController.ref_Dv.getId());
         initXmtCbb(ptls);
         nhiemvuLs = chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_KHAC.getName());
@@ -138,16 +142,21 @@ public class XuatNVController extends CommonFactory implements Initializable {
     public void mbRadioSel(ActionEvent actionEvent) {
         initXmtCbb(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAYBAY.getNameVehicle(),DashboardController.ref_Dv.getId()));
         initChitietNhiemvu(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_BAY.getName()));
+        lgb_hb.setDisable(false);
     }
     @FXML
     public void xeRadioSelec(ActionEvent actionEvent) {
         initXmtCbb(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.XE.getNameVehicle(),DashboardController.ref_Dv.getId()));
         initChitietNhiemvu(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_KHAC.getName()));
+        lgb_hb.setDisable(true);
+        md_rd.setSelected(true);
     }
     @FXML
     public void mayRadioSelec(ActionEvent actionEvent) {
         initXmtCbb(phuongtienService.findPhuongTienByLoaiPhuongTien(LoaiPTEnum.MAY.getNameVehicle(),DashboardController.ref_Dv.getId()));
         initChitietNhiemvu(chitietNhiemvuService.findAllDtoById(LoaiNVCons.NV_KHAC.getName()));
+        lgb_hb.setDisable(true);
+        md_rd.setSelected(true);
     }
     @FXML
     public void so_km_clicked(MouseEvent mouseEvent) {
