@@ -44,8 +44,7 @@ public class TransactionHistory extends BaseObject{
     private long index;
     @Column(name = "ledger_id")
     private String ledger_id;
-    @Transient
-    @Column(name = "created_at")
+    @Column(name = "created_at",insertable = false, updatable = false)
     private LocalDateTime created_at;
 
     @Transient

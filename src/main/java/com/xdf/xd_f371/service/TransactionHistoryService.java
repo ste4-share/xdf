@@ -37,6 +37,9 @@ public class TransactionHistoryService {
     public List<TransactionHistory> getTransactionHistoryByDate(int lxd_id,LocalDate ed){
         return transactionHistoryRepo.getTransactionHistoryByDate(lxd_id,ed);
     }
+    public List<TransactionHistory> getAllTransactionHistoryList(int rootid,LocalDate ed){
+        return transactionHistoryRepo.getAllTransactionHistoryList(rootid,ed);
+    }
     public Optional<TransactionHistory> getInventoryOf_Lxd(int xdid, int root_id){
         return transactionHistoryRepo.getInventoryOf_Lxd(xdid,root_id);
     }

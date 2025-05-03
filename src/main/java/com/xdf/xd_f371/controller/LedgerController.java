@@ -2,6 +2,7 @@ package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.cons.*;
 import com.xdf.xd_f371.dto.InvDto3;
+import com.xdf.xd_f371.dto.TransactionHistoryDto;
 import com.xdf.xd_f371.entity.*;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.fatory.ExportFactory;
@@ -39,12 +40,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
+
 
 @Component
 public class LedgerController implements Initializable {
     private final String file_name = "data.xlsx";
     private List<Ledger> ledgerSelectList = new ArrayList<>();
+    private List<TransactionHistoryDto> ls_show = new ArrayList<>();
     private List<Ledger> refLedgerList = new ArrayList<>();
+    private List<Ledger> ledgersByYear = new ArrayList<>();
     private List<TransactionHistory> refTransactionHistorysList = new ArrayList<>();
     private List<LedgerDetails> refLedgerDetailList = new ArrayList<>();
     private LocalDate currentDateSelected;
@@ -59,14 +64,25 @@ public class LedgerController implements Initializable {
     private NguonNxService nguonNxService;
     @Autowired
     private PhuongtienService phuongtienService;
+    @Autowired
+    private TransactionHistoryService transactionHistoryService;
     @FXML
     private Button ref_to_root;
     @FXML
     private TableView<Ledger> ledgers_table,root_table,ref_table;
     @FXML
-    private TableView<TransactionHistory> history_tb;
+    private ComboBox<TrucThuoc> tt_cbb;
     @FXML
-    private TableColumn<TransactionHistory, String> h_stt,h_phieu,h_sophieu,h_createTime,h_dvx,h_dvn,h_tructhuoc,h_tenxd,h_loaixd,h_soluong,h_gia;
+    private ComboBox<NguonNx> nnx_cbb;
+    @FXML
+    private ComboBox<PhuongTien> xmtcbb;
+    @FXML
+    private ComboBox<ChitietNhiemVu> nvcbb;
+
+    @FXML
+    private TableView<TransactionHistoryDto> history_tb;
+    @FXML
+    private TableColumn<TransactionHistoryDto, String> h_phieu,h_sophieu,h_createTime,h_dvx,h_dvn,h_tructhuoc,h_tenxd,h_loaixd,h_soluong,h_gia;
     @FXML
     private TableColumn<Ledger,String> ledgers_col_stt,ledgers_col_id,ledgers_col_so,ledgers_col_stdate,ledgers_col_edate,ledgers_col_lenhkh,ledgers_col_loainx,
             ledgers_col_dvn,ledgers_col_dvx,ledgers_col_xmt,ledgers_col_nv,ledgers_col_note,ledgers_col_createtime,
@@ -80,7 +96,7 @@ public class LedgerController implements Initializable {
     private TableView<InvDto3> tonkho_tb;
     @FXML
     private Label tab1_dvi_label,root_unit_lable,unitClickedLable,ctnv_lb,xmt_lb,loaixmt_lb,km_lb,giohd_lb,giohd_tk_lb,giohd_md_lb,nguoinhan_lb,amount_lb,note_lb,
-            inv_price,inv_total,tenxmt,loaixmt,nv,ctnv2;
+            inv_price,inv_total,tenxmt,loaixmt,nv;
     @FXML
     private DatePicker st_time,lst_time,tab2_tungay,tab2_denngay;
     @FXML
@@ -90,7 +106,7 @@ public class LedgerController implements Initializable {
     @FXML
     private CheckBox mucgiaCk,tdvChk;
     @FXML
-    private TextField search_by_name_tf;
+    private TextField h_search_tf;
     @FXML
     private ComboBox<NguonNx> dvi_ref_cbb;
     @FXML
@@ -109,11 +125,81 @@ public class LedgerController implements Initializable {
         setCellFactoryForLeger_table();
         setCellFactoryForRefTable();
         setCellFactoryForRootTable();
+        setCellFactoryForHistoryTable();
         initLedgerList();
+        initLedgerListByYear();
         initRootLedgerList();
+        initTransactionHistoryLs();
+        initTructhuocCbb();
+        List<NguonNx> nguonNxList = nguonNxService.findByAllBy();
+        initDviCbb(nguonNxList);
+        initXmtCbb();
+        initNvcbb();
     }
+
+    private void initNvcbb() {
+        ComponentUtil.setItemsToComboBox(nvcbb,DashboardController.ctnv_ls_all_,ChitietNhiemVu::getNhiemvu,
+                input -> DashboardController.ctnv_ls_all_.stream().filter(x->x.getNhiemvu().equals(input)).findFirst().orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(nvcbb, (typedText, itemToCompare) -> itemToCompare.getNhiemvu().toLowerCase().contains(typedText.toLowerCase()));
+        nvcbb.getSelectionModel().selectFirst();
+    }
+
+    private void initXmtCbb() {
+        ComponentUtil.setItemsToComboBox(xmtcbb,DashboardController.xmt_ls,PhuongTien::getName, input -> DashboardController.xmt_ls.stream().filter(x->x.getName().equals(input)).findFirst().orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(xmtcbb, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()));
+    }
+
+    private void initTructhuocCbb() {
+        ComponentUtil.setItemsToComboBox(tt_cbb,DashboardController.trucThuocs_ls, TrucThuoc::getType, input-> DashboardController.trucThuocs_ls.stream().filter(x->x.getType().equals(input)).findFirst().orElse(null));
+     }
+    private void initDviCbb(List<NguonNx> ls) {
+        ComponentUtil.setItemsToComboBox(nnx_cbb,ls,NguonNx::getTen, input -> ls.stream().filter(x->x.getTen().equals(input)).findFirst().orElse(null));
+        FxUtilTest.autoCompleteComboBoxPlus(nnx_cbb, (typedText, itemToCompare) -> itemToCompare.getTen().toLowerCase().contains(typedText.toLowerCase()));
+        nnx_cbb.getSelectionModel().selectFirst();
+    }
+    private void initLedgerListByYear() {
+        ledgersByYear = ledgerService.findAllLedgerByUnit(DashboardController.ref_Dv.getId(),LocalDate.now().getYear());
+    }
+
+    private void initTransactionHistoryLs() {
+        List<TransactionHistory> ls = transactionHistoryService.getAllTransactionHistoryList(DashboardController.ref_Dv.getId(),LocalDate.now().with(firstDayOfYear()));
+        ls_show = new ArrayList<>();
+        for (TransactionHistory l : ls) {
+            Optional<Ledger> ledger1 = ledgersByYear.stream().filter(x->x.getId().equals(l.getLedger_id())).findFirst();
+            Optional<LoaiXangDau> lxd = DashboardController.xd_ls.stream().filter(x->x.getId()==l.getXd_id()).findFirst();
+            if (ledger1.isPresent()){
+                Optional<PhuongTien> pt = DashboardController.xmt_ls.stream().filter(x->x.getId()==ledger1.get().getPt_id()).findFirst();
+                if (lxd.isPresent()){
+                    if (pt.isPresent()){
+                        ls_show.add(new TransactionHistoryDto(ledger1.get().getBill_id(),ledger1.get().getLoai_phieu(),ledger1.get().getDvi_xuat(),ledger1.get().getDvi_nhan(),
+                                ledger1.get().getTructhuoc(),lxd.get().getTenxd(),lxd.get().getChungloai(),l.getMucgia(),l.getSoluong(),l.getCreated_at(),l.getTonkho_gia(),l.getTonkhotong(),
+                                pt.get().getName(),ledger1.get().getLpt_2(),ledger1.get().getNhiemvu()));
+                    }else{
+                        ls_show.add(new TransactionHistoryDto(ledger1.get().getBill_id(),ledger1.get().getLoai_phieu(),ledger1.get().getDvi_xuat(),ledger1.get().getDvi_nhan(),
+                                ledger1.get().getTructhuoc(),lxd.get().getTenxd(),lxd.get().getChungloai(),l.getMucgia(),l.getSoluong(),l.getCreated_at(),l.getTonkho_gia(),l.getTonkhotong(),
+                                null,null,null));
+                    }
+                }
+            }
+        }
+        setItemsTo_HistoryTable(ls_show);
+    }
+    private void initTransactionHistoryLabel(TransactionHistoryDto t){
+        inv_price.setText(t.getTontheogia());
+        inv_total.setText(t.getTontheoloaixd());
+        tenxmt.setText(t.getTenxmt());
+        loaixmt.setText(t.getLoaixmt());
+        nv.setText(t.getChitietnhiemvu());
+    }
+    private void setItemsTo_HistoryTable(List<TransactionHistoryDto> ls){
+        history_tb.setItems(FXCollections.observableList(ls));
+        history_tb.refresh();
+    }
+
     private void updateData() {
         initLedgerList();
+        initLedgerListByYear();
+        initTransactionHistoryLs();
     }
     private void initRootLedgerList() {
         LocalDate tungay = tab2_tungay.getValue();
@@ -137,6 +223,38 @@ public class LedgerController implements Initializable {
         root_col_xmt.setCellValueFactory(new PropertyValueFactory<Ledger, String>("lpt"));
         root_col_nv.setCellValueFactory(new PropertyValueFactory<Ledger, String>("nhiemvu"));
         root_col_note.setCellValueFactory(new PropertyValueFactory<Ledger, String>("note"));
+    }
+    private void setCellFactoryForHistoryTable() {
+        h_phieu.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("loaiphieu"));
+        h_sophieu.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("sophieu"));
+        h_createTime.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("created_at"));
+        h_dvx.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("dvx"));
+        h_dvn.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("dvn"));
+        h_tructhuoc.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("tructhuoc"));
+        h_tenxd.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("tenxd"));
+        h_loaixd.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("loaixd"));
+        h_soluong.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("soluong"));
+        h_gia.setCellValueFactory(new PropertyValueFactory<TransactionHistoryDto, String>("gia"));
+        history_tb.setRowFactory(tv -> new TableRow<TransactionHistoryDto>() {
+            @Override
+            protected void updateItem(TransactionHistoryDto historyDto, boolean empty) {
+                super.updateItem(historyDto, empty);
+
+                if (historyDto == null || empty) {
+                    setStyle(null);
+                } else {
+                    if (historyDto.getLoaiphieu().equals(LoaiPhieuCons.PHIEU_NHAP.getName())) {
+                        setStyle("-fx-background-color: #5f94e8;"+
+                                "-fx-border-color: transparent transparent black transparent; " +
+                                "-fx-border-width: 0px 0px 1px;");
+                    }else if (historyDto.getLoaiphieu().equals(LoaiPhieuCons.PHIEU_XUAT.getName())) {
+                        setStyle("-fx-background-color: #fa4655;"+
+                                "-fx-border-color: transparent transparent black transparent; " +
+                                "-fx-border-width: 0px 0px 1px;");
+                    }
+                }
+            }
+        });
     }
     private void setCellFactoryForRefTable() {
         ref_col_stt.setSortable(false);
@@ -262,8 +380,8 @@ public class LedgerController implements Initializable {
     private void initTableSize() {
         ledgers_table.setPrefWidth(DashboardController.screenWidth-500);
         ledgers_table.setPrefHeight(DashboardController.screenHeigh-800);
-        history_tb.setPrefWidth(DashboardController.screenWidth-100);
-        history_tb.setPrefHeight(DashboardController.screenHeigh-200);
+        history_tb.setPrefWidth(DashboardController.screenWidth-300);
+        history_tb.setPrefHeight(DashboardController.screenHeigh-500);
         chitiet_tb.setPrefWidth(DashboardController.screenWidth-300);
         chitiet_tb.setPrefHeight(DashboardController.screenHeigh-900);
         root_table.setPrefWidth(DashboardController.screenWidth-800);
@@ -831,5 +949,53 @@ public class LedgerController implements Initializable {
     }
     @FXML
     public void history_tb_clicked(MouseEvent mouseEvent) {
+        TransactionHistoryDto transactionHistoryDto = history_tb.getSelectionModel().getSelectedItem();
+        if (transactionHistoryDto!=null){
+            initTransactionHistoryLabel(transactionHistoryDto);
+        }
+    }
+    @FXML
+    public void nnx_cbbAction(ActionEvent actionEvent) {
+    }
+    @FXML
+    public void tt_cbbAction(ActionEvent actionEvent) {
+        TrucThuoc tt = tt_cbb.getSelectionModel().getSelectedItem();
+        if (tt!=null){
+            setItemsTo_HistoryTable(ls_show.stream().filter(x->x.getTructhuoc().contains(tt.getType())).toList());
+        }else{
+            setItemsTo_HistoryTable(ls_show);
+        }
+    }
+    @FXML
+    public void xmtcbbAction(ActionEvent actionEvent) {
+        PhuongTien pt = xmtcbb.getSelectionModel().getSelectedItem();
+        if (pt!=null){
+            setItemsTo_HistoryTable(ls_show.stream().filter(x->x.getTenxmt()!=null && x.getTenxmt().contains(pt.getName())).toList());
+        }else{
+            setItemsTo_HistoryTable(ls_show);
+        }
+    }
+    @FXML
+    public void nvcbbAction(ActionEvent actionEvent) {
+        ChitietNhiemVu ct = nvcbb.getSelectionModel().getSelectedItem();
+        if (ct!=null){
+            setItemsTo_HistoryTable(ls_show.stream().filter(x->x.getChitietnhiemvu()!=null && x.getChitietnhiemvu().contains(ct.getNhiemvu())).toList());
+        }else{
+            setItemsTo_HistoryTable(ls_show);
+        }
+    }
+    @FXML
+    public void h_search_tfAction(ActionEvent actionEvent) {
+        String search = h_search_tf.getText();
+        if (!search.isBlank()){
+            setItemsTo_HistoryTable(ls_show.stream().filter(x->x.getSophieu().contains(search)).toList());
+        }else{
+            setItemsTo_HistoryTable(ls_show);
+        }
+    }
+
+    @FXML
+    public void refreshHistoryTb(ActionEvent actionEvent) {
+        initTransactionHistoryLs();
     }
 }

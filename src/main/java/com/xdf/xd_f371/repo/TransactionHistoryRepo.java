@@ -25,6 +25,8 @@ public interface TransactionHistoryRepo extends JpaRepository<TransactionHistory
     List<TransactionHistory> getSizeOfTransactionByDay(@Param("xd_id") int xd_id, @Param("d")LocalDate date,@Param("rid") int root_id);
     @Query(value = "select * from transaction_history where xd_id=:xd_id and date < :e order by created_at desc",nativeQuery = true)
     List<TransactionHistory> getTransactionHistoryByDate(@Param("xd_id") int xd_id, @Param("e")LocalDate date);
+    @Query(value = "select * from transaction_history where root_id=:rid and date >= :e order by created_at desc",nativeQuery = true)
+    List<TransactionHistory> getAllTransactionHistoryList(@Param("rid") int root_id, @Param("e")LocalDate date);
     @Query(value = "SELECT distinct on (mucgia) * FROM public.transaction_history where xd_id=:xd_id and root_id=:rid order by mucgia,created_at desc",nativeQuery = true)
     List<TransactionHistory> getLastestTimeForEachPrices(@Param("xd_id") int xd_id,@Param("rid") int root_id);
     @Query(value = "select lxd.id,maxd,tenxd,loai,\n" +

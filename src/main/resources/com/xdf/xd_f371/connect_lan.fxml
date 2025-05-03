@@ -28,7 +28,7 @@
          <children>
             <HBox>
                <children>
-                  <Label alignment="BOTTOM_LEFT" prefHeight="36.0" prefWidth="128.0" text="Tên tài khoản:">
+                  <Label prefHeight="36.0" prefWidth="128.0" text="Tên tài khoản:">
                      <font>
                         <Font name="Cambria Bold" size="16.0" />
                      </font>
@@ -48,7 +48,7 @@
             </HBox>
             <HBox>
                <children>
-                  <Label alignment="BOTTOM_LEFT" prefHeight="36.0" prefWidth="128.0" text="Mật khẩu:">
+                  <Label prefHeight="36.0" prefWidth="128.0" text="Mật khẩu:">
                      <font>
                         <Font name="Cambria Bold" size="16.0" />
                      </font>

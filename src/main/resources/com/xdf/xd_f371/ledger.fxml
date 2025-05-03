@@ -436,7 +436,170 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab closable="false" text="ĐỐI CHIẾU">
+            <Tab closable="false" text="LỊCH SỬ">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="1378.0">
+                     <children>
+                        <VBox layoutX="14.0" layoutY="14.0">
+                           <children>
+                              <HBox prefHeight="31.0" prefWidth="1308.0">
+                                 <children>
+                                    <Label prefHeight="27.0" prefWidth="80.0" text="Tìm kiếm:">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="h_search_tf" onAction="#h_search_tfAction" onMouseClicked="#search_by_name_Click" prefHeight="26.0" prefWidth="157.0" promptText="so phieu vd: 1,2,3...">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="TEXT" />
+                                       </cursor>
+                                    </TextField>
+                                    <Label layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="102.0" text="Đơn vị đầu mối:">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="nnx_cbb" disable="true" onAction="#nnx_cbbAction" prefHeight="22.0" prefWidth="128.0" />
+                                    <Label layoutX="333.0" layoutY="10.0" prefHeight="27.0" prefWidth="102.0" text="Trực thuộc:">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="tt_cbb" layoutX="435.0" layoutY="10.0" onAction="#tt_cbbAction" prefHeight="25.0" prefWidth="128.0" />
+                                    <Label layoutX="573.0" layoutY="10.0" prefHeight="27.0" prefWidth="102.0" text="Xe-Máy-tàu:">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ComboBox layoutX="675.0" layoutY="10.0" onAction="#xmtcbbAction" prefHeight="21.0" prefWidth="128.0" fx:id="xmtcbb" />
+                                    <Label layoutX="803.0" layoutY="10.0" prefHeight="27.0" prefWidth="102.0" text="Nhiệm vụ:">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="nvcbb" layoutX="905.0" layoutY="10.0" onAction="#nvcbbAction" prefHeight="21.0" prefWidth="128.0" />
+                                    <Button layoutX="257.0" layoutY="10.0" mnemonicParsing="false" onAction="#refreshHistoryTb" prefHeight="26.0" prefWidth="70.0" text="làm mới">
+                                       <cursor>
+                                          <Cursor fx:constant="OPEN_HAND" />
+                                       </cursor>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="history_tb" onMouseClicked="#history_tb_clicked">
+                                <columns>
+                                    <TableColumn fx:id="h_sophieu" prefWidth="63.0" text="số" />
+                                    <TableColumn fx:id="h_phieu" prefWidth="63.0" text="phiếu" />
+                                    <TableColumn fx:id="h_dvx" prefWidth="75.0" text="Đ.v Xuất" />
+                                    <TableColumn fx:id="h_dvn" prefWidth="75.0" text="Đ.v Nhập" />
+                                    <TableColumn fx:id="h_tructhuoc" prefWidth="109.0" text="Đv Trực thuộc" />
+                                    <TableColumn fx:id="h_tenxd" prefWidth="109.0" text="Tên XD" />
+                                    <TableColumn fx:id="h_loaixd" prefWidth="109.0" text="Loại XD" />
+                                    <TableColumn fx:id="h_gia" prefWidth="65.0" text="Giá" />
+                                    <TableColumn fx:id="h_soluong" prefWidth="65.0" text="số lượng" />
+                                  <TableColumn fx:id="h_createTime" prefWidth="121.0" text="Thời gian" />
+                                </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                                 <VBox.margin>
+                                    <Insets right="10.0" />
+                                 </VBox.margin>
+                              </TableView>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="31.0" prefWidth="1308.0">
+                                 <children>
+                                    <Label prefHeight="27.0" prefWidth="196.0" text="Tồn theo giá(NVDX):">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="inv_price" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="441.0" prefHeight="31.0" prefWidth="1308.0">
+                                 <children>
+                                    <Label prefHeight="27.0" prefWidth="196.0" text="Tồn theo loại Xd(NVDX):">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="inv_total" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="472.0" prefHeight="31.0" prefWidth="1308.0">
+                                 <children>
+                                    <Label prefHeight="27.0" prefWidth="196.0" text="Tên XMT:">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="tenxmt" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="503.0" prefHeight="31.0" prefWidth="1308.0">
+                                 <children>
+                                    <Label prefHeight="27.0" prefWidth="196.0" text="Loại xmt:">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="loaixmt" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="534.0" prefHeight="31.0" prefWidth="1308.0">
+                                 <children>
+                                    <Label prefHeight="27.0" prefWidth="196.0" text="Nhiệm vụ:">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="nv" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
+                                       <font>
+                                          <Font name="Cambria Italic" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab closable="false" disable="true" text="ĐỐI CHIẾU">
                <content>
                   <VBox>
                      <children>
@@ -688,148 +851,6 @@
                      </children>
                   </VBox>
                </content>
-            </Tab>
-            <Tab closable="false" text="LỊCH SỬ">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="1378.0">
-                     <children>
-                        <VBox layoutX="14.0" layoutY="14.0">
-                           <children>
-                              <HBox prefHeight="31.0" prefWidth="1308.0">
-                                 <children>
-                                    <Label prefHeight="27.0" prefWidth="80.0" text="Tìm kiếm:">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="search_by_name_tf1" onAction="#search_by_name_tfAction" onMouseClicked="#search_by_name_Click" prefHeight="26.0" prefWidth="157.0" promptText="a80...">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="TEXT" />
-                                       </cursor>
-                                    </TextField>
-                                    <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="66.0" text="Tim kiem">
-                                       <cursor>
-                                          <Cursor fx:constant="OPEN_HAND" />
-                                       </cursor>
-                                       <HBox.margin>
-                                          <Insets left="10.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                 </children>
-                              </HBox>
-                              <TableView fx:id="history_tb" onMouseClicked="#history_tb_clicked">
-                                <columns>
-                                  <TableColumn fx:id="h_stt" prefWidth="75.0" text="stt" />
-                                    <TableColumn fx:id="h_phieu" prefWidth="63.0" text="phiếu" />
-                                    <TableColumn fx:id="h_sophieu" prefWidth="63.0" text="số" />
-                                    <TableColumn fx:id="h_dvx" prefWidth="75.0" text="Đ.v Xuất" />
-                                    <TableColumn fx:id="h_dvn" prefWidth="75.0" text="Đ.v Nhập" />
-                                    <TableColumn fx:id="h_tructhuoc" prefWidth="109.0" text="Đv Trực thuộc" />
-                                    <TableColumn fx:id="h_tenxd" prefWidth="109.0" text="Tên XD" />
-                                    <TableColumn fx:id="h_loaixd" prefWidth="109.0" text="Loại XD" />
-                                    <TableColumn fx:id="h_gia" prefWidth="65.0" text="Giá" />
-                                    <TableColumn fx:id="h_soluong" prefWidth="65.0" text="số lượng" />
-                                  <TableColumn fx:id="h_createTime" prefWidth="121.0" text="Thời gian" />
-                                </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
-                                 <VBox.margin>
-                                    <Insets right="10.0" />
-                                 </VBox.margin>
-                              </TableView>
-                              <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="31.0" prefWidth="1308.0">
-                                 <children>
-                                    <Label prefHeight="27.0" prefWidth="196.0" text="Tồn theo giá(NVDX):">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="inv_price" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER" layoutX="10.0" layoutY="441.0" prefHeight="31.0" prefWidth="1308.0">
-                                 <children>
-                                    <Label prefHeight="27.0" prefWidth="196.0" text="Tồn theo loại Xd(NVDX):">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="inv_total" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER" layoutX="10.0" layoutY="472.0" prefHeight="31.0" prefWidth="1308.0">
-                                 <children>
-                                    <Label prefHeight="27.0" prefWidth="196.0" text="Tên XMT:">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="tenxmt" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER" layoutX="10.0" layoutY="503.0" prefHeight="31.0" prefWidth="1308.0">
-                                 <children>
-                                    <Label prefHeight="27.0" prefWidth="196.0" text="Loại xmt:">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="loaixmt" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER" layoutX="10.0" layoutY="534.0" prefHeight="31.0" prefWidth="1308.0">
-                                 <children>
-                                    <Label prefHeight="27.0" prefWidth="196.0" text="Nhiệm vụ:">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="nv" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER" layoutX="10.0" layoutY="565.0" prefHeight="31.0" prefWidth="1308.0">
-                                 <children>
-                                    <Label prefHeight="27.0" prefWidth="196.0" text="Chi tiết nhiệm vụ:">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="ctnv2" layoutX="597.0" layoutY="12.0" prefHeight="27.0" prefWidth="196.0" text="----------">
-                                       <font>
-                                          <Font name="Cambria Italic" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-              </content>
             </Tab>
          </tabs>
       </TabPane>
