@@ -32,4 +32,13 @@ public class TrucThuoc {
 
     public TrucThuoc() {
     }
+
+    public TrucThuoc(int id, String name, String type, String nhom_tructhuoc, String tennhom_tructhuoc, String loaiphieu) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.nhom_tructhuoc = nhom_tructhuoc;
+        this.tennhom_tructhuoc = tennhom_tructhuoc;
+        this.loaiphieu = loaiphieu;
+    }
 }

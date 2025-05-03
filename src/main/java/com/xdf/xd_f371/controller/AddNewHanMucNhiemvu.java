@@ -33,7 +33,7 @@ public class AddNewHanMucNhiemvu implements Initializable {
     @FXML
     ComboBox<ChitietNhiemVu> ct_cbb;
     @FXML
-    TextField xang_tf,diezel_tf,daubay_tf;
+    TextField xang_tf,diezel_tf,daubay_tf,hacap_tf;
 
     @Autowired
     ChitietNhiemvuService chitietNhiemvuService;
@@ -49,24 +49,28 @@ public class AddNewHanMucNhiemvu implements Initializable {
     private void initField(){
         HanmucNhiemvu2Dto hm = NhiemvuController.hm2;
         if (hm!=null){
-            xang_tf.setText(String.valueOf(hm.getXang()));
-            diezel_tf.setText(String.valueOf(hm.getDiezel()));
-            daubay_tf.setText(String.valueOf(hm.getDaubay()));
+            xang_tf.setText(String.format("%.0f", hm.getXang()));
+            diezel_tf.setText(String.format("%.0f", hm.getDiezel()));
+            daubay_tf.setText(String.format("%.0f", hm.getDaubay()));
+            hacap_tf.setText(String.format("%.0f", hm.getHacap()));
             Optional<NhiemVu> nv = chitietNhiemvuService.findByName(hm.getTenNv(),StatusCons.ACTIVED.getName());
             nv.ifPresent(nhiemVu -> nv_cbb.getSelectionModel().select(nhiemVu));
-            List<ChitietNhiemVu> ct = chitietNhiemvuService.findByNhiemvuId(nv.get().getId());
-            initChitietNhiemvuCbb(ct);
+            if (nv.isPresent()) {
+                List<ChitietNhiemVu> ct = DashboardController.ctnv_ls_all_.stream().filter(x-> x.getNhiemvu_id()==nv.get().getId()).toList();
+                initChitietNhiemvuCbb(ct);
+            }
         }
     }
 
     private void initNhiemvuCbb(){
-        ComponentUtil.setItemsToComboBox(nv_cbb,chitietNhiemvuService.findAll(),NhiemVu::getTenNv,input->chitietNhiemvuService.findByName(input, StatusCons.ACTIVED.getName()).orElse(null));
+        ComponentUtil.setItemsToComboBox(nv_cbb,DashboardController.nv_ls,NhiemVu::getTenNv,
+                input->DashboardController.nv_ls.stream().filter(x-> x.getTenNv().equals(input)).findFirst().orElse(null));
         nv_cbb.getSelectionModel().selectFirst();
     }
     private void initChitietNhiemvuCbb(List<ChitietNhiemVu> ls){
         NhiemVu nv = nv_cbb.getSelectionModel().getSelectedItem();
         if (nv!=null){
-            ComponentUtil.setItemsToComboBox(ct_cbb,ls,ChitietNhiemVu::getNhiemvu,input->chitietNhiemvuService.findByNhiemvu(input,nv.getId()).orElse(null));
+            ComponentUtil.setItemsToComboBox(ct_cbb,ls,ChitietNhiemVu::getNhiemvu,input->DashboardController.ctnv_ls_all_.stream().filter(x-> x.getNhiemvu().equals(input)).findFirst().orElse(null));
             ct_cbb.getSelectionModel().selectFirst();
         }
     }
@@ -108,9 +112,10 @@ public class AddNewHanMucNhiemvu implements Initializable {
     }
     private void saveXdB(HanmucNhiemvu2Dto hm,ChitietNhiemVu ct){
         hm.setNhiemvu_id(ct.getId());
-        hm.setXang(Long.parseLong(xang_tf.getText()));
-        hm.setDiezel(Long.parseLong(diezel_tf.getText()));
-        hm.setDaubay(Long.parseLong(daubay_tf.getText()));
+        hm.setXang(Double.parseDouble(xang_tf.getText()));
+        hm.setDiezel(Double.parseDouble(diezel_tf.getText()));
+        hm.setDaubay(Double.parseDouble(daubay_tf.getText()));
+        hm.setHacap(Double.parseDouble(hacap_tf.getText()));
     }
     private boolean isDetectAss(int ctnv_id,ChitietNhiemVu ct){
 
@@ -122,7 +127,7 @@ public class AddNewHanMucNhiemvu implements Initializable {
         return false;
     }
     private boolean isvalid(){
-        if (Common.isNumber(xang_tf.getText()) && Common.isNumber(daubay_tf.getText()) && Common.isNumber(diezel_tf.getText())){
+        if (Common.isLongNumber(hacap_tf.getText()) && Common.isLongNumber(xang_tf.getText()) && Common.isLongNumber(daubay_tf.getText()) && Common.isLongNumber(diezel_tf.getText())){
             return true;
         }
         return false;
@@ -148,21 +153,23 @@ public class AddNewHanMucNhiemvu implements Initializable {
                 if (exitst.isPresent()){
                     setVal(exitst.get());
                 }else {
-                    xang_tf.setText("0");
-                    diezel_tf.setText("0");
-                    daubay_tf.setText("0");
+                    resetF();
                 }
             }else{
                 Optional<HanmucNhiemvu2> exitst = hanmucNhiemvuService.findByUnique(LocalDate.now().getYear(),ct.getId());
                 if (exitst.isPresent()){
                     setVal(exitst.get());
                 }else {
-                    xang_tf.setText("0");
-                    diezel_tf.setText("0");
-                    daubay_tf.setText("0");
+                    resetF();
                 }
             }
         }
+    }
+    private void resetF(){
+        xang_tf.setText("0");
+        diezel_tf.setText("0");
+        daubay_tf.setText("0");
+        hacap_tf.setText("0");
     }
     private void setVal(HanmucNhiemvu2 hm){
         xang_tf.setText(String.valueOf(hm.getXang()));

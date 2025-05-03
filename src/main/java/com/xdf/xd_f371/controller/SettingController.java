@@ -65,7 +65,7 @@ public class SettingController implements Initializable {
                 configurationService.updateValueByParam(ConfigCons.ROOT_ID.getName(), String.valueOf(n.getId()));
                 configurationService.updateValueByParam(ConfigCons.REPORT_PATH.getName(), reportFolderPath.getText());
                 DashboardController.ref_Dv = n;
-                ConnectLan.pre_path = reportFolderPath.getText();
+                DashboardController.pre_path = reportFolderPath.getText();
                 DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
                 DashboardController.primaryStage.close();
             }

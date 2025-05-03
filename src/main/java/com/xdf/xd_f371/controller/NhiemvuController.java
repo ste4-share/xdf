@@ -154,7 +154,7 @@ public class NhiemvuController implements Initializable {
         nvStage.initStyle(StageStyle.TRANSPARENT);
         Common.openNewStage("add_chitieunv.fxml", nvStage,null, StageStyle.DECORATED);
         Integer y = year_cbb.getSelectionModel().getSelectedItem();
-        if (y!=null){
+        if (y!=null) {
             hmnv = hanmucNhiemvuService.getAllByYear(y);
             initNhiemvuTaubay(hmnv);
         }

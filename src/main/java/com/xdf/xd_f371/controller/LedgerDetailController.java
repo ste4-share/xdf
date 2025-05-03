@@ -7,6 +7,7 @@ import com.xdf.xd_f371.entity.DinhMuc;
 import com.xdf.xd_f371.entity.Ledger;
 import com.xdf.xd_f371.entity.LedgerDetails;
 import com.xdf.xd_f371.entity.PhuongTien;
+import com.xdf.xd_f371.fatory.ExportFactory;
 import com.xdf.xd_f371.service.DinhmucService;
 import com.xdf.xd_f371.service.LedgerService;
 import com.xdf.xd_f371.service.PhuongtienService;
@@ -24,8 +25,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -148,13 +148,13 @@ public class LedgerDetailController implements Initializable {
             String currentDir = System.getProperty("user.dir");
             String temp_file_name=currentDir+"\\xlsx_template\\phieu_mau.xlsx";
             String file_name_1 = "/phieu_nhap_xuat.xlsx";
-            if (Common.isDirectory(ConnectLan.pre_path)){
+            if (Common.isDirectory(DashboardController.pre_path)){
                 try {
                     Platform.runLater(()->{
-                        Common.copyFileExcel(temp_file_name, ConnectLan.pre_path+"/"+file_name_1);
-                        StringBuilder file_name = new StringBuilder().append(ConnectLan.pre_path).append("/").append(file_name_1);
-                        Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input.createSheet(getPhieu()),true),
-                                (input)->fillDataToPhieuNhap(input.getSheet(getPhieu()),false),getPhieu());
+                        Common.copyFileExcel(temp_file_name, DashboardController.pre_path+"/"+file_name_1);
+                        StringBuilder file_name = new StringBuilder().append(DashboardController.pre_path).append("/").append(file_name_1);
+                        Common.mapExcelFile(file_name.toString(),(input)->fillDataToPhieuNhap(input,input.createSheet(getPhieu()),true),
+                                (input)->fillDataToPhieuNhap(input,input.getSheet(getPhieu()),false),getPhieu());
                         if (DialogMessage.callAlertWithMessage(null,"Thanh cong","Click OK để mở thư mục xuất phiếu." , Alert.AlertType.INFORMATION)==ButtonType.OK){
                             Common.openDesktop();
                         }
@@ -164,7 +164,7 @@ public class LedgerDetailController implements Initializable {
                     throw new RuntimeException(e);
                 }
             }else {
-                DialogMessage.message(null,null,"Thư mục tại " + ConnectLan.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
+                DialogMessage.message(null,null,"Thư mục tại " + DashboardController.pre_path + " không tồn tại. Cấu hình thư mục báo cáo tại --Setting--", Alert.AlertType.WARNING);
                 DashboardController.primaryStage.close();
             }
         }
@@ -175,43 +175,44 @@ public class LedgerDetailController implements Initializable {
         }
         return SheetNameCons.PHIEU_XUAT.getName();
     }
-    private int fillDataToPhieuNhap(XSSFSheet sheet, boolean isNew){
-        setCEll(sheet, ledger.getDvi_nhan(), 3,3,isNew);
-        setCEll(sheet, ledger.getDvi_xuat(), 4,3,isNew);
+    private int fillDataToPhieuNhap(XSSFWorkbook wb,XSSFSheet sheet, boolean isNew){
+        XSSFCellStyle style = wb.createCellStyle();
+        setCEll(wb,style,sheet, ledger.getDvi_nhan(), 3,3,isNew);
+        setCEll(wb,style,sheet, ledger.getDvi_xuat(), 4,3,isNew);
         if (tcnService.findById(ledger.getTcn_id()).orElse(null)==null){
-            setCEll(sheet,ledger.getNhiemvu(), 5,3,isNew);
+            setCEll(wb,style,sheet,ledger.getNhiemvu(), 5,3,isNew);
         } else {
-            setCEll(sheet, tcnService.findById(ledger.getTcn_id()).orElse(null).getName(), 5,3,isNew);
+            setCEll(wb,style,sheet, tcnService.findById(ledger.getTcn_id()).orElse(null).getName(), 5,3,isNew);
         }
 
-        setCEll(sheet, ledger.getLenh_so(), 6,3,isNew);
-        setCEll(sheet, ledger.getNguoi_nhan(), 7,3,isNew);
-        setCEll(sheet, "ABC", 8,3,isNew);
-        setCEll(sheet, ledger.getEnd_date()==null? "" : ledger.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 3,10,isNew);
-        setCEll(sheet, ledger.getSo_xe(), 4,10,isNew);
-        setCEll(sheet, String.valueOf(ledger.getBill_id()), 3,7,isNew);
-        setCEll(sheet, ledger.getFrom_date()==null?  "": ledger.getFrom_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 4,7,isNew);
+        setCEll(wb,style,sheet, ledger.getLenh_so(), 6,3,isNew);
+        setCEll(wb,style,sheet, ledger.getNguoi_nhan(), 7,3,isNew);
+        setCEll(wb,style,sheet, "ABC", 8,3,isNew);
+        setCEll(wb,style,sheet, ledger.getEnd_date()==null? "" : ledger.getEnd_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 3,10,isNew);
+        setCEll(wb,style,sheet, ledger.getSo_xe(), 4,10,isNew);
+        setCEll(wb,style,sheet, String.valueOf(ledger.getBill_id()), 3,7,isNew);
+        setCEll(wb,style,sheet, ledger.getFrom_date()==null?  "": ledger.getFrom_date().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), 4,7,isNew);
         for (int i = 0; i< details.size(); i++) {
             addNewRow(sheet);
         }
         int row_num = 12;
         double thanh_tien = 0;
         for (int i = 0; i< details.size(); i++) {
-            setCEll(sheet, String.valueOf(i+1), row_num,1,isNew);
-            setCEll(sheet, details.get(i).getMa_xd(), row_num,2,isNew);
-            setCEll(sheet, details.get(i).getTen_xd(), row_num,3,isNew);
-            setCEll(sheet, details.get(i).getChat_luong(), row_num,4,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getSoluong_px()), row_num,5,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getNhiet_do_tt()), row_num,6,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getTy_trong()), row_num,7,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getHe_so_vcf()), row_num,8,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getSoluong()), row_num,9,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getDon_gia()), row_num,10,isNew);
-            setCEll(sheet, String.valueOf(details.get(i).getSoluong()*details.get(i).getDon_gia()), row_num,11,isNew);
+            setCEll(wb,style,sheet, String.valueOf(i+1), row_num,1,isNew);
+            setCEll(wb,style,sheet, details.get(i).getMa_xd(), row_num,2,isNew);
+            setCEll(wb,style,sheet, details.get(i).getTen_xd(), row_num,3,isNew);
+            setCEll(wb,style,sheet, details.get(i).getChat_luong(), row_num,4,isNew);
+            setCEll(wb,style,sheet, String.valueOf(details.get(i).getSoluong_px()), row_num,5,isNew);
+            setCEll(wb,style,sheet, String.valueOf(details.get(i).getNhiet_do_tt()), row_num,6,isNew);
+            setCEll(wb,style,sheet, String.valueOf(details.get(i).getTy_trong()), row_num,7,isNew);
+            setCEll(wb,style,sheet, String.valueOf(details.get(i).getHe_so_vcf()), row_num,8,isNew);
+            setCEll(wb,style,sheet, String.valueOf(details.get(i).getSoluong()), row_num,9,isNew);
+            setCEll(wb,style,sheet, String.valueOf(details.get(i).getDon_gia()), row_num,10,isNew);
+            setCEll(wb,style,sheet, String.valueOf(details.get(i).getSoluong()*details.get(i).getDon_gia()), row_num,11,isNew);
             row_num = row_num+1;
             thanh_tien = thanh_tien + (details.get(i).getDon_gia() * details.get(i).getSoluong());
             if (i == details.size() - 1){
-                setCEll(sheet,String.valueOf(ledger.getAmount()), 14+details.size(),11,isNew);
+                setCEll(wb,style,sheet,String.valueOf(ledger.getAmount()), 14+details.size(),11,isNew);
             }
         }
         return 1;
@@ -225,24 +226,48 @@ public class LedgerDetailController implements Initializable {
             System.out.println("The sheet is empty.");
         }
     }
-    private void setCEll(XSSFSheet sheet, String value, int row_num, int cell_num,boolean isNew){
+    private void setCEll(XSSFWorkbook wb, XSSFCellStyle style, XSSFSheet sheet, String value, int row_num, int cell_num, boolean isNew){
         if (!isNew){
             XSSFRow row = sheet.getRow(row_num);
-            if (StringUtils.isNumeric(value)){
-                BigDecimal bigDecimal = new BigDecimal(value);
-                bigDecimal.setScale(2, RoundingMode.HALF_UP);
-                NumberFormat numberFormat = NumberFormat.getInstance();
-                numberFormat.setMinimumFractionDigits(2);
-                row.getCell(cell_num).setCellValue(numberFormat.format(bigDecimal));
-            } else {
-                row.getCell(cell_num).setCellValue(value);
+            XSSFCell c = row.getCell(cell_num);
+            if (value!=null){
+                if (Common.isDoubleNumber(value)){
+                    ExportFactory.setDataFormat(wb,style,"#,##0.00");
+                    BigDecimal bigDecimal = new BigDecimal(value).setScale(1, RoundingMode.HALF_UP);
+                    c.setCellValue(bigDecimal.doubleValue());
+                } else if(Common.isLongNumber(value)){
+                    long l = (long) Double.parseDouble(value);
+                    if (l==0){
+                        c.setCellValue("");
+                    }
+                    ExportFactory.setDataFormat(wb,style,"#,##0");
+                    c.setCellValue((long) Double.parseDouble(value));
+                }else {
+                    row.getCell(cell_num).setCellValue(value);
+                }
+            }else{
+                row.getCell(cell_num).setCellValue("");
             }
         }else{
             XSSFRow row = sheet.createRow(row_num);
-            if (StringUtils.isNumeric(value)){
-                row.createCell(cell_num).setCellValue(new BigDecimal(value).doubleValue());
-            } else {
-                row.createCell(cell_num).setCellValue(value);
+            XSSFCell c = row.createCell(cell_num);
+            if (value!=null){
+                if (Common.isDoubleNumber(value)){
+                    ExportFactory.setDataFormat(wb,style,"#,##0.00");
+                    BigDecimal bigDecimal = new BigDecimal(value).setScale(1, RoundingMode.HALF_UP);
+                    c.setCellValue(bigDecimal.doubleValue());
+                } else if(Common.isLongNumber(value)){
+                    long l = (long) Double.parseDouble(value);
+                    if (l==0){
+                        c.setCellValue("");
+                    }
+                    ExportFactory.setDataFormat(wb,style,"#,##0");
+                    c.setCellValue((long) Double.parseDouble(value));
+                }else {
+                    row.createCell(cell_num).setCellValue(value);
+                }
+            }else {
+                row.createCell(cell_num).setCellValue("");
             }
         }
     }

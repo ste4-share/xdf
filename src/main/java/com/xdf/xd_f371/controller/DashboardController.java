@@ -45,14 +45,17 @@ public class DashboardController implements Initializable {
     public static Stage primaryStage;
     public static NguonNx ref_Dv=null;
     public static QuarterDto ref_Quarter=null;
+    public static String pre_path=null;
     public static List<PhuongTien> xmt_ls = new ArrayList<>();
     public static List<NhiemVu> nv_ls = new ArrayList<>();
     public static List<LoaiXangDau> xd_ls = new ArrayList<>();
     public static List<NguonNx> units_ls = new ArrayList<>();
     public static List<Tcn> tcn_ls = new ArrayList<>();
     public static List<UnitXmt> unitxmt_ls = new ArrayList<>();
+    public static List<TrucThuoc> trucThuocs_ls = new ArrayList<>();
     public static List<UnitXmt> unitxmt_ls_all = new ArrayList<>();
     public static List<ChitietNhiemVu> ctnv_ls = new ArrayList<>();
+    public static List<ChitietNhiemVu> ctnv_ls_all_ = new ArrayList<>();
     public static List<NhiemVuDto> ctnv_ls_all = new ArrayList<>();
     public static Map<String, List<TrucThuoc>> map = new HashMap<>();
     public static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
@@ -103,15 +106,19 @@ public class DashboardController implements Initializable {
         openFxml("ledger.fxml");
     }
     private void initPulbicList() {
+        Optional<Configuration> report_path = configurationService.findByParam(ConfigCons.REPORT_PATH.getName());
+        report_path.ifPresent(x-> pre_path=x.getValue());
         xmt_ls = phuongtienService.findAll();
         unitxmt_ls = unitXmtService.findAllByMaybay(ref_Dv.getId());
         unitxmt_ls_all = unitXmtService.findAll();
         ctnv_ls = chitietNhiemvuService.findAllCtnvByTypeMaybay();
+        ctnv_ls_all_ = chitietNhiemvuService.findAllCtnv();
         ctnv_ls_all = chitietNhiemvuService.findAllDtoById();
         units_ls = nguonNxService.findAll();
         tcn_ls = tcnService.findAll();
         xd_ls = loaiXdService.findAll();
         nv_ls = chitietNhiemvuService.findAll();
+        trucThuocs_ls = tructhuocService.findAll();
     }
     private void getQuarterList() {
         try {

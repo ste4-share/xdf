@@ -86,7 +86,7 @@ public class Common {
     }
     public static void openDesktop(){
         try {
-            File directoryPath = new File(ConnectLan.pre_path);
+            File directoryPath = new File(DashboardController.pre_path);
             Desktop desktop = Desktop.getDesktop();
             desktop.open(directoryPath);
         } catch (IOException io) {

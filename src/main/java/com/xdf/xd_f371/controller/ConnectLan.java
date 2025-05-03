@@ -1,11 +1,10 @@
 package com.xdf.xd_f371.controller;
 
 import com.xdf.xd_f371.MainApplicationApp;
-import com.xdf.xd_f371.cons.ConfigCons;
+import com.xdf.xd_f371.cons.DefaultVarCons;
 import com.xdf.xd_f371.entity.Accounts;
 import com.xdf.xd_f371.fatory.CommonFactory;
 import com.xdf.xd_f371.service.AccountService;
-import com.xdf.xd_f371.service.ConfigurationService;
 import com.xdf.xd_f371.service.ConnectionService;
 import com.xdf.xd_f371.util.Common;
 import com.xdf.xd_f371.util.DialogMessage;
@@ -17,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,6 @@ public class ConnectLan implements Initializable {
     public static Stage primaryStage;
     public static Accounts pre_acc = new Accounts();
     public static String ip_pre;
-    public static String pre_path;
     public static String port_pre;
     private String zeroTo255 = "(\\d{1,2}|(0|1)\\d{2}|2[0-4]\\d|25[0-5])";
     private String regex
@@ -48,7 +45,7 @@ public class ConnectLan implements Initializable {
             + zeroTo255 + "\\."
             + zeroTo255;
     @FXML
-    private TextField username,ip,port,path_tf;
+    private TextField username;
     @FXML
     private PasswordField passwd;
     @FXML
@@ -61,8 +58,6 @@ public class ConnectLan implements Initializable {
     private AccountService accountService;
     @Autowired
     private ConnectionService connectionService;
-    @Autowired
-    private ConfigurationService configurationService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Common.hoverButton(connect,"#009107");
@@ -70,7 +65,7 @@ public class ConnectLan implements Initializable {
         conn_status.setText("-----");
         ip_pre = "";
         port_pre = "0";
-        loadCredentials(username,ip,port, passwd,path_tf, ck_save);
+        loadCredentials(username,passwd, ck_save);
         connect.requestFocus();
     }
     @FXML
@@ -78,15 +73,11 @@ public class ConnectLan implements Initializable {
         try {
             String user = username.getText().trim();
             String p = passwd.getText().trim();
-            String i = ip.getText().trim();
-            String po = port.getText().trim();
-            String path = path_tf.getText().trim();
-            if (isvalid(user,p,i,po,path)){
-                if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
-                rememberme(user,p,i,po,path);
-                setContext(i,po);
-                configurationService.updateValueByParam(ConfigCons.REPORT_PATH.getName(),path);
-                log_in(user,p,i,po,path);
+            if (isvalid(user,p, DefaultVarCons.IP.getName(),DefaultVarCons.PORT.getName())){
+                if (connectionService.checkConnection(DefaultVarCons.IP.getName(),Integer.parseInt(DefaultVarCons.PORT.getName()))){
+                rememberme(user,p,DefaultVarCons.IP.getName(),DefaultVarCons.PORT.getName());
+                setContext(DefaultVarCons.IP.getName(),DefaultVarCons.PORT.getName());
+                log_in(user,p,DefaultVarCons.IP.getName(),DefaultVarCons.PORT.getName());
             }else{
                 DialogMessage.message(null, "Vui long kiem tra lai ip va port", "That bai", Alert.AlertType.CONFIRMATION);
                 conn_status.setText("FAIL");
@@ -97,13 +88,12 @@ public class ConnectLan implements Initializable {
             DialogMessage.errorShowing("Co loi xay ra :" + e.getMessage());
         }
     }
-    private void log_in(String user,String p,String i,String po,String path){
+    private void log_in(String user,String p,String i,String po){
                 Optional<Accounts> acc = accountService.login(user,p);
                 if (acc.isPresent()){
                     InitProgressBar.stage.close();
                     ip_pre = i;
                     port_pre = po;
-                    pre_path = path;
                     pre_acc = acc.get();
                     connectionService.maintainConnection();
                     primaryStage = new Stage();
@@ -126,16 +116,15 @@ public class ConnectLan implements Initializable {
         DataSourceManager dataSourceManager = MainApplicationApp.context.getBean(DataSourceManager.class);
         dataSourceManager.configureDataSource(url, "postgres", "postgres");
     }
-    private void rememberme(String user, String p,String i,String po,String path){
+    private void rememberme(String user, String p,String i,String po){
         boolean rememberMe = ck_save.isSelected();
         if (rememberMe) {
-            saveCredentials(user, p,i,po,path);
+            saveCredentials(user, p,i,po);
         } else {
             clearCredentials();
         }
     }
-    private boolean isvalid(String user, String p,String ip,String po,String path){
-        if (!path.isEmpty() && Common.isDirectory(path)){
+    private boolean isvalid(String user, String p,String ip,String po){
             if (!user.isEmpty()){
                 if (!p.isEmpty()){
                     if (ip.matches(regex) || ip.equals("localhost")){
@@ -157,10 +146,6 @@ public class ConnectLan implements Initializable {
                 DialogMessage.message(null, "Cần nhập tên tài khoản.",
                         "Chưa nhập Tên tài khoản", Alert.AlertType.INFORMATION);
             }
-        }else{
-            path_tf.setStyle(CommonFactory.styleErrorField);
-            DialogMessage.message(null, "Đường dẫn không chính xác",null, Alert.AlertType.INFORMATION);
-        }
         return false;
     }
     @FXML
@@ -169,8 +154,8 @@ public class ConnectLan implements Initializable {
     }
     @FXML
     public void checkConnection(ActionEvent actionEvent) {
-        if (isvalid(username.getText(),passwd.getText(),ip.getText(),port.getText(),path_tf.getText())){
-            if (connectionService.checkConnection(ip.getText(),Integer.parseInt(port.getText()))){
+        if (isvalid(username.getText(),passwd.getText(),DefaultVarCons.IP.getName(),DefaultVarCons.PORT.getName())){
+            if (connectionService.checkConnection(DefaultVarCons.IP.getName(),Integer.parseInt(DefaultVarCons.PORT.getName()))){
                 DialogMessage.message("Thong bao", "Ket noi thanh cong", "Thanh cong", Alert.AlertType.CONFIRMATION);
                 conn_status.setText("OK");
             }else{
@@ -179,28 +164,26 @@ public class ConnectLan implements Initializable {
             }
         }
     }
-    private void saveCredentials(String username, String password,String ip,String port,String path) {
+    private void saveCredentials(String username, String password,String ip,String port) {
         try (FileOutputStream out = new FileOutputStream(CREDENTIALS_FILE)) {
             Properties props = new Properties();
             props.setProperty("username", username);
             props.setProperty("password", password);
             props.setProperty("ip", ip);
             props.setProperty("port", port);
-            props.setProperty("path", path);
             props.store(out, "Saved Credentials");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void loadCredentials(TextField usernameField,TextField ip,TextField p, PasswordField passwordField,TextField path, CheckBox rememberMeCheckBox) {
+    private void loadCredentials(TextField usernameField, PasswordField passwordField, CheckBox rememberMeCheckBox) {
         File file = new File(CREDENTIALS_FILE);
         if (file.exists()) {
             try (FileInputStream in = new FileInputStream(file)) {
                 Properties props = new Properties();
                 props.load(in);
-                ip.setText(props.getProperty("ip", ""));
-                p.setText(props.getProperty("port", ""));
-                path.setText(props.getProperty("path", ""));
+//                ip.setText(props.getProperty("ip", ""));
+//                p.setText(props.getProperty("port", ""));
                 usernameField.setText(props.getProperty("username", ""));
                 passwordField.setText(props.getProperty("password", ""));
                 rememberMeCheckBox.setSelected(true);

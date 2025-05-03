@@ -14,14 +14,14 @@ import java.util.Optional;
 public interface ChitietNhiemvuRepo extends JpaRepository<ChitietNhiemVu, Integer> {
     @Query(value = "select ct.* from chitiet_nhiemvu ct left join nhiemvu n on ct.nhiemvu_id=n.id where loainv like 'NV_BAY'",nativeQuery = true)
     List<ChitietNhiemVu> findAllCtnv();
-    @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where lnv.task_name like :lnv")
+    @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,n.team_group,n.loainv) from ChitietNhiemVu ct join ct.nhiemVu n where n.loainv like :lnv")
     List<NhiemVuDto> findAllDtoById(@Param("lnv") String lnv);
-    @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv")
+    @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,n.team_group,n.loainv) from ChitietNhiemVu ct join ct.nhiemVu n")
     List<NhiemVuDto> findAllDtoById();
     @Query(value = "select * from chitiet_nhiemvu where nhiemvu like :nv and nhiemvu_id=:nv_id",nativeQuery = true)
     Optional<ChitietNhiemVu> findByNhiemvu(@Param("nv") String nhiemvu,@Param("nv_id") int nv_id);
     @Query("select new ChitietNhiemVu(ct.id,ct.nhiemvu_id,ct.nhiemvu) from ChitietNhiemVu ct where ct.nhiemvu_id=:od")
     List<ChitietNhiemVu> findByNhiemvuId(@Param("od") int id);
-    @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(t.id,lnv.id, n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,t.name,lnv.task_name) from ChitietNhiemVu ct join ct.nhiemVu n join n.team t join n.loaiNhiemVu lnv where ct.nhiemvu like :chitiet")
+    @Query("select new com.xdf.xd_f371.dto.NhiemVuDto(n.id, ct.id, n.priority,n.tenNv,ct.nhiemvu,n.team_group,n.loainv) from ChitietNhiemVu ct join ct.nhiemVu n where ct.nhiemvu like :chitiet")
     Optional<NhiemVuDto> findByTenNv(@Param("chitiet") String tennv);
 }

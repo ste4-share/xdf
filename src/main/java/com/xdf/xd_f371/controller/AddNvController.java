@@ -23,23 +23,18 @@ import java.util.ResourceBundle;
 public class AddNvController implements Initializable {
     public static Stage primaryState;
     @FXML
-    private ComboBox<Team> cbb_team;
-    @FXML
-    private ComboBox<LoaiNhiemVu> cbb_lnv;
-    @FXML
     private TextField ct,xang,diezel,daubay,id,hacap;
     @FXML
     private Button add_btn,cancel_btn;
     @FXML
     private ComboBox<NhiemVu> nv_cbb;
 
+
     @Autowired
     private ChitietNhiemvuService nhiemvuService;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initVar();
-        initTeam();
-        initLoaiNvCbb();
         initNvCbb();
     }
     private void initVar(){
@@ -78,19 +73,9 @@ public class AddNvController implements Initializable {
     }
 
     private void initNvCbb() {
+        DashboardController.nv_ls = nhiemvuService.findAll();
         ComponentUtil.setItemsToComboBox(nv_cbb,DashboardController.nv_ls,NhiemVu::getTenNv,input-> DashboardController.nv_ls.stream().filter(x-> x.getTenNv().equals(input)).findFirst().orElse(null));
         nv_cbb.getSelectionModel().selectFirst();
-    }
-    private void initLoaiNvCbb() {
-        ComponentUtil.setItemsToComboBox(cbb_lnv,nhiemvuService.getAllLoaiNv(),LoaiNhiemVu::getTask_name,input-> nhiemvuService.findLoaiNvByName(input).orElse(null));
-        cbb_lnv.getSelectionModel().selectFirst();
-    }
-    private void initTeam() {
-        ComponentUtil.setItemsToComboBox(cbb_team,nhiemvuService.findAllTeam(),Team::getTeam_code,input-> nhiemvuService.findByCode(input));
-        cbb_team.getSelectionModel().selectFirst();
-    }
-    @FXML
-    public void teamAction(ActionEvent actionEvent) {
     }
     @FXML
     public void ct_clicked(MouseEvent mouseEvent) {
@@ -99,18 +84,19 @@ public class AddNvController implements Initializable {
     }
     @FXML
     public void addAction(ActionEvent actionEvent) {
-        LoaiNhiemVu lnv = cbb_lnv.getSelectionModel().getSelectedItem();
-        Team t = cbb_team.getSelectionModel().getSelectedItem();
         NguonNx nx = DashboardController.ref_Dv;
-        if (lnv!=null && t!=null && nx!=null){
-            if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
-                if (isValid()){
-                    if (nv_cbb.getSelectionModel().getSelectedItem()!=null){
-                        nhiemvuService.saveNhiemvu(cbb_team.getSelectionModel().getSelectedItem().getTeam_code(),Integer.parseInt(id.getText()),t.getId(),nv_cbb.getSelectionModel().getSelectedItem().getTenNv(),lnv,ct.getText(),nx,xang.getText(),diezel.getText(),daubay.getText(),hacap.getText());
-                    }else{
-                        DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+        NhiemVu nv = nv_cbb.getSelectionModel().getSelectedItem();
+        if (nx!=null){
+            if (nv!=null){
+                if (DialogMessage.callAlertWithMessage(null, "Tạo mới Nhiemvu", "Xác nhận tạo mới", Alert.AlertType.CONFIRMATION) == ButtonType.OK) {
+                    if (isValid()){
+                        try {
+                            nhiemvuService.saveNhiemvu(Integer.parseInt(id.getText()),nv,ct.getText(), nx,xang.getText(),diezel.getText(),daubay.getText(),hacap.getText());
+                        } catch (RuntimeException e) {
+                            DialogMessage.errorShowing(MessageCons.CO_LOI_XAY_RA.getName());
+                        }
+                        NhiemvuController.nvStage.close();
                     }
-                    NhiemvuController.nvStage.close();
                 }
             }
         }
@@ -120,19 +106,18 @@ public class AddNvController implements Initializable {
         NhiemvuController.nvStage.close();
     }
     @FXML
-    public void lnvAction(ActionEvent actionEvent) {
-    }
-    @FXML
     public void id_clicked(MouseEvent mouseEvent) {
         id.selectAll();
         id.setStyle(null);
     }
     @FXML
-    public void nv_cbbAct(ActionEvent actionEvent) {}
+    public void nv_cbbAct(ActionEvent actionEvent) {
+    }
     @FXML
     public void add_nvAction(ActionEvent actionEvent) {
         primaryState = new Stage();
         primaryState.initStyle(StageStyle.UTILITY);
         Common.openNewStage("addnewnv.fxml", primaryState,null, StageStyle.DECORATED);
+        initNvCbb();
     }
 }

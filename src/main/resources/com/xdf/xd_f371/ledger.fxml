@@ -693,7 +693,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="1378.0">
                      <children>
-                        <VBox layoutX="14.0" layoutY="14.0" prefHeight="740.0" prefWidth="1369.0">
+                        <VBox layoutX="14.0" layoutY="14.0">
                            <children>
                               <HBox prefHeight="31.0" prefWidth="1308.0">
                                  <children>

@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.AddNewHanMucNhiemvu">
+<VBox prefHeight="419.0" prefWidth="448.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xdf.xd_f371.controller.AddNewHanMucNhiemvu">
    <children>
-      <Label alignment="CENTER" prefHeight="43.0" prefWidth="572.0" text="Thêm hạn mức" textAlignment="CENTER">
+      <Label alignment="CENTER" prefHeight="43.0" prefWidth="572.0" text="Hạn mức nhiệm vụ" textAlignment="CENTER" underline="true">
          <font>
-            <Font name="Cambria Bold" size="21.0" />
+            <Font name="Cambria Bold" size="14.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -22,12 +22,12 @@
       </Label>
       <HBox>
          <children>
-            <Label prefHeight="45.0" prefWidth="128.0" text="Nhiệm vụ">
+            <Label prefHeight="36.0" prefWidth="128.0" text="Nhiệm vụ">
                <font>
-                  <Font name="Cambria Bold" size="13.0" />
+                  <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <ComboBox fx:id="nv_cbb" onAction="#nvselected" prefHeight="44.0" prefWidth="366.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
+            <ComboBox fx:id="nv_cbb" onAction="#nvselected" prefHeight="36.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-border-color: #a8a8a8; -fx-border-radius: 10;" />
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -38,12 +38,12 @@
       </HBox>
       <HBox>
          <children>
-            <Label prefHeight="45.0" prefWidth="128.0" text="Chi tiết">
+            <Label prefHeight="36.0" prefWidth="128.0" text="Chi tiết">
                <font>
-                  <Font name="Cambria Bold" size="13.0" />
+                  <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <ComboBox fx:id="ct_cbb" onAction="#ctAction" prefHeight="44.0" prefWidth="366.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" />
+            <ComboBox fx:id="ct_cbb" onAction="#ctAction" prefHeight="36.0" prefWidth="250.0" style="-fx-background-color: #ffffff; -fx-border-radius: 10; -fx-border-color: #a8a8a8;" />
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -54,12 +54,20 @@
       </HBox>
       <HBox>
          <children>
-            <Label prefHeight="45.0" prefWidth="128.0" text="Hạn mức xăng:">
+            <Label prefHeight="36.0" prefWidth="128.0" text="Hạn mức xăng:">
                <font>
-                  <Font name="Cambria Bold" size="13.0" />
+                  <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <TextField prefHeight="40.0" prefWidth="365.0" style="-fx-background-radius: 10;" fx:id="xang_tf" />
+            <TextField prefHeight="36.0" prefWidth="200.0" style="-fx-background-radius: 10;" fx:id="xang_tf" />
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="40.0" text="(Lit)">
+               <font>
+                  <Font name="Cambria Bold Italic" size="10.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -70,12 +78,20 @@
       </HBox>
       <HBox>
          <children>
-            <Label prefHeight="45.0" prefWidth="128.0" text="Hạn mức Diezel:">
+            <Label prefHeight="36.0" prefWidth="128.0" text="Hạn mức Diezel:">
                <font>
-                  <Font name="Cambria Bold" size="13.0" />
+                  <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <TextField fx:id="diezel_tf" prefHeight="40.0" prefWidth="365.0" style="-fx-background-radius: 10;" />
+            <TextField fx:id="diezel_tf" prefHeight="36.0" prefWidth="200.0" style="-fx-background-radius: 10;" />
+            <Label prefHeight="36.0" prefWidth="31.0" text="(Lit)">
+               <font>
+                  <Font name="Cambria Bold Italic" size="10.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -86,12 +102,44 @@
       </HBox>
       <HBox>
          <children>
-            <Label prefHeight="45.0" prefWidth="128.0" text="Hạn mức dầu bay:">
+            <Label prefHeight="36.0" prefWidth="128.0" text="Hạn mức dầu bay:">
                <font>
-                  <Font name="Cambria Bold" size="13.0" />
+                  <Font name="Cambria Bold" size="12.0" />
                </font>
             </Label>
-            <TextField fx:id="daubay_tf" prefHeight="40.0" prefWidth="365.0" style="-fx-background-radius: 10;" />
+            <TextField fx:id="daubay_tf" prefHeight="36.0" prefWidth="200.0" style="-fx-background-radius: 10;" />
+            <Label prefHeight="36.0" prefWidth="56.0" text="(Lit)">
+               <font>
+                  <Font name="Cambria Bold Italic" size="10.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox layoutX="20.0" layoutY="303.0">
+         <children>
+            <Label prefHeight="36.0" prefWidth="128.0" text="Hạn mức hạ cấp:">
+               <font>
+                  <Font name="Cambria Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="hacap_tf" prefHeight="36.0" prefWidth="200.0" style="-fx-background-radius: 10;" />
+            <Label prefHeight="36.0" prefWidth="59.0" text="(Lit)">
+               <font>
+                  <Font name="Cambria Bold Italic" size="10.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />

@@ -22,6 +22,7 @@ public class NguonNx {
     private String status;
     @Column(name = "tructhuoc_id")
     private int tructhuoc_id;
+
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)
     List<DonViTrucThuoc> donViTrucThuocs;
     @OneToMany(mappedBy = "nguonNx", cascade = CascadeType.ALL)

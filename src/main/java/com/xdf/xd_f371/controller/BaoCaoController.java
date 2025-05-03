@@ -55,8 +55,8 @@ public class BaoCaoController implements Initializable {
     Label fromdate,todate,nxt_lb,ttnlbtkh_lb,ttxdtnv_lb,lcv_lb,ttxd_xmt_lb,pttk_lb;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        dest_file = ConnectLan.pre_path+"\\baocao.xlsx";
-        dest_file2 = ConnectLan.pre_path+"\\baocao_2.xlsx";
+        dest_file = DashboardController.pre_path+"\\baocao.xlsx";
+        dest_file2 = DashboardController.pre_path+"\\baocao_2.xlsx";
         rvb.setPrefWidth(DashboardController.screenWidth-300);
         rvb.setPrefHeight(DashboardController.screenHeigh-300);
         nguonNxList = nguonNxService.findByAllBy();
@@ -86,7 +86,7 @@ public class BaoCaoController implements Initializable {
         Common.getLoading(stage_1);
         Platform.runLater(()-> {
             Common.task(this::nxtmap_2, stage_1::close, () -> DialogMessage.successShowing("Cap nhat thanh cong"));
-//            nxt_lb.setText("UPDATED");
+            nxt_lb.setText("UPDATED");
         });
     }
     private void nxtmap_2() {
@@ -276,9 +276,6 @@ public class BaoCaoController implements Initializable {
         initHederColumnFor_nxt(sheet,wb);
         ExportFactory.mergerCell(sheet);
         ReportDAO reportDAO = new ReportDAO();
-        System.out.println("q: "+getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),
-                SubQuery.end_q1_1(DashboardController.ref_Dv.getId(),DashboardController.ref_Quarter.getStart_date()),
-                DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));
         List<Object[]> nxtls = reportDAO.findByWhatEver(getCusQueryNl(SubQuery.begin_q1(),SubQuery.end_q1(),
                 SubQuery.end_q1_1(DashboardController.ref_Dv.getId(),DashboardController.ref_Quarter.getStart_date()),
                 DashboardController.ref_Quarter.getStart_date(),DashboardController.ref_Quarter.getEnd_date()));

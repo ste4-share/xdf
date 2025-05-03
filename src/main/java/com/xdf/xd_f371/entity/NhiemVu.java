@@ -23,10 +23,6 @@ public class NhiemVu implements Serializable {
     private String tenNv;
     @Column(name = "status")
     private String status;
-    @Column(name = "team_id")
-    private int teamId;
-    @Column(name = "assignment_type_id")
-    private Integer assignmentTypeId;
     @Column(name = "priority")
     private Integer priority;
     @Column(name = "priority_bc2")
@@ -38,18 +34,10 @@ public class NhiemVu implements Serializable {
 
     @OneToMany(mappedBy = "nhiemVu", cascade = CascadeType.ALL)
     private List<ChitietNhiemVu> details = new ArrayList<>();
-    @ManyToOne
-    @JoinColumn(name = "team_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Team team;
-    @ManyToOne
-    @JoinColumn(name = "assignment_type_id", referencedColumnName = "id" , insertable = false, updatable = false)
-    private LoaiNhiemVu loaiNhiemVu;
 
-    public NhiemVu(String tenNv, String status, int teamId, Integer assignmentTypeId, Integer priority, Integer priorityBc2,String loainv,String team_group) {
+    public NhiemVu(String tenNv, String status, Integer priority, Integer priorityBc2,String loainv,String team_group) {
         this.tenNv = tenNv;
         this.status = status;
-        this.teamId = teamId;
-        this.assignmentTypeId = assignmentTypeId;
         this.priority = priority;
         this.priorityBc2 = priorityBc2;
         this.loainv = loainv;

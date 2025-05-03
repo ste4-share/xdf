@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class NhiemVuDto {
-    private int team_id;
-    private int lnv_id;
     private int nv_id;
     private int ctnv_id;
     private int priority;
@@ -18,9 +16,7 @@ public class NhiemVuDto {
     private String khoi;
     private String ten_loai_nv;
 
-    public NhiemVuDto(int team_id, int lnv_id, int nv_id, int ctnv_id, int priority, String ten_nv, String chitiet, String khoi, String ten_loai_nv) {
-        this.team_id = team_id;
-        this.lnv_id = lnv_id;
+    public NhiemVuDto(int nv_id, int ctnv_id, int priority, String ten_nv, String chitiet, String khoi, String ten_loai_nv) {
         this.nv_id = nv_id;
         this.ctnv_id = ctnv_id;
         this.priority = priority;

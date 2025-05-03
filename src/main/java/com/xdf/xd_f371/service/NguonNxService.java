@@ -4,6 +4,7 @@ import com.xdf.xd_f371.entity.NguonNx;
 import com.xdf.xd_f371.entity.TrucThuoc;
 import com.xdf.xd_f371.repo.LedgersRepo;
 import com.xdf.xd_f371.repo.NguonNxRepo;
+import com.xdf.xd_f371.repo.TructhuocRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class NguonNxService {
     private final NguonNxRepo nguonNxRepo;
     private final LedgersRepo ledgersRepo;
+    private final TructhuocRepo tructhuocRepo;
 
     public List<NguonNx> findAllById(int id){
         return nguonNxRepo.findAllById(id);
@@ -44,7 +46,7 @@ public class NguonNxService {
         try {
             nguonNxRepo.save(new NguonNx(n.getId(),n.getTen(),n.getStatus(),
                     n.getCode(),n.getTructhuoc_id()));
-            ledgersRepo.updateTrucThuocFromNxx(n.getId(),tt.getType());
+            tructhuocRepo.save(tt);
         }catch (Exception e){
             e.printStackTrace();
         }

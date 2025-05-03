@@ -219,8 +219,7 @@ public class SubQuery {
                 "FROM public.hanmuc_nhiemvu2 hm \n" +
                 "right join chitiet_nhiemvu ct on hm.nhiemvu_id=ct.id\n" +
                 "right join nhiemvu nv on ct.nhiemvu_id=nv.id\n" +
-                "right join loai_nhiemvu lnv on lnv.id=nv.assignment_type_id\n" +
-                "where dvi_id="+root_id+" and task_name like 'NV_BAY') a \n" +
+                "where dvi_id="+root_id+" and loainv like 'NV_BAY') a \n" +
                 "left join (select id,nhiemvu_id,sum(giohd_md::interval) as giohd_md,sum(giohd_tk::interval) as giohd_tk,sum(giohd_md::interval)+sum(giohd_tk::interval) as tong_giohd \n" +
                 "from ledgers l where lpt_2 like 'MAYBAY' and l.status like 'ACTIVE' and root_id="+root_id+" and l.from_date between '"+sd+"' and '"+ed+"' group by 1,2) x on a.ctnv_id=x.nhiemvu_id \n" +
                 "left join (select l.id as lid,sum(thuc_xuat) as nltt_md,sum(thuc_xuat_tk) as nltt_tk,sum(thuc_xuat)+sum(thuc_xuat_tk) as cong_nltt,max(haohut_sl) as haohut,sum(haohut_sl)+sum(thuc_xuat)+sum(thuc_xuat_tk) as tongcong\n" +

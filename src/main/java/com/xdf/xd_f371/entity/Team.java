@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
-
 @Entity
 @Table(name = "team")
 @Getter
@@ -27,7 +24,4 @@ public class Team {
     private int priority;
     @Column(name = "tt")
     private String tt;
-
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<NhiemVu> nhiemVuList;
 }

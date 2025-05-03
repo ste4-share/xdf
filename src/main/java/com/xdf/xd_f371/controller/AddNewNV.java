@@ -50,8 +50,7 @@ public class AddNewNV implements Initializable {
     @FXML
     public void saveAction(ActionEvent actionEvent) {
         if (!nv_tf.getText().isBlank()){
-            nhiemvuService.savenv(new NhiemVu(nv_tf.getText(), StatusCons.ACTIVED.getName(),team_cbb.getSelectionModel().getSelectedItem().getId()
-                    ,type_cbb.getSelectionModel().getSelectedItem().getId(),99,99,type_cbb.getSelectionModel().getSelectedItem().getTask_name(),
+            nhiemvuService.savenv(new NhiemVu(nv_tf.getText(), StatusCons.ACTIVED.getName(),99,99,type_cbb.getSelectionModel().getSelectedItem().getTask_name(),
                     team_cbb.getSelectionModel().getSelectedItem().getTeam_code()));
             DialogMessage.successShowing(MessageCons.THANH_CONG.getName());
             AddNvController.primaryState.close();
