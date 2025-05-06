@@ -546,7 +546,7 @@ public class LedgerController implements Initializable {
         if (file!=null){
             importDataToList(file,refLedgerList, this::importCellToLEdger);
             if (refLedgerList.isEmpty()){
-                DialogMessage.successShowing("Dữ liệu nhập từ file data.xlsx trống.");
+                DialogMessage.successShowing("Dữ liệu nhập từ file data_template.xlsx trống.");
             }else{
                 dvi_ref_cbb.getSelectionModel().select(DashboardController.ref_Dv.getId());
                 setItemsTo_RefTable(refLedgerList);
@@ -942,7 +942,7 @@ public class LedgerController implements Initializable {
     @FXML
     public void delMiAction(ActionEvent actionEvent) {
         if (DialogMessage.callAlertWithMessage(null, "ban co chac chan muon xoa","Xoa", Alert.AlertType.CONFIRMATION)==ButtonType.OK){
-            ledgerService.inactiveLedger(ledger.getId());
+            ledgerService.inactiveLedger(ledger);
             DialogMessage.message(null,"Xoa thanh cong", null, Alert.AlertType.INFORMATION);
             updateData();
         }
